@@ -1,0 +1,14 @@
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\easyam.exe.config
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\easyam.XML
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\easyam.exe
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\easyam.pdb
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FSharp.Core.dll
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FSharp.Core.xml
+E:\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.exe
+E:\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.pdb
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FSharp.Data.TypeProviders.dll
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\mscorlib.dll
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\System.Data.dll
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\System.Data.Linq.dll
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\System.dll
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\System.Numerics.dll
