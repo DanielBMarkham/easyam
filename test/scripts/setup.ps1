@@ -24,7 +24,7 @@ Copy-Item -Path easyam.xml -Destination ../../../test/in/easyam.xml
 Copy-Item -Path easyam.pdb -Destination ../../../test/in/easyam.pdb
 Copy-Item -Path FSharp.Core.dll -Destination ../../../test/in/FSharp.Core.dll
 Copy-Item -Path FSharp.Core.xml -Destination ../../../test/in/FSharp.Core.xml
-Copy-Item -Path FSharp.Data.TypeProviders.dll -Destination ../../../test/in/FSharp.Data.TypeProviders.dll
+#Copy-Item -Path FSharp.Data.TypeProviders.dll -Destination ../../../test/in/FSharp.Data.TypeProviders.dll
 
 Write-Host "setup end"
 

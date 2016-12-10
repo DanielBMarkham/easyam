@@ -215,3 +215,40 @@
             this.destinationDirectory.printVal
             printfn "destinationDirectoryExists: %b" this.destinationDirectoryExists
 
+//
+//  Data used during program execution
+//
+    type Genres =
+        | Business
+        | System
+    type Buckets =
+        | Behavior
+        | Structure
+        | Supplemental
+        | Meta
+    type AbstractionLevels = 
+        | Abstract
+        | Realized
+    type TemporalIndicators =
+        | AsIs
+        | ToBe
+    type InformationTag =
+        {
+            Genre:Genres
+            Bucket:Buckets
+            AbstractionLevel:AbstractionLevels
+            TemporalIndicator:TemporalIndicators
+        }
+    type ProgramOutputDirectories =
+        {
+            SourceDirectoryInfo:System.IO.DirectoryInfo
+            DestinationDirectoryInfo:System.IO.DirectoryInfo
+            BehaviorDirectoryInfo:System.IO.DirectoryInfo
+            StructureDirectoryInfo:System.IO.DirectoryInfo
+            SupplementalDirectoryInfo:System.IO.DirectoryInfo
+            MetaDirectoryInfo:System.IO.DirectoryInfo
+        }
+    type ProgramInputFiles = 
+        {
+            files:System.IO.FileInfo list
+        }

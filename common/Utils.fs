@@ -110,3 +110,7 @@
                         systemProc.WaitForExit()
 
                 
+    let getOrMakeDirectory dirName =
+        if System.IO.Directory.Exists dirName
+            then System.IO.DirectoryInfo dirName
+            else System.IO.Directory.CreateDirectory dirName
