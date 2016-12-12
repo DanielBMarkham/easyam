@@ -7,6 +7,8 @@ Copy-Item -Path easyam.pdb -Destination ../../../deploy/linux/easyam.pdb
 Copy-Item -Path FSharp.Core.dll -Destination ../../../deploy/linux/FSharp.Core.dll
 Copy-Item -Path FSharp.Core.xml -Destination ../../../deploy/linux/FSharp.Core.xml
 Copy-Item -Path FSharp.Data.TypeProviders.dll -Destination ../../../deploy/linux/FSharp.Data.TypeProviders.dll
+Copy-Item -Path FParsec.dll -Destination ../../../deploy/linux/FParsec.dll
+Copy-Item -Path FParsec.xml -Destination ../../../deploy/linux/FParsec.xml
 
 
 Copy-Item -Path easyam.exe -Destination        ../../../deploy/win/easyam.exe
@@ -16,6 +18,8 @@ Copy-Item -Path easyam.pdb -Destination ../../../deploy/win/easyam.pdb
 Copy-Item -Path FSharp.Core.dll -Destination ../../../deploy/win/FSharp.Core.dll
 Copy-Item -Path FSharp.Core.xml -Destination ../../../deploy/win/FSharp.Core.xml
 Copy-Item -Path FSharp.Data.TypeProviders.dll -Destination ../../../deploy/win/FSharp.Data.TypeProviders.dll
+Copy-Item -Path FParsec.dll -Destination ../../../deploy/win/FParsec.dll
+Copy-Item -Path FParsec.xml -Destination ../../../deploy/win/FParsec.xml
 
 Powershell.exe -executionpolicy remotesigned -File ..\..\..\test\scripts\setup.ps1
 

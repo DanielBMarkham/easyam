@@ -5,6 +5,11 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "easyam", "easyam.fsproj", "{CF8CEAFA-2672-482F-A9FC-BDFE7872D4FF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4926B90F-73FE-4F55-BC7D-3E827FE4D595}"
+	ProjectSection(SolutionItems) = preProject
+		bin\Debug\dm.txt = bin\Debug\dm.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

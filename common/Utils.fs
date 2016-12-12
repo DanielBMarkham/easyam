@@ -114,3 +114,8 @@
         if System.IO.Directory.Exists dirName
             then System.IO.DirectoryInfo dirName
             else System.IO.Directory.CreateDirectory dirName
+
+    let forceDirectoryCreation (dir:ConfigEntry<DirectoryParm>) =
+        if directoryExists dir
+            then (snd dir.parameterValue).Value
+            else System.IO.Directory.CreateDirectory(fst dir.parameterValue)

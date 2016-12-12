@@ -104,6 +104,9 @@
                 if parmSections.Length<2 then Some "" else Some parmSections.[1]
             else
                 None
+    type FileParm = string*System.IO.FileInfo option
+    type DirectoryParm = string*System.IO.DirectoryInfo option
+
     type ConfigEntry<'A> =
         {
             commandLineParameterSymbol:string
@@ -132,6 +135,29 @@
                 if parmValue.IsSome
                     then
                         defaultConfig.swapInNewValue parmValue.Value
+                    else
+                        defaultConfig
+            static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<DirectoryParm>), (args:string[])):ConfigEntry<DirectoryParm>  =
+                let parmValue = getValuePartOfMostRelevantCommandLineMatch args defaultConfig.commandLineParameterSymbol
+                if parmValue.IsSome
+                    then
+                        if System.IO.Directory.Exists(parmValue.Value)
+                            then 
+                                let tempDirectoryInfo = Some(System.IO.DirectoryInfo(parmValue.Value))
+                                defaultConfig.swapInNewValue (parmValue.Value, tempDirectoryInfo)
+                            else defaultConfig.swapInNewValue (parmValue.Value, None)
+                    else
+                        defaultConfig
+            static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<FileParm>), (args:string[])):ConfigEntry<FileParm>  =
+                let parmValue = getValuePartOfMostRelevantCommandLineMatch args defaultConfig.commandLineParameterSymbol
+                if parmValue.IsSome
+                    then
+                        if System.IO.File.Exists(parmValue.Value)
+                            then
+                                let tempFileInfo = Some(System.IO.FileInfo(parmValue.Value))
+                                defaultConfig.swapInNewValue (parmValue.Value, tempFileInfo)
+                            else
+                                defaultConfig.swapInNewValue (parmValue.Value, None)
                     else
                         defaultConfig
             static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<bool>), (args:string[])):ConfigEntry<bool> =
@@ -202,34 +228,36 @@
     type EasyAMProgramConfig =
         {
             configBase:ConfigBase
-            sourceDirectory:ConfigEntry<string>
-            sourceDirectoryExists:bool
-            destinationDirectory:ConfigEntry<string>
-            destinationDirectoryExists:bool
+            sourceDirectory:ConfigEntry<DirectoryParm>
+            destinationDirectory:ConfigEntry<DirectoryParm>
         }
         member this.printThis() =
             printfn "EasyAMConfig Parameters Provided"
             this.configBase.verbose.printVal
             this.sourceDirectory.printVal
-            printfn "sourceDirectoryExists: %b" this.sourceDirectoryExists
+            printfn "sourceDirectoryExists: %b" (snd this.sourceDirectory.parameterValue).IsSome
             this.destinationDirectory.printVal
-            printfn "destinationDirectoryExists: %b" this.destinationDirectoryExists
+            printfn "destinationDirectoryExists: %b" (snd this.destinationDirectory.parameterValue).IsSome
 
 //
 //  Data used during program execution
 //
     type Genres =
+        | Unkown
         | Business
         | System
     type Buckets =
+        | Unknown
         | Behavior
         | Structure
         | Supplemental
         | Meta
     type AbstractionLevels = 
+        | Unknown
         | Abstract
         | Realized
     type TemporalIndicators =
+        | Unknown
         | AsIs
         | ToBe
     type InformationTag =
@@ -238,6 +266,18 @@
             Bucket:Buckets
             AbstractionLevel:AbstractionLevels
             TemporalIndicator:TemporalIndicators
+        }
+    let defaultInformationTag=
+        {
+            Genre=Genres.Unkown
+            Bucket=Buckets.Unknown
+            AbstractionLevel=AbstractionLevels.Unknown
+            TemporalIndicator=TemporalIndicators.Unknown
+        }
+    type Statement =
+        {
+            Tag:InformationTag
+            StatementText:string
         }
     type ProgramOutputDirectories =
         {
@@ -250,5 +290,43 @@
         }
     type ProgramInputFiles = 
         {
-            files:System.IO.FileInfo list
+            Files:System.IO.FileInfo list
         }
+    type CompilationLineType =
+        | Unknown
+        | Scoping
+        | Context
+        | Command
+        | Freetext
+    type CompilationLine =
+        {
+            File:System.IO.FileInfo option
+            LineNumber:int
+            LineType:CompilationLineType
+            Scope:string
+            TaggedContext:InformationTag
+            LineText:string
+        }
+    let defaultCompilationLine =
+        {
+            File=None
+            LineNumber=0
+            Scope=""
+            LineType=CompilationLineType.Unknown
+            TaggedContext=defaultInformationTag
+            LineText=""
+        }
+    type CompilationContext =
+        {
+            CompilationLines:CompilationLine list
+            State:InformationTag
+            Scope:string
+        }
+    let defaultCompilationContext =
+        {
+            CompilationLines = []
+            State=defaultInformationTag
+            Scope=""
+        }
+    let directoryExists (dir:ConfigEntry<DirectoryParm>) = (snd (dir.parameterValue)).IsSome
+    let fileExists (dir:ConfigEntry<FileParm>) = (snd (dir.parameterValue)).IsSome
