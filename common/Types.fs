@@ -292,6 +292,11 @@
         {
             Files:System.IO.FileInfo list
         }
+    type CompilationLineCommands =
+        | NoCommand
+        | Unknown
+        | Hasa
+        | Question
     type CompilationLineType =
         | Unknown
         | Scoping
@@ -303,6 +308,7 @@
             File:System.IO.FileInfo option
             LineNumber:int
             LineType:CompilationLineType
+            CommandType:CompilationLineCommands
             Scope:string
             TaggedContext:InformationTag
             LineText:string
@@ -313,6 +319,7 @@
             LineNumber=0
             Scope=""
             LineType=CompilationLineType.Unknown
+            CommandType=NoCommand
             TaggedContext=defaultInformationTag
             LineText=""
         }
@@ -321,12 +328,14 @@
             CompilationLines:CompilationLine list
             State:InformationTag
             Scope:string
+            CurrentFile:string
         }
     let defaultCompilationContext =
         {
             CompilationLines = []
             State=defaultInformationTag
             Scope=""
+            CurrentFile=""
         }
     let directoryExists (dir:ConfigEntry<DirectoryParm>) = (snd (dir.parameterValue)).IsSome
     let fileExists (dir:ConfigEntry<FileParm>) = (snd (dir.parameterValue)).IsSome

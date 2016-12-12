@@ -16,3 +16,5 @@ E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FParsecCS.xml
 E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FSharp.Core.xml
 E:\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.exe
 E:\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.pdb
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\GemBox.Spreadsheet.dll
+E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\GemBox.Spreadsheet.xml
