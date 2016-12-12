@@ -296,6 +296,7 @@
         | NoCommand
         | Unknown
         | Hasa
+        | Contains
         | Question
     type CompilationLineType =
         | Unknown
@@ -337,5 +338,30 @@
             Scope=""
             CurrentFile=""
         }
+    type NounClause =
+        {
+            text:string
+        }
+    type VerbClause =
+        {
+            text:string
+        }
+    type DomainConnection =
+        {
+            SourceEntity:NounClause
+            DestinationEntity:NounClause
+        }
+    type Entity =
+        {
+            Title:NounClause
+            Attributes:NounClause list
+            Connections:NounClause list
+        }
+    type StructureModel =
+        {
+            Entities:Entity list
+            DomainConnections:DomainConnection list
+        }
+
     let directoryExists (dir:ConfigEntry<DirectoryParm>) = (snd (dir.parameterValue)).IsSome
     let fileExists (dir:ConfigEntry<FileParm>) = (snd (dir.parameterValue)).IsSome

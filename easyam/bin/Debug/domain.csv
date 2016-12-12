@@ -1,2 +1,7 @@
 ﻿Domain Statements
+Dog CONTAINS tail
 Dog HASA leg
+Camel HASA hump
+leg CONTAINS toes
+Dog CONTAINS fur
+Domain Nouns

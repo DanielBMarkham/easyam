@@ -1,5 +1,10 @@
 The dog ran over the cat
 
+BUSINESS STRUCTURE ABSTRACT
+Dog CONTAINS tail
+
+
+
 BEHAVIOR STRUCTURE
 
 Q: How do birds fly?

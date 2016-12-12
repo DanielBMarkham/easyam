@@ -11,7 +11,7 @@
     
     let informationTagTokens =[|"STRUCUTRE"; "BEHAVIOR"; "SUPPLEMENTAL"; "META"; "BUSINESS"; "SYSTEM"; "ABSTRACT"; "REALIZED"; "AS-IS"; "TO-BE"|]
     let scopingTokens = [|"NAME"; "ORG"; "DOMAIN"|]
-    let commandTokens =[|"HASA"; "Q:"|]
+    let commandTokens =[|"HASA"; "CONTAINS"; "Q:"|]
 
     let loadConfigFromCommandLine (args:string []):EasyAMProgramConfig =
         let newVerbosity =ConfigEntry<_>.populateValueFromCommandLine(defaultVerbosity, args)
@@ -74,6 +74,7 @@
                     let foundToken = commandTokens |> Array.find(fun y->x.LineText.Contains(y))
                     let newCommandType = match foundToken with
                                                 | "HASA"->CompilationLineCommands.Hasa
+                                                | "CONTAINS"->CompilationLineCommands.Contains
                                                 | "Q:"->CompilationLineCommands.Question
                                                 |_ ->CompilationLineCommands.Unknown
                     {x with CommandType=newCommandType}
@@ -139,12 +140,15 @@
         let ws = ef.Worksheets.Add("Domain")
         ws.Cells.[0, 0].Value<-"Domain Statements"
         let domainStatements = ctx.CompilationLines |> List.filter(fun x->
-            (x.CommandType=CompilationLineCommands.Hasa)
+            ( (x.CommandType=CompilationLineCommands.Hasa) || (x.CommandType=CompilationLineCommands.Contains))
             && (x.TaggedContext.Bucket=Buckets.Structure)
+            && (x.TaggedContext.AbstractionLevel=AbstractionLevels.Abstract)
             && (x.TaggedContext.Genre=Genres.Business))
         domainStatements |> List.iteri(fun i x->
             ws.Cells.[1+i, 0].Value<-x.LineText
             )
+        ws.Cells.[domainStatements.Length+1, 0].Value<-"Domain Nouns"
+        System.IO.File.Delete("domain.csv")
         ef.Save("domain.csv")
 
         let ef = new ExcelFile()
@@ -157,26 +161,81 @@
         System.IO.File.Delete("questions.csv")
         ef.Save("questions.csv")
 
+        ()
+    let createDomainModel (ctx:CompilationContext) =
+        let domainStatements = ctx.CompilationLines |> List.filter(fun x->
+            ( (x.CommandType=CompilationLineCommands.Hasa) || (x.CommandType=CompilationLineCommands.Contains))
+            && (x.TaggedContext.Bucket=Buckets.Structure)
+            && (x.TaggedContext.AbstractionLevel=AbstractionLevels.Abstract)
+            && (x.TaggedContext.Genre=Genres.Business))
+
+        let domainModelEntitiesTupleList = domainStatements |> List.filter(fun x->x.CommandType=CompilationLineCommands.Hasa) |> List.map(fun x->
+            let splitStatement = x.LineText.Split([|"HASA"|], System.StringSplitOptions.None)
+            ({Types.NounClause.text=splitStatement.[0]}, {Types.NounClause.text=splitStatement.[1]})
+            )
+        let domainModelEntities1 = domainModelEntitiesTupleList |> List.map(fun x->(fst x))
+        let domainModelEntities2 = domainModelEntitiesTupleList |> List.map(fun x->(snd x))
+        let domainModelEntities = (List.concat [domainModelEntities1; domainModelEntities2]) |> Seq.distinct |> Seq.toList
+
+        let domainModelEntitiesAttributeList1= domainStatements |> List.filter(fun x->x.CommandType=CompilationLineCommands.Contains) |> List.map(fun x->
+            let splitStatement = x.LineText.Split([|"CONTAINS"|], System.StringSplitOptions.None)
+            (splitStatement.[0], splitStatement.[1])
+            )
+        let domainModelEntitiesAttributeList = domainModelEntitiesAttributeList1 |> Seq.toList |> List.map(fun x->({Types.NounClause.text=fst x},{Types.NounClause.text=snd x}))
+
+        let newEntities = domainModelEntities |> List.map(fun x->
+            let newEntityAttributes = domainModelEntitiesAttributeList |> List.filter(fun y->(fst y)=x) |> List.map(fun y->(snd y))
+            let newEntityDomainConnections = domainModelEntitiesTupleList |> List.filter(fun y->(fst y)=x) |> List.map(fun x->(snd x))
+            {
+                Title = x
+                Attributes=newEntityAttributes
+                Connections=newEntityDomainConnections
+            }
+
+            )
+        {Entities=newEntities; DomainConnections=List.empty}
+    let createDomainModelDiagram (model:StructureModel) =
+        System.IO.File.Delete("out.svg")
         let svgOutputFile = new System.IO.StreamWriter("out.svg")
         svgOutputFile.WriteLine "<svg  xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">" 
         svgOutputFile.WriteLine ""
         svgOutputFile.WriteLine ""
-        svgOutputFile.WriteLine "<rect x=\"10\" y=\"10\" height=\"100\" width=\"100\" style=\"stroke:#ff0000; fill: #0000ff\"/>"
+        model.Entities |> List.iteri(fun i x->
+            let newY = 10 + i *110
+            let newYString = newY.ToString()
+            svgOutputFile.WriteLine ("<rect x=\"10\" y=\"" + newYString + "\" height=\"100\" width=\"100\" style=\"stroke:#ff0000; fill: #dddddd\"/>")
+            
+            let newYtext = 34 + i *110
+            svgOutputFile.WriteLine ("<text x=\"20\" y=\"" + newYtext.ToString() + "\" font-family=\"Verdana\" font-size=\"12\">")
+            svgOutputFile.WriteLine x.Title.text
+            svgOutputFile.WriteLine "</text>"
+
+            let newYDividerLine = 60 + i *110
+            svgOutputFile.WriteLine ("<line x1=\"10\" y1=\"" + newYDividerLine.ToString() + "\" x2=\"110\" y2=\"" + newYDividerLine.ToString() + "\" stroke-width=\"2\" stroke=\"black\"/>")
+            x.Attributes |> List.iteri(fun j z->
+                let newYAttributeText = 84 + i *110 + j * 12
+                svgOutputFile.WriteLine ("<text x=\"20\" y=\"" + newYAttributeText.ToString() + "\" font-family=\"Verdana\" font-size=\"12\">")
+                svgOutputFile.WriteLine z.text
+                svgOutputFile.WriteLine "</text>"
+                )
+            )
         svgOutputFile.WriteLine ""
         svgOutputFile.WriteLine ""
         svgOutputFile.WriteLine "</svg>"
         svgOutputFile.Flush()
         svgOutputFile.Close()
         ()
-
     let doStuff (opts:EasyAMProgramConfig) =
         let programDirectories = getDirectories opts
         let fileList = programDirectories.SourceDirectoryInfo.GetFiles() |> Seq.filter(fun x->
-            ((x.Name.GetRight 3).ToUpper() <> "EXE") && ((x.Name.GetRight 3).ToUpper() <> "DLL") && ((x.Name.GetRight 3).ToUpper() <> "XML") && ((x.Name.GetRight 3).ToUpper() <> "PDB") && ((x.Name.GetRight 6).ToUpper() <> "CONFIG") && ((x.Attributes.HasFlag(System.IO.FileAttributes.Directory)=false)) ) |> Seq.toArray
+            ((x.Name.GetRight 3).ToUpper() <> "EXE") && ((x.Name.GetRight 3).ToUpper() <> "DLL") && ((x.Name.GetRight 3).ToUpper() <> "XML") && ((x.Name.GetRight 3).ToUpper() <> "PDB") && ((x.Name.GetRight 6).ToUpper() <> "CONFIG") && ((x.Name.GetRight 3).ToUpper() <> "CSV") && ((x.Name.GetRight 3).ToUpper() <> "SVG") && ((x.Attributes.HasFlag(System.IO.FileAttributes.Directory)=false)) ) |> Seq.toArray
         let compilationLines = loadInAllIncomingLines fileList
         let lineTypesAdded = sortOutLineTypes compilationLines
         let lineContextAdded = addRunningContext lineTypesAdded
         dumpCSVs lineContextAdded
+
+        let domainModel = createDomainModel lineContextAdded
+        createDomainModelDiagram domainModel
         ()
 
 

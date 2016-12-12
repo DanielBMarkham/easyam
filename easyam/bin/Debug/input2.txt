@@ -3,8 +3,15 @@ Cats? Goit what
 SYSTEM
 Moo cow
 
+DOMAIN weaselfarmers
+
 BUSINESS STRUCTURE ABSTRACT
 Dog HASA leg
+Camel HASA hump
+
+SYSTEM BEHAVIOR REALIZED
+Cat HASA whisker
+Cat CONTAINS ears, nose, feet
 
 BUSINESS
 Go away
