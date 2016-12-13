@@ -1,10 +1,29 @@
-The dog ran over the cat
+Lemonade stand project for Jim Smith started Feb 2nd
 
 BUSINESS STRUCTURE ABSTRACT
-Dog CONTAINS tail
+	drink HASA recipe
+	recipe HASA ingredient
 
+	Q: Are all ingredients fresh?
+	
+	inventory HASA ingredient
+	inventory HASA office supplies
+	Q: How much is the office paperless?
 
+BUSINESS BEHAVIOR ABSTRACT
+	buy lemonade
+	schedule parties
 
-BEHAVIOR STRUCTURE
+	Q: Is there a loyalty program we should be talking about?
 
-Q: How do birds fly?
+Interview went well. Plan on coming back the 5th
+
+SUPPL: People shouldn't wait more than 5 minutes for thier order
+SUPPL: All lemonade will be served fresh
+Q: What does fresh mean?
+
+Follow-up phone call
+
+BUSINESS STRUCTURE ABSTRACT
+	drink CONTAINS lemon
+	drink CONTAINS ice

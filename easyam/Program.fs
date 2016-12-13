@@ -134,34 +134,6 @@
                     CompilationLines=newCompilationLines
             }
             ) defaultCompilationContext
-    let dumpCSVs (ctx:CompilationContext) = 
-        SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
-        let ef = new ExcelFile()
-        let ws = ef.Worksheets.Add("Domain")
-        ws.Cells.[0, 0].Value<-"Domain Statements"
-        let domainStatements = ctx.CompilationLines |> List.filter(fun x->
-            ( (x.CommandType=CompilationLineCommands.Hasa) || (x.CommandType=CompilationLineCommands.Contains))
-            && (x.TaggedContext.Bucket=Buckets.Structure)
-            && (x.TaggedContext.AbstractionLevel=AbstractionLevels.Abstract)
-            && (x.TaggedContext.Genre=Genres.Business))
-        domainStatements |> List.iteri(fun i x->
-            ws.Cells.[1+i, 0].Value<-x.LineText
-            )
-        ws.Cells.[domainStatements.Length+1, 0].Value<-"Domain Nouns"
-        System.IO.File.Delete("domain.csv")
-        ef.Save("domain.csv")
-
-        let ef = new ExcelFile()
-        let ws = ef.Worksheets.Add("Open Questions")
-        ws.Cells.[0, 0].Value<-"Questions"
-        let questions = ctx.CompilationLines |> List.filter(fun x->x.CommandType = CompilationLineCommands.Question)
-        questions |> List.iteri(fun i x->
-            ws.Cells.[1+i, 0].Value<-x.LineText
-            )
-        System.IO.File.Delete("questions.csv")
-        ef.Save("questions.csv")
-
-        ()
     let createDomainModel (ctx:CompilationContext) =
         let domainStatements = ctx.CompilationLines |> List.filter(fun x->
             ( (x.CommandType=CompilationLineCommands.Hasa) || (x.CommandType=CompilationLineCommands.Contains))
@@ -171,7 +143,7 @@
 
         let domainModelEntitiesTupleList = domainStatements |> List.filter(fun x->x.CommandType=CompilationLineCommands.Hasa) |> List.map(fun x->
             let splitStatement = x.LineText.Split([|"HASA"|], System.StringSplitOptions.None)
-            ({Types.NounClause.text=splitStatement.[0]}, {Types.NounClause.text=splitStatement.[1]})
+            ({Types.NounClause.text=splitStatement.[0].Trim()}, {Types.NounClause.text=splitStatement.[1].Trim()})
             )
         let domainModelEntities1 = domainModelEntitiesTupleList |> List.map(fun x->(fst x))
         let domainModelEntities2 = domainModelEntitiesTupleList |> List.map(fun x->(snd x))
@@ -179,7 +151,7 @@
 
         let domainModelEntitiesAttributeList1= domainStatements |> List.filter(fun x->x.CommandType=CompilationLineCommands.Contains) |> List.map(fun x->
             let splitStatement = x.LineText.Split([|"CONTAINS"|], System.StringSplitOptions.None)
-            (splitStatement.[0], splitStatement.[1])
+            (splitStatement.[0].Trim(), splitStatement.[1].Trim())
             )
         let domainModelEntitiesAttributeList = domainModelEntitiesAttributeList1 |> Seq.toList |> List.map(fun x->({Types.NounClause.text=fst x},{Types.NounClause.text=snd x}))
 
@@ -194,37 +166,6 @@
 
             )
         {Entities=newEntities; DomainConnections=List.empty}
-    let createDomainModelDiagram (model:StructureModel) =
-        System.IO.File.Delete("out.svg")
-        let svgOutputFile = new System.IO.StreamWriter("out.svg")
-        svgOutputFile.WriteLine "<svg  xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">" 
-        svgOutputFile.WriteLine ""
-        svgOutputFile.WriteLine ""
-        model.Entities |> List.iteri(fun i x->
-            let newY = 10 + i *110
-            let newYString = newY.ToString()
-            svgOutputFile.WriteLine ("<rect x=\"10\" y=\"" + newYString + "\" height=\"100\" width=\"100\" style=\"stroke:#ff0000; fill: #dddddd\"/>")
-            
-            let newYtext = 34 + i *110
-            svgOutputFile.WriteLine ("<text x=\"20\" y=\"" + newYtext.ToString() + "\" font-family=\"Verdana\" font-size=\"12\">")
-            svgOutputFile.WriteLine x.Title.text
-            svgOutputFile.WriteLine "</text>"
-
-            let newYDividerLine = 60 + i *110
-            svgOutputFile.WriteLine ("<line x1=\"10\" y1=\"" + newYDividerLine.ToString() + "\" x2=\"110\" y2=\"" + newYDividerLine.ToString() + "\" stroke-width=\"2\" stroke=\"black\"/>")
-            x.Attributes |> List.iteri(fun j z->
-                let newYAttributeText = 84 + i *110 + j * 12
-                svgOutputFile.WriteLine ("<text x=\"20\" y=\"" + newYAttributeText.ToString() + "\" font-family=\"Verdana\" font-size=\"12\">")
-                svgOutputFile.WriteLine z.text
-                svgOutputFile.WriteLine "</text>"
-                )
-            )
-        svgOutputFile.WriteLine ""
-        svgOutputFile.WriteLine ""
-        svgOutputFile.WriteLine "</svg>"
-        svgOutputFile.Flush()
-        svgOutputFile.Close()
-        ()
     let doStuff (opts:EasyAMProgramConfig) =
         let programDirectories = getDirectories opts
         let fileList = programDirectories.SourceDirectoryInfo.GetFiles() |> Seq.filter(fun x->
@@ -235,7 +176,7 @@
         dumpCSVs lineContextAdded
 
         let domainModel = createDomainModel lineContextAdded
-        createDomainModelDiagram domainModel
+        createDomainModelDiagram domainModel "domain.svg"
         ()
 
 
