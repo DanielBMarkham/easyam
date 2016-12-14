@@ -239,129 +239,26 @@
             this.destinationDirectory.printVal
             printfn "destinationDirectoryExists: %b" (snd this.destinationDirectory.parameterValue).IsSome
 
-//
-//  Data used during program execution
-//
-    type Genres =
-        | Unkown
-        | Business
-        | System
-    type Buckets =
-        | Unknown
-        | Behavior
-        | Structure
-        | Supplemental
-        | Meta
-    type AbstractionLevels = 
-        | Unknown
-        | Abstract
-        | Realized
-    type TemporalIndicators =
-        | Unknown
-        | AsIs
-        | ToBe
-    type InformationTag =
-        {
-            Genre:Genres
-            Bucket:Buckets
-            AbstractionLevel:AbstractionLevels
-            TemporalIndicator:TemporalIndicators
-        }
-    let defaultInformationTag=
-        {
-            Genre=Genres.Unkown
-            Bucket=Buckets.Unknown
-            AbstractionLevel=AbstractionLevels.Unknown
-            TemporalIndicator=TemporalIndicators.Unknown
-        }
-    type Statement =
-        {
-            Tag:InformationTag
-            StatementText:string
-        }
-    type ProgramOutputDirectories =
-        {
-            SourceDirectoryInfo:System.IO.DirectoryInfo
-            DestinationDirectoryInfo:System.IO.DirectoryInfo
-            BehaviorDirectoryInfo:System.IO.DirectoryInfo
-            StructureDirectoryInfo:System.IO.DirectoryInfo
-            SupplementalDirectoryInfo:System.IO.DirectoryInfo
-            MetaDirectoryInfo:System.IO.DirectoryInfo
-        }
-    type ProgramInputFiles = 
-        {
-            Files:System.IO.FileInfo list
-        }
-    type CompilationLineCommands =
-        | NoCommand
-        | Unknown
-        | Hasa
-        | Contains
-        | Question
-    type CompilationLineType =
-        | Unknown
-        | Scoping
-        | Context
-        | Command
-        | Freetext
-    type CompilationLine =
-        {
-            File:System.IO.FileInfo option
-            LineNumber:int
-            LineType:CompilationLineType
-            CommandType:CompilationLineCommands
-            Scope:string
-            TaggedContext:InformationTag
-            LineText:string
-        }
-    let defaultCompilationLine =
-        {
-            File=None
-            LineNumber=0
-            Scope=""
-            LineType=CompilationLineType.Unknown
-            CommandType=NoCommand
-            TaggedContext=defaultInformationTag
-            LineText=""
-        }
-    type CompilationContext =
-        {
-            CompilationLines:CompilationLine list
-            State:InformationTag
-            Scope:string
-            CurrentFile:string
-        }
-    let defaultCompilationContext =
-        {
-            CompilationLines = []
-            State=defaultInformationTag
-            Scope=""
-            CurrentFile=""
-        }
-    type NounClause =
-        {
-            text:string
-        }
-    type VerbClause =
-        {
-            text:string
-        }
-    type DomainConnection =
-        {
-            SourceEntity:NounClause
-            DestinationEntity:NounClause
-        }
-    type Entity =
-        {
-            Title:NounClause
-            Attributes:NounClause list
-            Connections:NounClause list
-        }
-    type StructureModel =
-        {
-            Entities:Entity list
-            DomainConnections:DomainConnection list
-        }
 
     let directoryExists (dir:ConfigEntry<DirectoryParm>) = (snd (dir.parameterValue)).IsSome
     let fileExists (dir:ConfigEntry<FileParm>) = (snd (dir.parameterValue)).IsSome
+    type SVGSetup =
+        {
+            FontSize:int
+            FontName:string
+            TextMargin:int
+            EntityBorderColor:string
+            EntityBorderWidth:string
+            EntityFillColor:string
+            EntityFillOpacity:string
+        }
+    let defaultSVGSetup =
+        {
+            FontSize=12
+            FontName="Verdana"
+            TextMargin=6
+            EntityBorderColor="#ff0000"
+            EntityBorderWidth="1"
+            EntityFillColor="#dddddd"
+            EntityFillOpacity="80%"
+        }

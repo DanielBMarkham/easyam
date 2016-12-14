@@ -1,5 +1,6 @@
 ﻿module Main//
     open Types
+    open SAModel
     open Utils
     open Persist
     open FParsec
@@ -9,9 +10,6 @@
     let defaulSourceDirectory = createNewConfigEntry "S" "Source Directory (Optional)" [|"/S:<path> -> path to the directory having the source files."|] (System.AppDomain.CurrentDomain.BaseDirectory, Some(System.IO.DirectoryInfo(System.AppDomain.CurrentDomain.BaseDirectory)))
     let defaultDestinationDirectory = createNewConfigEntry "D" "Destination Directory (Optional)" [|"/D:<path> -> path to the directory where compiled files will be deployed."|] (System.AppDomain.CurrentDomain.BaseDirectory, Some(System.IO.DirectoryInfo(System.AppDomain.CurrentDomain.BaseDirectory)))
     
-    let informationTagTokens =[|"STRUCUTRE"; "BEHAVIOR"; "SUPPLEMENTAL"; "META"; "BUSINESS"; "SYSTEM"; "ABSTRACT"; "REALIZED"; "AS-IS"; "TO-BE"|]
-    let scopingTokens = [|"NAME"; "ORG"; "DOMAIN"|]
-    let commandTokens =[|"HASA"; "CONTAINS"; "Q:"|]
 
     let loadConfigFromCommandLine (args:string []):EasyAMProgramConfig =
         let newVerbosity =ConfigEntry<_>.populateValueFromCommandLine(defaultVerbosity, args)
@@ -76,8 +74,9 @@
                                                 | "HASA"->CompilationLineCommands.Hasa
                                                 | "CONTAINS"->CompilationLineCommands.Contains
                                                 | "Q:"->CompilationLineCommands.Question
+                                                | "//"->CompilationLineCommands.Comment
                                                 |_ ->CompilationLineCommands.Unknown
-                    {x with CommandType=newCommandType}
+                    if newCommandType = CompilationLineCommands.Comment then {x with CommandType=newCommandType; LineType=CompilationLineType.Freetext} else {x with CommandType=newCommandType}
                 | false, false, false->
                     {x with LineType=CompilationLineType.Freetext}
             )
@@ -143,7 +142,7 @@
 
         let domainModelEntitiesTupleList = domainStatements |> List.filter(fun x->x.CommandType=CompilationLineCommands.Hasa) |> List.map(fun x->
             let splitStatement = x.LineText.Split([|"HASA"|], System.StringSplitOptions.None)
-            ({Types.NounClause.text=splitStatement.[0].Trim()}, {Types.NounClause.text=splitStatement.[1].Trim()})
+            ({NounClause.text=splitStatement.[0].Trim()}, {NounClause.text=splitStatement.[1].Trim()})
             )
         let domainModelEntities1 = domainModelEntitiesTupleList |> List.map(fun x->(fst x))
         let domainModelEntities2 = domainModelEntitiesTupleList |> List.map(fun x->(snd x))
@@ -153,7 +152,7 @@
             let splitStatement = x.LineText.Split([|"CONTAINS"|], System.StringSplitOptions.None)
             (splitStatement.[0].Trim(), splitStatement.[1].Trim())
             )
-        let domainModelEntitiesAttributeList = domainModelEntitiesAttributeList1 |> Seq.toList |> List.map(fun x->({Types.NounClause.text=fst x},{Types.NounClause.text=snd x}))
+        let domainModelEntitiesAttributeList = domainModelEntitiesAttributeList1 |> Seq.toList |> List.map(fun x->({NounClause.text=fst x},{NounClause.text=snd x}))
 
         let newEntities = domainModelEntities |> List.map(fun x->
             let newEntityAttributes = domainModelEntitiesAttributeList |> List.filter(fun y->(fst y)=x) |> List.map(fun y->(snd y))

@@ -1,5 +1,6 @@
 ﻿module Utils
     open Types
+    open SAModel
     open System
     open System.Text.RegularExpressions
     open System.Net
@@ -122,6 +123,67 @@
             else System.IO.Directory.CreateDirectory(fst dir.parameterValue)
 
 
+    let drawEntityBox (sw:System.IO.StreamWriter) (box:SVGEntityBox) (svgConfig:SVGSetup) =
+        sw.WriteLine ("<rect x=\"" + box.xPos.ToString() + "\" y=\"" + box.yPos.ToString() + "\" height=\"" + box.height.ToString() + "\" width=\"" + box.width.ToString() + "\" style=\"stroke:" + svgConfig.EntityBorderColor + "; fill: " + svgConfig.EntityFillColor  + "; fill-opacity: " + svgConfig.EntityFillOpacity  + "\"/>")
+        sw.WriteLine ("<text x=\"" + (box.xPos+svgConfig.TextMargin).ToString() + "\" y=\"" + (box.yPos+svgConfig.FontSize+svgConfig.TextMargin).ToString() + "\" font-family=\"Verdana\" font-size=\"" + svgConfig.FontSize.ToString() + "\">")
+        sw.WriteLine box.Entity.Title.text
+        sw.WriteLine "</text>"
+        let dividerYPos = box.yPos + svgConfig.FontSize * 2
+        sw.WriteLine ("<line x1=\"" + box.xPos.ToString() + "\" y1=\"" + dividerYPos.ToString() + "\" x2=\"" + (box.xPos + box.width).ToString() + "\" y2=\"" + dividerYPos.ToString() + "\" stroke-width=\"" + svgConfig.EntityBorderWidth + "\" stroke=\"" + svgConfig.EntityBorderColor + "\"/>")
+        box.Entity.Attributes |> List.iteri(fun i x->
+            let attributeTextYPos = dividerYPos + svgConfig.FontSize + (i * svgConfig.FontSize)
+            sw.WriteLine ("<text x=\"" + (box.xPos+svgConfig.TextMargin).ToString() + "\" y=\"" + (attributeTextYPos+svgConfig.TextMargin).ToString() + "\" font-family=\"Verdana\" font-size=\"" + svgConfig.FontSize.ToString() + "\">")
+            sw.WriteLine x.text
+            sw.WriteLine "</text>"
+            )
+        ()
+    let drawEntityBoxes (sw:System.IO.StreamWriter) (xpos:int) (ypos:int) (width:int) (height:int) (entity:Entity) =
+        let newBox =
+            {
+                xPos=xpos
+                yPos=ypos
+                width=width
+                height=height
+                Entity=entity
+            }
+        drawEntityBox sw newBox defaultSVGSetup
+    let layoutEntityModel (model:StructureModel) =
+        // Need some way to display a Directed Acyclic Graph (DAG)
+        // So that users can make sense of it. Doesn't have to be pretty
+        // HACKETY HACK HACK
+        model.Entities |> List.map(fun x->
+            ()
+            )
+        ()
+    let createDomainModelDiagram (model:StructureModel) (fileName:string) =
+        // entity box metrics
+        let gridSize =  (int)(Math.Sqrt((float)model.Entities.Length) + 0.5)
+        let maxEntityNameLength = (model.Entities |> List.maxBy(fun x->x.Title.text.Length)).Title.text.Length
+        let maxNumberOfEntityAttributes = (model.Entities |> List.maxBy(fun x->x.Attributes.Length)).Attributes.Length
+
+        let entityBoxHeight = (maxNumberOfEntityAttributes + 4) * defaultSVGSetup.FontSize
+        let entityBoxWidth = (maxEntityNameLength + 4) * defaultSVGSetup.FontSize
+        let entityBoxHorizSpacer = 10
+        let entityBoxVertSpacer = 10
+
+        System.IO.File.Delete(fileName)
+        let svgOutputFile = new System.IO.StreamWriter(fileName)
+        svgOutputFile.WriteLine "<svg  xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">" 
+        svgOutputFile.WriteLine ""
+        svgOutputFile.WriteLine ""
+        model.Entities |> List.iteri(fun i x->
+            let ycol = i%gridSize
+            let xcol = (int)i/gridSize
+            let colYPos = entityBoxVertSpacer + (ycol * entityBoxHeight + entityBoxVertSpacer) + (defaultSVGSetup.FontSize*ycol)
+            let colXPos = entityBoxHorizSpacer + (xcol * entityBoxWidth + entityBoxHorizSpacer) + (defaultSVGSetup.FontSize*xcol)
+            drawEntityBoxes svgOutputFile colXPos colYPos entityBoxWidth entityBoxHeight x
+            )
+        svgOutputFile.WriteLine ""
+        svgOutputFile.WriteLine ""
+        svgOutputFile.WriteLine "</svg>"
+        svgOutputFile.Flush()
+        svgOutputFile.Close()
+        ()
     let dumpCSVs (ctx:CompilationContext) = 
         SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
         let ef = new ExcelFile()
@@ -149,67 +211,4 @@
         System.IO.File.Delete("questions.csv")
         ef.Save("questions.csv")
 
-        ()
-    let drawEntityBox (sw:System.IO.StreamWriter) (xpos:int) (ypos:int) (width:int) (height:int) (fontSize:int) (entity:Entity) =
-        let textMargin = (int)((float)fontSize/2.0)
-        sw.WriteLine ("<rect x=\"" + xpos.ToString() + "\" y=\"" + ypos.ToString() + "\" height=\"" + height.ToString() + "\" width=\"" + width.ToString() + "\" style=\"stroke:#ff0000; fill: #dddddd\"/>")
-        sw.WriteLine ("<text x=\"" + (xpos+textMargin).ToString() + "\" y=\"" + (ypos+fontSize+textMargin).ToString() + "\" font-family=\"Verdana\" font-size=\"" + fontSize.ToString() + "\">")
-        sw.WriteLine entity.Title.text
-        sw.WriteLine "</text>"
-        let dividerYPos = ypos + fontSize * 2
-        sw.WriteLine ("<line x1=\"" + xpos.ToString() + "\" y1=\"" + dividerYPos.ToString() + "\" x2=\"" + (xpos + width).ToString() + "\" y2=\"" + dividerYPos.ToString() + "\" stroke-width=\"2\" stroke=\"black\"/>")
-        entity.Attributes |> List.iteri(fun i x->
-            let attributeTextYPos = dividerYPos + fontSize + (i * fontSize)
-            sw.WriteLine ("<text x=\"" + (xpos+textMargin).ToString() + "\" y=\"" + (attributeTextYPos+textMargin).ToString() + "\" font-family=\"Verdana\" font-size=\"" + fontSize.ToString() + "\">")
-            sw.WriteLine x.text
-            sw.WriteLine "</text>"
-            )
-        ()
-    let createDomainModelDiagram (model:StructureModel) (fileName:string) =
-        // entity box metrics
-        let gridSize =  (int)(Math.Sqrt((float)model.Entities.Length) + 0.5)
-        let maxEntityNameLength = (model.Entities |> List.maxBy(fun x->x.Title.text.Length)).Title.text.Length
-        let maxNumberOfEntityAttributes = (model.Entities |> List.maxBy(fun x->x.Attributes.Length)).Attributes.Length
-        let entityFontSize=12
-        let entityBoxHeight = (maxNumberOfEntityAttributes + 4) *entityFontSize
-        let entityBoxWidth = (maxEntityNameLength + 4) * entityFontSize
-        let entityBoxHorizSpacer = 10
-        let entityBoxVertSpacer = 10
-
-        System.IO.File.Delete(fileName)
-        let svgOutputFile = new System.IO.StreamWriter(fileName)
-        svgOutputFile.WriteLine "<svg  xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">" 
-        svgOutputFile.WriteLine ""
-        svgOutputFile.WriteLine ""
-        model.Entities |> List.iteri(fun i x->
-            let ycol = i%gridSize
-            let xcol = (int)i/gridSize
-            let colYPos = entityBoxVertSpacer + (ycol * entityBoxHeight + entityBoxVertSpacer) + (entityFontSize*ycol)
-            let colXPos = entityBoxHorizSpacer + (xcol * entityBoxWidth + entityBoxHorizSpacer) + (entityFontSize*xcol)
-            drawEntityBox svgOutputFile colXPos colYPos entityBoxWidth entityBoxHeight entityFontSize x
-            )
-//        model.Entities |> List.iteri(fun i x->
-//            let newY = 10 + i *110
-//            let newYString = newY.ToString()
-//            svgOutputFile.WriteLine ("<rect x=\"10\" y=\"" + newYString + "\" height=\"100\" width=\"100\" style=\"stroke:#ff0000; fill: #dddddd\"/>")
-//            
-//            let newYtext = 34 + i *110
-//            svgOutputFile.WriteLine ("<text x=\"20\" y=\"" + newYtext.ToString() + "\" font-family=\"Verdana\" font-size=\"12\">")
-//            svgOutputFile.WriteLine x.Title.text
-//            svgOutputFile.WriteLine "</text>"
-//
-//            let newYDividerLine = 60 + i *110
-//            svgOutputFile.WriteLine ("<line x1=\"10\" y1=\"" + newYDividerLine.ToString() + "\" x2=\"110\" y2=\"" + newYDividerLine.ToString() + "\" stroke-width=\"2\" stroke=\"black\"/>")
-//            x.Attributes |> List.iteri(fun j z->
-//                let newYAttributeText = 84 + i *110 + j * 12
-//                svgOutputFile.WriteLine ("<text x=\"20\" y=\"" + newYAttributeText.ToString() + "\" font-family=\"Verdana\" font-size=\"12\">")
-//                svgOutputFile.WriteLine z.text
-//                svgOutputFile.WriteLine "</text>"
-//                )
-//            )
-        svgOutputFile.WriteLine ""
-        svgOutputFile.WriteLine ""
-        svgOutputFile.WriteLine "</svg>"
-        svgOutputFile.Flush()
-        svgOutputFile.Close()
         ()

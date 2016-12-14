@@ -11,6 +11,7 @@ BUSINESS STRUCTURE ABSTRACT
 	Q: How much is the office paperless?
 
 BUSINESS BEHAVIOR ABSTRACT
+// Anything in a Biz Behav Abstract section is a User Story Title (except comments and questions)
 	buy lemonade
 	schedule parties
 
@@ -27,3 +28,15 @@ Follow-up phone call
 BUSINESS STRUCTURE ABSTRACT
 	drink CONTAINS lemon
 	drink CONTAINS ice
+
+
+BUSINESS BEHAVIOR ABSTRACT
+// Here's a fully-formed User Story Title
+WHENA Truck Arrives
+ASA Receiving Clerk
+INEEDTO Record Bill Of Lading
+SOTHAT We can update the inventory
+
+// Here's a partially-formed User Story Title
+ASA Truck Driver
+INEEDTO Unload Truck

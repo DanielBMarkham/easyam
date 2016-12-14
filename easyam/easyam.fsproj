@@ -62,6 +62,9 @@
     <Compile Include="..\common\Types.fs">
       <Link>Types.fs</Link>
     </Compile>
+    <Compile Include="..\common\SAModel.fs">
+      <Link>SAModel.fs</Link>
+    </Compile>
     <Compile Include="..\common\Utils.fs">
       <Link>Utils.fs</Link>
     </Compile>

@@ -1,0 +1,10 @@
+E:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.exe.config
+E:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.XML
+E:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.exe
+E:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.pdb
+E:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\FSharp.Core.dll
+E:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\FSharp.Core.xml
+E:\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.exe
+E:\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.pdb
+E:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\GemBox.Spreadsheet.dll
+E:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\GemBox.Spreadsheet.xml
