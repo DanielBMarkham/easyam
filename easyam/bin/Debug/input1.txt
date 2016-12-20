@@ -17,10 +17,12 @@ BUSINESS BEHAVIOR ABSTRACT
 
 	Q: Is there a loyalty program we should be talking about?
 
-Interview went well. Plan on coming back the 5th
+//Interview went well. Plan on coming back the 5th
 
-SUPPL: People shouldn't wait more than 5 minutes for thier order
-SUPPL: All lemonade will be served fresh
+SUPPLEMENTAL
+	People shouldn't wait more than 5 minutes for thier order
+	All lemonade will be served fresh
+
 Q: What does fresh mean?
 
 Follow-up phone call
@@ -32,7 +34,7 @@ BUSINESS STRUCTURE ABSTRACT
 
 BUSINESS BEHAVIOR ABSTRACT
 // Here's a fully-formed User Story Title
-WHENA Truck Arrives
+WHEN Truck Arrives
 ASA Receiving Clerk
 INEEDTO Record Bill Of Lading
 SOTHAT We can update the inventory

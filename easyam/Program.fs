@@ -50,11 +50,11 @@
                     TaggedContext=
                         {
                             Bucket=Buckets.Unknown
-                            Genre=Genres.Unkown
+                            Genre=Genres.Unknown
                             TemporalIndicator=TemporalIndicators.Unknown
                             AbstractionLevel=AbstractionLevels.Unknown
                         }
-                    LineText=y  
+                    LineText=y.Trim()  
                 }
             )
         )
@@ -62,13 +62,24 @@
 
     let sortOutLineTypes (lines:CompilationLine list) =
         let removedEmptyLines = lines |> List.filter(fun x->x.LineText.Length>0)
+        let bucketTokenStringList = bucketTokens |> Array.map(fun a->
+            let x,y,z=a
+            x)
         let determinedLineType = removedEmptyLines |> List.map(fun x->
-            match (x.LineText.ContainsAny informationTagTokens), (x.LineText.ContainsAny scopingTokens), (x.LineText.ContainsAny commandTokens) with
-                | true, _, _ ->
+            match (x.LineText.ContainsAny bucketTokenStringList), (x.LineText.ContainsAny informationTagTokens), (x.LineText.ContainsAny scopingTokenVals), (x.LineText.ContainsAny commandTokens) with
+                | true, _,_,_->
+                    let newBucketStruct = bucketTokens |> Array.find(fun y->
+                        let a,b,c=y
+                        x.LineText.ContainsAny [|a|]
+                        )
+                    let a,b,c = newBucketStruct
+                    let newBucket = b
+                    {x with LineType=CompilationLineType.Command; TaggedContext={x.TaggedContext with Bucket=b}}
+                | false, true, _, _ ->
                     {x with LineType=CompilationLineType.Context}
-                | false, true, _ ->
+                | false, false, true, _ ->
                     {x with LineType=CompilationLineType.Scoping}
-                | false, false, true->
+                | false, false, false, true ->
                     let foundToken = commandTokens |> Array.find(fun y->x.LineText.Contains(y))
                     let newCommandType = match foundToken with
                                                 | "HASA"->CompilationLineCommands.Hasa
@@ -76,106 +87,156 @@
                                                 | "Q:"->CompilationLineCommands.Question
                                                 | "//"->CompilationLineCommands.Comment
                                                 |_ ->CompilationLineCommands.Unknown
-                    if newCommandType = CompilationLineCommands.Comment then {x with CommandType=newCommandType; LineType=CompilationLineType.Freetext} else {x with CommandType=newCommandType}
-                | false, false, false->
+                    if newCommandType = CompilationLineCommands.Comment then {x with CommandType=newCommandType; LineType=CompilationLineType.Command} else {x with CommandType=newCommandType}
+                | false, false, false, false->
                     {x with LineType=CompilationLineType.Freetext}
             )
         determinedLineType
 
     let addRunningContext (lines:CompilationLine list):CompilationContext =        
         let k=9
+        let bucketTokenStringList = bucketTokens |> Array.map(fun a->
+            let x,y,z=a
+            x)
+        ()
         lines |> List.fold(fun (acc:CompilationContext) x->
             // when the file changes, reset the context
             let newacc = 
                 if x.File.IsSome && x.File.Value.FullName <> acc.CurrentFile
                     then 
-                        {acc with CurrentFile=x.File.Value.FullName; State = defaultInformationTag}
+                        {acc with CurrentFile=x.File.Value.FullName; State = defaultInformationTag; Scope=""}
                     else acc
+            let bucketTokenFound = bucketTokenStringList |> Array.tryFind(fun k->x.LineText.Contains k)
             let newCompilationContext = 
-                match x.LineType with
-                    | CompilationLineType.Scoping->
-                            let foundToken = scopingTokens |> Array.find(fun y->x.LineText.Contains(y))
-                            let positionWhereAllCapsKeywordStarts = x.LineText.IndexOf(foundToken)
-                            let newScope = x.LineText.Substring(positionWhereAllCapsKeywordStarts + foundToken.Length).Trim()
-                            {newacc with Scope= newScope}
-                    | CompilationLineType.Context->
-                            let lineWords = x.LineText.Split([|" "|],System.StringSplitOptions.None)
-                            let newContext = lineWords |> Array.fold(fun (acc:CompilationContext) x->
-                                                                            match x with 
-                                                                                        | "BEHAVIOR"->{acc with State={acc.State with Bucket=Buckets.Behavior}}
-                                                                                        | "STRUCTURE"->{acc with State={acc.State with Bucket=Buckets.Structure}}
-                                                                                        | "SUPPLEMENTAL"->{acc with State={acc.State with Bucket=Buckets.Supplemental}}
-                                                                                        | "META"->{acc with State={acc.State with Bucket=Buckets.Meta}}
-                                                                                        | "BUSINESS"->{acc with State={acc.State with Genre=Genres.Business}}
-                                                                                        | "SYSTEM"->{acc with State={acc.State with Genre=Genres.System}}
-                                                                                        | "ABSTRACT"->{acc with State={acc.State with AbstractionLevel=AbstractionLevels.Abstract}}
-                                                                                        | "REALIZED"->{acc with State={acc.State with AbstractionLevel=AbstractionLevels.Realized}}
-                                                                                        | "AS-IS"->{acc with State={acc.State with TemporalIndicator=TemporalIndicators.AsIs}}
-                                                                                        | "TO-BE"->{acc with State={acc.State with TemporalIndicator=TemporalIndicators.ToBe}}
-                                                                                        |_ ->acc
+                if bucketTokenFound.IsSome
+                    then
+                        let newBucketTokenText, newBucket, c = bucketTokens |> Array.find(fun k->
+                            let d,e,f = k
+                            x.LineText.Contains d)
+                        {newacc with State={acc.State with Bucket=newBucket}}
+                    else
+                        match x.LineType with
+                            | CompilationLineType.Scoping->
+                                    let foundTokenText = scopingTokenVals |> Array.find(fun y->x.LineText.Contains(y))
+                                    let positionWhereAllCapsKeywordStarts = x.LineText.IndexOf(foundTokenText)
+                                    let newScope = x.LineText.Substring(positionWhereAllCapsKeywordStarts + foundTokenText.Length).Trim()
+                                    let foundToken = scopingTokens |> Array.find(fun y->(fst y)=foundTokenText)
+                                    let newBucket = 
+                                        if (snd foundToken).IsSome
+                                            then
+                                                (snd foundToken).Value
+                                            else
+                                                newacc.State.Bucket
+                                    {newacc with Scope= newScope; State={acc.State with Bucket=newBucket}}
+                            | CompilationLineType.Context->
+                                    let lineWords = x.LineText.Split([|" "|],System.StringSplitOptions.None)
+                                    let newContext = lineWords |> Array.fold(fun (acc:CompilationContext) x->
+                                                                                    match x.Trim() with 
+                                                                                                | "BEHAVIOR"->{acc with State={acc.State with Bucket=Buckets.Behavior}}
+                                                                                                | "STRUCTURE"->{acc with State={acc.State with Bucket=Buckets.Structure}}
+                                                                                                | "SUPPLEMENTAL"->{acc with State={acc.State with Bucket=Buckets.Supplemental}}
+                                                                                                | "META"->{acc with State={acc.State with Bucket=Buckets.Meta}}
+                                                                                                | "BUSINESS"->{acc with State={acc.State with Genre=Genres.Business}}
+                                                                                                | "SYSTEM"->{acc with State={acc.State with Genre=Genres.System}}
+                                                                                                | "ABSTRACT"->{acc with State={acc.State with AbstractionLevel=AbstractionLevels.Abstract}}
+                                                                                                | "REALIZED"->{acc with State={acc.State with AbstractionLevel=AbstractionLevels.Realized}}
+                                                                                                | "AS-IS"->{acc with State={acc.State with TemporalIndicator=TemporalIndicators.AsIs}}
+                                                                                                | "TO-BE"->{acc with State={acc.State with TemporalIndicator=TemporalIndicators.ToBe}}
+                                                                                                |_ ->acc
 
-                                                                            ) newacc
-                            newContext
-                    | CompilationLineType.Command->
-                        newacc
-                    | CompilationLineType.Freetext->
-                        newacc
-                    |_->newacc
-
+                                                                                    ) newacc
+                                    newContext
+                            | CompilationLineType.Command->
+                                newacc
+                            | CompilationLineType.Freetext->
+                                newacc
+                            |_->newacc
+            // if it's freetext with context, it's a label
             let newListItem =
-                 { x with
-                    Scope=newCompilationContext.Scope
-                    TaggedContext=newCompilationContext.State
-                 }
+                if ( (x.LineType = CompilationLineType.Freetext) && (newCompilationContext.State.Bucket<>Buckets.Unknown) )
+                    then
+                         { x with
+                            CommandType=CompilationLineCommands.Label
+                            Scope=newCompilationContext.Scope
+                            TaggedContext=newCompilationContext.State
+                            LineType=CompilationLineType.Label
+                         }
+                    else
+                         { x with
+                            Scope=newCompilationContext.Scope
+                            TaggedContext=newCompilationContext.State
+                         }
             let newCompilationLines = List.append newacc.CompilationLines [newListItem]
             {
                 newCompilationContext with
                     CompilationLines=newCompilationLines
             }
             ) defaultCompilationContext
-    let createDomainModel (ctx:CompilationContext) =
-        let domainStatements = ctx.CompilationLines |> List.filter(fun x->
-            ( (x.CommandType=CompilationLineCommands.Hasa) || (x.CommandType=CompilationLineCommands.Contains))
-            && (x.TaggedContext.Bucket=Buckets.Structure)
-            && (x.TaggedContext.AbstractionLevel=AbstractionLevels.Abstract)
-            && (x.TaggedContext.Genre=Genres.Business))
+    let createDomainModel (ctx:CompilationContext):StructuredAnalysisModel =
+//        let domainStatements = ctx.CompilationLines |> List.filter(fun x->
+//            ( (x.CommandType=CompilationLineCommands.Hasa) || (x.CommandType=CompilationLineCommands.Contains))
+//            && (x.TaggedContext.Bucket=Buckets.Structure)
+//            && (x.TaggedContext.AbstractionLevel=AbstractionLevels.Abstract)
+//            && (x.TaggedContext.Genre=Genres.Business))
+//
+//        let domainModelEntitiesTupleList = domainStatements |> List.filter(fun x->x.CommandType=CompilationLineCommands.Hasa) |> List.map(fun x->
+//            let splitStatement = x.LineText.Split([|"HASA"|], System.StringSplitOptions.None)
+//            ({NounClause.text=splitStatement.[0].Trim()}, {NounClause.text=splitStatement.[1].Trim()})
+//            )
+//        let domainModelEntities1 = domainModelEntitiesTupleList |> List.map(fun x->(fst x))
+//        let domainModelEntities2 = domainModelEntitiesTupleList |> List.map(fun x->(snd x))
+//        let domainModelEntities = (List.concat [domainModelEntities1; domainModelEntities2]) |> Seq.distinct |> Seq.toList
 
-        let domainModelEntitiesTupleList = domainStatements |> List.filter(fun x->x.CommandType=CompilationLineCommands.Hasa) |> List.map(fun x->
-            let splitStatement = x.LineText.Split([|"HASA"|], System.StringSplitOptions.None)
-            ({NounClause.text=splitStatement.[0].Trim()}, {NounClause.text=splitStatement.[1].Trim()})
-            )
-        let domainModelEntities1 = domainModelEntitiesTupleList |> List.map(fun x->(fst x))
-        let domainModelEntities2 = domainModelEntitiesTupleList |> List.map(fun x->(snd x))
-        let domainModelEntities = (List.concat [domainModelEntities1; domainModelEntities2]) |> Seq.distinct |> Seq.toList
+//        let domainModelEntitiesAttributeList1= domainStatements |> List.filter(fun x->x.CommandType=CompilationLineCommands.Contains) |> List.map(fun x->
+//            let splitStatement = x.LineText.Split([|"CONTAINS"|], System.StringSplitOptions.None)
+//            (splitStatement.[0].Trim(), splitStatement.[1].Trim())
+//            )
+//        let domainModelEntitiesAttributeList = domainModelEntitiesAttributeList1 |> Seq.toList |> List.map(fun x->({NounClause.text=fst x},{NounClause.text=snd x}))
+//
+//        let newEntities = domainModelEntities |> List.map(fun x->
+//            let newEntityAttributes = domainModelEntitiesAttributeList |> List.filter(fun y->(fst y)=x) |> List.map(fun y->(snd y))
+//            let newEntityDomainConnections = domainModelEntitiesTupleList |> List.filter(fun y->(fst y)=x) |> List.map(fun x->(snd x))
+//            {
+//                Title = x
+//                Attributes=newEntityAttributes
+//                Connections=newEntityDomainConnections
+//            }
+//
+//            )
+        ctx.CompilationLines |> List.fold(fun acc x->
+            match x.TaggedContext.Bucket with
+                | Buckets.Unknown->
+                    let newLines = List.append acc.Unknown [x]
+                    {acc with Unknown=newLines}
+                | Buckets.Behavior->
+                    let newLines = List.append acc.BehaviorModel [x]
+                    {acc with BehaviorModel=newLines}
+                | Buckets.Structure->
+                    let newLines = List.append acc.StructureModel [x]
+                    {acc with StructureModel=newLines}
+                | Buckets.Supplemental->
+                    let newLines = List.append acc.SupplementalModel [x]
+                    {acc with SupplementalModel=newLines}
+                | Buckets.Meta->
+                    let newLines = List.append acc.MetaModel [x]
+                    {acc with MetaModel=newLines}
+            ) defaultStructuredAnalysisModel
+        //{Entities=newEntities; DomainConnections=List.empty}
 
-        let domainModelEntitiesAttributeList1= domainStatements |> List.filter(fun x->x.CommandType=CompilationLineCommands.Contains) |> List.map(fun x->
-            let splitStatement = x.LineText.Split([|"CONTAINS"|], System.StringSplitOptions.None)
-            (splitStatement.[0].Trim(), splitStatement.[1].Trim())
-            )
-        let domainModelEntitiesAttributeList = domainModelEntitiesAttributeList1 |> Seq.toList |> List.map(fun x->({NounClause.text=fst x},{NounClause.text=snd x}))
-
-        let newEntities = domainModelEntities |> List.map(fun x->
-            let newEntityAttributes = domainModelEntitiesAttributeList |> List.filter(fun y->(fst y)=x) |> List.map(fun y->(snd y))
-            let newEntityDomainConnections = domainModelEntitiesTupleList |> List.filter(fun y->(fst y)=x) |> List.map(fun x->(snd x))
-            {
-                Title = x
-                Attributes=newEntityAttributes
-                Connections=newEntityDomainConnections
-            }
-
-            )
-        {Entities=newEntities; DomainConnections=List.empty}
     let doStuff (opts:EasyAMProgramConfig) =
         let programDirectories = getDirectories opts
         let fileList = programDirectories.SourceDirectoryInfo.GetFiles() |> Seq.filter(fun x->
             ((x.Name.GetRight 3).ToUpper() <> "EXE") && ((x.Name.GetRight 3).ToUpper() <> "DLL") && ((x.Name.GetRight 3).ToUpper() <> "XML") && ((x.Name.GetRight 3).ToUpper() <> "PDB") && ((x.Name.GetRight 6).ToUpper() <> "CONFIG") && ((x.Name.GetRight 3).ToUpper() <> "CSV") && ((x.Name.GetRight 3).ToUpper() <> "SVG") && ((x.Attributes.HasFlag(System.IO.FileAttributes.Directory)=false)) ) |> Seq.toArray
         let compilationLines = loadInAllIncomingLines fileList
+        // Here's the heart of the code. Update each line separately. Then update each line using a running context
         let lineTypesAdded = sortOutLineTypes compilationLines
         let lineContextAdded = addRunningContext lineTypesAdded
-        dumpCSVs lineContextAdded
 
+        dumpInputFiles lineContextAdded programDirectories
         let domainModel = createDomainModel lineContextAdded
-        createDomainModelDiagram domainModel "domain.svg"
+        dumpModelBuckets domainModel programDirectories
+
+//        createDomainModelDiagram domainModel "domain.svg"
         ()
 
 

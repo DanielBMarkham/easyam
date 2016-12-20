@@ -1,0 +1,17 @@
+﻿STRUCTURE
+
+Labels
+
+Commands
+drink HASA recipe
+recipe HASA ingredient
+inventory HASA ingredient
+inventory HASA office supplies
+drink CONTAINS lemon
+drink CONTAINS ice
+
+Questions
+Q: Are all ingredients fresh?
+Q: How much is the office paperless?
+
+Notes

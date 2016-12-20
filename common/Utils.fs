@@ -133,7 +133,8 @@
         box.Entity.Attributes |> List.iteri(fun i x->
             let attributeTextYPos = dividerYPos + svgConfig.FontSize + (i * svgConfig.FontSize)
             sw.WriteLine ("<text x=\"" + (box.xPos+svgConfig.TextMargin).ToString() + "\" y=\"" + (attributeTextYPos+svgConfig.TextMargin).ToString() + "\" font-family=\"Verdana\" font-size=\"" + svgConfig.FontSize.ToString() + "\">")
-            sw.WriteLine x.text
+            let attText:string = x.Title.text
+            sw.WriteLine (attText)
             sw.WriteLine "</text>"
             )
         ()
@@ -147,59 +148,75 @@
                 Entity=entity
             }
         drawEntityBox sw newBox defaultSVGSetup
-    let layoutEntityModel (model:StructureModel) =
-        // Need some way to display a Directed Acyclic Graph (DAG)
-        // So that users can make sense of it. Doesn't have to be pretty
-        // HACKETY HACK HACK
-        model.Entities |> List.map(fun x->
-            ()
+
+    let csvDumpModelBucketRaw (bucket:Buckets) (compilationList:CompilationLine list) =
+        let ef = new ExcelFile()
+        let ws = ef.Worksheets.Add(bucket.ToString())
+        ws.Cells.[0, 0].Value<-bucket.ToString().ToUpper()
+
+        let labelTitleRow=2
+        ws.Cells.[labelTitleRow, 0].Value<-"Labels"
+        let labelList = compilationList |> List.filter(fun x->x.LineType=CompilationLineType.Label)
+        labelList |> List.iteri(fun i x->
+            ws.Cells.[labelTitleRow+i+1, 0].Value<-x.LineText
+            )        
+        let labelListCount = labelList.Length + 1
+
+        let commandTitleRow=labelTitleRow+labelListCount+1
+        ws.Cells.[commandTitleRow, 0].Value<-"Commands"
+        let commandList = compilationList |> List.filter(fun x->((x.LineType = CompilationLineType.Command)) && (x.CommandType<>CompilationLineCommands.Comment))
+        commandList |> List.iteri(fun i x->
+            ws.Cells.[commandTitleRow+i+1, 0].Value<-x.LineText
             )
-        ()
-    let createDomainModelDiagram (model:StructureModel) (fileName:string) =
-        // entity box metrics
-        let gridSize =  (int)(Math.Sqrt((float)model.Entities.Length) + 0.5)
-        let maxEntityNameLength = (model.Entities |> List.maxBy(fun x->x.Title.text.Length)).Title.text.Length
-        let maxNumberOfEntityAttributes = (model.Entities |> List.maxBy(fun x->x.Attributes.Length)).Attributes.Length
+        let commandListCount = commandList.Length+1
 
-        let entityBoxHeight = (maxNumberOfEntityAttributes + 4) * defaultSVGSetup.FontSize
-        let entityBoxWidth = (maxEntityNameLength + 4) * defaultSVGSetup.FontSize
-        let entityBoxHorizSpacer = 10
-        let entityBoxVertSpacer = 10
 
+        let questionTitleRow=commandTitleRow+commandListCount+1
+        ws.Cells.[questionTitleRow, 0].Value<-"Questions"
+        let questionList = compilationList |> List.filter(fun x->((x.LineType=CompilationLineType.Unknown)) && (x.CommandType=CompilationLineCommands.Question))
+        questionList |> List.iteri(fun i x->
+            ws.Cells.[questionTitleRow+i+1, 0].Value<-x.LineText
+            )
+        let questionListCount = questionList.Length+1
+
+
+        let notesTitleRow=questionTitleRow+questionListCount+1
+        ws.Cells.[notesTitleRow, 0].Value<-"Notes"
+        let notesList = compilationList |> List.filter(fun x->((x.LineType = CompilationLineType.Command)) && (x.CommandType=CompilationLineCommands.Comment))
+        notesList |> List.iteri(fun i x->
+            ws.Cells.[notesTitleRow+i+1, 0].Value<-x.LineText
+            )
+        let notesListCount = notesList.Length+1
+
+        let fileName = bucket.ToString() + "-Raw.csv"
         System.IO.File.Delete(fileName)
-        let svgOutputFile = new System.IO.StreamWriter(fileName)
-        svgOutputFile.WriteLine "<svg  xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">" 
-        svgOutputFile.WriteLine ""
-        svgOutputFile.WriteLine ""
-        model.Entities |> List.iteri(fun i x->
-            let ycol = i%gridSize
-            let xcol = (int)i/gridSize
-            let colYPos = entityBoxVertSpacer + (ycol * entityBoxHeight + entityBoxVertSpacer) + (defaultSVGSetup.FontSize*ycol)
-            let colXPos = entityBoxHorizSpacer + (xcol * entityBoxWidth + entityBoxHorizSpacer) + (defaultSVGSetup.FontSize*xcol)
-            drawEntityBoxes svgOutputFile colXPos colYPos entityBoxWidth entityBoxHeight x
-            )
-        svgOutputFile.WriteLine ""
-        svgOutputFile.WriteLine ""
-        svgOutputFile.WriteLine "</svg>"
-        svgOutputFile.Flush()
-        svgOutputFile.Close()
-        ()
-    let dumpCSVs (ctx:CompilationContext) = 
+        ef.Save(fileName)
+
+    ()
+    let dumpInputFiles (ctx:CompilationContext) programDirectories = 
         SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
         let ef = new ExcelFile()
-        let ws = ef.Worksheets.Add("Domain")
-        ws.Cells.[0, 0].Value<-"Domain Statements"
-        let domainStatements = ctx.CompilationLines |> List.filter(fun x->
-            ( (x.CommandType=CompilationLineCommands.Hasa) || (x.CommandType=CompilationLineCommands.Contains))
-            && (x.TaggedContext.Bucket=Buckets.Structure)
-            && (x.TaggedContext.AbstractionLevel=AbstractionLevels.Abstract)
-            && (x.TaggedContext.Genre=Genres.Business))
-        domainStatements |> List.iteri(fun i x->
-            ws.Cells.[1+i, 0].Value<-x.LineText
+        let ws = ef.Worksheets.Add("InputFiles")
+        ws.Cells.[0, 0].Value<-"InputFileLineList"
+        ws.Cells.[1, 0].Value<-"Line Number"
+        ws.Cells.[1, 1].Value<-"File Name"
+        ws.Cells.[1, 2].Value<-"Line Type"
+        ws.Cells.[1, 3].Value<-"Command Type"
+        ws.Cells.[1, 4].Value<-"Scope"
+        ws.Cells.[1, 5].Value<-"Tagged Context (Raw)"
+        ws.Cells.[1, 6].Value<-"Line Text"
+        ctx.CompilationLines |> List.iteri(fun i x->
+            ws.Cells.[i+2, 0].Value<-i.ToString()
+            let filenamecol = if x.File.IsSome then x.File.Value.FullName else ""
+            ws.Cells.[i+2, 1].Value<-filenamecol
+            ws.Cells.[i+2, 2].Value<-x.LineType.ToString()
+            ws.Cells.[i+2, 3].Value<-x.CommandType.ToString()
+            ws.Cells.[i+2, 4].Value<-x.Scope
+            ws.Cells.[i+2, 5].Value<-x.TaggedContext.ToString()
+            ws.Cells.[i+2, 6].Value<-x.LineText
             )
-        ws.Cells.[domainStatements.Length+1, 0].Value<-"Domain Nouns"
-        System.IO.File.Delete("domain.csv")
-        ef.Save("domain.csv")
+        System.IO.File.Delete("InputFiles.csv")
+        ef.Save("InputFiles.csv")
 
         let ef = new ExcelFile()
         let ws = ef.Worksheets.Add("Open Questions")
@@ -211,4 +228,87 @@
         System.IO.File.Delete("questions.csv")
         ef.Save("questions.csv")
 
-        ()
+
+    let dumpModelBuckets (domainModel:StructuredAnalysisModel) programDirectories =
+        csvDumpModelBucketRaw Buckets.Unknown domainModel.Unknown
+        csvDumpModelBucketRaw Buckets.Behavior domainModel.BehaviorModel
+        csvDumpModelBucketRaw Buckets.Structure domainModel.StructureModel
+        csvDumpModelBucketRaw Buckets.Supplemental domainModel.SupplementalModel
+
+
+
+//        let ef = new ExcelFile()
+//        let ws = ef.Worksheets.Add("Unknown")
+//        ws.Cells.[0, 0].Value<-"Unknown"
+//        let questions = ctx.CompilationLines |> List.filter(fun x->x.TaggedContext.Bucket=Buckets.Unknown)
+//        questions |> List.iteri(fun i x->
+//            ws.Cells.[1+i, 0].Value<-x.LineText
+//            )
+//        System.IO.File.Delete("Unknown.csv")
+//        ef.Save("Unknown.csv")
+
+
+//        let ef = new ExcelFile()
+//        let ws = ef.Worksheets.Add("Behavior")
+//        ws.Cells.[0, 0].Value<-"Behavior"
+//        let questions = ctx.CompilationLines |> List.filter(fun x->x.TaggedContext.Bucket=Buckets.Behavior)
+//        questions |> List.iteri(fun i x->
+//            ws.Cells.[1+i, 0].Value<-x.LineText
+//            )
+//        System.IO.File.Delete("Behavior.csv")
+//        ef.Save("Behavior.csv")
+//
+//
+//        let ef = new ExcelFile()
+//        let ws = ef.Worksheets.Add("Structure")
+//        ws.Cells.[0, 0].Value<-"Structure"
+//        let questions = ctx.CompilationLines |> List.filter(fun x->x.TaggedContext.Bucket=Buckets.Structure)
+//        questions |> List.iteri(fun i x->
+//            ws.Cells.[1+i, 0].Value<-x.LineText
+//            )
+//        System.IO.File.Delete("Structure.csv")
+//        ef.Save("Structure.csv")
+//
+//
+//        let ef = new ExcelFile()
+//        let ws = ef.Worksheets.Add("Meta")
+//        ws.Cells.[0, 0].Value<-"Meta"
+//        let questions = ctx.CompilationLines |> List.filter(fun x->x.TaggedContext.Bucket=Buckets.Meta)
+//        questions |> List.iteri(fun i x->
+//            ws.Cells.[1+i, 0].Value<-x.LineText
+//            )
+//        System.IO.File.Delete("Meta.csv")
+//        ef.Save("Meta.csv")
+
+
+//        ()
+
+//    let createDomainModelDiagram (model:StructureModel) (fileName:string) =
+//        // entity box metrics
+//        let gridSize =  (int)(Math.Sqrt((float)model.Entities.Length) + 0.5)
+//        let maxEntityNameLength = (model.Entities |> List.maxBy(fun x->x.Title.text.Length)).Title.text.Length
+//        let maxNumberOfEntityAttributes = (model.Entities |> List.maxBy(fun x->x.Attributes.Length)).Attributes.Length
+//
+//        let entityBoxHeight = (maxNumberOfEntityAttributes + 4) * defaultSVGSetup.FontSize
+//        let entityBoxWidth = (maxEntityNameLength + 4) * defaultSVGSetup.FontSize
+//        let entityBoxHorizSpacer = 10
+//        let entityBoxVertSpacer = 10
+//
+//        System.IO.File.Delete(fileName)
+//        let svgOutputFile = new System.IO.StreamWriter(fileName)
+//        svgOutputFile.WriteLine "<svg  xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">" 
+//        svgOutputFile.WriteLine ""
+//        svgOutputFile.WriteLine ""
+//        model.Entities |> List.iteri(fun i x->
+//            let ycol = i%gridSize
+//            let xcol = (int)i/gridSize
+//            let colYPos = entityBoxVertSpacer + (ycol * entityBoxHeight + entityBoxVertSpacer) + (defaultSVGSetup.FontSize*ycol)
+//            let colXPos = entityBoxHorizSpacer + (xcol * entityBoxWidth + entityBoxHorizSpacer) + (defaultSVGSetup.FontSize*xcol)
+//            drawEntityBoxes svgOutputFile colXPos colYPos entityBoxWidth entityBoxHeight x
+//            )
+//        svgOutputFile.WriteLine ""
+//        svgOutputFile.WriteLine ""
+//        svgOutputFile.WriteLine "</svg>"
+//        svgOutputFile.Flush()
+//        svgOutputFile.Close()
+//        ()

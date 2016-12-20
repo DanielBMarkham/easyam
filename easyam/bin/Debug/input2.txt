@@ -1,0 +1,6 @@
+US: buy lemonade
+WHEN I'm thirsty
+ASA customer
+INEEDTO buy lemonade
+SOTHAT I can do other things in life
+

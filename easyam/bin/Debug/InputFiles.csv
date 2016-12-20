@@ -1,0 +1,40 @@
+﻿InputFileLineList,,,,,,
+Line Number,File Name,Line Type,Command Type,Scope,Tagged Context (Raw),Line Text
+0,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,FreeText,Unknown,,Unknown Unknown Unknown Unknown,Lemonade stand project for Jim Smith started Feb 2nd
+1,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Context,Unknown,,Business Structure Abstract Unknown,BUSINESS STRUCTURE ABSTRACT
+2,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Unknown,,Business Structure Abstract Unknown,drink HASA recipe
+3,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Unknown,,Business Structure Abstract Unknown,recipe HASA ingredient
+4,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Unknown,Question,,Business Structure Abstract Unknown,Q: Are all ingredients fresh?
+5,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Unknown,,Business Structure Abstract Unknown,inventory HASA ingredient
+6,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Unknown,,Business Structure Abstract Unknown,inventory HASA office supplies
+7,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Unknown,Question,,Business Structure Abstract Unknown,Q: How much is the office paperless?
+8,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Context,Unknown,,Business Behavior Abstract Unknown,BUSINESS BEHAVIOR ABSTRACT
+9,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Comment,,Business Behavior Abstract Unknown,// Anything in a Biz Behav Abstract section is a User Story Title (except comments and questions)
+10,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,FreeText,Label,,Business Behavior Abstract Unknown,buy lemonade
+11,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,FreeText,Label,,Business Behavior Abstract Unknown,schedule parties
+12,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Unknown,Question,,Business Behavior Abstract Unknown,Q: Is there a loyalty program we should be talking about?
+13,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Comment,,Business Behavior Abstract Unknown,//Interview went well. Plan on coming back the 5th
+14,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Context,Unknown,,Business Supplemental Abstract Unknown,SUPPLEMENTAL
+15,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,FreeText,Label,,Business Supplemental Abstract Unknown,People shouldn't wait more than 5 minutes for thier order
+16,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,FreeText,Label,,Business Supplemental Abstract Unknown,All lemonade will be served fresh
+17,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Unknown,Question,,Business Supplemental Abstract Unknown,Q: What does fresh mean?
+18,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,FreeText,Label,,Business Supplemental Abstract Unknown,Follow-up phone call
+19,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Context,Unknown,,Business Structure Abstract Unknown,BUSINESS STRUCTURE ABSTRACT
+20,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Unknown,,Business Structure Abstract Unknown,drink CONTAINS lemon
+21,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Unknown,,Business Structure Abstract Unknown,drink CONTAINS ice
+22,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Context,Unknown,,Business Behavior Abstract Unknown,BUSINESS BEHAVIOR ABSTRACT
+23,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Comment,,Business Behavior Abstract Unknown,// Here's a fully-formed User Story Title
+24,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Unknown,,Business Behavior Abstract Unknown,WHEN Truck Arrives
+25,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Unknown,,Business Behavior Abstract Unknown,ASA Receiving Clerk
+26,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Unknown,,Business Behavior Abstract Unknown,INEEDTO Record Bill Of Lading
+27,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Unknown,,Business Behavior Abstract Unknown,SOTHAT We can update the inventory
+28,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Comment,,Business Behavior Abstract Unknown,// Here's a partially-formed User Story Title
+29,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Unknown,,Business Behavior Abstract Unknown,ASA Truck Driver
+30,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.txt,Command,Unknown,,Business Behavior Abstract Unknown,INEEDTO Unload Truck
+31,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input2.txt,Scoping,Unknown,buy lemonade,Business Behavior Abstract Unknown,US: buy lemonade
+32,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input2.txt,Command,Unknown,buy lemonade,Business Behavior Abstract Unknown,WHEN I'm thirsty
+33,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input2.txt,Command,Unknown,buy lemonade,Business Behavior Abstract Unknown,ASA customer
+34,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input2.txt,Command,Unknown,buy lemonade,Business Behavior Abstract Unknown,INEEDTO buy lemonade
+35,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input2.txt,Command,Unknown,buy lemonade,Business Behavior Abstract Unknown,SOTHAT I can do other things in life
+36,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.txt,Scoping,Unknown,Joe,Business Unknown Abstract Unknown,DOMAIN: Joe
+37,E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.txt,FreeText,Unknown,Joe,Business Unknown Abstract Unknown,Why are we here?

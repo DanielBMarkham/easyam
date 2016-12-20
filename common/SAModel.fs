@@ -1,11 +1,6 @@
 ﻿module SAModel
     open Types
 
-// INCOMING FILE TYPES
-    let informationTagTokens =[|"STRUCUTRE"; "BEHAVIOR"; "SUPPLEMENTAL"; "META"; "BUSINESS"; "SYSTEM"; "ABSTRACT"; "REALIZED"; "AS-IS"; "TO-BE"|]
-    let scopingTokens = [|"NAME"; "ORG"; "DOMAIN"|]
-    let commandTokens =[|"HASA"; "CONTAINS"; "Q:"; "//"|]
-
     type NounClause =
         {
             text:string
@@ -18,23 +13,45 @@
     type Actor = NounClause
 
     type Genres =
-        | Unkown
+        | Unknown
         | Business
         | System
+         override self.ToString() =
+          match self with
+            | Unknown->"Unknown"
+            | Business->"Business"
+            | System->"System"
     type Buckets =
         | Unknown
         | Behavior
         | Structure
         | Supplemental
         | Meta
+         override self.ToString() =
+          match self with
+            | Unknown->"Unknown"
+            | Behavior->"Behavior"
+            | Structure->"Structure"
+            | Supplemental->"Supplemental"
+            | Meta->"Meta"
     type AbstractionLevels = 
         | Unknown
         | Abstract
         | Realized
+         override self.ToString() =
+          match self with
+            | Unknown->"Unknown"
+            | Abstract->"Abstract"
+            | Realized->"Realized"
     type TemporalIndicators =
         | Unknown
         | AsIs
         | ToBe
+         override self.ToString() =
+          match self with
+            | Unknown->"Unknown"
+            | AsIs->"As-Is"
+            | ToBe->"To-Be"
     type InformationTag =
         {
             Genre:Genres
@@ -42,19 +59,64 @@
             AbstractionLevel:AbstractionLevels
             TemporalIndicator:TemporalIndicators
         }
+         member self.ToString2() =
+            let genre = if self.Genre=Genres.Unknown then "" else self.Genre.ToString()
+            let bucket = if self.Bucket=Buckets.Unknown then "" else self.Bucket.ToString()
+            let abstractionlevel = if self.AbstractionLevel=AbstractionLevels.Unknown then "" else self.AbstractionLevel.ToString()
+            let temporalindicator = if self.TemporalIndicator=TemporalIndicators.Unknown then "" else self.TemporalIndicator.ToString()
+            genre + " " + bucket + " " + abstractionlevel + " " + temporalindicator.ToString()
+         override self.ToString() =
+            self.Genre.ToString() + " " + self.Bucket.ToString() + " " + self.AbstractionLevel.ToString() + " " + self.TemporalIndicator.ToString()
     let defaultInformationTag=
         {
-            Genre=Genres.Unkown
+            Genre=Genres.Unknown
             Bucket=Buckets.Unknown
             AbstractionLevel=AbstractionLevels.Unknown
             TemporalIndicator=TemporalIndicators.Unknown
         }
-    type Statement =
-        {
-            Tag:InformationTag
-            StatementText:string
-        }
-    type ProgramOutputDirectories =
+
+// INCOMING FILE TYPES
+    let informationTagTokens =[|"STRUCUTRE"; "BEHAVIOR"; "SUPPLEMENTAL"; "META"; "BUSINESS"; "SYSTEM"; "ABSTRACT"; "REALIZED"; "AS-IS"; "TO-BE"|]
+    let scopingTokens = [|
+        ("NAME: ", None); 
+        ("ORG: ", None); 
+        ("DOMAIN: ", None); 
+        ("US: ", Some(Buckets.Behavior)); 
+        ("USER STORY: ", Some(Buckets.Behavior)); 
+        ("SUPPL: ",  Some(Buckets.Supplemental)); 
+        ("ENTITY: ", Some(Buckets.Structure)); 
+        ("META: ",  Some(Buckets.Meta))|]
+    let scopingTokenVals = scopingTokens |> Array.map(fun x->fst x)
+
+    let commandTokens =[|"Q:"; "//"|]
+    type BucketTokenType =
+        | LTOR
+        | Declarative
+    let bucketTokens = [|
+        ("HASA ", Buckets.Structure, LTOR);
+        ("CONTAINS ", Buckets.Structure, LTOR);
+        ("WHEN ", Buckets.Behavior, Declarative);
+        ("ASA ", Buckets.Behavior, Declarative);
+        ("INEEDTO ", Buckets.Behavior, Declarative);
+        ("SOTHAT ", Buckets.Behavior, Declarative);
+        ("INITIAL ", Buckets.Behavior, Declarative);
+        ("FINAL ", Buckets.Behavior, Declarative);
+        ("MERGENODE ", Buckets.Behavior, Declarative);
+        ("MERGE ", Buckets.Behavior, Declarative);
+        ("FORK ", Buckets.Behavior, Declarative);
+        ("DO ", Buckets.Behavior, Declarative);
+        ("DATA ", Buckets.Supplemental, Declarative);
+        |]
+    let bucketTokenVals = bucketTokens |> Array.map(fun x->
+        let a,b,c = x
+        a
+        )
+//    type Statement =
+//        {
+//            Tag:InformationTag
+//            StatementText:string
+//        }
+    type ProgramDirectories =
         {
             SourceDirectoryInfo:System.IO.DirectoryInfo
             DestinationDirectoryInfo:System.IO.DirectoryInfo
@@ -74,12 +136,33 @@
         | Hasa
         | Contains
         | Question
+        | Label
+         override self.ToString() =
+          match self with
+            | NoCommand->"No Command"
+            | Unknown->"Unknown"
+            | Comment->"Comment"
+            | Hasa->"HasA"
+            | Contains->"Contains"
+            | Question->"Question"
+            | Label->"Label"
+
     type CompilationLineType =
         | Unknown
         | Scoping
         | Context
         | Command
         | Freetext
+        | Label
+         override self.ToString() =
+          match self with
+            | Unknown->"Unknown"
+            | Scoping->"Scoping"
+            | Context->"Context"
+            | Command->"Command"
+            | FreeText->"FreeText"
+            | Label->"Label"
+
     type CompilationLine =
         {
             File:System.IO.FileInfo option
@@ -114,21 +197,22 @@
             Scope=""
             CurrentFile=""
         }
-    type DomainConnection =
+//    type DomainConnection =
+//        {
+//            SourceEntity:NounClause
+//            DestinationEntity:NounClause
+//        }
+    type Attribute =
         {
-            SourceEntity:NounClause
-            DestinationEntity:NounClause
+            Title:NounClause
         }
     type Entity =
         {
+            Id:int
             Title:NounClause
-            Attributes:NounClause list
-            Connections:NounClause list
-        }
-    type StructureModel =
-        {
-            Entities:Entity list
-            DomainConnections:DomainConnection list
+            Attributes:Attribute list
+            Connections:(int*int) list
+            ParentId:int option
         }
 
 
@@ -156,22 +240,43 @@
         {
             Title:string
         }
-    type StructuralModelTitle =
+    type StructuralDiagramTitle =
         {
             Title:string
         }
-//    type ModelBase =
+    type BehaviorLayer =
+        {
+            CompilationLines:CompilationLine list
+            Entities:Entity list
+            Questions:string list
+            Notes:string list
+        }
+//    type BucketBase =
 //        {
-//            DOWOP:string   
+//            Bucket:Buckets
+//            CompilationLines:CompilationLine list
 //        }
+    type BehaviorModelType =
+        {
+            Root:BehaviorLayer
+            AbstractBusinessEntitiesToBe: BehaviorLayer
+            RealizedBusinessEntitiesToBe: BehaviorLayer
+            AbstractSystemEntitiesToBe: BehaviorLayer
+            RealizedSystemEntitiesToBe: BehaviorLayer
+            AbstractBusinessEntitiesAsIs: BehaviorLayer
+            RealizedBusinessEntitiesAsIs: BehaviorLayer
+            AbstractSystemEntitiesAsIs: BehaviorLayer
+            RealizedSystemEntitiesAsIs: BehaviorLayer
+        }
     type StructuredAnalysisModel =
         {
-            BehaviorModel:string
-            StructuralModel:string
-            SupplementalModel:string
-            Meta:string
+            BehaviorModel:CompilationLine list
+            StructureModel:CompilationLine list
+            SupplementalModel:CompilationLine list
+            MetaModel:CompilationLine list
+            Unknown:CompilationLine list
         }
-
+    let defaultStructuredAnalysisModel = {BehaviorModel=[]; StructureModel=[]; SupplementalModel=[]; MetaModel=[]; Unknown=[]}
 
 
 
