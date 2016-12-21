@@ -16,17 +16,22 @@
         | Unknown
         | Business
         | System
+         static member ToList() =
+            [Unknown; Business; System]
          override self.ToString() =
           match self with
             | Unknown->"Unknown"
             | Business->"Business"
             | System->"System"
+
     type Buckets =
         | Unknown
         | Behavior
         | Structure
         | Supplemental
         | Meta
+         static member ToList() =
+            [Unknown;Behavior;Structure;Supplemental;Meta]
          override self.ToString() =
           match self with
             | Unknown->"Unknown"
@@ -38,6 +43,8 @@
         | Unknown
         | Abstract
         | Realized
+         static member ToList() =
+            [Unknown;Abstract;Realized]
          override self.ToString() =
           match self with
             | Unknown->"Unknown"
@@ -47,6 +54,8 @@
         | Unknown
         | AsIs
         | ToBe
+         static member ToList() =
+            [Unknown;AsIs;ToBe]
          override self.ToString() =
           match self with
             | Unknown->"Unknown"
@@ -88,7 +97,7 @@
         ("META: ",  Some(Buckets.Meta))|]
     let scopingTokenVals = scopingTokens |> Array.map(fun x->fst x)
 
-    let commandTokens =[|"Q:"; "//"|]
+    let commandTokens =[|"Q: "; "//"|]
     type BucketTokenType =
         | LTOR
         | Declarative
@@ -111,11 +120,6 @@
         let a,b,c = x
         a
         )
-//    type Statement =
-//        {
-//            Tag:InformationTag
-//            StatementText:string
-//        }
     type ProgramDirectories =
         {
             SourceDirectoryInfo:System.IO.DirectoryInfo
@@ -197,86 +201,248 @@
             Scope=""
             CurrentFile=""
         }
-//    type DomainConnection =
-//        {
-//            SourceEntity:NounClause
-//            DestinationEntity:NounClause
-//        }
+
+    // HYPOTHESIS
+    type Hypothesis =
+        {
+            ExpectedChange:string
+            ExpectedImpactMetric:string
+            ExpectedActorsImpacted:string
+            ExpectedImpactAmount:string
+            ExpectedTimeUntilImpactObserved:string
+            MightWorkBecause:string list
+        }
+    let defaultHypothesis =
+        {
+            ExpectedChange=""
+            ExpectedImpactMetric=""
+            ExpectedActorsImpacted=""
+            ExpectedImpactAmount=""
+            ExpectedTimeUntilImpactObserved=""
+            MightWorkBecause=[]
+        }
+
+
+    // True for all models
+    type SourceFileReference =
+        {
+            File:System.IO.FileInfo
+            Line:int
+        }
+
+    // STRUCTURE
     type Attribute =
         {
             Title:NounClause
+            SourceFileReferences:SourceFileReference list
         }
     type Entity =
         {
             Id:int
+            ParentId:int option
             Title:NounClause
             Attributes:Attribute list
             Connections:(int*int) list
-            ParentId:int option
-        }
-
-
-
-    type SourceFileReference =
-        {
-            FileName:string
-            Line:int
-        }
-    type ModelBaseEntry =
-        {
-            id:int
             SourceFileReferences:SourceFileReference list
+            AffectedBySupplementals:int list
+        }
+    type StructureLayer =
+        {
+            CompilationLines:CompilationLine list
             Questions:string list
             Notes:string list
+            Entities:Entity list
         }
-    type UserStoryTitle =
+    let defaultStructureLayer = 
         {
-            Trigger:VerbNounClause
-            Actor:NounClause
-            Goal:VerbNounClause
-            Context:VerbNounClause
+            CompilationLines=[]
+            Entities=[]
+            Questions=[]
+            Notes=[]
         }
-    type SupplementalTitle =
+    type StructureModelType =
         {
-            Title:string
+            Input:StructureLayer
+            Root:StructureLayer
+            AbstractBusinessEntitiesToBe: StructureLayer
+            RealizedBusinessEntitiesToBe: StructureLayer
+            AbstractSystemEntitiesToBe: StructureLayer
+            RealizedSystemEntitiesToBe: StructureLayer
+            AbstractBusinessEntitiesAsIs: StructureLayer
+            RealizedBusinessEntitiesAsIs: StructureLayer
+            AbstractSystemEntitiesAsIs: StructureLayer
+            RealizedSystemEntitiesAsIs: StructureLayer
         }
-    type StructuralDiagramTitle =
+    let defaultStructureModel =
         {
-            Title:string
+            Input=defaultStructureLayer
+            Root=defaultStructureLayer
+            AbstractBusinessEntitiesToBe=defaultStructureLayer
+            RealizedBusinessEntitiesToBe=defaultStructureLayer
+            AbstractSystemEntitiesToBe=defaultStructureLayer
+            RealizedSystemEntitiesToBe=defaultStructureLayer
+            AbstractBusinessEntitiesAsIs=defaultStructureLayer
+            RealizedBusinessEntitiesAsIs=defaultStructureLayer
+            AbstractSystemEntitiesAsIs=defaultStructureLayer
+            RealizedSystemEntitiesAsIs=defaultStructureLayer
+        }
+
+    // BEHAVIOR
+    type USTrigger=VerbNounClause
+    type USActor=VerbNounClause
+    type USGoal=VerbNounClause
+    type USContext=VerbNounClause
+    type USUserStoryTitle =
+        {
+            Trigger:USTrigger
+            Actor:USActor
+            Goal:USGoal
+            Context:USContext
+        }
+    type UserStory =
+        {
+            Id:int
+            ParentId:int option
+            USUserStoryTitle:USUserStoryTitle
+            DiagramSteps:string list
+            SourceFileReferences:SourceFileReference list
+            AffectedBySupplementals:int list
         }
     type BehaviorLayer =
         {
             CompilationLines:CompilationLine list
-            Entities:Entity list
             Questions:string list
             Notes:string list
+            UserStoryList:UserStory list
         }
-//    type BucketBase =
-//        {
-//            Bucket:Buckets
-//            CompilationLines:CompilationLine list
-//        }
+    let defaultBehaviorLayer =
+        {
+            CompilationLines=[]
+            Questions=[]
+            Notes=[]
+            UserStoryList=[]
+        }
     type BehaviorModelType =
         {
+            Input:BehaviorLayer
             Root:BehaviorLayer
-            AbstractBusinessEntitiesToBe: BehaviorLayer
-            RealizedBusinessEntitiesToBe: BehaviorLayer
-            AbstractSystemEntitiesToBe: BehaviorLayer
-            RealizedSystemEntitiesToBe: BehaviorLayer
-            AbstractBusinessEntitiesAsIs: BehaviorLayer
-            RealizedBusinessEntitiesAsIs: BehaviorLayer
-            AbstractSystemEntitiesAsIs: BehaviorLayer
-            RealizedSystemEntitiesAsIs: BehaviorLayer
+            AbstractBusinessUserStoriesToBe: BehaviorLayer
+            RealizedBusinessUserStoriesToBe: BehaviorLayer
+            AbstractSystemUserStoriesToBe: BehaviorLayer
+            RealizedSystemUserStoriesToBe: BehaviorLayer
+            AbstractBusinessUserStoriesAsIs: BehaviorLayer
+            RealizedBusinessUserStoriesAsIs: BehaviorLayer
+            AbstractSystemUserStoriesAsIs: BehaviorLayer
+            RealizedSystemUserStoriesAsIs: BehaviorLayer
         }
+    let defaultBehaviorModel =
+        {
+            Input=defaultBehaviorLayer
+            Root=defaultBehaviorLayer
+            AbstractBusinessUserStoriesToBe= defaultBehaviorLayer
+            RealizedBusinessUserStoriesToBe= defaultBehaviorLayer
+            AbstractSystemUserStoriesToBe= defaultBehaviorLayer
+            RealizedSystemUserStoriesToBe= defaultBehaviorLayer
+            AbstractBusinessUserStoriesAsIs= defaultBehaviorLayer
+            RealizedBusinessUserStoriesAsIs= defaultBehaviorLayer
+            AbstractSystemUserStoriesAsIs= defaultBehaviorLayer
+            RealizedSystemUserStoriesAsIs= defaultBehaviorLayer
+        }
+
+
+    // Supplementals
+    type Supplemental =
+        {
+            Id:int
+            ParentId:int option
+            SourceFileReferences:SourceFileReference list
+            EntityReferences:int list
+            BehaviorReferences:int list
+        }
+    type SupplementalLayer =
+        {
+            CompilationLines:CompilationLine list
+            Questions:string list
+            Notes:string list
+            Supplementals:Supplemental list
+        }
+    let defaultSupplementalLayer =
+        {
+            CompilationLines=[]
+            Questions=[]
+            Notes=[]
+            Supplementals=[]
+        }
+    type SupplementalModelType =
+        {
+            Input:SupplementalLayer
+            Root:SupplementalLayer
+            AbstractBusinessUserStoriesToBe: SupplementalLayer
+            RealizedBusinessUserStoriesToBe: SupplementalLayer
+            AbstractSystemUserStoriesToBe: SupplementalLayer
+            RealizedSystemUserStoriesToBe: SupplementalLayer
+            AbstractBusinessUserStoriesAsIs: SupplementalLayer
+            RealizedBusinessUserStoriesAsIs: SupplementalLayer
+            AbstractSystemUserStoriesAsIs: SupplementalLayer
+            RealizedSystemUserStoriesAsIs: SupplementalLayer
+        }
+    let defaultSupplementalModel =
+        {
+            Input= defaultSupplementalLayer
+            Root= defaultSupplementalLayer
+            AbstractBusinessUserStoriesToBe= defaultSupplementalLayer
+            RealizedBusinessUserStoriesToBe= defaultSupplementalLayer
+            AbstractSystemUserStoriesToBe= defaultSupplementalLayer
+            RealizedSystemUserStoriesToBe= defaultSupplementalLayer
+            AbstractBusinessUserStoriesAsIs= defaultSupplementalLayer
+            RealizedBusinessUserStoriesAsIs= defaultSupplementalLayer
+            AbstractSystemUserStoriesAsIs= defaultSupplementalLayer
+            RealizedSystemUserStoriesAsIs= defaultSupplementalLayer
+        }
+
+    // META
+    type MetaItem =
+        {
+            Id:int
+            ParentId:int option
+            Text:string
+        }
+
+    type MetaLayer =
+        {
+            CompilationLines:CompilationLine list
+            Questions:string list
+            Notes:string list
+            MetaItems:MetaItem list
+        }
+    let defaultMetaLayer =
+        {
+            CompilationLines=[]
+            Questions=[]
+            Notes=[]
+            MetaItems=[]
+        }
+    type MetaModelType =
+        {
+            Input:MetaLayer
+            Root:MetaLayer
+        }
+    let defaultMetaModel =
+        {
+            Input=defaultMetaLayer
+            Root=defaultMetaLayer
+        }
+        
+
     type StructuredAnalysisModel =
         {
-            BehaviorModel:CompilationLine list
-            StructureModel:CompilationLine list
-            SupplementalModel:CompilationLine list
-            MetaModel:CompilationLine list
+            StructureModel:StructureModelType
+            BehaviorModel:BehaviorModelType
+            SupplementalModel:SupplementalModelType
+            MetaModel:MetaModelType
             Unknown:CompilationLine list
         }
-    let defaultStructuredAnalysisModel = {BehaviorModel=[]; StructureModel=[]; SupplementalModel=[]; MetaModel=[]; Unknown=[]}
+    let defaultStructuredAnalysisModel = {BehaviorModel=defaultBehaviorModel; StructureModel=defaultStructureModel; SupplementalModel=defaultSupplementalModel; MetaModel=defaultMetaModel; Unknown=[]}
 
 
 

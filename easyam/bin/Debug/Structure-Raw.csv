@@ -1,6 +1,7 @@
 ﻿STRUCTURE
 
 Labels
+Cats
 
 Commands
 drink HASA recipe
@@ -11,7 +12,5 @@ drink CONTAINS lemon
 drink CONTAINS ice
 
 Questions
-Q: Are all ingredients fresh?
-Q: How much is the office paperless?
 
 Notes

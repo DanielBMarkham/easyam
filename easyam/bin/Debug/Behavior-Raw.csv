@@ -3,6 +3,8 @@
 Labels
 buy lemonade
 schedule parties
+buy lemonade
+take inventory
 
 Commands
 WHEN Truck Arrives
@@ -17,7 +19,6 @@ INEEDTO buy lemonade
 SOTHAT I can do other things in life
 
 Questions
-Q: Is there a loyalty program we should be talking about?
 
 Notes
 // Anything in a Biz Behav Abstract section is a User Story Title (except comments and questions)

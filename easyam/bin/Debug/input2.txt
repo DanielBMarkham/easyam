@@ -4,3 +4,10 @@ ASA customer
 INEEDTO buy lemonade
 SOTHAT I can do other things in life
 
+BUSINESS STRUCTURE
+Cats
+
+
+BUSINESS BEHAVIOR ABSTRACT
+buy lemonade
+take inventory

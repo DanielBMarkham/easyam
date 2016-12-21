@@ -208,21 +208,57 @@
                 | Buckets.Unknown->
                     let newLines = List.append acc.Unknown [x]
                     {acc with Unknown=newLines}
-                | Buckets.Behavior->
-                    let newLines = List.append acc.BehaviorModel [x]
-                    {acc with BehaviorModel=newLines}
                 | Buckets.Structure->
-                    let newLines = List.append acc.StructureModel [x]
-                    {acc with StructureModel=newLines}
+                    let newLines = List.append (acc.StructureModel.Input.CompilationLines) [x]
+                    let newInput = {acc.StructureModel.Input with CompilationLines=newLines}
+                    let newStructureModel = {acc.StructureModel with Input=newInput}
+                    let newacc={acc with StructureModel=newStructureModel}
+                    newacc
+                | Buckets.Behavior->
+                    let newLines = List.append (acc.BehaviorModel.Input.CompilationLines) [x]
+                    let newInput = {acc.BehaviorModel.Input with CompilationLines=newLines}
+                    let newBehaviorModel = {acc.BehaviorModel with Input=newInput}
+                    let newacc={acc with BehaviorModel=newBehaviorModel}
+                    newacc
+                    //let newLines = List.append acc.BehaviorModel [x]
+                    //{acc with BehaviorModel=newLines}
                 | Buckets.Supplemental->
-                    let newLines = List.append acc.SupplementalModel [x]
-                    {acc with SupplementalModel=newLines}
+                    let newLines = List.append (acc.SupplementalModel.Input.CompilationLines) [x]
+                    let newInput = {acc.SupplementalModel.Input with CompilationLines=newLines}
+                    let newSupplementalModel = {acc.SupplementalModel with Input=newInput}
+                    let newacc={acc with SupplementalModel=newSupplementalModel}
+                    newacc
+                    //let newLines = List.append acc.SupplementalModel [x]
+                    //{acc with SupplementalModel=newLines}
                 | Buckets.Meta->
-                    let newLines = List.append acc.MetaModel [x]
-                    {acc with MetaModel=newLines}
+                    let newLines = List.append (acc.MetaModel.Input.CompilationLines) [x]
+                    let newInput = {acc.MetaModel.Input with CompilationLines=newLines}
+                    let newMetaModel = {acc.MetaModel with Input=newInput}
+                    let newacc={acc with MetaModel=newMetaModel}
+                    newacc
+                    //let newLines = List.append acc.MetaModel [x]
+                    //{acc with MetaModel=newLines}
             ) defaultStructuredAnalysisModel
         //{Entities=newEntities; DomainConnections=List.empty}
 
+    let checkInputFilesForErrors (ctx:CompilationContext) (opts:EasyAMProgramConfig) =
+        // duplicate labels
+        let labels = ctx.CompilationLines |> List.filter(fun x->x.CommandType=CompilationLineCommands.Label)
+        let duplicates = labels |> duplicatesBy(fun x y->x.LineText=y.LineText)
+        //let dupeSort = duplicates |> Seq.groupBy(fun x->x.TaggedContext.AbstractionLevel)
+        Genres.ToList() |> List.iter(fun x->
+            let dupeListByGenre = duplicates |> List.filter(fun y->y.TaggedContext.Genre=x)
+            if dupeListByGenre.Length>0
+                then                    
+                    System.Console.WriteLine ("ERROR: Duplication found in the " + x.ToString() + " genre.")
+                    dupeListByGenre |> List.iteri(fun i y->
+                        System.Console.WriteLine(i.ToString() + ". '" + y.LineText + "' found on line " + y.LineNumber.ToString() + " of file " + y.File.Value.FullName)
+                        )
+                    System.Console.WriteLine ""
+                else
+                    ()
+            )
+        ()
     let doStuff (opts:EasyAMProgramConfig) =
         let programDirectories = getDirectories opts
         let fileList = programDirectories.SourceDirectoryInfo.GetFiles() |> Seq.filter(fun x->
@@ -233,6 +269,8 @@
         let lineContextAdded = addRunningContext lineTypesAdded
 
         dumpInputFiles lineContextAdded programDirectories
+        checkInputFilesForErrors lineContextAdded opts
+
         let domainModel = createDomainModel lineContextAdded
         dumpModelBuckets domainModel programDirectories
 

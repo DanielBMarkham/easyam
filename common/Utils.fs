@@ -122,6 +122,44 @@
             then (snd dir.parameterValue).Value
             else System.IO.Directory.CreateDirectory(fst dir.parameterValue)
 
+    let duplicatesUnique a =
+        a |> List.fold(fun acc x->
+            let itemCount = (a |> List.filter(fun y->x=y)).Length
+            if itemCount>1
+                then
+                    if acc |> List.exists(fun y->x=y)
+                        then
+                            acc
+                        else
+                            List.append acc [x]
+                else
+                    acc
+            ) []
+    let duplicatesUniqueBy f a =
+        a |> List.fold(fun acc x->
+            let itemCount = (a |> List.filter(fun y->f x y)).Length
+            if itemCount>1
+                then
+                    if acc |> List.exists(fun y->f x y)
+                        then
+                            acc
+                        else
+                            List.append acc [x]
+                else
+                    acc
+            ) []
+
+    let duplicates a =
+        a |> List.fold(fun acc x->
+            let itemCount = (a |> List.filter(fun y->x=y)).Length
+            if itemCount>1 then List.append acc [x] else acc
+            ) []
+    let duplicatesBy f a =
+        a |> List.fold(fun acc x->
+            let itemCount = (a |> List.filter(fun y->f x y)).Length
+            if itemCount>1 then List.append acc [x] else acc
+            ) []
+
 
     let drawEntityBox (sw:System.IO.StreamWriter) (box:SVGEntityBox) (svgConfig:SVGSetup) =
         sw.WriteLine ("<rect x=\"" + box.xPos.ToString() + "\" y=\"" + box.yPos.ToString() + "\" height=\"" + box.height.ToString() + "\" width=\"" + box.width.ToString() + "\" style=\"stroke:" + svgConfig.EntityBorderColor + "; fill: " + svgConfig.EntityFillColor  + "; fill-opacity: " + svgConfig.EntityFillOpacity  + "\"/>")
@@ -231,9 +269,10 @@
 
     let dumpModelBuckets (domainModel:StructuredAnalysisModel) programDirectories =
         csvDumpModelBucketRaw Buckets.Unknown domainModel.Unknown
-        csvDumpModelBucketRaw Buckets.Behavior domainModel.BehaviorModel
-        csvDumpModelBucketRaw Buckets.Structure domainModel.StructureModel
-        csvDumpModelBucketRaw Buckets.Supplemental domainModel.SupplementalModel
+        csvDumpModelBucketRaw Buckets.Meta domainModel.MetaModel.Input.CompilationLines
+        csvDumpModelBucketRaw Buckets.Behavior domainModel.BehaviorModel.Input.CompilationLines
+        csvDumpModelBucketRaw Buckets.Structure domainModel.StructureModel.Input.CompilationLines
+        csvDumpModelBucketRaw Buckets.Supplemental domainModel.SupplementalModel.Input.CompilationLines
 
 
 
