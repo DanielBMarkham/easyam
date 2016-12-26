@@ -1,15 +1,20 @@
 ﻿STRUCTURE
 
 Labels
-Cats
+Lemons
+Sugar
+Glasses
+Mixers
+Menus
+Tables
+Schedule
+Employees
+Lemonade
 
 Commands
-drink HASA recipe
-recipe HASA ingredient
-inventory HASA ingredient
-inventory HASA office supplies
-drink CONTAINS lemon
-drink CONTAINS ice
+Lemonade HASA Recipe
+Recipe CONTAINS Ingredients
+Recipe CONTAINS Instructions
 
 Questions
 

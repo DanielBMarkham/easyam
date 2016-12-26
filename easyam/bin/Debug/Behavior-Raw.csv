@@ -1,27 +1,15 @@
 ﻿BEHAVIOR
 
 Labels
-buy lemonade
-schedule parties
-buy lemonade
-take inventory
+Buy Lemonade
+Count Inventory
+Recieve Shipments
 
 Commands
-WHEN Truck Arrives
-ASA Receiving Clerk
-INEEDTO Record Bill Of Lading
-SOTHAT We can update the inventory
-ASA Truck Driver
-INEEDTO Unload Truck
-WHEN I'm thirsty
-ASA customer
-INEEDTO buy lemonade
-SOTHAT I can do other things in life
+ASA Customer
+INEEDTO Schedule Birthday Parties
 
 Questions
 
 Notes
-// Anything in a Biz Behav Abstract section is a User Story Title (except comments and questions)
-//Interview went well. Plan on coming back the 5th
-// Here's a fully-formed User Story Title
-// Here's a partially-formed User Story Title
+// We can enter in as much of a title as we know about

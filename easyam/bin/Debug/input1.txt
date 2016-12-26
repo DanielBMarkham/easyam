@@ -1,44 +1,47 @@
-Lemonade stand project for Jim Smith started Feb 2nd
+eastyam is a compiler for business intent. 
+It's goal is to provide the minimal amount of structure
+necessary to capture and remember important business
+conversations, taking that information in one
+place and distributing wherever it's needed.
+
+Keywords are in ALL CAPS. Everything else is unstuctured
+
+
+This is an example of a freeform file, the kind
+of notes that might be taken at a meeting with a
+new client.
 
 BUSINESS STRUCTURE ABSTRACT
-	drink HASA recipe
-	recipe HASA ingredient
+Lemons
+Sugar
+Glasses
+Mixers
+Menus
+Tables
+Schedule
+Employees
+Lemonade
+Lemonade HASA Recipe
+Recipe CONTAINS Ingredients
+Recipe CONTAINS Instructions
 
-	Q: Are all ingredients fresh?
-	
-	inventory HASA ingredient
-	inventory HASA office supplies
-	Q: How much is the office paperless?
+SUPPL: We never open a store near a mall
+Q: Looks like we need to talk about opening stores and what "near" and "mall" mean (and whether they are important)
 
-BUSINESS BEHAVIOR ABSTRACT
-// Anything in a Biz Behav Abstract section is a User Story Title (except comments and questions)
-	buy lemonade
-	schedule parties
+META BEHAVIOR
+Q: Are we going to meet every Thursday with the owner?
 
-	Q: Is there a loyalty program we should be talking about?
-
-//Interview went well. Plan on coming back the 5th
-
-SUPPLEMENTAL
-	People shouldn't wait more than 5 minutes for thier order
-	All lemonade will be served fresh
-
-Q: What does fresh mean?
-
-Follow-up phone call
-
-BUSINESS STRUCTURE ABSTRACT
-	drink CONTAINS lemon
-	drink CONTAINS ice
 
 
 BUSINESS BEHAVIOR ABSTRACT
-// Here's a fully-formed User Story Title
-WHEN Truck Arrives
-ASA Receiving Clerk
-INEEDTO Record Bill Of Lading
-SOTHAT We can update the inventory
+Buy Lemonade
+Count Inventory
+Recieve Shipments
 
-// Here's a partially-formed User Story Title
-ASA Truck Driver
-INEEDTO Unload Truck
+Q: Do they do their own stocking? Or just record BOLs for shipments?
+
+// We can enter in as much of a title as we know about
+ASA Customer
+INEEDTO Schedule Birthday Parties
+
+// Next time, let's find out about the giant lemon

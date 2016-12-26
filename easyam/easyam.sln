@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		bin\Debug\input1.txt = bin\Debug\input1.txt
 		bin\Debug\input2.txt = bin\Debug\input2.txt
 		bin\Debug\input3.txt = bin\Debug\input3.txt
+		bin\Debug\input4.txt = bin\Debug\input4.txt
+		bin\Debug\input5.txt = bin\Debug\input5.txt
 		..\readme.md = ..\readme.md
 	EndProjectSection
 EndProject
