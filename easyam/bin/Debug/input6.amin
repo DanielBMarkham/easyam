@@ -1,0 +1,33 @@
+Here's an example of Hypothesis-Driven Backlogs
+
+A Hypothesis is connected to desired changes which
+drive a backlog
+
+All together this forms a business case, a financial
+justification for changes to the baseline system
+
+BUSINESS HYPOTHESIS
+	Service speed drives order size
+		OBSERVATION:
+			Total wait time and order size might be related
+			On low productivity days sales go down
+		EXPECTED ACTORS IMPACTED:
+			Walk-in Customer
+		EXPECTED IMPACT METRIC GIVEN:
+			Average Line Time IS UNKNOWN
+			Average Order Wait Time IS 3 minutes STD(2.5) 
+			Average Sale Amount IS $3.50 STD(1.00)
+		EXPECTED SUCESSFUL RESULT:
+			Average Line Time WILLBE 2 minutes STD(1.5)
+			AVerage Order Wait Time WILLBE 2 minutes STD(1.5) 
+			Average Sale Amount WILLBE $5.00 STD(1.00)
+		// Here is where the hypothesis connects to the model
+		PROPOSED CHANGE TO TEST HYPOTHESIS:
+			BUSINESS SUPPLEMENTAL
+				Order Clerk scripts are edited and practiced to be < 10 sec
+				Time from store entry until push-out is recorded
+			BUSINESS BEHAVIOR
+				Order Lemonade
+			BUSINESS STRUCTURE
+		EXPECTED EXPERIMENT SUSPENSE TIME:
+			1 month
