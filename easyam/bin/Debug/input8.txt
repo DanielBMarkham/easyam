@@ -1,0 +1,32 @@
+Product Backlog example
+
+Backlog items are BUSINESS BEHAVIOR REALIZED TO-BE Items
+
+This means they must be identified by their parent item,
+the BUSINESS BEHAVIOR ABSTRACT TO-BE Items.
+
+Identifying the parent brings in all the parent's detail,
+notes, questions, supplementals, etc. so that data
+entry is not repeated.
+
+One of the things this type of result file could be used for is printing User Story cards
+
+LABEL: Product Backlog
+	BUSINESS BEHAVIOR REALIZED TO-BE
+		Buy Lemonade (IM/Text Hack) PARENT Buy Lemonade
+			NOTE: People SMS their order to our bot while in-line. Order placed automatically
+			Points:5 // if you want to add points or other tagged data
+		Use Coupon (Gesture-based) PARENT Buy Lemonade
+			NOTE: When they're actually ordering, hand gestures read by 3D kinect system gives discount
+			Points: 8
+	// Note every backlog item has a parent in BUSINESS BEHAVIOR
+	// Also note that there's a MISC and ALL parent
+	TASK
+		Upgrade test store O/S and drivers PARENT ALL
+		Team training for new POS API PARENT ALL
+		AWS script clean-up PARENT MISC
+	TESTGROUP
+		Upgrade to Version 4.0 regression tests PARENT ALL
+	BUGS
+		Order total ringing up wrong PARENT Buy Lemonade
+		New SKU size not saving PARENT Count Inventory

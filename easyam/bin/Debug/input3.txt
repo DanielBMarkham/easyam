@@ -1,0 +1,42 @@
+	Level 0 - easiest backlog entry. Joe's Dentist Office
+
+BUSINESS BEHAVIOR ABSTRACT
+	Schedule Appointment
+	Review Patient History
+	Record Patient Treatment
+	Conduct Patient Follow-up Call
+	Plan Office Load
+
+BUSINESS SUPPLEMENTAL ABSTRACT
+	Never waste the patient's time
+		AFFECTS Schedule Appointment, Conduct Patient Follow-up Call
+	Always verify patients were happy with our interaction
+		AFFECTS Schedule Appointment, Review Patient History, Conduct Patient Follow-up Call
+
+BUSINESS STRUCTURE ABSTRACT
+	Patient HASA Appointment
+	Patient HASA Teeth
+	Patient HASA Treatment History
+	Treatment History HASA Appointment
+	Appointment HASA Procedure
+	Patient HASA Billing History
+	Billing History HASA Treatment History
+
+SYSTEM SUPPLEMENTAL ABSTRACT
+	All coding changes available online within 5 minutes AFFECTS ALL
+
+LABEL: Product Backlog
+	BUSINESS BEHAVIOR REALIZED
+		See Appointment Screen PARENT Schedule Apppointment
+			NOTE: Just be able to bring up a dummy page
+		See Appointment Screen (with my data) PARENT Schedule Appointment &Points=8
+			NOTE: Include my information
+		Make Appointment (no verification) PARENT Schedule Appointment &Points=3
+			NOTE: Just enter in all data. Any front-end validation in-place
+		Make Appointment (and save) PARENT Schedule Appointment &Points=2
+			NOTE: Verify it was saved by having a chron DB dump sent to a page that users can monitor
+		View Appointments PARENT Plan Office Load &Points=2
+	TASKS
+		Team gets training on HIPPA requirements PARENT ALL
+	TESTGROUPS
+		Regression tests to upgrade system to new database PARENT ALL

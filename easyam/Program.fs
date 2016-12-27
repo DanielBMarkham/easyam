@@ -38,243 +38,200 @@
             SupplementalDirectoryInfo=SupplementalDirectoryInfo
             MetaDirectoryInfo=MetaDirectoryInfo
         }
+    let allCardinalNumbers = {1..10000}
+
+    type incomingLine = {FileNumber:int;FileInfo:System.IO.FileInfo; LineNumber:int; LineText:string}
     let loadInAllIncomingLines (fileList:System.IO.FileInfo[]) =
         let lineDumpForAllFiles = fileList |> Array.mapi(fun i x->
-            System.IO.File.ReadLines(x.FullName) |> Seq.toList  |> List.mapi(fun (j:int) (y:string)->
-                {
-                    File=Some x
-                    LineNumber=j
-                    LineType=CompilationLineType.Unknown
-                    CommandType=CompilationLineCommands.Unknown
-                    Scope=""
-                    TaggedContext=
-                        {
-                            Bucket=Buckets.Unknown
-                            Genre=Genres.Unknown
-                            TemporalIndicator=TemporalIndicators.Unknown
-                            AbstractionLevel=AbstractionLevels.Unknown
-                        }
-                    LineText=y.Trim()  
-                }
+            System.IO.File.ReadAllLines(x.FullName) |> Array.mapi(fun j y->
+                {FileNumber=i;FileInfo=x; LineNumber=j; LineText=y}
+                )
             )
-        )
-        lineDumpForAllFiles |> List.concat
-
-    let sortOutLineTypes (lines:CompilationLine list) =
-        let removedEmptyLines = lines |> List.filter(fun x->x.LineText.Length>0)
-        let bucketTokenStringList = bucketTokens |> Array.map(fun a->
-            let x,y,z=a
-            x)
-        let determinedLineType = removedEmptyLines |> List.map(fun x->
-            match (x.LineText.ContainsAny bucketTokenStringList), (x.LineText.ContainsAny informationTagTokens), (x.LineText.ContainsAny scopingTokenVals), (x.LineText.ContainsAny commandTokens) with
-                | true, _,_,_->
-                    let newBucketStruct = bucketTokens |> Array.find(fun y->
-                        let a,b,c=y
-                        x.LineText.ContainsAny [|a|]
-                        )
-                    let a,b,c = newBucketStruct
-                    let newBucket = b
-                    {x with LineType=CompilationLineType.Command; TaggedContext={x.TaggedContext with Bucket=b}}
-                | false, true, _, _ ->
-                    {x with LineType=CompilationLineType.Context}
-                | false, false, true, _ ->
-                    {x with LineType=CompilationLineType.Scoping}
-                | false, false, false, true ->
-                    let foundToken = commandTokens |> Array.find(fun y->x.LineText.Contains(y))
-                    let newCommandType = match foundToken with
-                                                | "HASA"->CompilationLineCommands.Hasa
-                                                | "CONTAINS"->CompilationLineCommands.Contains
-                                                | "Q:"->CompilationLineCommands.Question
-                                                | "//"->CompilationLineCommands.Comment
-                                                |_ ->CompilationLineCommands.Unknown
-                    if newCommandType = CompilationLineCommands.Comment then {x with CommandType=newCommandType; LineType=CompilationLineType.Command} else {x with CommandType=newCommandType}
-                | false, false, false, false->
-                    {x with LineType=CompilationLineType.Freetext}
-            )
-        determinedLineType
-
-    let addRunningContext (lines:CompilationLine list):CompilationContext =        
-        let k=9
-        let bucketTokenStringList = bucketTokens |> Array.map(fun a->
-            let x,y,z=a
-            x)
-        ()
-        lines |> List.fold(fun (acc:CompilationContext) x->
-            // when the file changes, reset the context
-            let newacc = 
-                if x.File.IsSome && x.File.Value.FullName <> acc.CurrentFile
-                    then 
-                        {acc with CurrentFile=x.File.Value.FullName; State = defaultInformationTag; Scope=""}
-                    else acc
-            let bucketTokenFound = bucketTokenStringList |> Array.tryFind(fun k->x.LineText.Contains k)
-            let newCompilationContext = 
-                if bucketTokenFound.IsSome
-                    then
-                        let newBucketTokenText, newBucket, c = bucketTokens |> Array.find(fun k->
-                            let d,e,f = k
-                            x.LineText.Contains d)
-                        {newacc with State={acc.State with Bucket=newBucket}}
-                    else
-                        match x.LineType with
-                            | CompilationLineType.Scoping->
-                                    let foundTokenText = scopingTokenVals |> Array.find(fun y->x.LineText.Contains(y))
-                                    let positionWhereAllCapsKeywordStarts = x.LineText.IndexOf(foundTokenText)
-                                    let newScope = x.LineText.Substring(positionWhereAllCapsKeywordStarts + foundTokenText.Length).Trim()
-                                    let foundToken = scopingTokens |> Array.find(fun y->(fst y)=foundTokenText)
-                                    let newBucket = 
-                                        if (snd foundToken).IsSome
-                                            then
-                                                (snd foundToken).Value
-                                            else
-                                                newacc.State.Bucket
-                                    {newacc with Scope= newScope; State={acc.State with Bucket=newBucket}}
-                            | CompilationLineType.Context->
-                                    let lineWords = x.LineText.Split([|" "|],System.StringSplitOptions.None)
-                                    let newContext = lineWords |> Array.fold(fun (acc:CompilationContext) x->
-                                                                                    match x.Trim() with 
-                                                                                                | "BEHAVIOR"->{acc with State={acc.State with Bucket=Buckets.Behavior}}
-                                                                                                | "STRUCTURE"->{acc with State={acc.State with Bucket=Buckets.Structure}}
-                                                                                                | "SUPPLEMENTAL"->{acc with State={acc.State with Bucket=Buckets.Supplemental}}
-                                                                                                | "META"->{acc with State={acc.State with Bucket=Buckets.Meta}}
-                                                                                                | "BUSINESS"->{acc with State={acc.State with Genre=Genres.Business}}
-                                                                                                | "SYSTEM"->{acc with State={acc.State with Genre=Genres.System}}
-                                                                                                | "ABSTRACT"->{acc with State={acc.State with AbstractionLevel=AbstractionLevels.Abstract}}
-                                                                                                | "REALIZED"->{acc with State={acc.State with AbstractionLevel=AbstractionLevels.Realized}}
-                                                                                                | "AS-IS"->{acc with State={acc.State with TemporalIndicator=TemporalIndicators.AsIs}}
-                                                                                                | "TO-BE"->{acc with State={acc.State with TemporalIndicator=TemporalIndicators.ToBe}}
-                                                                                                |_ ->acc
-
-                                                                                    ) newacc
-                                    newContext
-                            | CompilationLineType.Command->
-                                newacc
-                            | CompilationLineType.Freetext->
-                                newacc
-                            |_->newacc
-            // if it's freetext with context, it's a label
-            let newListItem =
-                if ( (x.LineType = CompilationLineType.Freetext) && (newCompilationContext.State.Bucket<>Buckets.Unknown) )
-                    then
-                         { x with
-                            CommandType=CompilationLineCommands.Label
-                            Scope=newCompilationContext.Scope
-                            TaggedContext=newCompilationContext.State
-                            LineType=CompilationLineType.Label
-                         }
-                    else
-                         { x with
-                            Scope=newCompilationContext.Scope
-                            TaggedContext=newCompilationContext.State
-                         }
-            let newCompilationLines = List.append newacc.CompilationLines [newListItem]
+        lineDumpForAllFiles |> Array.concat
+    
+    let smashTwoModelItems (existingModelItem:ModelItem) (incomingModelItem:ModelItem) =
+            let newId=incomingModelItem.Id
+            let newParent=if incomingModelItem.Parent.IsSome then incomingModelItem.Parent else existingModelItem.Parent
+            let newItemType=if incomingModelItem.ItemType<>ModelItemType.None then incomingModelItem.ItemType else existingModelItem.ItemType
+            let newBucket=if incomingModelItem.Bucket<>Buckets.Unknown then incomingModelItem.Bucket else existingModelItem.Bucket
+            let newGenre=if incomingModelItem.Genre<>Genres.Unknown then incomingModelItem.Genre else existingModelItem.Genre
+            let newAbstractionLevel=if incomingModelItem.AbstractionLevel<>AbstractionLevels.Unknown then incomingModelItem.AbstractionLevel else existingModelItem.AbstractionLevel
+            let newTemporalIndicator=if incomingModelItem.TemporalIndicator<>TemporalIndicators.Unknown then incomingModelItem.TemporalIndicator else existingModelItem.TemporalIndicator
+            let newItemAnnotation=incomingModelItem.ItemAnnotation
+            let newSourceReferences=incomingModelItem.SourceReferences
+            let newShortName=incomingModelItem.ShortName
             {
-                newCompilationContext with
-                    CompilationLines=newCompilationLines
+                Id=newId
+                Parent=newParent
+                ItemType=newItemType
+                Bucket=newBucket
+                Genre=newGenre
+                AbstractionLevel=newAbstractionLevel
+                TemporalIndicator=newTemporalIndicator
+                ItemAnnotation=newItemAnnotation
+                SourceReferences=newSourceReferences
+                ShortName=newShortName
             }
-            ) defaultCompilationContext
-    let createDomainModel (ctx:CompilationContext):StructuredAnalysisModel =
-//        let domainStatements = ctx.CompilationLines |> List.filter(fun x->
-//            ( (x.CommandType=CompilationLineCommands.Hasa) || (x.CommandType=CompilationLineCommands.Contains))
-//            && (x.TaggedContext.Bucket=Buckets.Structure)
-//            && (x.TaggedContext.AbstractionLevel=AbstractionLevels.Abstract)
-//            && (x.TaggedContext.Genre=Genres.Business))
-//
-//        let domainModelEntitiesTupleList = domainStatements |> List.filter(fun x->x.CommandType=CompilationLineCommands.Hasa) |> List.map(fun x->
-//            let splitStatement = x.LineText.Split([|"HASA"|], System.StringSplitOptions.None)
-//            ({NounClause.text=splitStatement.[0].Trim()}, {NounClause.text=splitStatement.[1].Trim()})
-//            )
-//        let domainModelEntities1 = domainModelEntitiesTupleList |> List.map(fun x->(fst x))
-//        let domainModelEntities2 = domainModelEntitiesTupleList |> List.map(fun x->(snd x))
-//        let domainModelEntities = (List.concat [domainModelEntities1; domainModelEntities2]) |> Seq.distinct |> Seq.toList
 
-//        let domainModelEntitiesAttributeList1= domainStatements |> List.filter(fun x->x.CommandType=CompilationLineCommands.Contains) |> List.map(fun x->
-//            let splitStatement = x.LineText.Split([|"CONTAINS"|], System.StringSplitOptions.None)
-//            (splitStatement.[0].Trim(), splitStatement.[1].Trim())
-//            )
-//        let domainModelEntitiesAttributeList = domainModelEntitiesAttributeList1 |> Seq.toList |> List.map(fun x->({NounClause.text=fst x},{NounClause.text=snd x}))
-//
-//        let newEntities = domainModelEntities |> List.map(fun x->
-//            let newEntityAttributes = domainModelEntitiesAttributeList |> List.filter(fun y->(fst y)=x) |> List.map(fun y->(snd y))
-//            let newEntityDomainConnections = domainModelEntitiesTupleList |> List.filter(fun y->(fst y)=x) |> List.map(fun x->(snd x))
-//            {
-//                Title = x
-//                Attributes=newEntityAttributes
-//                Connections=newEntityDomainConnections
-//            }
-//
-//            )
-        ctx.CompilationLines |> List.fold(fun acc x->
-            match x.TaggedContext.Bucket with
-                | Buckets.Unknown->
-                    let newLines = List.append acc.Unknown [x]
-                    {acc with Unknown=newLines}
-                | Buckets.Structure->
-                    let newLines = List.append (acc.StructureModel.Input.CompilationLines) [x]
-                    let newInput = {acc.StructureModel.Input with CompilationLines=newLines}
-                    let newStructureModel = {acc.StructureModel with Input=newInput}
-                    let newacc={acc with StructureModel=newStructureModel}
-                    newacc
-                | Buckets.Behavior->
-                    let newLines = List.append (acc.BehaviorModel.Input.CompilationLines) [x]
-                    let newInput = {acc.BehaviorModel.Input with CompilationLines=newLines}
-                    let newBehaviorModel = {acc.BehaviorModel with Input=newInput}
-                    let newacc={acc with BehaviorModel=newBehaviorModel}
-                    newacc
-                    //let newLines = List.append acc.BehaviorModel [x]
-                    //{acc with BehaviorModel=newLines}
-                | Buckets.Supplemental->
-                    let newLines = List.append (acc.SupplementalModel.Input.CompilationLines) [x]
-                    let newInput = {acc.SupplementalModel.Input with CompilationLines=newLines}
-                    let newSupplementalModel = {acc.SupplementalModel with Input=newInput}
-                    let newacc={acc with SupplementalModel=newSupplementalModel}
-                    newacc
-                    //let newLines = List.append acc.SupplementalModel [x]
-                    //{acc with SupplementalModel=newLines}
-                | Buckets.Meta->
-                    let newLines = List.append (acc.MetaModel.Input.CompilationLines) [x]
-                    let newInput = {acc.MetaModel.Input with CompilationLines=newLines}
-                    let newMetaModel = {acc.MetaModel with Input=newInput}
-                    let newacc={acc with MetaModel=newMetaModel}
-                    newacc
-                    //let newLines = List.append acc.MetaModel [x]
-                    //{acc with MetaModel=newLines}
-            ) defaultStructuredAnalysisModel
-        //{Entities=newEntities; DomainConnections=List.empty}
-
-    let checkInputFilesForErrors (ctx:CompilationContext) (opts:EasyAMProgramConfig) =
-        // duplicate labels
-        let labels = ctx.CompilationLines |> List.filter(fun x->x.CommandType=CompilationLineCommands.Label)
-        let duplicates = labels |> duplicatesBy(fun x y->x.LineText=y.LineText)
-        //let dupeSort = duplicates |> Seq.groupBy(fun x->x.TaggedContext.AbstractionLevel)
-        Genres.ToList() |> List.iter(fun x->
-            let dupeListByGenre = duplicates |> List.filter(fun y->y.TaggedContext.Genre=x)
-            if dupeListByGenre.Length>0
-                then                    
-                    System.Console.WriteLine ("ERROR: Duplication found in the " + x.ToString() + " genre.")
-                    dupeListByGenre |> List.iteri(fun i y->
-                        System.Console.WriteLine(i.ToString() + ". '" + y.LineText + "' found on line " + y.LineNumber.ToString() + " of file " + y.File.Value.FullName)
-                        )
-                    System.Console.WriteLine ""
+    let smashTokensWithModelItem (tokens:(LanguageTokenMatchType*LanguageToken*int) option list) (modelItem:ModelItem option):ModelItem =
+        let startingModelItem = if modelItem.IsSome then modelItem.Value else defaultModelItem
+        let newModelItem = tokens |> List.fold(fun (acc:ModelItem) x->
+            if x.IsSome
+                then
+                    let xVal=
+                        let a,b,c=x.Value
+                        b.ExampleItem
+                    let newItemType=if xVal.ItemType=ModelItemType.None then acc.ItemType else xVal.ItemType
+                    let newBucket=if ( (xVal.Bucket=Buckets.None) || (xVal.Bucket=Buckets.Unknown) ) then acc.Bucket else xVal.Bucket
+                    let newGenre=if ( (xVal.Genre=Genres.None) || (xVal.Genre=Genres.Unknown)) then acc.Genre else xVal.Genre
+                    let newAbstractionLevel=if ( (xVal.AbstractionLevel=AbstractionLevels.None) || (xVal.AbstractionLevel=AbstractionLevels.Unknown)) then acc.AbstractionLevel else xVal.AbstractionLevel
+                    let newTemporalIndicator=if ( (xVal.TemporalIndicator=TemporalIndicators.None) || (xVal.TemporalIndicator=TemporalIndicators.Unknown)) then acc.TemporalIndicator else xVal.TemporalIndicator
+                    { acc with
+                        ItemType=newItemType
+                        Bucket=newBucket
+                        Genre=newGenre
+                        AbstractionLevel=newAbstractionLevel
+                        TemporalIndicator=newTemporalIndicator
+                    }
                 else
-                    ()
-            )
-        ()
+                            acc
+                            ) startingModelItem
+        newModelItem
+    let removeNameValueTags (lineWithOnlyLabelRemaining:string) (currentContext:ModelItem) =
+        if lineWithOnlyLabelRemaining.Contains("&")
+            then
+                let firstDelimiter=lineWithOnlyLabelRemaining.IndexOf("&")
+                let newLineWithOnlyLabelRemaining=lineWithOnlyLabelRemaining.GetLeft(firstDelimiter-1)
+                let delimterSection = lineWithOnlyLabelRemaining.Substring(firstDelimiter+1)
+                let delimiterSections=delimterSection.Split([|"&"|], System.StringSplitOptions.None)
+                let newModelItems = delimiterSections |> Array.fold(fun acc x->
+                                    List.append acc [{currentContext with Id=(Seq.take 1 allCardinalNumbers |> Seq.toArray).[0]; ShortName=x; ItemType=ModelItemType.NameValuePair}]
+                                    ) []
+                newLineWithOnlyLabelRemaining, newModelItems
+            else
+                lineWithOnlyLabelRemaining, []
+    type ProcessContext = {ContextStack:System.Collections.Generic.Stack<ModelItem>; Lines:ModelItem list}
+    let defaultProcessContext = 
+        let newContextStack = new System.Collections.Generic.Stack<ModelItem>()
+        newContextStack.Push(defaultModelItem)
+        {ContextStack=newContextStack; Lines=[]}
+    
+    let processIncomingLines incomingLines =        
+        let whiteSpaceRegex=new System.Text.RegularExpressions.Regex("^\s+")
+        let compiledContext = 
+            incomingLines |> Array.fold(fun acc x->
+            let lastItemProcessed=if acc.Lines.Length>0 then Some(acc.Lines.Item(acc.Lines.Length-1)) else option<ModelItem>.None
+            let lastSourceReferenceForLastItemProcessed=if lastItemProcessed.IsNone then option<SourceReference>.None else Some(lastItemProcessed.Value.SourceReferences.Item(lastItemProcessed.Value.SourceReferences.Length-1))
+            // if there's a new file from the last time, we zap the stack and start over with context
+            let newacc = 
+                if ( (acc<>defaultProcessContext) && (lastSourceReferenceForLastItemProcessed.Value.File.FullName<>x.FileInfo.FullName))
+                    then
+                        defaultProcessContext
+                    else
+                        acc
+            let indentLevel, lineWithoutLeadingSpaces = 
+                let whiteSpaceMatches = whiteSpaceRegex.Matches(x.LineText).toArray
+                if whiteSpaceMatches.Length>0
+                    then
+                        let leadingWhiteSpace = whiteSpaceMatches.[0].Value
+                        let tabCount = leadingWhiteSpace.CountOccurences("\t")
+                        let spaceCount = leadingWhiteSpace.CountOccurences(" ")
+                        ((tabCount + (spaceCount/4)),x.LineText.Remove(leadingWhiteSpace.Length+1))
+                    else (0,x.LineText)
+            let endingComment, lineWithoutBeginningWhitespaceOrEndingComment = 
+                let isThereACommentIndicator = lineWithoutLeadingSpaces.Contains("//")
+                if isThereACommentIndicator
+                    then
+                        let lineCommentBeginsAt = lineWithoutLeadingSpaces.IndexOf("//")
+                        let lineWithoutComment = lineWithoutLeadingSpaces.GetRight(lineCommentBeginsAt)
+                        let lineEndingComment = lineWithoutLeadingSpaces.Substring(lineCommentBeginsAt+3).Trim()
+                        lineWithoutComment, lineEndingComment
+                    else
+                        "", lineWithoutLeadingSpaces
+            let isThereAToken = languageTokenMatches lineWithoutBeginningWhitespaceOrEndingComment
+            if isThereAToken.Length>0
+                then
+                    // smash token list with previous one to make new one
+                    let newModelItemWithTokensAdded=smashTokensWithModelItem isThereAToken (if newacc.ContextStack.Count>0 then Some(newacc.ContextStack.Peek()) else option<ModelItem>.None)
+                    // push new one on the stack
+                    newacc.ContextStack.Push(newModelItemWithTokensAdded)
+                    // if there are labels on the same line, create a new modelItem for those (including SourceReference) and add
+                    if lineWithoutBeginningWhitespaceOrEndingComment.Contains(":")
+                        then
+                            let onlyGoodTokens = isThereAToken 
+                                                |> List.filter(fun j->j.IsSome) 
+                                                |> List.map(fun j->j.Value) 
+                                                |> List.map(fun (a,b,c)->b)
+                            let removeAllButLabel =
+                                onlyGoodTokens 
+                                    |> List.fold(fun (acc3:string) z->
+                                        acc3.Replace(z.TokenText,"")
+                                        ) (lineWithoutBeginningWhitespaceOrEndingComment.Replace(":", ""))
+                            let trimUpLabel = removeAllButLabel.Trim()
+                            let newName, newNameValueTagsWithoutLabel = removeNameValueTags trimUpLabel newModelItemWithTokensAdded
+                            let newSourceReferences = [{File=x.FileInfo; LineNumber=x.LineNumber}]
+                            let newId2 = (allCardinalNumbers |> Seq.take(1)  |> Seq.toArray).[0]
+                            let newModelItem = { newModelItemWithTokensAdded with Id=newId2; ItemType=ModelItemType.Label;ShortName=newName; SourceReferences=newSourceReferences}
+
+                            let newNameValueLinesAddingSourceReference = newNameValueTagsWithoutLabel |> List.map(fun x->{x with SourceReferences=newSourceReferences; Parent=Some newModelItem.Id})
+                            let newModelItemAndAnyNameValuePairs = List.append [newModelItem] newNameValueLinesAddingSourceReference
+                            let newContextLines = List.append acc.Lines newModelItemAndAnyNameValuePairs
+
+                            {newacc with Lines=newContextLines}
+                        else
+                            newacc
+                else
+                    // if there were no tokens on the line
+                    // If there are any buckets in the stack it's an item
+                    // otherwise it's a comment
+                    let anyBucketsOnTheStack = 
+                        ( (newacc.ContextStack.Count>0) && (newacc.ContextStack.Peek().Bucket<>Buckets.None) && (newacc.ContextStack.Peek().Bucket<>Buckets.Unknown) )
+                    if anyBucketsOnTheStack
+                        then
+                            let tempNewItem = {(smashTwoModelItems (acc.ContextStack.Peek()) defaultModelItem) with Id=(allCardinalNumbers |> Seq.take(1)  |> Seq.toArray).[0]}
+                            // pull out any Name/Value pairs from the line
+                            let newName, newNameValueTagsWithoutLabel = removeNameValueTags lineWithoutBeginningWhitespaceOrEndingComment tempNewItem
+                            let newSourceReferences = [{File=x.FileInfo; LineNumber=x.LineNumber}]
+                            let newModelItem = 
+                                // find any existing root model lines and add new reference. Otherwise add new model line
+                                let isThereExistingItem = newacc.Lines |> List.tryFind(fun y->y.ShortName=newName)
+                                if isThereExistingItem.IsSome                           
+                                    then
+                                        { tempNewItem with ItemType=ModelItemType.Item;ShortName=newName; SourceReferences=newSourceReferences}
+                                    else
+                                        { tempNewItem with ItemType=ModelItemType.Item;ShortName=newName; SourceReferences=newSourceReferences}
+
+                            let newNameValueLinesAddingSourceReference = newNameValueTagsWithoutLabel |> List.map(fun x->{x with SourceReferences=newSourceReferences; Parent=Some newModelItem.Id})
+                            let newModelItemAndAnyNameValuePairs = List.append [newModelItem] newNameValueLinesAddingSourceReference
+                            let newContextLines = List.append acc.Lines newModelItemAndAnyNameValuePairs
+
+                            {newacc with Lines=newContextLines}
+                        else
+                            // no buckets on stack. It's a comment
+                            if lineWithoutBeginningWhitespaceOrEndingComment.Length=0
+                                then newacc
+                                else
+                                    let mostRecentContext=newacc.ContextStack.Peek()
+                                    let newSourceReference =
+                                        {
+                                            File=x.FileInfo
+                                            LineNumber=x.LineNumber
+                                        }
+                                    let newModelItem =
+                                        {
+                                            mostRecentContext with Id=(allCardinalNumbers |> Seq.take(1)  |> Seq.toArray).[0]; ShortName=lineWithoutBeginningWhitespaceOrEndingComment;SourceReferences=[newSourceReference]
+                                        }
+                                    let newContextLines = List.append acc.Lines [newModelItem]
+                                    {newacc with Lines=newContextLines}
+            ) defaultProcessContext
+        compiledContext.Lines
+
     let doStuff (opts:EasyAMProgramConfig) =
         let programDirectories = getDirectories opts
         let fileList = programDirectories.SourceDirectoryInfo.GetFiles() |> Seq.filter(fun x->
             ((x.Name.GetRight 3).ToUpper() <> "EXE") && ((x.Name.GetRight 3).ToUpper() <> "DLL") && ((x.Name.GetRight 3).ToUpper() <> "XML") && ((x.Name.GetRight 3).ToUpper() <> "PDB") && ((x.Name.GetRight 6).ToUpper() <> "CONFIG") && ((x.Name.GetRight 3).ToUpper() <> "CSV") && ((x.Name.GetRight 3).ToUpper() <> "SVG") && ((x.Attributes.HasFlag(System.IO.FileAttributes.Directory)=false)) ) |> Seq.toArray
-        let compilationLines = loadInAllIncomingLines fileList
-        // Here's the heart of the code. Update each line separately. Then update each line using a running context
-        let lineTypesAdded = sortOutLineTypes compilationLines
-        let lineContextAdded = addRunningContext lineTypesAdded
-
-        dumpInputFiles lineContextAdded programDirectories
-        checkInputFilesForErrors lineContextAdded opts
-
-        let domainModel = createDomainModel lineContextAdded
-        dumpModelBuckets domainModel programDirectories
-
-//        createDomainModelDiagram domainModel "domain.svg"
+        let incomingLines = loadInAllIncomingLines fileList
+        let StructuredAnalysisModel = processIncomingLines incomingLines
         ()
 
 

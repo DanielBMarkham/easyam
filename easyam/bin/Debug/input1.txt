@@ -1,47 +1,31 @@
-eastyam is a compiler for business intent. 
-It's goal is to provide the minimal amount of structure
-necessary to capture and remember important business
-conversations, taking that information in one
-place and distributing wherever it's needed.
+//															Example 2
+//															Simplest Backlog
 
-Keywords are in ALL CAPS. Everything else is unstuctured
+WORK: Met with Joe again. Signed contract and first backlog &time=60
 
+MASTER BACKLOG
+	Review Patient History
+	Record Patient Treatment
+	Conduct Patient Follow-up Call
 
-This is an example of a freeform file, the kind
-of notes that might be taken at a meeting with a
-new client.
+PRODUCT BACKLOG
+	Plan Office Load PARENT Plan Daily Work // Need to fix language here to align with parent
 
-BUSINESS STRUCTURE ABSTRACT
-Lemons
-Sugar
-Glasses
-Mixers
-Menus
-Tables
-Schedule
-Employees
-Lemonade
-Lemonade HASA Recipe
-Recipe CONTAINS Ingredients
-Recipe CONTAINS Instructions
+SPRINT BACKLOG: Sprint 1
+	See Appointment Screen PARENT Schedule Apppointment
+		NOTE: Just be able to bring up a dummy page
+	See Appointment Screen (with my data) PARENT Schedule Appointment &Points=8
+		NOTE: Include my information
+	Make Appointment (no verification) PARENT Schedule Appointment &Points=3
+		NOTE: Just enter in all data. Any front-end validation in-place
+	Make Appointment (and save) PARENT Schedule Appointment &Points=2
+		NOTE: Verify it was saved by having a chron DB dump sent to a page that users can monitor
+	View Appointments PARENT Plan Office Load &Points=2
+TASKS
+	Team gets training on HIPPA requirements from Mary PARENT ALL
 
-SUPPL: We never open a store near a mall
-Q: Looks like we need to talk about opening stores and what "near" and "mall" mean (and whether they are important)
+NOTE: We'l be meeting with Joe on Mon/Wed/Fri from 9-10. At all times Office Manager will be available
 
-META BEHAVIOR
-Q: Are we going to meet every Thursday with the owner?
-
-
-
-BUSINESS BEHAVIOR ABSTRACT
-Buy Lemonade
-Count Inventory
-Recieve Shipments
-
-Q: Do they do their own stocking? Or just record BOLs for shipments?
-
-// We can enter in as much of a title as we know about
-ASA Customer
-INEEDTO Schedule Birthday Parties
-
-// Next time, let's find out about the giant lemon
+META BUSINESS STRUCTURE
+	Sprint close on Wednesday afternoons at 3
+	Weekly sprints
