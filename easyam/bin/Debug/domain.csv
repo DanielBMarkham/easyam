@@ -1,8 +1,0 @@
-﻿Domain Statements
-	drink HASA recipe
-	recipe HASA ingredient
-	inventory HASA ingredient
-	inventory HASA office supplies
-	drink CONTAINS lemon
-	drink CONTAINS ice
-Domain Nouns

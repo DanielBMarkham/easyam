@@ -7,6 +7,11 @@
             let idx = rnd.Next(x.Length)
             x.[idx]
 
+    type System.Random with
+        /// Generates an infinite sequence of random numbers within the given range.
+        member this.GetValues(minValue, maxValue) =
+            Seq.initInfinite (fun _ -> this.Next(minValue, maxValue))
+
     type System.String with
         member x.ContainsAny (possibleMatches:string[]) =
             let ret = possibleMatches |> Array.tryFind(fun y->
@@ -261,4 +266,17 @@
             EntityBorderWidth="1"
             EntityFillColor="#dddddd"
             EntityFillOpacity="80%"
+        }
+    type ProgramDirectories =
+        {
+            SourceDirectoryInfo:System.IO.DirectoryInfo
+            DestinationDirectoryInfo:System.IO.DirectoryInfo
+            BehaviorDirectoryInfo:System.IO.DirectoryInfo
+            StructureDirectoryInfo:System.IO.DirectoryInfo
+            SupplementalDirectoryInfo:System.IO.DirectoryInfo
+            MetaDirectoryInfo:System.IO.DirectoryInfo
+        }
+    type ProgramInputFiles = 
+        {
+            Files:System.IO.FileInfo list
         }

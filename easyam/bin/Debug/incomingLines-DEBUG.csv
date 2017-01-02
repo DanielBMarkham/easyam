@@ -1,251 +1,2021 @@
-0	1	None None None None	Example 1	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-1	1	None None None None	Initial Phone Notes	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-2	1	None None None None	Joe's Dental Project	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-3	1	Business Meta Realized As-Is	Called Joe to talk about upcoming project	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-4	1	Business Meta Realized As-Is	time=45	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-5	1	None None None None	Patient	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-6	1	None None None None	Dentist	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-7	1	None None None None	Procedure	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-8	1	None None None None	Q: Is there more than one dentist?	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-9	1	None None None None	Q: How many different kinds of procedures are they? Is there a list/codes?	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-10	1	None None None None	Perform Procedure	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-11	1	None None None None	This seems to be a hot button with Joe	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-12	1	None None None None	Plan Daily Work	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-13	1	None None None None	NOTE: used by the office manager and others (?) to optimize day	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-14	1	None None None None	The customer should never wait	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-15	1	None None None None	Telephone calls should be no more than 5 minutes total	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-16	1	None None None None	Anything done on the phone should also be availale online	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-17	1	None None None None	We always need to learn how we're doing	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-18	1	None None None None	Follow-up contacts should occur with any customer interaction	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-19	1	None None None None	Follow-up contacts should be fun	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-20	1	None None None None	We have big, visible, public displays of how we're doing	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-21	1	None None None None	Q: Are we going to graph a lot of things?	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-22	1	None None None None	Q: Is there a big printer available?	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-23	1	None None None None	Q: What about web dashboards?	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-24	1	Business Meta Abstract To-Be	Get contract template together and filled out	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-25	1	Business Meta Abstract To-Be	Have the initial consulting, work-for-hire conversation	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-26	1	None None None None	Hmm	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-27	1	None None None None	##It'll be good to remind Joe of our key offerings	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-28	1	None None None None	- Nice people	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-29	1	None None None None	- We smile a lot	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-30	1	None None None None	- We like pets	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-31	1	Business Meta Realized As-Is	set up folders, todos, and initial easyam compile pipeline	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-32	1	Business Meta Realized As-Is	time=15	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin	
-33	1	None None None None	Example 2	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-34	1	None None None None	Simplest Backlog	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-35	1	Business Meta Realized As-Is	Met with Joe again. Signed contract and first backlog	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-36	1	Business Meta Realized As-Is	time=60	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-37	1	None None None None	Review Patient History	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-38	1	None None None None	Record Patient Treatment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-39	1	None None None None	Conduct Patient Follow-up Call	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-40	1	None None None None	Need to fix language here to align with parent	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-41	1	Business Behavior Realized To-Be	Sprint 1	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-42	1	None None None None	See Appointment Screen PARENT Schedule Apppointment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-43	1	None None None None	NOTE: Just be able to bring up a dummy page	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-44	1	None None None None	See Appointment Screen (with my data) PARENT Schedule Appointment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-45	1	None None None None	Points=8	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-46	1	None None None None	NOTE: Include my information	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-47	1	None None None None	Make Appointment (no verification) PARENT Schedule Appointment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-48	1	None None None None	Points=3	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-49	1	None None None None	NOTE: Just enter in all data. Any front-end validation in-place	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-50	1	None None None None	Make Appointment (and save) PARENT Schedule Appointment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-51	1	None None None None	Points=2	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-52	1	None None None None	NOTE: Verify it was saved by having a chron DB dump sent to a page that users can monitor	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-53	1	None None None None	View Appointments PARENT Plan Office Load	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-54	1	None None None None	Points=2	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-55	1	None None None None	TASKS	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-56	1	None None None None	Team gets training on HIPPA requirements from Mary PARENT ALL	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-57	1	None None None None	NOTE: We'l be meeting with Joe on Mon/Wed/Fri from 9-10. At all times Office Manager will be available	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-58	1	None None None None	Sprint close on Wednesday afternoons at 3	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-59	1	None None None None	Weekly sprints	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin	
-60	1	None None None None	Level 0 - easiest backlog entry. Joe's Dentist Office	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-61	1	None None None None	Schedule Appointment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-62	1	None None None None	Review Patient History	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-63	1	None None None None	Record Patient Treatment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-64	1	None None None None	Conduct Patient Follow-up Call	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-65	1	None None None None	Plan Office Load	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-66	1	None None None None	Never waste the patient's time	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-67	1	None None None None	AFFECTS Schedule Appointment, Conduct Patient Follow-up Call	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-68	1	None None None None	Always verify patients were happy with our interaction	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-69	1	None None None None	AFFECTS Schedule Appointment, Review Patient History, Conduct Patient Follow-up Call	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-70	1	None None None None	Patient HASA Appointment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-71	1	None None None None	Patient HASA Teeth	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-72	1	None None None None	Patient HASA Treatment History	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-73	1	None None None None	Treatment History HASA Appointment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-74	1	None None None None	Appointment HASA Procedure	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-75	1	None None None None	Patient HASA Billing History	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-76	1	None None None None	Billing History HASA Treatment History	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-77	1	None None None None	All coding changes available online within 5 minutes AFFECTS ALL	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-78	1	None None None None	LABEL: Product Backlog	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-79	1	None None None None	See Appointment Screen PARENT Schedule Apppointment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-80	1	None None None None	NOTE: Just be able to bring up a dummy page	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-81	1	None None None None	See Appointment Screen (with my data) PARENT Schedule Appointment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-82	1	None None None None	Points=8	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-83	1	None None None None	NOTE: Include my information	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-84	1	None None None None	Make Appointment (no verification) PARENT Schedule Appointment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-85	1	None None None None	Points=3	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-86	1	None None None None	NOTE: Just enter in all data. Any front-end validation in-place	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-87	1	None None None None	Make Appointment (and save) PARENT Schedule Appointment	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-88	1	None None None None	Points=2	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-89	1	None None None None	NOTE: Verify it was saved by having a chron DB dump sent to a page that users can monitor	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-90	1	None None None None	View Appointments PARENT Plan Office Load	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-91	1	None None None None	Points=2	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-92	1	None None None None	TASKS	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-93	1	None None None None	Team gets training on HIPPA requirements PARENT ALL	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-94	1	None None None None	TESTGROUPS	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-95	1	None None None None	Regression tests to upgrade system to new database PARENT ALL	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin	
-96	1	None None None None	eastyam is a compiler for business intent. 	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-97	1	None None None None	It's goal is to provide the minimal amount of structure	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-98	1	None None None None	necessary to capture and remember important business	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-99	1	None None None None	conversations, taking that information in one	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-100	1	None None None None	place and distributing wherever it's needed.	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-101	1	None None None None	Keywords are in ALL CAPS. Everything else is unstuctured	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-102	1	None None None None	This is an example of a freeform file, the kind	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-103	1	None None None None	of notes that might be taken at a meeting with a	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-104	1	None None None None	new client.	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-105	1	None None None None	Lemons	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-106	1	None None None None	Sugar	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-107	1	None None None None	Glasses	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-108	1	None None None None	Mixers	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-109	1	None None None None	Menus	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-110	1	None None None None	Tables	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-111	1	None None None None	Schedule	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-112	1	None None None None	Employees	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-113	1	None None None None	Lemonade	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-114	1	None None None None	Lemonade HASA Recipe	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-115	1	None None None None	Recipe CONTAINS Ingredients	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-116	1	None None None None	Recipe CONTAINS Instructions	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-117	1	None None None None	SUPPL: We never open a store near a mall	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-118	1	None None None None	Q: Looks like we need to talk about opening stores and what "near" and "mall" mean (and whether they are important)	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-119	1	None None None None	Q: Are we going to meet every Thursday with the owner?	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-120	1	None None None None	Buy Lemonade	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-121	1	None None None None	Count Inventory	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-122	1	None None None None	Recieve Shipments	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-123	1	None None None None	Q: Do they do their own stocking? Or just record BOLs for shipments?	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-124	1	None None None None	We can enter in as much of a title as we know about	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-125	1	None None None None	ASA Customer	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-126	1	None None None None	INEEDTO Schedule Birthday Parties	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-127	1	None None None None	Next time, let's find out about the giant lemon	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin	
-128	1	None None None None	It outputs two things: first, all of the input files organized by	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-129	1	None None None None	filename and Structured Analysis Tag in a format that can be re-	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-130	1	None None None None	used to input it back into the system. In this way the compiler 	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-131	1	None None None None	alongside with git can be used to "clean up" a bunch of SA notes	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-132	1	None None None None	into a universal text format. Secondly, it outputs all of the files	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-133	1	None None None None	in a detailed, cross-referenced format. So, for instance, a User	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-134	1	None None None None	Story for the upcoming sprint will have all of the supplemental	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-135	1	None None None None	and parent acceptance and description criteria automatically	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-136	1	None None None None	attached to it. (There are also a few debug outputs available)	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-137	1	None None None None	These outputs can be used in dozens of additional business intent	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-138	1	None None None None	pipeline programs. Some possible uses are: story card generator,	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-139	1	None None None None	activity diagram generator, domain model generator, help desk	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-140	1	None None None None	script creation, manual acceptance test script creation, production	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-141	1	None None None None	system monitoring scripts, release plan reports, burn-downs and 	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-142	1	None None None None	burn-ups, sprint snapshots, and so on.	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-143	1	None None None None	Basically anywhere business intent is resued in the project, a 	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-144	1	None None None None	pipeline tool should be able to convert these notes into useful	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-145	1	None None None None	information consumed by automated tools and humans alike.	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-146	1	None None None None	Here's an example of how information might be organized around	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-147	1	None None None None	user stories. Teams are free to organize information however they	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-148	1	None None None None	see fit. (Note: over time, language, terms and organization should	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-149	1	None None None None	move from fuzzy and disorganized to concrete and highly organized)	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-150	1	None None None None	YOU WOULD NEVER CREATE A FILE LIKE THIS ON ITS OWN.	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-151	1	None None None None	Instead, information contained here is gathered through	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-152	1	None None None None	natural conversations in a slipshod, scattershot manner. This is 	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-153	1	None None None None	simply and example of how such information might be collected after	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-154	1	None None None None	dozens of conversations about all kinds of other things that affect	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-155	1	None None None None	this desired behavior	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-156	1	None None None None	WHEN the business financials look good for growth	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-157	1	None None None None	ASA District Manager, Franchise Owner	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-158	1	None None None None	this is the UserStory short name	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-159	1	None None None None	SOTHAT the organization can continue to grow	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-160	1	None None None None	INITIAL Business financials are created	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-161	1	None None None None	DO Review financials	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-162	1	None None None None	DATA notes on financials	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-163	1	None None None None	NOTE: I hate paperwork	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-164	1	None None None None	Q: Do we want to track financial data here?	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-165	1	None None None None	FORKBY Financials HASA Opportunity FORKTO Financial Opportunity Found, No Financial Opportunity	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-166	1	None None None None	FINAL No Financial Opportunity	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-167	1	None None None None	MERGE Financial Opportunity Found	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-168	1	None None None None	DO Gather statistics and demographics on regional communities	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-169	1	None None None None	DATA Regional report	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-170	1	None None None None	DO Rank potential markets by key growth indicators	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-171	1	None None None None	FORKBY Top markets match resources FORKTO Write new store plan, No potential markets found	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-172	1	None None None None	FINAL No potential markets found	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-173	1	None None None None	DO Join resources and market information together	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-174	1	None None None None	DATA Market-opportunity list	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-175	1	None None None None	FINAL Write New Store Plan	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-176	1	None None None None	Supplementals associated with this desired behavior	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-177	1	None None None None	Business OODA Loop no longer than a month	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-178	1	None None None None	No more than 10% of reserve capital allocated for growth	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin	
-179	1	None None None None	Here's an example of Hypothesis-Driven Backlogs	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-180	1	None None None None	A Hypothesis is connected to desired changes which	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-181	1	None None None None	drive a backlog	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-182	1	None None None None	All together this forms a business case, a financial	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-183	1	None None None None	justification for changes to the baseline system	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-184	1	None None None None	Service speed drives order size	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-185	1	None None None None	OBSERVATION:	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-186	1	None None None None	Total wait time and order size might be related	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-187	1	None None None None	On low productivity days sales go down	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-188	1	None None None None	EXPECTED ACTORS IMPACTED:	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-189	1	None None None None	Walk-in Customer	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-190	1	None None None None	EXPECTED IMPACT METRIC GIVEN:	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-191	1	None None None None	Average Line Time IS UNKNOWN	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-192	1	None None None None	Average Order Wait Time IS 3 minutes STD(2.5) 	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-193	1	None None None None	Average Sale Amount IS $3.50 STD(1.00)	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-194	1	None None None None	EXPECTED SUCESSFUL RESULT:	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-195	1	None None None None	Average Line Time WILLBE 2 minutes STD(1.5)	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-196	1	None None None None	AVerage Order Wait Time WILLBE 2 minutes STD(1.5) 	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-197	1	None None None None	Average Sale Amount WILLBE $5.00 STD(1.00)	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-198	1	None None None None	Here is where the hypothesis connects to the model	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-199	1	None None None None	PROPOSED CHANGE TO TEST HYPOTHESIS:	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-200	1	None None None None	Order Clerk scripts are edited and practiced to be < 10 sec	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-201	1	None None None None	Time from store entry until push-out is recorded	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-202	1	None None None None	Order Lemonade	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-203	1	None None None None	EXPECTED EXPERIMENT SUSPENSE TIME:	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-204	1	None None None None	1 month	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin	
-205	1	None None None None	Just like behavior can be explicitly	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-206	1	None None None None	diagrammed out using text, structure can	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-207	1	None None None None	be also.	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-208	1	None None None None	Here's a domain model.	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-209	1	None None None None	Note that in all of these types of models, behavior,	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-210	1	None None None None	structure, supplemental, and meta, items can be	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-211	1	None None None None	listed by themselves initially or as part of a 	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-212	1	None None None None	diagram (an item/relationship list) duplicates	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-213	1	None None None None	are treated as the same item. The only rule is that	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-214	1	None None None None	there cannot be conflicting definitions	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-215	1	None None None None	Domain (structure) models are forced into HASA DAGs	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-216	1	None None None None	It's usually good to keep noun clauses singular and capitalize them	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-217	1	None None None None	Lemonade HASA Recipe	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-218	1	None None None None	Recipe HASA Ingredient	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-219	1	None None None None	Recipe CONTAINS Instruction	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-220	1	None None None None	Ingredients HASA Lemon	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-221	1	None None None None	Ingredients HASA Sugar	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-222	1	None None None None	Order HASA Glass	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-223	1	None None None None	Store HASA Menu	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-224	1	None None None None	Store HASA Table	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-225	1	None None None None	Store HASA Schedule	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-226	1	None None None None	Store HASA Employee	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-227	1	None None None None	Employee CONTAINS Mixer Skills	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin	
-228	1	None None None None	Product Backlog example	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-229	1	None None None None	This means they must be identified by their parent item,	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-230	1	None None None None	Identifying the parent brings in all the parent's detail,	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-231	1	None None None None	notes, questions, supplementals, etc. so that data	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-232	1	None None None None	entry is not repeated.	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-233	1	None None None None	One of the things this type of result file could be used for is printing User Story cards	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-234	1	None None None None	LABEL: Product Backlog	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-235	1	None None None None	Buy Lemonade (IM/Text Hack) PARENT Buy Lemonade	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-236	1	None None None None	NOTE: People SMS their order to our bot while in-line. Order placed automatically	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-237	1	None None None None	if you want to add points or other tagged data	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-238	1	None None None None	Use Coupon (Gesture-based) PARENT Buy Lemonade	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-239	1	None None None None	NOTE: When they're actually ordering, hand gestures read by 3D kinect system gives discount	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-240	1	None None None None	Points: 8	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-241	1	None None None None	Also note that there's a MISC and ALL parent	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-242	1	None None None None	TASK	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-243	1	None None None None	Upgrade test store O/S and drivers PARENT ALL	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-244	1	None None None None	Team training for new POS API PARENT ALL	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-245	1	None None None None	AWS script clean-up PARENT MISC	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-246	1	None None None None	TESTGROUP	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-247	1	None None None None	Upgrade to Version 4.0 regression tests PARENT ALL	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-248	1	None None None None	BUGS	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-249	1	None None None None	Order total ringing up wrong PARENT Buy Lemonade	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
-250	1	None None None None	New SKU size not saving PARENT Count Inventory	E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin	
+<html>
+<head>
+</head>
+<body>
+<table><thead><tr>
+<td>Item Number</td>
+<td>Context</td>
+<td>ShortName</td>
+<td>Reference</td>
+<td>Reference Line Number</td>
+</tr></thead>
+<tr>
+0    <td>1</td>
+    <td>None None None None</td>
+    <td>Example 1</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+1    <td>1</td>
+    <td>None None None None</td>
+    <td>Initial Phone Notes</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+2    <td>1</td>
+    <td>None None None None</td>
+    <td>Joe's Dental Project</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+3    <td>1</td>
+    <td>Business Meta Realized As-Is</td>
+    <td>Called Joe to talk about upcoming project</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+4    <td>1</td>
+    <td>Business Meta Realized As-Is</td>
+    <td>time=45</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+5    <td>1</td>
+    <td>None None None None</td>
+    <td>Patient</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+6    <td>1</td>
+    <td>None None None None</td>
+    <td>Dentist</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+7    <td>1</td>
+    <td>None None None None</td>
+    <td>Procedure</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+8    <td>1</td>
+    <td>None None None None</td>
+    <td>Q: Is there more than one dentist?</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+9    <td>1</td>
+    <td>None None None None</td>
+    <td>Q: How many different kinds of procedures are they? Is there a list/codes?</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+10    <td>1</td>
+    <td>None None None None</td>
+    <td>Perform Procedure</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+11    <td>1</td>
+    <td>None None None None</td>
+    <td>This seems to be a hot button with Joe</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+12    <td>1</td>
+    <td>None None None None</td>
+    <td>Plan Daily Work</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+13    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: used by the office manager and others (?) to optimize day</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+14    <td>1</td>
+    <td>None None None None</td>
+    <td>The customer should never wait</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+15    <td>1</td>
+    <td>None None None None</td>
+    <td>Telephone calls should be no more than 5 minutes total</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+16    <td>1</td>
+    <td>None None None None</td>
+    <td>Anything done on the phone should also be availale online</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+17    <td>1</td>
+    <td>None None None None</td>
+    <td>We always need to learn how we're doing</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+18    <td>1</td>
+    <td>None None None None</td>
+    <td>Follow-up contacts should occur with any customer interaction</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+19    <td>1</td>
+    <td>None None None None</td>
+    <td>Follow-up contacts should be fun</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+20    <td>1</td>
+    <td>None None None None</td>
+    <td>We have big, visible, public displays of how we're doing</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+21    <td>1</td>
+    <td>None None None None</td>
+    <td>Q: Are we going to graph a lot of things?</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+22    <td>1</td>
+    <td>None None None None</td>
+    <td>Q: Is there a big printer available?</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+23    <td>1</td>
+    <td>None None None None</td>
+    <td>Q: What about web dashboards?</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+24    <td>1</td>
+    <td>Business Meta Abstract To-Be</td>
+    <td>Get contract template together and filled out</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+25    <td>1</td>
+    <td>Business Meta Abstract To-Be</td>
+    <td>Have the initial consulting, work-for-hire conversation</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+26    <td>1</td>
+    <td>None None None None</td>
+    <td>Hmm</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+27    <td>1</td>
+    <td>None None None None</td>
+    <td>##It'll be good to remind Joe of our key offerings</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+28    <td>1</td>
+    <td>None None None None</td>
+    <td>- Nice people</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+29    <td>1</td>
+    <td>None None None None</td>
+    <td>- We smile a lot</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+30    <td>1</td>
+    <td>None None None None</td>
+    <td>- We like pets</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+31    <td>1</td>
+    <td>Business Meta Realized As-Is</td>
+    <td>set up folders, todos, and initial easyam compile pipeline</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+32    <td>1</td>
+    <td>Business Meta Realized As-Is</td>
+    <td>time=15</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input0.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+33    <td>1</td>
+    <td>None None None None</td>
+    <td>Example 2</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+34    <td>1</td>
+    <td>None None None None</td>
+    <td>Simplest Backlog</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+35    <td>1</td>
+    <td>Business Meta Realized As-Is</td>
+    <td>Met with Joe again. Signed contract and first backlog</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+36    <td>1</td>
+    <td>Business Meta Realized As-Is</td>
+    <td>time=60</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+37    <td>1</td>
+    <td>None None None None</td>
+    <td>Review Patient History</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+38    <td>1</td>
+    <td>None None None None</td>
+    <td>Record Patient Treatment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+39    <td>1</td>
+    <td>None None None None</td>
+    <td>Conduct Patient Follow-up Call</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+40    <td>1</td>
+    <td>None None None None</td>
+    <td>Need to fix language here to align with parent</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+41    <td>1</td>
+    <td>Business Behavior Realized To-Be</td>
+    <td>Sprint 1</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+42    <td>1</td>
+    <td>None None None None</td>
+    <td>See Appointment Screen PARENT Schedule Apppointment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+43    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: Just be able to bring up a dummy page</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+44    <td>1</td>
+    <td>None None None None</td>
+    <td>See Appointment Screen (with my data) PARENT Schedule Appointment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+45    <td>1</td>
+    <td>None None None None</td>
+    <td>Points=8</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+46    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: Include my information</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+47    <td>1</td>
+    <td>None None None None</td>
+    <td>Make Appointment (no verification) PARENT Schedule Appointment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+48    <td>1</td>
+    <td>None None None None</td>
+    <td>Points=3</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+49    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: Just enter in all data. Any front-end validation in-place</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+50    <td>1</td>
+    <td>None None None None</td>
+    <td>Make Appointment (and save) PARENT Schedule Appointment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+51    <td>1</td>
+    <td>None None None None</td>
+    <td>Points=2</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+52    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: Verify it was saved by having a chron DB dump sent to a page that users can monitor</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+53    <td>1</td>
+    <td>None None None None</td>
+    <td>View Appointments PARENT Plan Office Load</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+54    <td>1</td>
+    <td>None None None None</td>
+    <td>Points=2</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+55    <td>1</td>
+    <td>None None None None</td>
+    <td>TASKS</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+56    <td>1</td>
+    <td>None None None None</td>
+    <td>Team gets training on HIPPA requirements from Mary PARENT ALL</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+57    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: We'l be meeting with Joe on Mon/Wed/Fri from 9-10. At all times Office Manager will be available</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+58    <td>1</td>
+    <td>None None None None</td>
+    <td>Sprint close on Wednesday afternoons at 3</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+59    <td>1</td>
+    <td>None None None None</td>
+    <td>Weekly sprints</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input1.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+60    <td>1</td>
+    <td>None None None None</td>
+    <td>Level 0 - easiest backlog entry. Joe's Dentist Office</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+61    <td>1</td>
+    <td>None None None None</td>
+    <td>Schedule Appointment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+62    <td>1</td>
+    <td>None None None None</td>
+    <td>Review Patient History</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+63    <td>1</td>
+    <td>None None None None</td>
+    <td>Record Patient Treatment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+64    <td>1</td>
+    <td>None None None None</td>
+    <td>Conduct Patient Follow-up Call</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+65    <td>1</td>
+    <td>None None None None</td>
+    <td>Plan Office Load</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+66    <td>1</td>
+    <td>None None None None</td>
+    <td>Never waste the patient's time</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+67    <td>1</td>
+    <td>None None None None</td>
+    <td>AFFECTS Schedule Appointment, Conduct Patient Follow-up Call</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+68    <td>1</td>
+    <td>None None None None</td>
+    <td>Always verify patients were happy with our interaction</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+69    <td>1</td>
+    <td>None None None None</td>
+    <td>AFFECTS Schedule Appointment, Review Patient History, Conduct Patient Follow-up Call</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+70    <td>1</td>
+    <td>None None None None</td>
+    <td>Patient HASA Appointment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+71    <td>1</td>
+    <td>None None None None</td>
+    <td>Patient HASA Teeth</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+72    <td>1</td>
+    <td>None None None None</td>
+    <td>Patient HASA Treatment History</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+73    <td>1</td>
+    <td>None None None None</td>
+    <td>Treatment History HASA Appointment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+74    <td>1</td>
+    <td>None None None None</td>
+    <td>Appointment HASA Procedure</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+75    <td>1</td>
+    <td>None None None None</td>
+    <td>Patient HASA Billing History</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+76    <td>1</td>
+    <td>None None None None</td>
+    <td>Billing History HASA Treatment History</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+77    <td>1</td>
+    <td>None None None None</td>
+    <td>All coding changes available online within 5 minutes AFFECTS ALL</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+78    <td>1</td>
+    <td>None None None None</td>
+    <td>LABEL: Product Backlog</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+79    <td>1</td>
+    <td>None None None None</td>
+    <td>See Appointment Screen PARENT Schedule Apppointment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+80    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: Just be able to bring up a dummy page</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+81    <td>1</td>
+    <td>None None None None</td>
+    <td>See Appointment Screen (with my data) PARENT Schedule Appointment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+82    <td>1</td>
+    <td>None None None None</td>
+    <td>Points=8</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+83    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: Include my information</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+84    <td>1</td>
+    <td>None None None None</td>
+    <td>Make Appointment (no verification) PARENT Schedule Appointment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+85    <td>1</td>
+    <td>None None None None</td>
+    <td>Points=3</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+86    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: Just enter in all data. Any front-end validation in-place</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+87    <td>1</td>
+    <td>None None None None</td>
+    <td>Make Appointment (and save) PARENT Schedule Appointment</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+88    <td>1</td>
+    <td>None None None None</td>
+    <td>Points=2</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+89    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: Verify it was saved by having a chron DB dump sent to a page that users can monitor</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+90    <td>1</td>
+    <td>None None None None</td>
+    <td>View Appointments PARENT Plan Office Load</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+91    <td>1</td>
+    <td>None None None None</td>
+    <td>Points=2</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+92    <td>1</td>
+    <td>None None None None</td>
+    <td>TASKS</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+93    <td>1</td>
+    <td>None None None None</td>
+    <td>Team gets training on HIPPA requirements PARENT ALL</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+94    <td>1</td>
+    <td>None None None None</td>
+    <td>TESTGROUPS</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+95    <td>1</td>
+    <td>None None None None</td>
+    <td>Regression tests to upgrade system to new database PARENT ALL</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input3.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+96    <td>1</td>
+    <td>None None None None</td>
+    <td>eastyam is a compiler for business intent. </td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+97    <td>1</td>
+    <td>None None None None</td>
+    <td>It's goal is to provide the minimal amount of structure</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+98    <td>1</td>
+    <td>None None None None</td>
+    <td>necessary to capture and remember important business</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+99    <td>1</td>
+    <td>None None None None</td>
+    <td>conversations, taking that information in one</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+100    <td>1</td>
+    <td>None None None None</td>
+    <td>place and distributing wherever it's needed.</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+101    <td>1</td>
+    <td>None None None None</td>
+    <td>Keywords are in ALL CAPS. Everything else is unstuctured</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+102    <td>1</td>
+    <td>None None None None</td>
+    <td>This is an example of a freeform file, the kind</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+103    <td>1</td>
+    <td>None None None None</td>
+    <td>of notes that might be taken at a meeting with a</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+104    <td>1</td>
+    <td>None None None None</td>
+    <td>new client.</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+105    <td>1</td>
+    <td>None None None None</td>
+    <td>Lemons</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+106    <td>1</td>
+    <td>None None None None</td>
+    <td>Sugar</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+107    <td>1</td>
+    <td>None None None None</td>
+    <td>Glasses</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+108    <td>1</td>
+    <td>None None None None</td>
+    <td>Mixers</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+109    <td>1</td>
+    <td>None None None None</td>
+    <td>Menus</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+110    <td>1</td>
+    <td>None None None None</td>
+    <td>Tables</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+111    <td>1</td>
+    <td>None None None None</td>
+    <td>Schedule</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+112    <td>1</td>
+    <td>None None None None</td>
+    <td>Employees</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+113    <td>1</td>
+    <td>None None None None</td>
+    <td>Lemonade</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+114    <td>1</td>
+    <td>None None None None</td>
+    <td>Lemonade HASA Recipe</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+115    <td>1</td>
+    <td>None None None None</td>
+    <td>Recipe CONTAINS Ingredients</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+116    <td>1</td>
+    <td>None None None None</td>
+    <td>Recipe CONTAINS Instructions</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+117    <td>1</td>
+    <td>None None None None</td>
+    <td>SUPPL: We never open a store near a mall</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+118    <td>1</td>
+    <td>None None None None</td>
+    <td>Q: Looks like we need to talk about opening stores and what "near" and "mall" mean (and whether they are important)</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+119    <td>1</td>
+    <td>None None None None</td>
+    <td>Q: Are we going to meet every Thursday with the owner?</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+120    <td>1</td>
+    <td>None None None None</td>
+    <td>Buy Lemonade</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+121    <td>1</td>
+    <td>None None None None</td>
+    <td>Count Inventory</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+122    <td>1</td>
+    <td>None None None None</td>
+    <td>Recieve Shipments</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+123    <td>1</td>
+    <td>None None None None</td>
+    <td>Q: Do they do their own stocking? Or just record BOLs for shipments?</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+124    <td>1</td>
+    <td>None None None None</td>
+    <td>We can enter in as much of a title as we know about</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+125    <td>1</td>
+    <td>None None None None</td>
+    <td>ASA Customer</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+126    <td>1</td>
+    <td>None None None None</td>
+    <td>INEEDTO Schedule Birthday Parties</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+127    <td>1</td>
+    <td>None None None None</td>
+    <td>Next time, let's find out about the giant lemon</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input4.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+128    <td>1</td>
+    <td>None None None None</td>
+    <td>It outputs two things: first, all of the input files organized by</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+129    <td>1</td>
+    <td>None None None None</td>
+    <td>filename and Structured Analysis Tag in a format that can be re-</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+130    <td>1</td>
+    <td>None None None None</td>
+    <td>used to input it back into the system. In this way the compiler </td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+131    <td>1</td>
+    <td>None None None None</td>
+    <td>alongside with git can be used to "clean up" a bunch of SA notes</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+132    <td>1</td>
+    <td>None None None None</td>
+    <td>into a universal text format. Secondly, it outputs all of the files</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+133    <td>1</td>
+    <td>None None None None</td>
+    <td>in a detailed, cross-referenced format. So, for instance, a User</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+134    <td>1</td>
+    <td>None None None None</td>
+    <td>Story for the upcoming sprint will have all of the supplemental</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+135    <td>1</td>
+    <td>None None None None</td>
+    <td>and parent acceptance and description criteria automatically</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+136    <td>1</td>
+    <td>None None None None</td>
+    <td>attached to it. (There are also a few debug outputs available)</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+137    <td>1</td>
+    <td>None None None None</td>
+    <td>These outputs can be used in dozens of additional business intent</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+138    <td>1</td>
+    <td>None None None None</td>
+    <td>pipeline programs. Some possible uses are: story card generator,</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+139    <td>1</td>
+    <td>None None None None</td>
+    <td>activity diagram generator, domain model generator, help desk</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+140    <td>1</td>
+    <td>None None None None</td>
+    <td>script creation, manual acceptance test script creation, production</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+141    <td>1</td>
+    <td>None None None None</td>
+    <td>system monitoring scripts, release plan reports, burn-downs and </td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+142    <td>1</td>
+    <td>None None None None</td>
+    <td>burn-ups, sprint snapshots, and so on.</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+143    <td>1</td>
+    <td>None None None None</td>
+    <td>Basically anywhere business intent is resued in the project, a </td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+144    <td>1</td>
+    <td>None None None None</td>
+    <td>pipeline tool should be able to convert these notes into useful</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+145    <td>1</td>
+    <td>None None None None</td>
+    <td>information consumed by automated tools and humans alike.</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+146    <td>1</td>
+    <td>None None None None</td>
+    <td>Here's an example of how information might be organized around</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+147    <td>1</td>
+    <td>None None None None</td>
+    <td>user stories. Teams are free to organize information however they</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+148    <td>1</td>
+    <td>None None None None</td>
+    <td>see fit. (Note: over time, language, terms and organization should</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+149    <td>1</td>
+    <td>None None None None</td>
+    <td>move from fuzzy and disorganized to concrete and highly organized)</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+150    <td>1</td>
+    <td>None None None None</td>
+    <td>YOU WOULD NEVER CREATE A FILE LIKE THIS ON ITS OWN.</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+151    <td>1</td>
+    <td>None None None None</td>
+    <td>Instead, information contained here is gathered through</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+152    <td>1</td>
+    <td>None None None None</td>
+    <td>natural conversations in a slipshod, scattershot manner. This is </td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+153    <td>1</td>
+    <td>None None None None</td>
+    <td>simply and example of how such information might be collected after</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+154    <td>1</td>
+    <td>None None None None</td>
+    <td>dozens of conversations about all kinds of other things that affect</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+155    <td>1</td>
+    <td>None None None None</td>
+    <td>this desired behavior</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+156    <td>1</td>
+    <td>None None None None</td>
+    <td>WHEN the business financials look good for growth</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+157    <td>1</td>
+    <td>None None None None</td>
+    <td>ASA District Manager, Franchise Owner</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+158    <td>1</td>
+    <td>None None None None</td>
+    <td>this is the UserStory short name</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+159    <td>1</td>
+    <td>None None None None</td>
+    <td>SOTHAT the organization can continue to grow</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+160    <td>1</td>
+    <td>None None None None</td>
+    <td>INITIAL Business financials are created</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+161    <td>1</td>
+    <td>None None None None</td>
+    <td>DO Review financials</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+162    <td>1</td>
+    <td>None None None None</td>
+    <td>DATA notes on financials</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+163    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: I hate paperwork</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+164    <td>1</td>
+    <td>None None None None</td>
+    <td>Q: Do we want to track financial data here?</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+165    <td>1</td>
+    <td>None None None None</td>
+    <td>FORKBY Financials HASA Opportunity FORKTO Financial Opportunity Found, No Financial Opportunity</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+166    <td>1</td>
+    <td>None None None None</td>
+    <td>FINAL No Financial Opportunity</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+167    <td>1</td>
+    <td>None None None None</td>
+    <td>MERGE Financial Opportunity Found</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+168    <td>1</td>
+    <td>None None None None</td>
+    <td>DO Gather statistics and demographics on regional communities</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+169    <td>1</td>
+    <td>None None None None</td>
+    <td>DATA Regional report</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+170    <td>1</td>
+    <td>None None None None</td>
+    <td>DO Rank potential markets by key growth indicators</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+171    <td>1</td>
+    <td>None None None None</td>
+    <td>FORKBY Top markets match resources FORKTO Write new store plan, No potential markets found</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+172    <td>1</td>
+    <td>None None None None</td>
+    <td>FINAL No potential markets found</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+173    <td>1</td>
+    <td>None None None None</td>
+    <td>DO Join resources and market information together</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+174    <td>1</td>
+    <td>None None None None</td>
+    <td>DATA Market-opportunity list</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+175    <td>1</td>
+    <td>None None None None</td>
+    <td>FINAL Write New Store Plan</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+176    <td>1</td>
+    <td>None None None None</td>
+    <td>Supplementals associated with this desired behavior</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+177    <td>1</td>
+    <td>None None None None</td>
+    <td>Business OODA Loop no longer than a month</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+178    <td>1</td>
+    <td>None None None None</td>
+    <td>No more than 10% of reserve capital allocated for growth</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input5.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+179    <td>1</td>
+    <td>None None None None</td>
+    <td>Here's an example of Hypothesis-Driven Backlogs</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+180    <td>1</td>
+    <td>None None None None</td>
+    <td>A Hypothesis is connected to desired changes which</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+181    <td>1</td>
+    <td>None None None None</td>
+    <td>drive a backlog</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+182    <td>1</td>
+    <td>None None None None</td>
+    <td>All together this forms a business case, a financial</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+183    <td>1</td>
+    <td>None None None None</td>
+    <td>justification for changes to the baseline system</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+184    <td>1</td>
+    <td>None None None None</td>
+    <td>Service speed drives order size</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+185    <td>1</td>
+    <td>None None None None</td>
+    <td>OBSERVATION:</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+186    <td>1</td>
+    <td>None None None None</td>
+    <td>Total wait time and order size might be related</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+187    <td>1</td>
+    <td>None None None None</td>
+    <td>On low productivity days sales go down</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+188    <td>1</td>
+    <td>None None None None</td>
+    <td>EXPECTED ACTORS IMPACTED:</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+189    <td>1</td>
+    <td>None None None None</td>
+    <td>Walk-in Customer</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+190    <td>1</td>
+    <td>None None None None</td>
+    <td>EXPECTED IMPACT METRIC GIVEN:</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+191    <td>1</td>
+    <td>None None None None</td>
+    <td>Average Line Time IS UNKNOWN</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+192    <td>1</td>
+    <td>None None None None</td>
+    <td>Average Order Wait Time IS 3 minutes STD(2.5) </td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+193    <td>1</td>
+    <td>None None None None</td>
+    <td>Average Sale Amount IS $3.50 STD(1.00)</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+194    <td>1</td>
+    <td>None None None None</td>
+    <td>EXPECTED SUCESSFUL RESULT:</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+195    <td>1</td>
+    <td>None None None None</td>
+    <td>Average Line Time WILLBE 2 minutes STD(1.5)</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+196    <td>1</td>
+    <td>None None None None</td>
+    <td>AVerage Order Wait Time WILLBE 2 minutes STD(1.5) </td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+197    <td>1</td>
+    <td>None None None None</td>
+    <td>Average Sale Amount WILLBE $5.00 STD(1.00)</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+198    <td>1</td>
+    <td>None None None None</td>
+    <td>Here is where the hypothesis connects to the model</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+199    <td>1</td>
+    <td>None None None None</td>
+    <td>PROPOSED CHANGE TO TEST HYPOTHESIS:</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+200    <td>1</td>
+    <td>None None None None</td>
+    <td>Order Clerk scripts are edited and practiced to be < 10 sec</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+201    <td>1</td>
+    <td>None None None None</td>
+    <td>Time from store entry until push-out is recorded</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+202    <td>1</td>
+    <td>None None None None</td>
+    <td>Order Lemonade</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+203    <td>1</td>
+    <td>None None None None</td>
+    <td>EXPECTED EXPERIMENT SUSPENSE TIME:</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+204    <td>1</td>
+    <td>None None None None</td>
+    <td>1 month</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input6.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+205    <td>1</td>
+    <td>None None None None</td>
+    <td>Just like behavior can be explicitly</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+206    <td>1</td>
+    <td>None None None None</td>
+    <td>diagrammed out using text, structure can</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+207    <td>1</td>
+    <td>None None None None</td>
+    <td>be also.</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+208    <td>1</td>
+    <td>None None None None</td>
+    <td>Here's a domain model.</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+209    <td>1</td>
+    <td>None None None None</td>
+    <td>Note that in all of these types of models, behavior,</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+210    <td>1</td>
+    <td>None None None None</td>
+    <td>structure, supplemental, and meta, items can be</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+211    <td>1</td>
+    <td>None None None None</td>
+    <td>listed by themselves initially or as part of a </td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+212    <td>1</td>
+    <td>None None None None</td>
+    <td>diagram (an item/relationship list) duplicates</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+213    <td>1</td>
+    <td>None None None None</td>
+    <td>are treated as the same item. The only rule is that</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+214    <td>1</td>
+    <td>None None None None</td>
+    <td>there cannot be conflicting definitions</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+215    <td>1</td>
+    <td>None None None None</td>
+    <td>Domain (structure) models are forced into HASA DAGs</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+216    <td>1</td>
+    <td>None None None None</td>
+    <td>It's usually good to keep noun clauses singular and capitalize them</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+217    <td>1</td>
+    <td>None None None None</td>
+    <td>Lemonade HASA Recipe</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+218    <td>1</td>
+    <td>None None None None</td>
+    <td>Recipe HASA Ingredient</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+219    <td>1</td>
+    <td>None None None None</td>
+    <td>Recipe CONTAINS Instruction</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+220    <td>1</td>
+    <td>None None None None</td>
+    <td>Ingredients HASA Lemon</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+221    <td>1</td>
+    <td>None None None None</td>
+    <td>Ingredients HASA Sugar</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+222    <td>1</td>
+    <td>None None None None</td>
+    <td>Order HASA Glass</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+223    <td>1</td>
+    <td>None None None None</td>
+    <td>Store HASA Menu</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+224    <td>1</td>
+    <td>None None None None</td>
+    <td>Store HASA Table</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+225    <td>1</td>
+    <td>None None None None</td>
+    <td>Store HASA Schedule</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+226    <td>1</td>
+    <td>None None None None</td>
+    <td>Store HASA Employee</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+227    <td>1</td>
+    <td>None None None None</td>
+    <td>Employee CONTAINS Mixer Skills</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input7.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+228    <td>1</td>
+    <td>None None None None</td>
+    <td>Product Backlog example</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+229    <td>1</td>
+    <td>None None None None</td>
+    <td>This means they must be identified by their parent item,</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+230    <td>1</td>
+    <td>None None None None</td>
+    <td>Identifying the parent brings in all the parent's detail,</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+231    <td>1</td>
+    <td>None None None None</td>
+    <td>notes, questions, supplementals, etc. so that data</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+232    <td>1</td>
+    <td>None None None None</td>
+    <td>entry is not repeated.</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+233    <td>1</td>
+    <td>None None None None</td>
+    <td>One of the things this type of result file could be used for is printing User Story cards</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+234    <td>1</td>
+    <td>None None None None</td>
+    <td>LABEL: Product Backlog</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+235    <td>1</td>
+    <td>None None None None</td>
+    <td>Buy Lemonade (IM/Text Hack) PARENT Buy Lemonade</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+236    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: People SMS their order to our bot while in-line. Order placed automatically</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+237    <td>1</td>
+    <td>None None None None</td>
+    <td>if you want to add points or other tagged data</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+238    <td>1</td>
+    <td>None None None None</td>
+    <td>Use Coupon (Gesture-based) PARENT Buy Lemonade</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+239    <td>1</td>
+    <td>None None None None</td>
+    <td>NOTE: When they're actually ordering, hand gestures read by 3D kinect system gives discount</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+240    <td>1</td>
+    <td>None None None None</td>
+    <td>Points: 8</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+241    <td>1</td>
+    <td>None None None None</td>
+    <td>Also note that there's a MISC and ALL parent</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+242    <td>1</td>
+    <td>None None None None</td>
+    <td>TASK</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+243    <td>1</td>
+    <td>None None None None</td>
+    <td>Upgrade test store O/S and drivers PARENT ALL</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+244    <td>1</td>
+    <td>None None None None</td>
+    <td>Team training for new POS API PARENT ALL</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+245    <td>1</td>
+    <td>None None None None</td>
+    <td>AWS script clean-up PARENT MISC</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+246    <td>1</td>
+    <td>None None None None</td>
+    <td>TESTGROUP</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+247    <td>1</td>
+    <td>None None None None</td>
+    <td>Upgrade to Version 4.0 regression tests PARENT ALL</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+248    <td>1</td>
+    <td>None None None None</td>
+    <td>BUGS</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+249    <td>1</td>
+    <td>None None None None</td>
+    <td>Order total ringing up wrong PARENT Buy Lemonade</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+<tr>
+250    <td>1</td>
+    <td>None None None None</td>
+    <td>New SKU size not saving PARENT Count Inventory</td>
+    <td>E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\input8.amin</td>
+    <td></td>
+</tr>
+
+</body>
+</html>

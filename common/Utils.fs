@@ -187,92 +187,133 @@
             }
         drawEntityBox sw newBox defaultSVGSetup
 
-    let csvDumpModelBucketRaw (bucket:Buckets) (compilationList:CompilationLine list) =
-        let ef = new ExcelFile()
-        let ws = ef.Worksheets.Add(bucket.ToString())
-        ws.Cells.[0, 0].Value<-bucket.ToString().ToUpper()
-
-        let labelTitleRow=2
-        ws.Cells.[labelTitleRow, 0].Value<-"Labels"
-        let labelList = compilationList |> List.filter(fun x->x.LineType=CompilationLineType.Label)
-        labelList |> List.iteri(fun i x->
-            ws.Cells.[labelTitleRow+i+1, 0].Value<-x.LineText
-            )        
-        let labelListCount = labelList.Length + 1
-
-        let commandTitleRow=labelTitleRow+labelListCount+1
-        ws.Cells.[commandTitleRow, 0].Value<-"Commands"
-        let commandList = compilationList |> List.filter(fun x->((x.LineType = CompilationLineType.Command)) && (x.CommandType<>CompilationLineCommands.Comment))
-        commandList |> List.iteri(fun i x->
-            ws.Cells.[commandTitleRow+i+1, 0].Value<-x.LineText
-            )
-        let commandListCount = commandList.Length+1
-
-
-        let questionTitleRow=commandTitleRow+commandListCount+1
-        ws.Cells.[questionTitleRow, 0].Value<-"Questions"
-        let questionList = compilationList |> List.filter(fun x->((x.LineType=CompilationLineType.Unknown)) && (x.CommandType=CompilationLineCommands.Question))
-        questionList |> List.iteri(fun i x->
-            ws.Cells.[questionTitleRow+i+1, 0].Value<-x.LineText
-            )
-        let questionListCount = questionList.Length+1
-
-
-        let notesTitleRow=questionTitleRow+questionListCount+1
-        ws.Cells.[notesTitleRow, 0].Value<-"Notes"
-        let notesList = compilationList |> List.filter(fun x->((x.LineType = CompilationLineType.Command)) && (x.CommandType=CompilationLineCommands.Comment))
-        notesList |> List.iteri(fun i x->
-            ws.Cells.[notesTitleRow+i+1, 0].Value<-x.LineText
-            )
-        let notesListCount = notesList.Length+1
-
-        let fileName = bucket.ToString() + "-Raw.csv"
+    let makeContextAString (genre:Genres) (bucket:Buckets) (temporalIndicator:TemporalIndicators) (abstractionLevel:AbstractionLevels) =
+        genre.ToString() + " " + bucket.ToString() + " " + abstractionLevel.ToString() + " " + temporalIndicator.ToString()
+    let writeATableCell (sb:System.Text.StringBuilder) s =
+        sb.Append ("    <td>" + s + "</td>\n") |> ignore
+    let dumpIncomingModel (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) =
+        let fileName="incomingLines-DEBUG.html"
         System.IO.File.Delete(fileName)
-        ef.Save(fileName)
-
-    ()
-    let dumpInputFiles (ctx:CompilationContext) programDirectories = 
-        SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
-        let ef = new ExcelFile()
-        let ws = ef.Worksheets.Add("InputFiles")
-        ws.Cells.[0, 0].Value<-"InputFileLineList"
-        ws.Cells.[1, 0].Value<-"Line Number"
-        ws.Cells.[1, 1].Value<-"File Name"
-        ws.Cells.[1, 2].Value<-"Line Type"
-        ws.Cells.[1, 3].Value<-"Command Type"
-        ws.Cells.[1, 4].Value<-"Scope"
-        ws.Cells.[1, 5].Value<-"Tagged Context (Raw)"
-        ws.Cells.[1, 6].Value<-"Line Text"
-        ctx.CompilationLines |> List.iteri(fun i x->
-            ws.Cells.[i+2, 0].Value<-i.ToString()
-            let filenamecol = if x.File.IsSome then x.File.Value.FullName else ""
-            ws.Cells.[i+2, 1].Value<-filenamecol
-            ws.Cells.[i+2, 2].Value<-x.LineType.ToString()
-            ws.Cells.[i+2, 3].Value<-x.CommandType.ToString()
-            ws.Cells.[i+2, 4].Value<-x.Scope
-            ws.Cells.[i+2, 5].Value<-x.TaggedContext.ToString()
-            ws.Cells.[i+2, 6].Value<-x.LineText
+        let sw = System.IO.File.CreateText(fileName)
+        sw.WriteLine "<html>"
+        sw.WriteLine "<head>"
+        sw.WriteLine "</head>"
+        sw.WriteLine "<body>"
+        sw.WriteLine "<table><thead><tr>"
+        sw.WriteLine ("<td>" + "Item Number" + "</td>")
+        sw.WriteLine ("<td>" + "Id Number" + "</td>")
+        sw.WriteLine ("<td>" + "Context" + "</td>")
+        sw.WriteLine ("<td>" + "Item Type" + "</td>")
+        sw.WriteLine ("<td>" + "ShortName" + "</td>")
+        sw.WriteLine ("<td>" + "Reference" + "</td>")
+        sw.WriteLine ("<td>" + "Reference Line Number" + "</td>")
+        sw.WriteLine "</tr></thead>"
+        modelItems |> List.iteri(fun i x->
+            let sb=new System.Text.StringBuilder(4096)
+            sb.Append("<tr>\n") |> ignore
+            sb.Append ("<td>" + i.ToString() + "</td>") |> ignore
+            writeATableCell sb (x.Id.ToString())
+            writeATableCell sb (makeContextAString x.Genre x.Bucket x.TemporalIndicator x.AbstractionLevel)
+            writeATableCell sb (x.ItemType.ToString())
+            writeATableCell sb (x.ModelItemName)
+            writeATableCell sb (x.SourceReferences.Item(x.SourceReferences.Length-1).File.FullName)
+            let referenceLineNumber= x.SourceReferences.Item(x.SourceReferences.Length-1).LineNumber.ToString()
+            writeATableCell sb (referenceLineNumber)
+            sb.Append ("</tr>\n") |> ignore
+            sw.WriteLine (sb.ToString())
             )
-        System.IO.File.Delete("InputFiles.csv")
-        ef.Save("InputFiles.csv")
-
-        let ef = new ExcelFile()
-        let ws = ef.Worksheets.Add("Open Questions")
-        ws.Cells.[0, 0].Value<-"Questions"
-        let questions = ctx.CompilationLines |> List.filter(fun x->x.CommandType = CompilationLineCommands.Question)
-        questions |> List.iteri(fun i x->
-            ws.Cells.[1+i, 0].Value<-x.LineText
-            )
-        System.IO.File.Delete("questions.csv")
-        ef.Save("questions.csv")
+        sw.WriteLine"</body>"
+        sw.WriteLine"</html>"
+        sw.Flush()
+        sw.Close()
 
 
-    let dumpModelBuckets (domainModel:StructuredAnalysisModel) programDirectories =
-        csvDumpModelBucketRaw Buckets.Unknown domainModel.Unknown
-        csvDumpModelBucketRaw Buckets.Meta domainModel.MetaModel.Input.CompilationLines
-        csvDumpModelBucketRaw Buckets.Behavior domainModel.BehaviorModel.Input.CompilationLines
-        csvDumpModelBucketRaw Buckets.Structure domainModel.StructureModel.Input.CompilationLines
-        csvDumpModelBucketRaw Buckets.Supplemental domainModel.SupplementalModel.Input.CompilationLines
+//    let csvDumpModelBucketRaw (bucket:Buckets) (compilationList:CompilationLine list) =
+//        let ef = new ExcelFile()
+//        let ws = ef.Worksheets.Add(bucket.ToString())
+//        ws.Cells.[0, 0].Value<-bucket.ToString().ToUpper()
+//
+//        let labelTitleRow=2
+//        ws.Cells.[labelTitleRow, 0].Value<-"Labels"
+//        let labelList = compilationList |> List.filter(fun x->x.LineType=CompilationLineType.Label)
+//        labelList |> List.iteri(fun i x->
+//            ws.Cells.[labelTitleRow+i+1, 0].Value<-x.LineText
+//            )        
+//        let labelListCount = labelList.Length + 1
+//
+//        let commandTitleRow=labelTitleRow+labelListCount+1
+//        ws.Cells.[commandTitleRow, 0].Value<-"Commands"
+//        let commandList = compilationList |> List.filter(fun x->((x.LineType = CompilationLineType.Command)) && (x.CommandType<>CompilationLineCommands.Comment))
+//        commandList |> List.iteri(fun i x->
+//            ws.Cells.[commandTitleRow+i+1, 0].Value<-x.LineText
+//            )
+//        let commandListCount = commandList.Length+1
+//
+//
+//        let questionTitleRow=commandTitleRow+commandListCount+1
+//        ws.Cells.[questionTitleRow, 0].Value<-"Questions"
+//        let questionList = compilationList |> List.filter(fun x->((x.LineType=CompilationLineType.Unknown)) && (x.CommandType=CompilationLineCommands.Question))
+//        questionList |> List.iteri(fun i x->
+//            ws.Cells.[questionTitleRow+i+1, 0].Value<-x.LineText
+//            )
+//        let questionListCount = questionList.Length+1
+//
+//
+//        let notesTitleRow=questionTitleRow+questionListCount+1
+//        ws.Cells.[notesTitleRow, 0].Value<-"Notes"
+//        let notesList = compilationList |> List.filter(fun x->((x.LineType = CompilationLineType.Command)) && (x.CommandType=CompilationLineCommands.Comment))
+//        notesList |> List.iteri(fun i x->
+//            ws.Cells.[notesTitleRow+i+1, 0].Value<-x.LineText
+//            )
+//        let notesListCount = notesList.Length+1
+//
+//        let fileName = bucket.ToString() + "-Raw.csv"
+//        System.IO.File.Delete(fileName)
+//        ef.Save(fileName)
+//
+//    ()
+//    let dumpInputFiles (ctx:CompilationContext) programDirectories = 
+//        SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
+//        let ef = new ExcelFile()
+//        let ws = ef.Worksheets.Add("InputFiles")
+//        ws.Cells.[0, 0].Value<-"InputFileLineList"
+//        ws.Cells.[1, 0].Value<-"Line Number"
+//        ws.Cells.[1, 1].Value<-"File Name"
+//        ws.Cells.[1, 2].Value<-"Line Type"
+//        ws.Cells.[1, 3].Value<-"Command Type"
+//        ws.Cells.[1, 4].Value<-"Scope"
+//        ws.Cells.[1, 5].Value<-"Tagged Context (Raw)"
+//        ws.Cells.[1, 6].Value<-"Line Text"
+//        ctx.CompilationLines |> List.iteri(fun i x->
+//            ws.Cells.[i+2, 0].Value<-i.ToString()
+//            let filenamecol = if x.File.IsSome then x.File.Value.FullName else ""
+//            ws.Cells.[i+2, 1].Value<-filenamecol
+//            ws.Cells.[i+2, 2].Value<-x.LineType.ToString()
+//            ws.Cells.[i+2, 3].Value<-x.CommandType.ToString()
+//            ws.Cells.[i+2, 4].Value<-x.Scope
+//            ws.Cells.[i+2, 5].Value<-x.TaggedContext.ToString()
+//            ws.Cells.[i+2, 6].Value<-x.LineText
+//            )
+//        System.IO.File.Delete("InputFiles.csv")
+//        ef.Save("InputFiles.csv")
+//
+//        let ef = new ExcelFile()
+//        let ws = ef.Worksheets.Add("Open Questions")
+//        ws.Cells.[0, 0].Value<-"Questions"
+//        let questions = ctx.CompilationLines |> List.filter(fun x->x.CommandType = CompilationLineCommands.Question)
+//        questions |> List.iteri(fun i x->
+//            ws.Cells.[1+i, 0].Value<-x.LineText
+//            )
+//        System.IO.File.Delete("questions.csv")
+//        ef.Save("questions.csv")
+//
+//
+//    let dumpModelBuckets (domainModel:StructuredAnalysisModel) programDirectories =
+//        csvDumpModelBucketRaw Buckets.Unknown domainModel.Unknown
+//        csvDumpModelBucketRaw Buckets.Meta domainModel.MetaModel.Input.CompilationLines
+//        csvDumpModelBucketRaw Buckets.Behavior domainModel.BehaviorModel.Input.CompilationLines
+//        csvDumpModelBucketRaw Buckets.Structure domainModel.StructureModel.Input.CompilationLines
+//        csvDumpModelBucketRaw Buckets.Supplemental domainModel.SupplementalModel.Input.CompilationLines
 
 
 
