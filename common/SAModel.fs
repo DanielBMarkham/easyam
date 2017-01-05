@@ -26,7 +26,12 @@
 //      no behavior nouns not mentioned in structure (and vice versa) (warning)
 //      
 
-
+    let IntegerFactory = 
+        let counter = ref 0
+        fun () -> 
+            counter.Value <- !counter + 1
+            !counter
+    let getNextItemNumber()=IntegerFactory()
     // Structured Analysis Model Super Types
     type Buckets =
         | Unknown
@@ -170,10 +175,10 @@
                             ItemAnnotation=h
                             SourceReferences=i
                             ModelItemName=j
-                        })->"ModelItem: " + j
-            | NameValueTag({Name=x;Value=y;SourceReference=z})->"NameValueTag: " + x + "=" + y
-            | Question({Text=x; SourceReference=y})->"Question: " + x
-            | Note({Text=x; SourceReference=y})->"Note: " + x
+                        })->"MODELITEM: " + j
+            | NameValueTag({Name=x;Value=y;SourceReference=z})->"NAME-VALUE TAG: " + x + "=" + y
+            | Question({Text=x; SourceReference=y})->"QUESTION: " + x
+            | Note({Text=x; SourceReference=y})->"NOTE: " + x
             | ToDo({Text=x; SourceReference=y})->"TODO: " + x
             | Work({Text=x; SourceReference=y})->"WORK: " + x
             | ContextShift({Text=x; SourceReference=y})->"CONTEXT SHIFT: " + x
@@ -215,50 +220,50 @@
         newContextStack.Push(defaultModelItem)
         {ContextStack=newContextStack; Lines=[]}
 
-    let makeEntireLineIntoAnItemModelItem (incomingLineToProcess:incomingLine) (defaultContext:ProcessContext) =
-        let contextParent = defaultContext.ContextStack.Peek()
-        {
-            Id=9
-            Parent=Some (contextParent.Id)
-            ItemType=ModelItemType.ModelItem(
-                                            {
-                                                Id=0
-                                                Parent=option.None
-                                                ItemType=ModelItemType.None
-                                                Bucket=Buckets.None
-                                                Genre=Genres.None
-                                                AbstractionLevel=AbstractionLevels.None
-                                                TemporalIndicator=TemporalIndicators.None
-                                                ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
-                                                ModelItemName=incomingLineToProcess.LineText
-                                                SourceReferences=
-                                                [{
-                                                    File=incomingLineToProcess.FileInfo; 
-                                                    LineNumber=incomingLineToProcess.LineNumber
-                                                 }]
-                                            }
-                                        )
-            Bucket=contextParent.Bucket
-            Genre=contextParent.Genre
-            AbstractionLevel=contextParent.AbstractionLevel
-            TemporalIndicator=contextParent.TemporalIndicator
-            ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
-            SourceReferences=[{File=incomingLineToProcess.FileInfo; LineNumber=incomingLineToProcess.LineNumber}]
-            ModelItemName=incomingLineToProcess.LineText
-        }
-    let makeEntireLineIntoAnCommentModelItem (incomingLineToProcess:incomingLine) (defaultContext:ProcessContext) =
-        {
-            Id=9
-            Parent=Some (defaultContext.ContextStack.Peek().Id)
-            ItemType=ModelItemType.Note({Text=incomingLineToProcess.LineText; SourceReference={File=incomingLineToProcess.FileInfo; LineNumber=incomingLineToProcess.LineNumber}})
-            Bucket=Buckets.None
-            Genre=Genres.None
-            AbstractionLevel=AbstractionLevels.None
-            TemporalIndicator=TemporalIndicators.None
-            ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
-            SourceReferences=[{File=incomingLineToProcess.FileInfo; LineNumber=incomingLineToProcess.LineNumber}]
-            ModelItemName=""
-        }
+//    let makeEntireLineIntoAnItemModelItem (incomingLineToProcess:incomingLine) (defaultContext:ProcessContext) =
+//        let contextParent = defaultContext.ContextStack.Peek()
+//        {
+//            Id=getNextItemNumber()
+//            Parent=Some (contextParent.Id)
+//            ItemType=ModelItemType.ModelItem(
+//                                            {
+//                                                Id=getNextItemNumber()
+//                                                Parent=option.None
+//                                                ItemType=ModelItemType.None
+//                                                Bucket=Buckets.None
+//                                                Genre=Genres.None
+//                                                AbstractionLevel=AbstractionLevels.None
+//                                                TemporalIndicator=TemporalIndicators.None
+//                                                ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+//                                                ModelItemName=incomingLineToProcess.LineText
+//                                                SourceReferences=
+//                                                [{
+//                                                    File=incomingLineToProcess.FileInfo; 
+//                                                    LineNumber=incomingLineToProcess.LineNumber
+//                                                 }]
+//                                            }
+//                                        )
+//            Bucket=contextParent.Bucket
+//            Genre=contextParent.Genre
+//            AbstractionLevel=contextParent.AbstractionLevel
+//            TemporalIndicator=contextParent.TemporalIndicator
+//            ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+//            SourceReferences=[{File=incomingLineToProcess.FileInfo; LineNumber=incomingLineToProcess.LineNumber}]
+//            ModelItemName=incomingLineToProcess.LineText
+//        }
+//    let makeEntireLineIntoAnCommentModelItem (incomingLineToProcess:incomingLine) (defaultContext:ProcessContext) =
+//        {
+//            Id=getNextItemNumber()
+//            Parent=Some (defaultContext.ContextStack.Peek().Id)
+//            ItemType=ModelItemType.Note({Text=incomingLineToProcess.LineText; SourceReference={File=incomingLineToProcess.FileInfo; LineNumber=incomingLineToProcess.LineNumber}})
+//            Bucket=Buckets.None
+//            Genre=Genres.None
+//            AbstractionLevel=AbstractionLevels.None
+//            TemporalIndicator=TemporalIndicators.None
+//            ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+//            SourceReferences=[{File=incomingLineToProcess.FileInfo; LineNumber=incomingLineToProcess.LineNumber}]
+//            ModelItemName=""
+//        }
 
     let smashTwoModelItems (existingModelItem:ModelItem) (incomingModelItem:ModelItem) =
             let newId=incomingModelItem.Id
@@ -283,10 +288,14 @@
                 SourceReferences=newSourceReferences
                 ModelItemName=newModelItemName
             }
-
+    let TokenSeparatorList =[" "; "&"; ":"]
+//    .*[ |&|:]
+    let TokenSeparatorRegex=".*[" + ( TokenSeparatorList |> String.concat "|" ) + "]"
     type SearchDirection =
-        | Forward
-        | Backward
+        | FindFirstMatch
+        | FindLastMatch
+        | FindFirstMatchExactTokenUsage
+        | FindLastMatchExactTokenUsage
     // 'A is the language item state type
     // 'B is the context type
     type Token<'A,'B> =
@@ -305,20 +314,54 @@
                 matches.[matches.Count-1]
             member self.ConsumeToken(sIncomingString) =
                 match self.SearchDirection with
-                    | Forward->
+                    | FindFirstMatch->
                         let matchIWant=self.FirstMatch(sIncomingString)
-                        let matchSplitLocation = matchIWant.Index
-                        (matchIWant.Value, sIncomingString.Substring (matchSplitLocation+matchIWant.Length))
-                    | Backward->
+                        let matchBeginLocation = matchIWant.Index 
+                        let matchEndLocation = matchBeginLocation + matchIWant.Value.Length 
+                        let sMatchPart, sRemainingPart = // chop off separator token if not EOL
+                            if matchEndLocation-matchBeginLocation = sIncomingString.Length
+                                then matchIWant.Value, ""
+                                else 
+                                    matchIWant.Value, sIncomingString.Substring(matchEndLocation)
+                        (sMatchPart.Trim(), sRemainingPart)
+                    | FindFirstMatchExactTokenUsage->
+                        let matchIWant=self.FirstMatch(sIncomingString)
+                        let matchBeginLocation = matchIWant.Index 
+                        let matchEndLocation = matchBeginLocation + matchIWant.Value.Length
+                        let sMatchPart, sRemainingPart = // chop off separator token if not EOL
+                            if matchEndLocation-matchBeginLocation = sIncomingString.Length
+                                then matchIWant.Value, ""
+                                else 
+                                    matchIWant.Value, sIncomingString.Substring(matchBeginLocation,matchEndLocation-matchBeginLocation-1)
+                        (sMatchPart.Trim(), sRemainingPart)
+
+                    | FindLastMatch->
                         let matchIWant=self.LastMatch(sIncomingString)
-                        let matchSplitLocation = matchIWant.Index
-                        (matchIWant.Value, sIncomingString.Substring (matchSplitLocation+matchIWant.Length))
+                        let matchBeginLocation = matchIWant.Index 
+                        let matchEndLocation = matchBeginLocation + matchIWant.Value.Length
+                        let sMatchPart, sRemainingPart = // chop off separator token if not EOL
+                            if matchEndLocation-matchBeginLocation = sIncomingString.Length-1
+                                then matchIWant.Value, ""
+                                else 
+                                    matchIWant.Value, sIncomingString.Substring(matchEndLocation)
+                        (sMatchPart.Trim(), sRemainingPart)
+                    | FindLastMatchExactTokenUsage->
+                        let matchIWant=self.LastMatch(sIncomingString)
+                        let matchBeginLocation = matchIWant.Index 
+                        let matchEndLocation = matchBeginLocation + matchIWant.Value.Length
+                        let sMatchPart, sRemainingPart = // chop off separator token if not EOL
+                            if matchEndLocation-matchBeginLocation = sIncomingString.Length
+                                then matchIWant.Value, ""
+                                else 
+                                    matchIWant.Value, sIncomingString.Substring(matchBeginLocation,matchEndLocation-matchBeginLocation-1)
+                        (sMatchPart.Trim(), sRemainingPart)
+
 
     type EasyAMToken = Token<ModelItem, ProcessContext>
     let easyAMTokens:EasyAMToken[] = 
         [|
             {
-                SearchDirection=Backward
+                SearchDirection=FindLastMatch
                 RegexMatch="//.*$"
                 MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
                                         let incomingModelItem=currentContext.ContextStack.Peek()
@@ -327,7 +370,8 @@
                                         let newlyCreatedModelItem =
                                             {
                                             defaultModelItem with
-                                                Id=7
+                                                Id=getNextItemNumber()
+                                                Parent=Some incomingModelItem.Id
                                                 ItemType=Note({Text=commentValue; SourceReference=newSourceReference})
                                                 SourceReferences=[newSourceReference]
                                             }
@@ -337,8 +381,8 @@
                                     )
             };
             {
-                SearchDirection=Forward
-                RegexMatch="WORK:.*$"
+                SearchDirection=FindFirstMatch
+                RegexMatch="NOTE:[^&|^:]*" //+ TokenSeparatorRegex
                 MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
                                         let incomingModelItem=currentContext.ContextStack.Peek()
                                         let commentValue=tokenMatchText.Substring(5).Trim()
@@ -346,7 +390,45 @@
                                         let newlyCreatedModelItem =
                                             {
                                             defaultModelItem with
-                                                Id=9
+                                                Id=getNextItemNumber()
+                                                ItemType=Note({Text=commentValue; SourceReference=newSourceReference})
+                                                SourceReferences=[newSourceReference]
+                                            }
+                                        let newModelItemUpdatedWithContext = smashTwoModelItems incomingModelItem newlyCreatedModelItem
+                                        let newLines= [newModelItemUpdatedWithContext] |> List.append currentContext.Lines
+                                        {currentContext with Lines=newLines}
+                                    )
+            };
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch="TODO:[^&|^:]*" //+ TokenSeparatorRegex
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let incomingModelItem=currentContext.ContextStack.Peek()
+                                        let commentValue=tokenMatchText.Substring(5).Trim()
+                                        let newSourceReference={File=lineBeingProcessed.FileInfo;LineNumber=lineBeingProcessed.LineNumber}
+                                        let newlyCreatedModelItem =
+                                            {
+                                            defaultModelItem with
+                                                Id=getNextItemNumber()
+                                                ItemType=ToDo({Text=commentValue; SourceReference=newSourceReference})
+                                                SourceReferences=[newSourceReference]
+                                            }
+                                        let newModelItemUpdatedWithContext = smashTwoModelItems incomingModelItem newlyCreatedModelItem
+                                        let newLines= [newModelItemUpdatedWithContext] |> List.append currentContext.Lines
+                                        {currentContext with Lines=newLines}
+                                    )
+            };
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch="WORK:[^&|^:]*" //+ TokenSeparatorRegex
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let incomingModelItem=currentContext.ContextStack.Peek()
+                                        let commentValue=tokenMatchText.Substring(5).Trim()
+                                        let newSourceReference={File=lineBeingProcessed.FileInfo;LineNumber=lineBeingProcessed.LineNumber}
+                                        let newlyCreatedModelItem =
+                                            {
+                                            defaultModelItem with
+                                                Id=getNextItemNumber()
                                                 ItemType=Work({Text=commentValue; SourceReference=newSourceReference})
                                                 SourceReferences=[newSourceReference]
                                             }
@@ -356,8 +438,8 @@
                                     )
             };
             {
-                SearchDirection=Forward
-                RegexMatch="MASTER DOMAIN MODEL.*$"
+                SearchDirection=FindFirstMatch
+                RegexMatch="MASTER DOMAIN MODEL"
                 MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
                                         let incomingModelItem=currentContext.ContextStack.Peek()
                                         let contextShiftValue=(tokenMatchText.GetLeft 19).Trim()
@@ -365,7 +447,7 @@
                                         let newlyCreatedModelItem =
                                             {
                                             defaultModelItem with
-                                                Id=17
+                                                Id=getNextItemNumber()
                                                 ItemType=ContextShift({Text=contextShiftValue; SourceReference=newSourceReference})
                                                 Genre=Genres.Business
                                                 Bucket=Buckets.Structure
@@ -378,8 +460,119 @@
                                     )
             };
             {
-                SearchDirection=Forward
-                RegexMatch="Q:.*$"
+                SearchDirection=FindFirstMatch
+                RegexMatch="MASTER BACKLOG"
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let incomingModelItem=currentContext.ContextStack.Peek()
+                                        let contextShiftValue=(tokenMatchText.GetLeft 14).Trim()
+                                        let newSourceReference={File=lineBeingProcessed.FileInfo;LineNumber=lineBeingProcessed.LineNumber}
+                                        let newlyCreatedModelItem =
+                                            {
+                                            defaultModelItem with
+                                                Id=getNextItemNumber()
+                                                ItemType=ContextShift({Text=contextShiftValue; SourceReference=newSourceReference})
+                                                Genre=Genres.Business
+                                                Bucket=Buckets.Behavior
+                                                AbstractionLevel=AbstractionLevels.Abstract
+                                                SourceReferences=[newSourceReference]
+                                            }
+                                        currentContext.ContextStack.Push newlyCreatedModelItem
+                                        let newLines= [newlyCreatedModelItem] |> List.append currentContext.Lines
+                                        {currentContext with Lines=newLines}
+                                    )
+            };
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch="MASTER SUPPLEMENTAL MODEL"
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let incomingModelItem=currentContext.ContextStack.Peek()
+                                        let contextShiftValue=(tokenMatchText.GetLeft 25).Trim()
+                                        let newSourceReference={File=lineBeingProcessed.FileInfo;LineNumber=lineBeingProcessed.LineNumber}
+                                        let newlyCreatedModelItem =
+                                            {
+                                            defaultModelItem with
+                                                Id=getNextItemNumber()
+                                                ItemType=ContextShift({Text=contextShiftValue; SourceReference=newSourceReference})
+                                                Genre=Genres.Business
+                                                Bucket=Buckets.Supplemental
+                                                AbstractionLevel=AbstractionLevels.Abstract
+                                                SourceReferences=[newSourceReference]
+                                            }
+                                        currentContext.ContextStack.Push newlyCreatedModelItem
+                                        let newLines= [newlyCreatedModelItem] |> List.append currentContext.Lines
+                                        {currentContext with Lines=newLines}
+                                    )
+            };
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch="PRODUCT BACKLOG"
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let incomingModelItem=currentContext.ContextStack.Peek()
+                                        let contextShiftValue=(tokenMatchText.GetLeft 15).Trim()
+                                        let newSourceReference={File=lineBeingProcessed.FileInfo;LineNumber=lineBeingProcessed.LineNumber}
+                                        let newlyCreatedModelItem =
+                                            {
+                                            defaultModelItem with
+                                                Id=getNextItemNumber()
+                                                ItemType=ContextShift({Text=contextShiftValue; SourceReference=newSourceReference})
+                                                Genre=Genres.Business
+                                                Bucket=Buckets.Behavior
+                                                AbstractionLevel=AbstractionLevels.Realized
+                                                SourceReferences=[newSourceReference]
+                                            }
+                                        currentContext.ContextStack.Push newlyCreatedModelItem
+                                        let newLines= [newlyCreatedModelItem] |> List.append currentContext.Lines
+                                        {currentContext with Lines=newLines}
+                                    )
+            };
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch="SPRINT BACKLOG"
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let incomingModelItem=currentContext.ContextStack.Peek()
+                                        let contextShiftValue=(tokenMatchText.GetLeft 15).Trim()
+                                        let newSourceReference={File=lineBeingProcessed.FileInfo;LineNumber=lineBeingProcessed.LineNumber}
+                                        let newlyCreatedModelItem =
+                                            {
+                                            defaultModelItem with
+                                                Id=getNextItemNumber()
+                                                ItemType=ContextShift({Text=contextShiftValue; SourceReference=newSourceReference})
+                                                Genre=Genres.Business
+                                                Bucket=Buckets.Behavior
+                                                AbstractionLevel=AbstractionLevels.Realized
+                                                SourceReferences=[newSourceReference]
+                                            }
+                                        currentContext.ContextStack.Push newlyCreatedModelItem
+                                        let newLines= [newlyCreatedModelItem] |> List.append currentContext.Lines
+                                        {currentContext with Lines=newLines}
+                                    )
+            };
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch="NOTES"
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let incomingModelItem=currentContext.ContextStack.Peek()
+                                        let contextShiftValue=(tokenMatchText.GetLeft 5).Trim()
+                                        let newSourceReference={File=lineBeingProcessed.FileInfo;LineNumber=lineBeingProcessed.LineNumber}
+                                        let newlyCreatedModelItem =
+                                            {
+                                            defaultModelItem with
+                                                Id=getNextItemNumber()
+                                                ItemType=ContextShift({Text=contextShiftValue; SourceReference=newSourceReference})
+                                                Genre=Genres.None
+                                                Bucket=Buckets.None
+                                                AbstractionLevel=AbstractionLevels.None
+                                                SourceReferences=[newSourceReference]
+                                            }
+                                        currentContext.ContextStack.Clear()
+                                        currentContext.ContextStack.Push(defaultModelItem)
+                                        let newLines= [newlyCreatedModelItem] |> List.append currentContext.Lines
+                                        {currentContext with Lines=newLines}
+                                    )
+            };
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch="Q:.*"
                 MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
                                         let incomingModelItem=currentContext.ContextStack.Peek()
                                         let questionValue=tokenMatchText.Substring(2).Trim()
@@ -387,7 +580,7 @@
                                         let newlyCreatedModelItem =
                                             {
                                             defaultModelItem with
-                                                Id=9
+                                                Id=getNextItemNumber()
                                                 ItemType=Question({Text=questionValue; SourceReference=newSourceReference})
                                                 SourceReferences=[newSourceReference]
                                             }
@@ -396,8 +589,40 @@
                                         {currentContext with Lines=newLines}
                                     )
             };
+            { // This should be near (next?) to last. Catch any name/value pairs on the line
+                SearchDirection=FindFirstMatchExactTokenUsage
+                RegexMatch="&[^&|^ |^:]*"
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let incomingModelItem=currentContext.ContextStack.Peek()
+                                        let nameText,valueText =
+                                            if tokenMatchText.Contains("=")
+                                                then
+                                                    let equalsSplit=tokenMatchText.IndexOf("=")
+                                                    tokenMatchText.Substring(1, equalsSplit-1), tokenMatchText.Substring(equalsSplit+1)
+                                                else
+                                                    tokenMatchText,""
+                                        let newSourceReference={File=lineBeingProcessed.FileInfo;LineNumber=lineBeingProcessed.LineNumber}
+                                        let newlyCreatedModelItem =
+                                            {
+                                            defaultModelItem with
+                                                Id=getNextItemNumber()
+                                                ItemType=NameValueTag({Name=nameText; Value=valueText; SourceReference=newSourceReference})
+                                                SourceReferences=[newSourceReference]
+                                            }
+                                        // smash item with most recent item on list to give it context. Also make it child
+                                        let smashedModelItem = 
+                                            if currentContext.Lines.Length>0
+                                                then
+                                                    let parentItem = currentContext.Lines.[currentContext.Lines.Length-1]
+                                                    {(smashTwoModelItems parentItem newlyCreatedModelItem) with Parent=Some parentItem.Id}
+                                                else
+                                                    newlyCreatedModelItem
+                                        let newLines= [smashedModelItem] |> List.append currentContext.Lines
+                                        {currentContext with Lines=newLines}
+                                    )
+            };
             {
-                SearchDirection=Forward
+                SearchDirection=FindFirstMatch
                 RegexMatch="^.*$"  // This runs last. It is the catch-all
                 MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
                                         let newSourceReference={File=lineBeingProcessed.FileInfo;LineNumber=lineBeingProcessed.LineNumber}
@@ -408,7 +633,7 @@
                                             then //it's an item
                                                 let newItem = 
                                                     {
-                                                        Id=11
+                                                        Id=getNextItemNumber()
                                                         Parent=Some (incomingModelItem.Id)
                                                         ItemType=ModelItemType.ModelItem(
                                                                                         {
@@ -437,7 +662,7 @@
                                             else //it's a comment
                                                 let newItem = 
                                                     {
-                                                        Id=9
+                                                        Id=getNextItemNumber()
                                                         Parent=Some (incomingModelItem.Id)
                                                         ItemType=ModelItemType.Note({Text=lineBeingProcessed.LineText; SourceReference=newSourceReference})
                                                         Bucket=Buckets.None
@@ -484,7 +709,6 @@
             { TokenText="SPRINT BACKLOG";               ExampleItem={defaultModelItem with TemporalIndicator=TemporalIndicators.ToBe; Genre=Genres.Business; Bucket=Buckets.Behavior; AbstractionLevel=AbstractionLevels.Realized}};
             { TokenText="MASTER DOMAIN MODEL";          ExampleItem={defaultModelItem with TemporalIndicator=TemporalIndicators.ToBe; Genre=Genres.Business; Bucket=Buckets.Structure; AbstractionLevel=AbstractionLevels.Abstract}};
             { TokenText="MASTER SUPPLEMENTAL MODEL";    ExampleItem={defaultModelItem with TemporalIndicator=TemporalIndicators.ToBe; Genre=Genres.Business; Bucket=Buckets.Supplemental; AbstractionLevel=AbstractionLevels.Abstract}};
-//            { TokenText="TODO";                         ExampleItem={defaultModelItem with TemporalIndicator=TemporalIndicators.ToBe; Genre=Genres.Business; Bucket=Buckets.Meta; AbstractionLevel=AbstractionLevels.Abstract}};
             { TokenText="WORK";                         ExampleItem={defaultModelItem with TemporalIndicator=TemporalIndicators.AsIs; Genre=Genres.Business; Bucket=Buckets.Meta; AbstractionLevel=AbstractionLevels.Realized}};
             { TokenText="Q ";                           ExampleItem=defaultModelItem};
             { TokenText="TODO ";                        ExampleItem=defaultModelItem};
@@ -605,342 +829,6 @@
             ExpectedExperimentSuspenseTime=""
         }
 
-//    type InformationTag =
-//        {
-//            Genre:Genres
-//            Bucket:Buckets
-//            AbstractionLevel:AbstractionLevels
-//            TemporalIndicator:TemporalIndicators
-//        }
-//         member self.ToString2() =
-//            let genre = if self.Genre=Genres.Unknown then "" else self.Genre.ToString()
-//            let bucket = if self.Bucket=Buckets.Unknown then "" else self.Bucket.ToString()
-//            let abstractionlevel = if self.AbstractionLevel=AbstractionLevels.Unknown then "" else self.AbstractionLevel.ToString()
-//            let temporalindicator = if self.TemporalIndicator=TemporalIndicators.Unknown then "" else self.TemporalIndicator.ToString()
-//            genre + " " + bucket + " " + abstractionlevel + " " + temporalindicator.ToString()
-//         override self.ToString() =
-//            self.Genre.ToString() + " " + self.Bucket.ToString() + " " + self.AbstractionLevel.ToString() + " " + self.TemporalIndicator.ToString()
-//    let defaultInformationTag=
-//        {
-//            Genre=Genres.Unknown
-//            Bucket=Buckets.Unknown
-//            AbstractionLevel=AbstractionLevels.Unknown
-//            TemporalIndicator=TemporalIndicators.Unknown
-//        }
-//
-//// INCOMING FILE TYPES
-//    let informationTagTokens =[|"STRUCUTRE"; "BEHAVIOR"; "SUPPLEMENTAL"; "META"; "BUSINESS"; "SYSTEM"; "ABSTRACT"; "REALIZED"; "AS-IS"; "TO-BE"|]
-//    let scopingTokens = [|
-//        ("NAME: ", None); 
-//        ("ORG: ", None); 
-//        ("DOMAIN: ", None); 
-//        ("US: ", Some(Buckets.Behavior)); 
-//        ("USER STORY: ", Some(Buckets.Behavior)); 
-//        ("SUPPL: ",  Some(Buckets.Supplemental)); 
-//        ("ENTITY: ", Some(Buckets.Structure)); 
-//        ("META: ",  Some(Buckets.Meta))|]
-//    let scopingTokenVals = scopingTokens |> Array.map(fun x->fst x)
-//
-//    let commandTokens =[|"Q: "; "//"|]
-//    type BucketTokenType =
-//        | LTOR
-//        | Declarative
-//    let bucketTokens = [|
-//        ("HASA ", Buckets.Structure, LTOR);
-//        ("CONTAINS ", Buckets.Structure, LTOR);
-//        ("WHEN ", Buckets.Behavior, Declarative);
-//        ("ASA ", Buckets.Behavior, Declarative);
-//        ("INEEDTO ", Buckets.Behavior, Declarative);
-//        ("SOTHAT ", Buckets.Behavior, Declarative);
-//        ("INITIAL ", Buckets.Behavior, Declarative);
-//        ("FINAL ", Buckets.Behavior, Declarative);
-//        ("MERGENODE ", Buckets.Behavior, Declarative);
-//        ("MERGE ", Buckets.Behavior, Declarative);
-//        ("FORK ", Buckets.Behavior, Declarative);
-//        ("DO ", Buckets.Behavior, Declarative);
-//        ("DATA ", Buckets.Supplemental, Declarative);
-//        |]
-//    let bucketTokenVals = bucketTokens |> Array.map(fun x->
-//        let a,b,c = x
-//        a
-//        )
-
-
-//    type CompilationLineCommands =
-//        | NoCommand
-//        | Unknown
-//        | Comment
-//        | Hasa
-//        | Contains
-//        | Question
-//        | Label
-//         override self.ToString() =
-//          match self with
-//            | NoCommand->"No Command"
-//            | Unknown->"Unknown"
-//            | Comment->"Comment"
-//            | Hasa->"HasA"
-//            | Contains->"Contains"
-//            | Question->"Question"
-//            | Label->"Label"
-//
-//    type CompilationLineType =
-//        | Unknown
-//        | Scoping
-//        | Context
-//        | Command
-//        | Freetext
-//        | Label
-//         override self.ToString() =
-//          match self with
-//            | Unknown->"Unknown"
-//            | Scoping->"Scoping"
-//            | Context->"Context"
-//            | Command->"Command"
-//            | FreeText->"FreeText"
-//            | Label->"Label"
-//
-//    type CompilationLine =
-//        {
-//            File:System.IO.FileInfo option
-//            LineNumber:int
-//            LineType:CompilationLineType
-//            CommandType:CompilationLineCommands
-//            Scope:string
-//            TaggedContext:InformationTag
-//            LineText:string
-//        }
-//    let defaultCompilationLine =
-//        {
-//            File=None
-//            LineNumber=0
-//            Scope=""
-//            LineType=CompilationLineType.Unknown
-//            CommandType=NoCommand
-//            TaggedContext=defaultInformationTag
-//            LineText=""
-//        }
-//    type CompilationContext =
-//        {
-//            CompilationLines:CompilationLine list
-//            State:InformationTag
-//            Scope:string
-//            CurrentFile:string
-//        }
-//    let defaultCompilationContext =
-//        {
-//            CompilationLines = []
-//            State=defaultInformationTag
-//            Scope=""
-//            CurrentFile=""
-//        }
-
-
-
-//    // True for all models
-//    type SourceFileReference =
-//        {
-//            File:System.IO.FileInfo
-//            Line:int
-//        }
-
-//    type StructureLayer =
-//        {
-//            CompilationLines:CompilationLine list
-//            Questions:string list
-//            Notes:string list
-//            Entities:Entity list
-//        }
-//    let defaultStructureLayer = 
-//        {
-//            CompilationLines=[]
-//            Entities=[]
-//            Questions=[]
-//            Notes=[]
-//        }
-//    type StructureModelType =
-//        {
-//            Input:StructureLayer
-//            Root:StructureLayer
-//            AbstractBusinessEntitiesToBe: StructureLayer
-//            RealizedBusinessEntitiesToBe: StructureLayer
-//            AbstractSystemEntitiesToBe: StructureLayer
-//            RealizedSystemEntitiesToBe: StructureLayer
-//            AbstractBusinessEntitiesAsIs: StructureLayer
-//            RealizedBusinessEntitiesAsIs: StructureLayer
-//            AbstractSystemEntitiesAsIs: StructureLayer
-//            RealizedSystemEntitiesAsIs: StructureLayer
-//        }
-//    let defaultStructureModel =
-//        {
-//            Input=defaultStructureLayer
-//            Root=defaultStructureLayer
-//            AbstractBusinessEntitiesToBe=defaultStructureLayer
-//            RealizedBusinessEntitiesToBe=defaultStructureLayer
-//            AbstractSystemEntitiesToBe=defaultStructureLayer
-//            RealizedSystemEntitiesToBe=defaultStructureLayer
-//            AbstractBusinessEntitiesAsIs=defaultStructureLayer
-//            RealizedBusinessEntitiesAsIs=defaultStructureLayer
-//            AbstractSystemEntitiesAsIs=defaultStructureLayer
-//            RealizedSystemEntitiesAsIs=defaultStructureLayer
-//        }
-//
-//    // BEHAVIOR
-//    type USTrigger=VerbNounClause
-//    type USActor=VerbNounClause
-//    type USGoal=VerbNounClause
-//    type USContext=VerbNounClause
-//    type USUserStoryTitle =
-//        {
-//            Trigger:USTrigger
-//            Actor:USActor
-//            Goal:USGoal
-//            Context:USContext
-//        }
-//    type UserStory =
-//        {
-//            Id:int
-//            ParentId:int option
-//            USUserStoryTitle:USUserStoryTitle
-//            DiagramSteps:string list
-//            SourceFileReferences:SourceFileReference list
-//            AffectedBySupplementals:int list
-//        }
-//    type BehaviorLayer =
-//        {
-//            CompilationLines:CompilationLine list
-//            Questions:string list
-//            Notes:string list
-//            UserStoryList:UserStory list
-//        }
-//    let defaultBehaviorLayer =
-//        {
-//            CompilationLines=[]
-//            Questions=[]
-//            Notes=[]
-//            UserStoryList=[]
-//        }
-//    type BehaviorModelType =
-//        {
-//            Input:BehaviorLayer
-//            Root:BehaviorLayer
-//            AbstractBusinessUserStoriesToBe: BehaviorLayer
-//            RealizedBusinessUserStoriesToBe: BehaviorLayer
-//            AbstractSystemUserStoriesToBe: BehaviorLayer
-//            RealizedSystemUserStoriesToBe: BehaviorLayer
-//            AbstractBusinessUserStoriesAsIs: BehaviorLayer
-//            RealizedBusinessUserStoriesAsIs: BehaviorLayer
-//            AbstractSystemUserStoriesAsIs: BehaviorLayer
-//            RealizedSystemUserStoriesAsIs: BehaviorLayer
-//        }
-//    let defaultBehaviorModel =
-//        {
-//            Input=defaultBehaviorLayer
-//            Root=defaultBehaviorLayer
-//            AbstractBusinessUserStoriesToBe= defaultBehaviorLayer
-//            RealizedBusinessUserStoriesToBe= defaultBehaviorLayer
-//            AbstractSystemUserStoriesToBe= defaultBehaviorLayer
-//            RealizedSystemUserStoriesToBe= defaultBehaviorLayer
-//            AbstractBusinessUserStoriesAsIs= defaultBehaviorLayer
-//            RealizedBusinessUserStoriesAsIs= defaultBehaviorLayer
-//            AbstractSystemUserStoriesAsIs= defaultBehaviorLayer
-//            RealizedSystemUserStoriesAsIs= defaultBehaviorLayer
-//        }
-//
-//
-//    // Supplementals
-//    type Supplemental =
-//        {
-//            Id:int
-//            ParentId:int option
-//            SourceFileReferences:SourceFileReference list
-//            EntityReferences:int list
-//            BehaviorReferences:int list
-//        }
-//    type SupplementalLayer =
-//        {
-//            CompilationLines:CompilationLine list
-//            Questions:string list
-//            Notes:string list
-//            Supplementals:Supplemental list
-//        }
-//    let defaultSupplementalLayer =
-//        {
-//            CompilationLines=[]
-//            Questions=[]
-//            Notes=[]
-//            Supplementals=[]
-//        }
-//    type SupplementalModelType =
-//        {
-//            Input:SupplementalLayer
-//            Root:SupplementalLayer
-//            AbstractBusinessUserStoriesToBe: SupplementalLayer
-//            RealizedBusinessUserStoriesToBe: SupplementalLayer
-//            AbstractSystemUserStoriesToBe: SupplementalLayer
-//            RealizedSystemUserStoriesToBe: SupplementalLayer
-//            AbstractBusinessUserStoriesAsIs: SupplementalLayer
-//            RealizedBusinessUserStoriesAsIs: SupplementalLayer
-//            AbstractSystemUserStoriesAsIs: SupplementalLayer
-//            RealizedSystemUserStoriesAsIs: SupplementalLayer
-//        }
-//    let defaultSupplementalModel =
-//        {
-//            Input= defaultSupplementalLayer
-//            Root= defaultSupplementalLayer
-//            AbstractBusinessUserStoriesToBe= defaultSupplementalLayer
-//            RealizedBusinessUserStoriesToBe= defaultSupplementalLayer
-//            AbstractSystemUserStoriesToBe= defaultSupplementalLayer
-//            RealizedSystemUserStoriesToBe= defaultSupplementalLayer
-//            AbstractBusinessUserStoriesAsIs= defaultSupplementalLayer
-//            RealizedBusinessUserStoriesAsIs= defaultSupplementalLayer
-//            AbstractSystemUserStoriesAsIs= defaultSupplementalLayer
-//            RealizedSystemUserStoriesAsIs= defaultSupplementalLayer
-//        }
-//
-//    // META
-//    type MetaItem =
-//        {
-//            Id:int
-//            ParentId:int option
-//            Text:string
-//        }
-//
-//    type MetaLayer =
-//        {
-//            CompilationLines:CompilationLine list
-//            Questions:string list
-//            Notes:string list
-//            MetaItems:MetaItem list
-//        }
-//    let defaultMetaLayer =
-//        {
-//            CompilationLines=[]
-//            Questions=[]
-//            Notes=[]
-//            MetaItems=[]
-//        }
-//    type MetaModelType =
-//        {
-//            Input:MetaLayer
-//            Root:MetaLayer
-//        }
-//    let defaultMetaModel =
-//        {
-//            Input=defaultMetaLayer
-//            Root=defaultMetaLayer
-//        }
-//        
-//
-//    type StructuredAnalysisModel =
-//        {
-//            StructureModel:StructureModelType
-//            BehaviorModel:BehaviorModelType
-//            SupplementalModel:SupplementalModelType
-//            MetaModel:MetaModelType
-//            Unknown:CompilationLine list
-//        }
-//    let defaultStructuredAnalysisModel = {BehaviorModel=defaultBehaviorModel; StructureModel=defaultStructureModel; SupplementalModel=defaultSupplementalModel; MetaModel=defaultMetaModel; Unknown=[]}
 
 
 
