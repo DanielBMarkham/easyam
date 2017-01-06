@@ -8,15 +8,22 @@ WORK: Called Joe to talk about upcoming project &time=45
 MASTER DOMAIN MODEL
 	Patient
 	Dentist
+		Q: For our purposes is there a difference between a dentist and a dental hygenist? 
 	Procedure
 	Q: Is there more than one dentist?
 	Q: How many different kinds of procedures are they? Is there a list/codes?
+	Supplies // How many subtypes of supplies are there?
 
 MASTER BACKLOG
 	Perform Procedure
 	Make Apointment // This seems to be a hot button with Joe
 	Plan Daily Work
 		NOTE: used by the office manager and others (?) to optimize day
+	Reorder Supplies&sampledata=needed
+		// Supplies should not include office supplies
+		NOTE: There may be some kind of office supply system to develop
+There's a long story about janitorial and office supplies that we need to tease out from Meg
+		Q: How do they tell the difference between office supplies and janitorial supplies?
 
 MASTER SUPPLEMENTAL MODEL
 	The customer should never wait

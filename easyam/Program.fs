@@ -4,7 +4,7 @@
     open Utils
     open Persist
     open FParsec
-    open GemBox.Spreadsheet
+
 
     let defaultBaseOptions = createNewBaseOptions "easyAM" "Compile the Analysis Model." [|"Takes tagged statements created with Structural Analysis, cross-checks and compiles."|] defaultVerbosity
     let defaulSourceDirectory = createNewConfigEntry "S" "Source Directory (Optional)" [|"/S:<path> -> path to the directory having the source files."|] (System.AppDomain.CurrentDomain.BaseDirectory, Some(System.IO.DirectoryInfo(System.AppDomain.CurrentDomain.BaseDirectory)))
@@ -41,9 +41,20 @@
     let allCardinalNumbers = {1..10000}
 
     let loadInAllIncomingLines (fileList:System.IO.FileInfo[]) =
+        let whiteSpaceRegex=new System.Text.RegularExpressions.Regex("^\s+")
         let lineDumpForAllFiles = fileList |> Array.mapi(fun i x->
-            System.IO.File.ReadAllLines(x.FullName) |> Array.mapi(fun j y->
-                {FileNumber=i;FileInfo=x; LineNumber=j; LineText=y}
+            System.IO.File.ReadAllLines(x.FullName) |> Array.mapi(fun j incomingLineBeingProcessed->
+                let indentLevel, lineWithoutLeadingSpaces = 
+                    let whiteSpaceMatches = whiteSpaceRegex.Matches(incomingLineBeingProcessed).toArray
+                    if whiteSpaceMatches.Length>0
+                        then
+                            let leadingWhiteSpace = whiteSpaceMatches.[0].Value
+                            let tabCount = leadingWhiteSpace.CountOccurences("\t")-1
+                            let spaceCount = leadingWhiteSpace.CountOccurences(" ")-1
+                            ((tabCount + (spaceCount/4)),incomingLineBeingProcessed.Substring(leadingWhiteSpace.Length))
+                        else (0,incomingLineBeingProcessed)
+
+                {FileNumber=i;FileInfo=x; LineNumber=j; LineText=incomingLineBeingProcessed; IndentLevel=indentLevel; LineWithoutLeadingSpaces=lineWithoutLeadingSpaces}
                 )
             )
         lineDumpForAllFiles |> Array.concat
@@ -58,14 +69,14 @@
                 let newModelItems = delimiterSections |> Array.fold(fun acc x->
                                     let splitByEquals=x.Split([|"="|], System.StringSplitOptions.None)
                                     let lhs, rhs = if splitByEquals.Length>1 then splitByEquals.[0],splitByEquals.[1] else "",""
-                                    List.append acc [{currentContext with Id=(Seq.take 1 allCardinalNumbers |> Seq.toArray).[0]; ModelItemName=x; ItemType=NameValueTag({ Name=lhs; Value=rhs; SourceReference={File=incomingLine.FileInfo; LineNumber=incomingLine.LineNumber}})}]
+                                    List.append acc [{currentContext with Id=(Seq.take 1 allCardinalNumbers |> Seq.toArray).[0]; ModelItemName=x; ItemType=NameValueTag({ Name=lhs; Value=rhs; SourceReference={File=incomingLine.FileInfo; LineNumber=incomingLine.LineNumber; LineLevelIndent=incomingLine.IndentLevel}})}]
                                     ) []
                 newLineWithOnlyLabelRemaining, newModelItems
             else
                 lineWithOnlyLabelRemaining, []
 
     let processIncomingLines incomingLines =        
-        let whiteSpaceRegex=new System.Text.RegularExpressions.Regex("^\s+")
+//        let whiteSpaceRegex=new System.Text.RegularExpressions.Regex("^\s+")
         let compiledContext = 
             incomingLines |> Array.fold(fun lineProcessorAccumulator incomingLineBeingProcessed->
             let lastItemProcessed=
@@ -73,9 +84,9 @@
                     then
                         lineProcessorAccumulator.Lines.Item(lineProcessorAccumulator.Lines.Length-1) 
                     else 
-                        let newSourceReferences=[{File=incomingLineBeingProcessed.FileInfo; LineNumber=incomingLineBeingProcessed.LineNumber}]
+                        let newSourceReferences=[{File=incomingLineBeingProcessed.FileInfo; LineNumber=incomingLineBeingProcessed.LineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}]
                         {defaultModelItem with SourceReferences=newSourceReferences}
-            let lastSourceReferenceForLastItemProcessed=if lineProcessorAccumulator.Lines.Length>0 then {File=incomingLineBeingProcessed.FileInfo;LineNumber=incomingLineBeingProcessed.LineNumber} else lastItemProcessed.SourceReferences.Item(lastItemProcessed.SourceReferences.Length-1)
+            let lastSourceReferenceForLastItemProcessed=if lineProcessorAccumulator.Lines.Length>0 then {File=incomingLineBeingProcessed.FileInfo;LineNumber=incomingLineBeingProcessed.LineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel} else lastItemProcessed.SourceReferences.Item(lastItemProcessed.SourceReferences.Length-1)
             // if there's a new file from the last time, we zap the stack and start over with context
             let newacc = 
                 if ( (lineProcessorAccumulator<>defaultProcessContext) && (lastSourceReferenceForLastItemProcessed.File.FullName<>incomingLineBeingProcessed.FileInfo.FullName))
@@ -83,15 +94,6 @@
                         defaultProcessContext
                     else
                         lineProcessorAccumulator
-            let indentLevel, lineWithoutLeadingSpaces = 
-                let whiteSpaceMatches = whiteSpaceRegex.Matches(incomingLineBeingProcessed.LineText).toArray
-                if whiteSpaceMatches.Length>0
-                    then
-                        let leadingWhiteSpace = whiteSpaceMatches.[0].Value
-                        let tabCount = leadingWhiteSpace.CountOccurences("\t")
-                        let spaceCount = leadingWhiteSpace.CountOccurences(" ")
-                        ((tabCount + (spaceCount/4)),incomingLineBeingProcessed.LineText.Substring(leadingWhiteSpace.Length))
-                    else (0,incomingLineBeingProcessed.LineText)
             let newContext = easyAMTokens |> Array.fold(fun tokenProcessingAccumulator currentTokenWeAreLookingAt->
                                 let (incomingLineToParse:string,incomingContext)=tokenProcessingAccumulator
                                 match (incomingLineToParse.Length>0),(currentTokenWeAreLookingAt.IsMatch incomingLineToParse) with
@@ -104,7 +106,7 @@
                                     | _, false->
                                         (incomingLineToParse, incomingContext)
 
-                                ) (lineWithoutLeadingSpaces,newacc)
+                                ) (incomingLineBeingProcessed.LineWithoutLeadingSpaces,newacc)
             
             snd newContext
             ) defaultProcessContext
@@ -118,7 +120,8 @@
         let incomingLines = loadInAllIncomingLines fileList
         let structuredAnalysisModel = processIncomingLines incomingLines
         System.Console.WriteLine (structuredAnalysisModel.Length.ToString())
-        dumpIncomingModel opts structuredAnalysisModel
+        rawDumpIncomingModel opts structuredAnalysisModel
+        compiledDumpIncomingModel opts structuredAnalysisModel
         ()
 
 

@@ -89,10 +89,6 @@
     <Reference Include="FSharp.Data.TypeProviders, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
     </Reference>
-    <Reference Include="GemBox.Spreadsheet">
-      <HintPath>packages\GemBox.Spreadsheet.41.3.30.1033\lib\net30\GemBox.Spreadsheet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <Private>True</Private>
       <SpecificVersion>True</SpecificVersion>
