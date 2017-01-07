@@ -53,8 +53,8 @@
                             let spaceCount = leadingWhiteSpace.CountOccurences(" ")-1
                             ((tabCount + (spaceCount/4)),incomingLineBeingProcessed.Substring(leadingWhiteSpace.Length))
                         else (0,incomingLineBeingProcessed)
-
-                {FileNumber=i;FileInfo=x; LineNumber=j; LineText=incomingLineBeingProcessed; IndentLevel=indentLevel; LineWithoutLeadingSpaces=lineWithoutLeadingSpaces}
+                // Note that we add 1 to j for the line number. Line numbers don't start with zero
+                {FileNumber=i;FileInfo=x; LineNumber=j+1; LineText=incomingLineBeingProcessed; IndentLevel=indentLevel; LineWithoutLeadingSpaces=lineWithoutLeadingSpaces}
                 )
             )
         lineDumpForAllFiles |> Array.concat
@@ -121,7 +121,9 @@
         let structuredAnalysisModel = processIncomingLines incomingLines
         System.Console.WriteLine (structuredAnalysisModel.Length.ToString())
         rawDumpIncomingModel opts structuredAnalysisModel
-        compiledDumpIncomingModel opts structuredAnalysisModel
+        compiledDumpIncomingModelAmout opts structuredAnalysisModel
+        compiledDumpIncomingModelHtml opts structuredAnalysisModel
+        saveMasterIndex
         ()
 
 

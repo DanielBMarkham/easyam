@@ -202,6 +202,8 @@
                     ||  ((self.Genre<>Genres.None) &&  (self.Genre<>Genres.Unknown))
                     ||  ((self.AbstractionLevel<>AbstractionLevels.None) &&  (self.AbstractionLevel<>AbstractionLevels.Unknown))
                     ||  ((self.TemporalIndicator<>TemporalIndicators.None) &&  (self.TemporalIndicator<>TemporalIndicators.Unknown)) )
+            member self.ToModelHeading =
+                self.Genre.ToString().ToUpper() + " " + self.Bucket.ToString().ToUpper() + " " + self.AbstractionLevel.ToString().ToUpper() + " " + self.TemporalIndicator.ToString().ToUpper()
     and ProcessContext = {ContextStack:System.Collections.Generic.Stack<ModelItem>; Lines:ModelItem list}
     let defaultModelItem = 
         {

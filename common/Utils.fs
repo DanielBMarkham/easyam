@@ -198,7 +198,169 @@
             && ((x.Bucket=bucket) || (bucket=Buckets.Unknown))
             && ((x.TemporalIndicator=temporalIndicator) || (temporalIndicator=TemporalIndicators.Unknown))
             )
-    let compiledDumpIncomingModel (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) =
+    let writeModelItemDetailHtmlTableHead (swItemDetailTextFileWriter:System.IO.StreamWriter) =
+        swItemDetailTextFileWriter.WriteLine "<table><thead><tr>"
+        swItemDetailTextFileWriter.WriteLine ("<td>" + "Item Number" + "</td>")
+        swItemDetailTextFileWriter.WriteLine ("<td>" + "Id Number" + "</td>")
+        swItemDetailTextFileWriter.WriteLine ("<td>" + "Parent" + "</td>")
+        swItemDetailTextFileWriter.WriteLine ("<td>" + "Context" + "</td>")
+        swItemDetailTextFileWriter.WriteLine ("<td>" + "Item Type" + "</td>")
+        swItemDetailTextFileWriter.WriteLine ("<td>" + "ShortName" + "</td>")
+        swItemDetailTextFileWriter.WriteLine ("<td>" + "Reference" + "</td>")
+        swItemDetailTextFileWriter.WriteLine ("<td>" + "Reference Line Number" + "</td>")
+        swItemDetailTextFileWriter.WriteLine "</tr></thead>"
+    let writeModelItemDetailHtmlTableDetail (swItemDetailTextFileWriter:System.IO.StreamWriter) (iterationNumber:int) (modelItem:ModelItem) =
+        let sb=new System.Text.StringBuilder(4096)
+        sb.Append("<tr>\n") |> ignore
+        sb.Append ("<td>" + iterationNumber.ToString() + "</td>") |> ignore
+        writeATableCell sb (modelItem.Id.ToString())
+        writeATableCell sb (if modelItem.Parent.IsSome then modelItem.Parent.Value.ToString() else "")
+        writeATableCell sb (makeContextAString modelItem.Genre modelItem.Bucket modelItem.TemporalIndicator modelItem.AbstractionLevel)
+        writeATableCell sb (modelItem.ItemType.ToString())
+        writeATableCell sb (modelItem.ModelItemName)
+        writeATableCell sb (modelItem.SourceReferences.Item(modelItem.SourceReferences.Length-1).File.FullName)
+        let referenceLineNumber= modelItem.SourceReferences.Item(modelItem.SourceReferences.Length-1).LineNumber.ToString()
+        writeATableCell sb (referenceLineNumber)
+        sb.Append ("</tr>\n") |> ignore
+        swItemDetailTextFileWriter.WriteLine (sb.ToString())
+    let saveDetailedViewHtml (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) (selectedItem:ModelItem) =
+        let itemDetailFileName=selectedItem.ModelItemName + ".html"
+        System.IO.File.Delete(itemDetailFileName)
+        let swItemDetailTextFileWriter = System.IO.File.CreateText(itemDetailFileName)
+        swItemDetailTextFileWriter.WriteLine "<html>"
+        swItemDetailTextFileWriter.WriteLine "<head>"
+        swItemDetailTextFileWriter.WriteLine ("<title>" + selectedItem.ModelItemName + "</title>")
+        swItemDetailTextFileWriter.WriteLine "</head>"
+        swItemDetailTextFileWriter.WriteLine "<body>"
+        swItemDetailTextFileWriter.WriteLine ("<h2>" + selectedItem.ToModelHeading + "</h2>")
+        swItemDetailTextFileWriter.WriteLine ("<h1>" + selectedItem.ModelItemName + "</h1>")
+        swItemDetailTextFileWriter.WriteLine ()
+        swItemDetailTextFileWriter.WriteLine ("<h3><a name='ItemDetail'>Item Detail</h3>")
+        swItemDetailTextFileWriter.WriteLine ("<h3><a name='Notes'>Notes</h3>")
+        swItemDetailTextFileWriter.WriteLine ("<h3><a name='Questions'>Questions</h3>")
+        swItemDetailTextFileWriter.WriteLine ("<h3><a name='ToDo'>To-Do</h3>")
+        swItemDetailTextFileWriter.WriteLine ("<h3><a name='Work'>Work</h3>")
+        swItemDetailTextFileWriter.WriteLine ("<h3><a name='Realizations'>Realizations</h3>")
+        swItemDetailTextFileWriter.WriteLine ("<h3>" + "DEBUG: Incoming Data Dump" + "</h3>")
+        writeModelItemDetailHtmlTableHead swItemDetailTextFileWriter
+        writeModelItemDetailHtmlTableDetail swItemDetailTextFileWriter 0 selectedItem
+        let itemsThatAreRelatedToThisItem = 
+            modelItems |> List.filter(fun y->
+                y.Parent.IsSome && y.Parent.Value=selectedItem.Id
+                )
+        itemsThatAreRelatedToThisItem |> List.iteri(fun i j->
+            writeModelItemDetailHtmlTableDetail swItemDetailTextFileWriter i j
+            )
+        swItemDetailTextFileWriter.WriteLine "</table></body></html>"
+        swItemDetailTextFileWriter.Flush()
+        swItemDetailTextFileWriter.Close()
+    let saveMasterIndex =
+        let fileName= "index.html"
+        System.IO.File.Delete(fileName)
+        let sw = System.IO.File.CreateText(fileName)
+        sw.WriteLine "<html>"
+        sw.WriteLine "<head>"
+        sw.WriteLine ("<title>Our Universe</title>")
+        sw.WriteLine "</head>"
+        sw.WriteLine "<body>"
+        sw.WriteLine ("<h1>Our Universe</h1>")
+        sw.WriteLine ("<h2>Overview</h2>")
+        sw.WriteLine ("<h3><a href='Business Behavior Abstract To-Be.html'>Benefits We Offer Our Clients</a></h3>")
+        sw.WriteLine ("<h3><a href='Business Structure Abstract To-Be.html'>Definitions, Terms, and Systems</h3>")
+        sw.WriteLine ("<h3><a href='Business Supplemental Abstract To-Be.html'>Rules We Do Our Work By</h3>")
+        sw.WriteLine ("<h2>How Things Have Went So Far</h2>")
+        sw.WriteLine ("<h3>Completed Work</h3>")
+        sw.WriteLine ("<h2>Where We Are Now</h2>")
+        sw.WriteLine ("<h3>Open Bugs</h3>")
+        sw.WriteLine ("<h3>Work In Progress</h3>")
+        sw.WriteLine ("<h2>Where We're Planning To Go</h2>")
+        sw.WriteLine ("<h3>Release Plan</h3>")
+        sw.WriteLine ("<h3>Roadmap</h3>")
+        sw.WriteLine ()
+        sw.WriteLine "</body></html>"
+        sw.Flush()
+        sw.Close()
+    let saveDetailedViewAmout (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) (selectedItem:ModelItem) =
+        let itemDetailFileName=selectedItem.ModelItemName + ".amout"
+        System.IO.File.Delete(itemDetailFileName)
+        let swItemDetailTextFileWriter = System.IO.File.CreateText(itemDetailFileName)
+        swItemDetailTextFileWriter.WriteLine selectedItem.ToModelHeading
+        swItemDetailTextFileWriter.WriteLine("    " + selectedItem.ModelItemName)
+        let itemsThatAreRelatedToThisItem = 
+            modelItems |> List.filter(fun y->
+                y.Parent.IsSome && y.Parent.Value=selectedItem.Id
+                )
+        swItemDetailTextFileWriter.WriteLine("        NOTES")
+        itemsThatAreRelatedToThisItem |> List.iter(fun k->
+            match k.ItemType with
+                |ModelItemType.Note(a) as n->
+                    swItemDetailTextFileWriter.WriteLine("            " + a.Text )
+                |_->()
+            )
+        swItemDetailTextFileWriter.WriteLine("        QUESTIONS")
+        itemsThatAreRelatedToThisItem |> List.iter(fun k->
+            match k.ItemType with
+                |ModelItemType.Question(a) as n->
+                    swItemDetailTextFileWriter.WriteLine("            " + a.Text )
+                |_->()
+            )
+        swItemDetailTextFileWriter.WriteLine("        TODO")
+        itemsThatAreRelatedToThisItem |> List.iter(fun k->
+            match k.ItemType with
+                |ModelItemType.ToDo(a) as n->
+                    swItemDetailTextFileWriter.WriteLine("            " + a.Text )
+                |_->()
+            )
+        swItemDetailTextFileWriter.WriteLine("        WORK")
+        itemsThatAreRelatedToThisItem |> List.iter(fun k->
+            match k.ItemType with
+                |ModelItemType.Work(a) as n->
+                    swItemDetailTextFileWriter.WriteLine("            " + a.Text )
+                |_->()
+            )
+        swItemDetailTextFileWriter.Flush()
+        swItemDetailTextFileWriter.Close()
+
+    let compiledDumpIncomingModelHtml (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) =
+        let topLevelItemsAndRelated = modelItems |> List.filter(fun x->x.Genre=Genres.Business && x.Bucket=Buckets.Behavior && x.AbstractionLevel=AbstractionLevels.Abstract && x.TemporalIndicator=TemporalIndicators.ToBe)
+        let sectionHeading="Business Behavior Abstract To-Be"
+        let itemDetailFileName=sectionHeading + ".html"
+        System.IO.File.Delete(itemDetailFileName)
+        let swItemDetailTextFileWriter = System.IO.File.CreateText(itemDetailFileName)
+        swItemDetailTextFileWriter.WriteLine "<html>"
+        swItemDetailTextFileWriter.WriteLine "<head>"
+        swItemDetailTextFileWriter.WriteLine ("<title>" + sectionHeading + "</title>")
+        swItemDetailTextFileWriter.WriteLine "</head>"
+        swItemDetailTextFileWriter.WriteLine "<body>"
+        swItemDetailTextFileWriter.WriteLine ("<h1>" + sectionHeading + " (" + topLevelItemsAndRelated.Length.ToString() + ")</h1>")
+        swItemDetailTextFileWriter.WriteLine ()
+        swItemDetailTextFileWriter.WriteLine ("</body></html>")
+        let topLevelItems = topLevelItemsAndRelated |> List.filter(fun x->match x.ItemType with |ModelItemType.ModelItem(_)->true |_->false)
+        //swItemDetailTextFileWriter.WriteLine "<ul>"
+        topLevelItems |> List.iter(fun y->
+            let itemChildren = modelItems |> List.filter(fun j->j.Parent.IsSome&&j.Parent.Value=y.Id)
+            let modelItemDetailHtmlFileName= y.ModelItemName + ".html"
+            swItemDetailTextFileWriter.WriteLine("<h2><a href='" + modelItemDetailHtmlFileName + "'>" + y.ModelItemName + "</a> (" + itemChildren.Length.ToString() + ")</h2>")
+            swItemDetailTextFileWriter.WriteLine "<table>"
+            swItemDetailTextFileWriter.WriteLine ("<tr><td><a href='" + modelItemDetailHtmlFileName + "#ItemDetail'>Item Detail</a></td>")
+            swItemDetailTextFileWriter.WriteLine "<td></td>"
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName + "#Notes'>Notes</a></td>")
+            swItemDetailTextFileWriter.WriteLine "<td></td>"
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName + "#Questions'>Questions</a></td>")
+            swItemDetailTextFileWriter.WriteLine "<td></td></tr>"
+            swItemDetailTextFileWriter.WriteLine ("<tr><td><a href='" + modelItemDetailHtmlFileName + "#ToDo'>To-Dos</a></td>")
+            swItemDetailTextFileWriter.WriteLine "<td></td>"
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName + "#Work'>Work</a></td>")
+            swItemDetailTextFileWriter.WriteLine "<td></td>"
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName + "#Realizations'>Realizations</a></td>")
+            swItemDetailTextFileWriter.WriteLine "<td></td>"
+            swItemDetailTextFileWriter.WriteLine "</tr></table>"
+            )
+        //swItemDetailTextFileWriter.WriteLine "</ul>"
+        swItemDetailTextFileWriter.Flush()
+        swItemDetailTextFileWriter.Close()
+        ()
+    let compiledDumpIncomingModelAmout (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) =
         let fileName="Business-Behavior-Abstract-ToBe.amout"
         System.IO.File.Delete(fileName)
         let sw = System.IO.File.CreateText(fileName)
@@ -208,6 +370,8 @@
             match x.ItemType with
                 |ModelItemType.ModelItem(_)->
                     sw.WriteLine (x.ModelItemName)
+                    saveDetailedViewHtml opts modelItems x
+                    saveDetailedViewAmout opts modelItems x
                 |_ ->()
             )
         sw.Flush()
@@ -222,6 +386,8 @@
             match x.ItemType with
                 |ModelItemType.ModelItem(_)->
                     sw.WriteLine (x.ModelItemName)
+                    saveDetailedViewHtml opts modelItems x
+                    saveDetailedViewAmout opts modelItems x
                 |_ ->()
             )
         sw.Flush()
@@ -249,32 +415,11 @@
         sw.WriteLine "<head>"
         sw.WriteLine "</head>"
         sw.WriteLine "<body>"
-        sw.WriteLine "<table><thead><tr>"
-        sw.WriteLine ("<td>" + "Item Number" + "</td>")
-        sw.WriteLine ("<td>" + "Id Number" + "</td>")
-        sw.WriteLine ("<td>" + "Parent" + "</td>")
-        sw.WriteLine ("<td>" + "Context" + "</td>")
-        sw.WriteLine ("<td>" + "Item Type" + "</td>")
-        sw.WriteLine ("<td>" + "ShortName" + "</td>")
-        sw.WriteLine ("<td>" + "Reference" + "</td>")
-        sw.WriteLine ("<td>" + "Reference Line Number" + "</td>")
-        sw.WriteLine "</tr></thead>"
+        writeModelItemDetailHtmlTableHead sw
         modelItems |> List.iteri(fun i x->
-            let sb=new System.Text.StringBuilder(4096)
-            sb.Append("<tr>\n") |> ignore
-            sb.Append ("<td>" + i.ToString() + "</td>") |> ignore
-            writeATableCell sb (x.Id.ToString())
-            writeATableCell sb (if x.Parent.IsSome then x.Parent.Value.ToString() else "")
-            writeATableCell sb (makeContextAString x.Genre x.Bucket x.TemporalIndicator x.AbstractionLevel)
-            writeATableCell sb (x.ItemType.ToString())
-            writeATableCell sb (x.ModelItemName)
-            writeATableCell sb (x.SourceReferences.Item(x.SourceReferences.Length-1).File.FullName)
-            let referenceLineNumber= x.SourceReferences.Item(x.SourceReferences.Length-1).LineNumber.ToString()
-            writeATableCell sb (referenceLineNumber)
-            sb.Append ("</tr>\n") |> ignore
-            sw.WriteLine (sb.ToString())
+            writeModelItemDetailHtmlTableDetail sw i x
             )
-        sw.WriteLine"</body>"
+        sw.WriteLine"</table></body>"
         sw.WriteLine"</html>"
         sw.Flush()
         sw.Close()
