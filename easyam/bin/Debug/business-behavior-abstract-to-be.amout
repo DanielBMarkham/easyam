@@ -1,0 +1,13 @@
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+    Perform Procedure
+    Make Apointment
+    Plan Daily Work
+    Reorder Supplies
+    Review Patient History
+    Record Patient Treatment
+    Conduct Patient Follow-up Call
+
+    NOTES  //Notes not attached to any specific item
+    QUESTIONS  //Questions not attached to any specific item
+    TODO  //To-do items not attached to any specific item
+    WORK  //Work not attached to any specific item

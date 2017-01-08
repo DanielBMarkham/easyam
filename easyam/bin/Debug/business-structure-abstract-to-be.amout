@@ -1,0 +1,10 @@
+BUSINESS STRUCTURE ABSTRACT TO-BE
+    Patient
+    Dentist
+    Procedure
+    Supplies
+
+    NOTES  //Notes not attached to any specific item
+    QUESTIONS  //Questions not attached to any specific item
+    TODO  //To-do items not attached to any specific item
+    WORK  //Work not attached to any specific item

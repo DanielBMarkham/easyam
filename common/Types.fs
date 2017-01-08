@@ -29,6 +29,16 @@
             rg.IsMatch(x)
         member x.ReplaceWithRegex (regexMatchString:string) (replacementString:string) = 
             System.Text.RegularExpressions.Regex.Replace(x, regexMatchString, replacementString)
+        member x.ReplaceAny (charactersToReplace:char []) (characterToUse:char) =
+            let sb = new System.Text.StringBuilder(x)
+            let newString = charactersToReplace |> Array.fold(fun (acc:System.Text.StringBuilder) x->
+                            acc.Replace(x,characterToUse)
+                            ) sb
+            newString.ToString()
+        member x.CovertIntoOSSafeFileName =
+            let getRidOfSystemInvalidCharacters =  x.ReplaceAny (System.IO.Path.GetInvalidFileNameChars()) '_'
+            let addHyphensAndToLower = x.ToLower().Replace(' ', '-')
+            addHyphensAndToLower
         member x.CountOccurences (token:string) = 
             let mts = x.Split([|token|], System.StringSplitOptions.None)
             if mts = null then 0 else mts.Length

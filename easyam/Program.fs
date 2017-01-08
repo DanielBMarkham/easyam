@@ -124,6 +124,7 @@
         compiledDumpIncomingModelAmout opts structuredAnalysisModel
         compiledDumpIncomingModelHtml opts structuredAnalysisModel
         saveMasterIndex
+        saveMasterQuestionList opts structuredAnalysisModel
         ()
 
 
