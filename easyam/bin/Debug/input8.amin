@@ -16,6 +16,7 @@ LABEL: Product Backlog
 		Buy Lemonade (IM/Text Hack) PARENT Buy Lemonade
 			NOTE: People SMS their order to our bot while in-line. Order placed automatically
 			Points:5 // if you want to add points or other tagged data
+			Q: Is this a question?
 		Use Coupon (Gesture-based) PARENT Buy Lemonade
 			NOTE: When they're actually ordering, hand gestures read by 3D kinect system gives discount
 			Points: 8

@@ -191,6 +191,8 @@
         genre.ToString() + " " + bucket.ToString() + " " + abstractionLevel.ToString() + " " + temporalIndicator.ToString()
     let writeATableCell (sb:System.Text.StringBuilder) s =
         sb.Append ("    <td>" + s + "</td>\n") |> ignore
+    let getParent (modelItems:ModelItem list) (id:int) =
+        modelItems |> List.find(fun x->x.Id=id)
     let filterModelItemsByTag (modelItems:ModelItem list) (genre:Genres) (abstractionLevel:AbstractionLevels) (temporalIndicator:TemporalIndicators) (bucket:Buckets) =
         modelItems |> List.filter(fun x->
             ((x.Genre=genre) || (genre=Genres.Unknown))
@@ -198,6 +200,27 @@
             && ((x.Bucket=bucket) || (bucket=Buckets.Unknown))
             && ((x.TemporalIndicator=temporalIndicator) || (temporalIndicator=TemporalIndicators.Unknown))
             )
+    let filterModelItemsByNOTType (modelItemTypeName:string) (modelItems:ModelItem list) =
+        let modelItemTypeNameLength = modelItemTypeName.Length
+        modelItems |> List.filter(fun x->
+            let indexedItemTypeName = x.ItemType.ToString()
+            let xItemTypeString = x.ItemType.ToString()
+            let xItemTypeStringLength =xItemTypeString.Length
+            (xItemTypeStringLength<modelItemTypeNameLength) 
+            || ((xItemTypeString.GetLeft modelItemTypeNameLength) <> modelItemTypeName)
+            )
+    let filterModelItemsByType (modelItemTypeName:string) (modelItems:ModelItem list) =
+        let modelItemTypeNameLength = modelItemTypeName.Length
+        modelItems |> List.filter(fun x->
+            let indexedItemTypeName = x.ItemType.ToString()
+            let xItemTypeString = x.ItemType.ToString()
+            let xItemTypeStringLength =xItemTypeString.Length
+            (xItemTypeStringLength>modelItemTypeNameLength) 
+            && ((xItemTypeString.GetLeft modelItemTypeNameLength) = modelItemTypeName)
+            )
+    let filterModelItemsByTagAndType (modelItems:ModelItem list) (genre:Genres) (abstractionLevel:AbstractionLevels) (temporalIndicator:TemporalIndicators) (bucket:Buckets) (modelItemTypeName:string):ModelItem list=
+        let filteredByTags = filterModelItemsByTag modelItems genre abstractionLevel temporalIndicator bucket
+        filteredByTags |> filterModelItemsByType  modelItemTypeName
     let itemsThatAreRelatedToThisItem (thisItem:ModelItem) (modelItems:ModelItem list)= 
         modelItems |> List.filter(fun y->
             y.Parent.IsSome && y.Parent.Value=thisItem.Id
@@ -225,6 +248,25 @@
                 |_,_ ->false
             )
         rootItemsOfModelItemType
+
+    let getRootLevelUnattachedSubItems (modelItems:ModelItem list) (genre:Genres) (abstractionLevel:AbstractionLevels) (temporalIndicator:TemporalIndicators) (bucket:Buckets) (modelItemTypeName:string):ModelItem list=
+        let allItems=filterModelItemsByTagAndType modelItems genre abstractionLevel temporalIndicator bucket modelItemTypeName
+        //let allQuestions = modelItems |> List.filter(fun x->match x.ItemType with |Question(q)->true |_->false)
+        // has no parent or the parent is a context shift
+        let unattachedItemsWithoutTagFilter = allItems |> List.filter(fun x->
+            match x.Parent with
+                | Some id->
+                    let parent = getParent modelItems id
+                    let parentItemType=parent.ItemType.ToString()
+                    let lengthOk=parentItemType.Length>13
+                    let leftSide=parentItemType.GetLeft 13
+                    let leftSideMatches=leftSide = "CONTEXT SHIFT"
+                    (lengthOk && leftSideMatches)
+                | _->false
+            )
+        let unattachedItems = filterModelItemsByTag unattachedItemsWithoutTagFilter Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior
+        unattachedItems
+
     let writeModelItemDetailHtmlTableHead (swItemDetailTextFileWriter:System.IO.StreamWriter) =
         swItemDetailTextFileWriter.WriteLine "<table><thead><tr>"
         swItemDetailTextFileWriter.WriteLine ("<td>" + "Item Number" + "</td>")
@@ -342,8 +384,21 @@
 
     let saveMasterQuestionList (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) =
         let fileName= "questions.html"
-        let allQuestions = modelItems |> List.filter(fun x->match x.ItemType with |Question(q)->true |_->false)
-        let unattachedQuestions = (getAllRootItemsForTags modelItems Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior) |> List.filter(fun y->match y.ItemType with |Question(q)->true |_->false)
+//        let allQuestions = modelItems |> List.filter(fun x->match x.ItemType with |Question(q)->true |_->false)
+//        // has no parent or the parent is a context shift
+//        let unattachedQuestionsWithoutTagFilter = allQuestions |> List.filter(fun x->
+//            match x.Parent with
+//                | Some id->
+//                    let parent = getParent modelItems id
+//                    let parentItemType=parent.ItemType.ToString()
+//                    let lengthOk=parentItemType.Length>13
+//                    let leftSide=parentItemType.GetLeft 13
+//                    let leftSideMatches=leftSide = "CONTEXT SHIFT"
+//                    (lengthOk && leftSideMatches)
+//                | _->false
+//            )
+        //let unattachedQuestions = filterModelItemsByTag unattachedQuestionsWithoutTagFilter Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior
+        let unattachedQuestions = getRootLevelUnattachedSubItems modelItems Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior "QUESTION"
         System.IO.File.Delete(fileName)
         let sw = System.IO.File.CreateText(fileName)
         sw.WriteLine "<html>"
@@ -356,11 +411,15 @@
         sw.WriteLine ("<h3>Overall Business Questions</h3>")
         sw.WriteLine ("<ul>")
         unattachedQuestions |> List.iteri(fun i x->
-            sw.WriteLine ("<li>" + x.ModelItemName + "</li>")
+            match x.ItemType with
+                |Question(q)->
+                    sw.WriteLine ("<li>" + q.Text + " <a href='" + ("business-behavior-abstract-to-be" + ".amout") + "'>(Look at all related material):</a>" + "</li>")
+                |_->()
             )
         sw.WriteLine ("</ul>")
         sw.WriteLine ("<h3>Questions about the way in general people do the kinds of things we want to help folks with</h3>")
         let allModelItemsForThisSection = getModelItemRootItems modelItems Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior
+        let allQuestions = filterModelItemsByTagAndType modelItems Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior "QUESTION"
         allModelItemsForThisSection |> List.iteri(fun i x->
             let questionsForThisModelItem = allQuestions |> List.filter(fun y->
                 match y.Parent with |Some parent->parent=x.Id |_->false)
@@ -529,33 +588,17 @@
         let rootItems = getAllRootItemsForTags modelItems genreToSave AbstractionLevels.Abstract TemporalIndicators.ToBe bucketToSave 
         sw.WriteLine ""
         sw.WriteLine "    NOTES  //Notes not attached to any specific item"
-        let masterUserStoryNotes = rootItems |> List.iteri(fun i x->
-            match x.ItemType with
-                |ModelItemType.Note(n)->
-                    if x.Parent.IsNone then sw.WriteLine ("        " + n.Text) else ()
-                |_ ->()
-            )
+        let rootNotes = getRootLevelUnattachedSubItems modelItems Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior "NOTE"
+        rootNotes |> List.iteri(fun i x->match x.ItemType with |Note(n)->sw.WriteLine ("        " + n.Text)|_->())
         sw.WriteLine "    QUESTIONS  //Questions not attached to any specific item"
-        let masterUserStoryQuestions = rootItems |> List.iteri(fun i x->
-            match x.ItemType with
-                |ModelItemType.Question(n)->
-                    if x.Parent.IsNone then sw.WriteLine ("        " + n.Text) else ()
-                |_ ->()
-            )
+        let rootQuestions = getRootLevelUnattachedSubItems modelItems Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior "QUESTION"
+        rootQuestions |> List.iteri(fun i x->match x.ItemType with |Question(q)->sw.WriteLine ("        " + q.Text)|_->())
         sw.WriteLine "    TODO  //To-do items not attached to any specific item"
-        let masterUserStoryToDos = rootItems |> List.iteri(fun i x->
-            match x.ItemType with
-                |ModelItemType.ToDo(n)->
-                    if x.Parent.IsNone then sw.WriteLine ("        " + n.Text) else ()
-                |_ ->()
-            )
+        let rootToDos = getRootLevelUnattachedSubItems modelItems Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior "TODO"
+        rootToDos |> List.iteri(fun i x->match x.ItemType with |ToDo(td)->sw.WriteLine ("        " + td.Text)|_->())
         sw.WriteLine "    WORK  //Work not attached to any specific item"
-        let masterUserStoryWork = rootItems |> List.iteri(fun i x->
-            match x.ItemType with
-                |ModelItemType.Work(n)->
-                    if x.Parent.IsNone then sw.WriteLine ("        " + n.Text) else ()
-                |_ ->()
-            )
+        let rootWork = getRootLevelUnattachedSubItems modelItems Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior "WORK"
+        rootWork |> List.iteri(fun i x->match x.ItemType with |Work(w)->sw.WriteLine ("        " + w.Text)|_->())
         sw.Flush()
         sw.Close()
 

@@ -12,33 +12,33 @@ of notes that might be taken at a meeting with a
 new client.
 
 BUSINESS STRUCTURE ABSTRACT
-Lemons
-Sugar
-Glasses
-Mixers
-Menus
-Tables
-Schedule
-Employees
-Lemonade
-Lemonade HASA Recipe
-Recipe CONTAINS Ingredients
-Recipe CONTAINS Instructions
+	Lemons
+	Sugar
+	Glasses
+	Mixers
+	Menus
+	Tables
+	Schedule
+	Employees
+	Lemonade
+	Lemonade HASA Recipe
+	Recipe CONTAINS Ingredients
+	Recipe CONTAINS Instructions
 
 SUPPL: We never open a store near a mall
-Q: Looks like we need to talk about opening stores and what "near" and "mall" mean (and whether they are important)
+	Q: Looks like we need to talk about opening stores and what "near" and "mall" mean (and whether they are important)
 
 META BEHAVIOR
-Q: Are we going to meet every Thursday with the owner?
+	Q: Are we going to meet every Thursday with the owner?
 
 
 
 BUSINESS BEHAVIOR ABSTRACT
-Buy Lemonade
-Count Inventory
-Recieve Shipments
+	Buy Lemonade
+	Count Inventory
+	Recieve Shipments
 
-Q: Do they do their own stocking? Or just record BOLs for shipments?
+		Q: Do they do their own stocking? Or just record BOLs for shipments?
 
 // We can enter in as much of a title as we know about
 ASA Customer
