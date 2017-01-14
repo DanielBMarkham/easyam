@@ -525,18 +525,32 @@
         {currentContext with Lines=newLines}
     let isThereAModelItemAlreadyWithThisNameInThisContext (myModelItemToTest:ModelItem) (currentContext:ProcessContext) =
         currentContext.Lines |> List.tryFind(fun x->
-            ((x.Genre=myModelItemToTest.Genre))
-            && ((x.AbstractionLevel=myModelItemToTest.AbstractionLevel))
-            && ((x.Bucket=myModelItemToTest.Bucket))
-            && ((x.TemporalIndicator=myModelItemToTest.TemporalIndicator))
-            && ((x.ModelItemName=myModelItemToTest.ModelItemName)))
+            let genresEqual = x.Genre=myModelItemToTest.Genre
+            let abstractionsEqual=x.AbstractionLevel=myModelItemToTest.AbstractionLevel
+            let bucketsEqual=x.Bucket=myModelItemToTest.Bucket
+            let temporalIndicatorsEqual=x.TemporalIndicator=myModelItemToTest.TemporalIndicator
+            let modelItemNamesEqual=x.ModelItemName=myModelItemToTest.ModelItemName
+            let r=9
+            genresEqual && abstractionsEqual && bucketsEqual && temporalIndicatorsEqual && modelItemNamesEqual)
+//            ((x.Genre=myModelItemToTest.Genre))
+//            && ((x.AbstractionLevel=myModelItemToTest.AbstractionLevel))
+//            && ((x.Bucket=myModelItemToTest.Bucket))
+//            && ((x.TemporalIndicator=myModelItemToTest.TemporalIndicator))
+//            && ((x.ModelItemName=myModelItemToTest.ModelItemName)))
     let isThereAnAbstractModelItemAlreadyWithThisNameInThisContext (myModelItemToTest:ModelItem) (currentContext:ProcessContext) =
         currentContext.Lines |> List.tryFind(fun x->
-            ((x.Genre=myModelItemToTest.Genre))
-            && ((x.AbstractionLevel=AbstractionLevels.Abstract))
-            && ((x.Bucket=myModelItemToTest.Bucket))
-            && ((x.TemporalIndicator=myModelItemToTest.TemporalIndicator))
-            && ((x.ModelItemName=myModelItemToTest.ModelItemName)))
+            let genresEqual = x.Genre=myModelItemToTest.Genre
+            let abstractionsEqual=x.AbstractionLevel=AbstractionLevels.Abstract
+            let bucketsEqual=x.Bucket=myModelItemToTest.Bucket
+            let temporalIndicatorsEqual=x.TemporalIndicator=myModelItemToTest.TemporalIndicator
+            let modelItemNamesEqual=x.ModelItemName=myModelItemToTest.ModelItemName
+            let r=9
+            genresEqual && abstractionsEqual && bucketsEqual && temporalIndicatorsEqual && modelItemNamesEqual)
+//            ((x.Genre=myModelItemToTest.Genre))
+//            && ((x.AbstractionLevel=AbstractionLevels.Abstract))
+//            && ((x.Bucket=myModelItemToTest.Bucket))
+//            && ((x.TemporalIndicator=myModelItemToTest.TemporalIndicator))
+//            && ((x.ModelItemName=myModelItemToTest.ModelItemName)))
     let replaceAModelItemInAModelItemListById (modelLines:ModelItem list) (newModelItem:ModelItem)  = 
         // split the list taking out the dupe. Then replace
         let splitLineListFirstPart =fst (modelLines |> List.partition(fun z->z.Id<newModelItem.Id))
@@ -834,7 +848,7 @@
                                                                                     AbstractionLevel=AbstractionLevels.None
                                                                                     TemporalIndicator=TemporalIndicators.None
                                                                                     ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
-                                                                                    ModelItemName=ctx.rightHandValue
+                                                                                    ModelItemName=ctx.rightHandValue.Trim()
                                                                                     SourceReferences=[ctx.newlyCreatedSourceReference]
                                                                                 }
                                                                             )
@@ -844,7 +858,7 @@
                                                 TemporalIndicator=ctx.closestModelParentOfAnyType.TemporalIndicator
                                                 ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
                                                 SourceReferences=[ctx.newlyCreatedSourceReference]
-                                                ModelItemName=ctx.rightHandValue
+                                                ModelItemName=ctx.rightHandValue.Trim()
                                             }
                                         // if no parent, add one (the one we just created)
                                         let possibleParent, newLines = 
@@ -869,7 +883,7 @@
                                         let childtWereWorkingOn = newLinesWithTheConnectionAdded |> List.find(fun x->x.Id=currentContext.LastAddedModelItem.Id)
                                         let childWithUpdatedParent = {childtWereWorkingOn with ModelParent=possibleParent.Id}
                                         let linesWithConnectionAndUpdatedKid = replaceAModelItemInAModelItemListById newLinesWithTheConnectionAdded childWithUpdatedParent
-                                        {currentContext with Lines=linesWithConnectionAndUpdatedKid}
+                                        {currentContext with Lines=linesWithConnectionAndUpdatedKid; LastAddedModelItem=childWithUpdatedParent}
                                     )
             };
             {

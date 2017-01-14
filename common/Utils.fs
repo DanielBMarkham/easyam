@@ -428,7 +428,27 @@
                 relatedItems.Realizations |> List.iter(fun k->
                     match k.ItemType with
                         |ModelItemType.ModelItem(a) as n->
-                            swItemDetailTextFileWriter.WriteLine("               <li> " + a.ModelItemName + " <a href='" + a.ToFileName + ".html'>Related</a></li>")
+                            swItemDetailTextFileWriter.WriteLine("               <li> " + a.ModelItemName + " <a href='" + k.ToFileName + ".html'>Related</a></li>")
+                        |_->()
+                    )
+                swItemDetailTextFileWriter.WriteLine("           </ul> ")
+            else ()
+        let associatedSupplementalConnections = modelItems |> List.filter(fun z->
+                match z.ItemType with
+                    | Connection(c)->c.RhsId=selectedItem.Id && c.ConnectionType=Affects
+                    |_->false
+            )
+        if associatedSupplementalConnections.Length>0
+            then
+                let associatedSupplementalItems=associatedSupplementalConnections |> List.map(fun z->
+                    getModelItemById modelItems z.ModelParent
+                    )
+                swItemDetailTextFileWriter.WriteLine ("<h3><a name='Supplementals'>Supplementals</h3>")
+                swItemDetailTextFileWriter.WriteLine("           <ul> ")
+                associatedSupplementalItems |> List.iter(fun k->
+                    match k.ItemType with
+                        |ModelItemType.ModelItem(a) as n->
+                            swItemDetailTextFileWriter.WriteLine("               <li> " + a.ModelItemName + " <a href='" + k.ToFileName + ".html'>Related</a></li>")
                         |_->()
                     )
                 swItemDetailTextFileWriter.WriteLine("           </ul> ")
