@@ -76,22 +76,25 @@
                 lineWithOnlyLabelRemaining, []
 
     let processIncomingLines incomingLines =        
-//        let whiteSpaceRegex=new System.Text.RegularExpressions.Regex("^\s+")
         let compiledContext = 
             incomingLines |> Array.fold(fun lineProcessorAccumulator incomingLineBeingProcessed->
-            let lastItemProcessed=
+            let lastItemInTheContextLineList=
                 if lineProcessorAccumulator.Lines.Length>0 
                     then
                         lineProcessorAccumulator.Lines.Item(lineProcessorAccumulator.Lines.Length-1) 
                     else 
                         let newSourceReferences=[{File=incomingLineBeingProcessed.FileInfo; LineNumber=incomingLineBeingProcessed.LineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}]
                         {defaultModelItem with SourceReferences=newSourceReferences}
-            let lastSourceReferenceForLastItemProcessed=if lineProcessorAccumulator.Lines.Length>0 then {File=incomingLineBeingProcessed.FileInfo;LineNumber=incomingLineBeingProcessed.LineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel} else lastItemProcessed.SourceReferences.Item(lastItemProcessed.SourceReferences.Length-1)
+            let lastSourceReferenceForLastItemProcessed=
+                if lineProcessorAccumulator.Lines.Length=0 
+                    then {File=incomingLineBeingProcessed.FileInfo;LineNumber=incomingLineBeingProcessed.LineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel} 
+                    else lastItemInTheContextLineList.SourceReferences.Item(lastItemInTheContextLineList.SourceReferences.Length-1)
             // if there's a new file from the last time, we zap the stack and start over with context
             let newacc = 
-                if ( (lineProcessorAccumulator<>defaultProcessContext) && (lastSourceReferenceForLastItemProcessed.File.FullName<>incomingLineBeingProcessed.FileInfo.FullName))
+                //if ( (lineProcessorAccumulator<>defaultProcessContext) && (lastSourceReferenceForLastItemProcessed.File.FullName<>incomingLineBeingProcessed.FileInfo.FullName))
+                if (  (lastSourceReferenceForLastItemProcessed.File.FullName<>incomingLineBeingProcessed.FileInfo.FullName))
                     then
-                        defaultProcessContext
+                        {defaultProcessContext with Lines=lineProcessorAccumulator.Lines}
                     else
                         lineProcessorAccumulator
             let newContext = easyAMTokens |> Array.fold(fun tokenProcessingAccumulator currentTokenWeAreLookingAt->
@@ -123,7 +126,7 @@
         rawDumpIncomingModel opts structuredAnalysisModel
         compiledDumpIncomingModelAmout opts structuredAnalysisModel
         compiledDumpIncomingModelHtml opts structuredAnalysisModel
-        saveMasterIndex
+        saveMasterIndex opts structuredAnalysisModel
         saveMasterQuestionList opts structuredAnalysisModel
         ()
 

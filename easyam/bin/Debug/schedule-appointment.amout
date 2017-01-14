@@ -1,0 +1,12 @@
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+    Schedule Appointment
+        NOTES
+        QUESTIONS
+        TODO
+        WORK
+
+        REALIZATIONS
+            See Appointment Screen
+            See Appointment Screen (with my data)
+            Make Appointment (no verification)
+            Make Appointment (and save)

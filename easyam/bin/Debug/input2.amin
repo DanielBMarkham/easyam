@@ -1,0 +1,10 @@
+MASTER DOMAIN MODEL
+	Patient
+		Q: Are all dogs furry?
+MASTER BACKLOG
+	Plan Office Load
+		NOTE: Offices all have cubicles
+		NOTE: We should check them out
+	Schedule Appointment
+		Q: Are these appointment in hour intervals? Half-hour? Variable?
+		NOTE: Appointments cannot be made same-day

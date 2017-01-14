@@ -14,7 +14,7 @@ PRODUCT BACKLOG
 	Plan Office Load PARENT Plan Daily Work // Need to fix language here to align with parent
 
 SPRINT BACKLOG: Sprint 1
-	See Appointment Screen PARENT Schedule Apppointment
+	See Appointment Screen PARENT Schedule Appointment
 		NOTE: Just be able to bring up a dummy page
 	See Appointment Screen (with my data) PARENT Schedule Appointment &Points=8
 		NOTE: Include my information
@@ -28,6 +28,6 @@ TASKS
 
 NOTE: We'l be meeting with Joe on Mon/Wed/Fri from 9-10. At all times Office Manager will be available
 
-META BUSINESS STRUCTURE
+META STRUCTURE
 	Sprint close on Wednesday afternoons at 3
 	Weekly sprints

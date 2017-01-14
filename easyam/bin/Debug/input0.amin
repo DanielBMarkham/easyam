@@ -16,7 +16,7 @@ MASTER DOMAIN MODEL
 
 MASTER BACKLOG
 	Perform Procedure
-	Make Apointment // This seems to be a hot button with Joe
+	Schedule Appointment // This seems to be a hot button with Joe
 	Plan Daily Work
 		NOTE: used by the office manager and others (?) to optimize day
 	Reorder Supplies&sampledata=needed

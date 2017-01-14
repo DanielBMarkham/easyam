@@ -7,6 +7,8 @@ Easyam allows you to enter in mostly unstructured text notes about what the busi
 
 The goal is OHIO, Only Handle Information Once, as close to business intent as possible, then deploy, mix and match that same information everywhere else it's used.
 
+It is a command-line system for accepting and storing all of your project information
+
 So, for example, questions about a user story the team has for an upcoming sprint will be automatically associated with the business intent and conversations around that.
 
 Release planning can now automatically include the consideration of bugs and feature requests around the areas being considered.

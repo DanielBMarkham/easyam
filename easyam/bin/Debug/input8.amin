@@ -11,15 +11,12 @@ entry is not repeated.
 
 One of the things this type of result file could be used for is printing User Story cards
 
-LABEL: Product Backlog
-	BUSINESS BEHAVIOR REALIZED TO-BE
-		Buy Lemonade (IM/Text Hack) PARENT Buy Lemonade
-			NOTE: People SMS their order to our bot while in-line. Order placed automatically
-			Points:5 // if you want to add points or other tagged data
-			Q: Is this a question?
-		Use Coupon (Gesture-based) PARENT Buy Lemonade
-			NOTE: When they're actually ordering, hand gestures read by 3D kinect system gives discount
-			Points: 8
+PRODUCT BACKLOG
+	Buy Lemonade (IM/Text Hack) PARENT Buy Lemonade&Points=8
+		NOTE: People SMS their order to our bot while in-line. Order placed automatically
+		Q: Is this a question?
+	Use Coupon (Gesture-based) PARENT Buy Lemonade&Points=5
+		NOTE: When they're actually ordering, hand gestures read by 3D kinect system gives discount
 	// Note every backlog item has a parent in BUSINESS BEHAVIOR
 	// Also note that there's a MISC and ALL parent
 	TASK

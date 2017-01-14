@@ -1,0 +1,16 @@
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+    Schedule Appointment
+        NOTES
+            This seems to be a hot button with Joe
+            Appointments cannot be made same-day
+        QUESTIONS
+            Are these appointment in hour intervals? Half-hour? Variable?
+        TODO
+        WORK
+
+        REALIZATIONS
+            See Appointment Screen (with my data)
+            Make Appointment (no verification)
+            Make Appointment (and save)
+
+        FEEDBACK

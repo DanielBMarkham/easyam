@@ -1,0 +1,15 @@
+BUSINESS STRUCTURE ABSTRACT TO-BE
+    Patient
+        NOTES
+        QUESTIONS
+            Are all dogs furry?
+        TODO
+        WORK
+
+        REALIZATIONS
+            Appointment
+            Teeth
+            Treatment History
+            Billing History
+
+        FEEDBACK

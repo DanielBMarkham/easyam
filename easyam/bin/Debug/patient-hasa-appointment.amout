@@ -1,0 +1,8 @@
+BUSINESS STRUCTURE ABSTRACT TO-BE
+    Patient HASA Appointment
+        NOTES
+        QUESTIONS
+        TODO
+        WORK
+
+        REALIZATIONS

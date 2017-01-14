@@ -3,9 +3,23 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
     Dentist
     Procedure
     Supplies
+    Appointment
+    Lemons
+    Sugar
+    Glasses
+    Mixers
+    Menus
+    Tables
+    Schedule
+    Employees
+    Lemonade
+    Recipe CONTAINS Ingredients
+    Recipe CONTAINS Instructions
 
     NOTES  //Notes not attached to any specific item
+        There may be some kind of office supply system to develop
+        this is the UserStory short name
     QUESTIONS  //Questions not attached to any specific item
-        Why do people become dentists, anyway?
+        How do they tell the difference between office supplies and janitorial supplies?
     TODO  //To-do items not attached to any specific item
     WORK  //Work not attached to any specific item

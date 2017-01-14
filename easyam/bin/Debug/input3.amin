@@ -8,10 +8,8 @@ BUSINESS BEHAVIOR ABSTRACT
 	Plan Office Load
 
 BUSINESS SUPPLEMENTAL ABSTRACT
-	Never waste the patient's time
-		AFFECTS Schedule Appointment, Conduct Patient Follow-up Call
-	Always verify patients were happy with our interaction
-		AFFECTS Schedule Appointment, Review Patient History, Conduct Patient Follow-up Call
+	Never waste the patient's time AFFECTS Schedule Appointment, Conduct Patient Follow-up Call
+	Always verify patients were happy with our interaction AFFECTS Schedule Appointment, Review Patient History, Conduct Patient Follow-up Call
 
 BUSINESS STRUCTURE ABSTRACT
 	Patient HASA Appointment

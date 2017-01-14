@@ -186,12 +186,77 @@
                 Entity=entity
             }
         drawEntityBox sw newBox defaultSVGSetup
+    /// writeHtmlBeginAndHead (sw:System.IO.StreamWriter) (title:string) (description:string) (author:string) (fileShortName:string)
+    let writeHtmlBeginAndHead (sw:System.IO.StreamWriter) (title:string) (description:string) (author:string) (fileShortName:string) =
+        sw.WriteLine("<!DOCTYPE html> ")
+        sw.WriteLine("<html lang='en'> ")
+        sw.WriteLine("    <head> ")
+        sw.WriteLine("        <meta http-equiv='content-type' content='text/html; charset=UTF-8'>  ")
+        sw.WriteLine("        <meta charset='utf-8'> ")
+        sw.WriteLine("        <link rel='SHORTCUT ICON' href='favico.png'/> ")
+        sw.WriteLine("        <title>" + title + "</title> ")
+        sw.WriteLine("        <meta itemprop='name' content='" + title + "'> ")
+        sw.WriteLine("        <meta itemprop='description' content='" + description + "'> ")
+        sw.WriteLine("        <meta name='description' content='" + description + "' /> ")
+        sw.WriteLine("        <meta itemprop='image' content='" + fileShortName + ".png'> ")
+        sw.WriteLine("        <meta name='author' content='" + author + "' /> ")
+        sw.WriteLine("        <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'> ")
+        sw.WriteLine("        <link href='main.css' type='text/css' rel='stylesheet'> ")
+        sw.WriteLine("        <link href='" + fileShortName + ".css' type='text/css' rel='stylesheet'> ")
+        sw.WriteLine("    </head> ")
 
+    type ItemReport =
+        {
+            ItemDetail:ModelItem list
+            Notes:ModelItem list
+            Questions:ModelItem list
+            ToDos:ModelItem List
+            Work:ModelItem list
+            Realizations:ModelItem list
+            Feedback:ModelItem list
+        }
+        with member self.AllTogether =
+                List.concat [self.ItemDetail; self.Notes; self.Questions; self.ToDos; self.Work; self.Realizations; self.Feedback]
+    let createItemReport (modelItems:ModelItem list) (selectedModelItem:ModelItem) =
+        let collectedNotes= modelItems |> List.filter(fun x->
+            match x.ItemType with
+                |Note(_)->x.ModelParent=selectedModelItem.Id
+                |_->false
+            )
+        let collectedQuestions= modelItems |> List.filter(fun x->
+            match x.ItemType with
+                |Question(_)->x.ModelParent=selectedModelItem.Id
+                |_->false
+            )
+        let collectedToDos= modelItems |> List.filter(fun x->
+            match x.ItemType with
+                |ToDo(_)->x.ModelParent=selectedModelItem.Id
+                |_->false
+            )
+        let collectedWork= modelItems |> List.filter(fun x->
+            match x.ItemType with
+                |Work(_)->x.ModelParent=selectedModelItem.Id
+                |_->false
+            )
+        let collectedRealizations= modelItems |> List.filter(fun x->
+            match x.ItemType with
+                |ModelItem(_)->x.ModelParent=selectedModelItem.Id
+                |_->false
+            )
+        {
+            ItemDetail=[]
+            Notes=collectedNotes
+            Questions=collectedQuestions
+            ToDos=collectedToDos
+            Work=collectedWork
+            Realizations=collectedRealizations
+            Feedback=[]
+        }
     let makeContextAString (genre:Genres) (bucket:Buckets) (temporalIndicator:TemporalIndicators) (abstractionLevel:AbstractionLevels) =
         genre.ToString() + " " + bucket.ToString() + " " + abstractionLevel.ToString() + " " + temporalIndicator.ToString()
     let writeATableCell (sb:System.Text.StringBuilder) s =
         sb.Append ("    <td>" + s + "</td>\n") |> ignore
-    let getParent (modelItems:ModelItem list) (id:int) =
+    let getModelItemById (modelItems:ModelItem list) (id:int) =
         modelItems |> List.find(fun x->x.Id=id)
     let filterModelItemsByTag (modelItems:ModelItem list) (genre:Genres) (abstractionLevel:AbstractionLevels) (temporalIndicator:TemporalIndicators) (bucket:Buckets) =
         modelItems |> List.filter(fun x->
@@ -223,14 +288,14 @@
         filteredByTags |> filterModelItemsByType  modelItemTypeName
     let itemsThatAreRelatedToThisItem (thisItem:ModelItem) (modelItems:ModelItem list)= 
         modelItems |> List.filter(fun y->
-            y.Parent.IsSome && y.Parent.Value=thisItem.Id
+            y.ModelParent=thisItem.Id
             )
     let getAllRootItemsForTags (modelItems:ModelItem list) (genre:Genres) (abstractionLevel:AbstractionLevels) (temporalIndicator:TemporalIndicators) (bucket:Buckets) =
         let itemsFilteredByTag = filterModelItemsByTag modelItems genre abstractionLevel temporalIndicator bucket
         let modelItemsWithContextShiftParentsOrNoParent = itemsFilteredByTag |> List.filter(fun x->
-            match x.Parent with
-                |option.None->true // parent is empty
-                |Some parent->
+            match x.SourceCodeParent with
+                |0->true // parent is empty
+                |parent->
                     match (modelItems|>List.tryFind(fun y->y.Id=parent)) with
                         | Some realParent->
                             match realParent.ItemType with
@@ -243,7 +308,7 @@
     let getModelItemRootItems (modelItems:ModelItem list) (genre:Genres) (abstractionLevel:AbstractionLevels) (temporalIndicator:TemporalIndicators) (bucket:Buckets) =
         let rootItemsOfAnyType = getAllRootItemsForTags modelItems genre abstractionLevel temporalIndicator bucket
         let rootItemsOfModelItemType = rootItemsOfAnyType |> List.filter(fun x->
-            match x.ItemType,x.Parent with
+            match x.ItemType,x.SourceCodeParent with
                 |ModelItemType.ModelItem(_), myParent->true
                 |_,_ ->false
             )
@@ -254,15 +319,15 @@
         //let allQuestions = modelItems |> List.filter(fun x->match x.ItemType with |Question(q)->true |_->false)
         // has no parent or the parent is a context shift
         let unattachedItemsWithoutTagFilter = allItems |> List.filter(fun x->
-            match x.Parent with
-                | Some id->
-                    let parent = getParent modelItems id
+            match x.SourceCodeParent with
+                | 0->false
+                | id->
+                    let parent = getModelItemById modelItems id
                     let parentItemType=parent.ItemType.ToString()
                     let lengthOk=parentItemType.Length>13
                     let leftSide=parentItemType.GetLeft 13
                     let leftSideMatches=leftSide = "CONTEXT SHIFT"
                     (lengthOk && leftSideMatches)
-                | _->false
             )
         let unattachedItems = filterModelItemsByTag unattachedItemsWithoutTagFilter Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior
         unattachedItems
@@ -271,7 +336,8 @@
         swItemDetailTextFileWriter.WriteLine "<table><thead><tr>"
         swItemDetailTextFileWriter.WriteLine ("<td>" + "Item Number" + "</td>")
         swItemDetailTextFileWriter.WriteLine ("<td>" + "Id Number" + "</td>")
-        swItemDetailTextFileWriter.WriteLine ("<td>" + "Parent" + "</td>")
+        swItemDetailTextFileWriter.WriteLine ("<td>" + "Source<br/>Code</br>Parent" + "</td>")
+        swItemDetailTextFileWriter.WriteLine ("<td>" + "Model</br>Parent" + "</td>")
         swItemDetailTextFileWriter.WriteLine ("<td>" + "Context" + "</td>")
         swItemDetailTextFileWriter.WriteLine ("<td>" + "Item Type" + "</td>")
         swItemDetailTextFileWriter.WriteLine ("<td>" + "ShortName" + "</td>")
@@ -283,7 +349,8 @@
         sb.Append("<tr>\n") |> ignore
         sb.Append ("<td>" + iterationNumber.ToString() + "</td>") |> ignore
         writeATableCell sb (modelItem.Id.ToString())
-        writeATableCell sb (if modelItem.Parent.IsSome then modelItem.Parent.Value.ToString() else "")
+        writeATableCell sb (if modelItem.SourceCodeParent<>0 then modelItem.SourceCodeParent.ToString() else "")
+        writeATableCell sb (if modelItem.ModelParent<>0 then modelItem.ModelParent.ToString() else "")
         writeATableCell sb (makeContextAString modelItem.Genre modelItem.Bucket modelItem.TemporalIndicator modelItem.AbstractionLevel)
         writeATableCell sb (modelItem.ItemType.ToString())
         writeATableCell sb (modelItem.ModelItemName)
@@ -293,77 +360,118 @@
         sb.Append ("</tr>\n") |> ignore
         swItemDetailTextFileWriter.WriteLine (sb.ToString())
     let saveDetailedViewHtml (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) (selectedItem:ModelItem) =
-        let relatedItems = itemsThatAreRelatedToThisItem selectedItem modelItems
-        let itemDetailFileName=selectedItem.ModelItemName.CovertIntoOSSafeFileName + ".html"
+        let relatedItems = createItemReport modelItems selectedItem //itemsThatAreRelatedToThisItem selectedItem modelItems
+        let itemDetailFileName=selectedItem.ToFileName + ".html"
         System.IO.File.Delete(itemDetailFileName)
         let swItemDetailTextFileWriter = System.IO.File.CreateText(itemDetailFileName)
-        swItemDetailTextFileWriter.WriteLine "<html>"
-        swItemDetailTextFileWriter.WriteLine "<head>"
-        swItemDetailTextFileWriter.WriteLine ("<title>" + selectedItem.ModelItemName + "</title>")
-        swItemDetailTextFileWriter.WriteLine "</head>"
+        writeHtmlBeginAndHead swItemDetailTextFileWriter selectedItem.ModelItemName (selectedItem.ModelItemName + ": Detailed View") "EasyAM" selectedItem.ToFileName
         swItemDetailTextFileWriter.WriteLine "<body>"
         swItemDetailTextFileWriter.WriteLine ("<h2>" + selectedItem.ToModelHeading + "</h2>")
         swItemDetailTextFileWriter.WriteLine ("<h1>" + selectedItem.ModelItemName + "</h1>")
         swItemDetailTextFileWriter.WriteLine ()
-        swItemDetailTextFileWriter.WriteLine ("<h3><a name='ItemDetail'>Item Detail</h3>")
-        swItemDetailTextFileWriter.WriteLine ("<h3><a name='Notes'>Notes</h3>")
-        swItemDetailTextFileWriter.WriteLine("           <ul> ")
-        relatedItems |> List.iter(fun k->
-            match k.ItemType with
-                |ModelItemType.Note(a) as n->
-                    swItemDetailTextFileWriter.WriteLine("               <li> " + a.Text + "</li>")
-                |_->()
-            )
-        swItemDetailTextFileWriter.WriteLine("           </ul> ")
-        swItemDetailTextFileWriter.WriteLine ("<h3><a name='Questions'>Questions</h3>")
-        swItemDetailTextFileWriter.WriteLine("           <ul> ")
-        relatedItems |> List.iter(fun k->
-            match k.ItemType with
-                |ModelItemType.Question(a) as n->
-                    swItemDetailTextFileWriter.WriteLine("               <li> " + a.Text + "</li>")
-                |_->()
-            )
-        swItemDetailTextFileWriter.WriteLine("           </ul> ")
-        swItemDetailTextFileWriter.WriteLine ("<h3><a name='ToDo'>To-Do</h3>")
-        swItemDetailTextFileWriter.WriteLine("           <ul> ")
-        relatedItems |> List.iter(fun k->
-            match k.ItemType with
-                |ModelItemType.ToDo(a) as n->
-                    swItemDetailTextFileWriter.WriteLine("               <li> " + a.Text + "</li>")
-                |_->()
-            )
-        swItemDetailTextFileWriter.WriteLine("           </ul> ")
-        swItemDetailTextFileWriter.WriteLine ("<h3><a name='Work'>Work</h3>")
-        swItemDetailTextFileWriter.WriteLine("           <ul> ")
-        relatedItems |> List.iter(fun k->
-            match k.ItemType with
-                |ModelItemType.Work(a) as n->
-                    swItemDetailTextFileWriter.WriteLine("               <li> " + a.Text + "</li>")
-                |_->()
-            )
-        swItemDetailTextFileWriter.WriteLine("           </ul> ")
-        swItemDetailTextFileWriter.WriteLine ("<h3><a name='Realizations'>Realizations</h3>")
+        if relatedItems.ItemDetail.Length>0
+            then
+                swItemDetailTextFileWriter.WriteLine ("<h3><a name='ItemDetail'>Item Detail</h3>")
+            else ()
+        if relatedItems.Notes.Length>0
+            then
+                swItemDetailTextFileWriter.WriteLine ("<h3><a name='Notes'>Notes</h3>")
+                swItemDetailTextFileWriter.WriteLine("           <ul> ")
+                relatedItems.Notes |> List.iter(fun k->
+                    match k.ItemType with
+                        |ModelItemType.Note(a) as n->
+                            swItemDetailTextFileWriter.WriteLine("               <li> " + a.Text + "</li>")
+                        |_->()
+                    )
+                swItemDetailTextFileWriter.WriteLine("           </ul> ")
+            else ()
+        if relatedItems.Questions.Length>0
+            then
+                swItemDetailTextFileWriter.WriteLine ("<h3><a name='Questions'>Questions</h3>")
+                swItemDetailTextFileWriter.WriteLine("           <ul> ")
+                relatedItems.Questions |> List.iter(fun k->
+                    match k.ItemType with
+                        |ModelItemType.Question(a) as n->
+                            swItemDetailTextFileWriter.WriteLine("               <li> " + a.Text + "</li>")
+                        |_->()
+                    )
+                swItemDetailTextFileWriter.WriteLine("           </ul> ")
+            else ()
+        if relatedItems.ToDos.Length>0
+            then
+                swItemDetailTextFileWriter.WriteLine ("<h3><a name='ToDo'>To-Do</h3>")
+                swItemDetailTextFileWriter.WriteLine("           <ul> ")
+                relatedItems.ToDos |> List.iter(fun k->
+                    match k.ItemType with
+                        |ModelItemType.ToDo(a) as n->
+                            swItemDetailTextFileWriter.WriteLine("               <li> " + a.Text + "</li>")
+                        |_->()
+                    )
+                swItemDetailTextFileWriter.WriteLine("           </ul> ")
+            else ()
+        if relatedItems.Work.Length>0
+            then
+                swItemDetailTextFileWriter.WriteLine ("<h3><a name='Work'>Work</h3>")
+                swItemDetailTextFileWriter.WriteLine("           <ul> ")
+                relatedItems.Work |> List.iter(fun k->
+                    match k.ItemType with
+                        |ModelItemType.Work(a) as n->
+                            swItemDetailTextFileWriter.WriteLine("               <li> " + a.Text + "</li>")
+                        |_->()
+                    )
+                swItemDetailTextFileWriter.WriteLine("           </ul> ")
+            else ()
+        if relatedItems.Realizations.Length>0
+            then
+                swItemDetailTextFileWriter.WriteLine ("<h3><a name='Realizations'>Realizations</h3>")
+                swItemDetailTextFileWriter.WriteLine("           <ul> ")
+                relatedItems.Realizations |> List.iter(fun k->
+                    match k.ItemType with
+                        |ModelItemType.ModelItem(a) as n->
+                            swItemDetailTextFileWriter.WriteLine("               <li> " + a.ModelItemName + " <a href='" + a.ToFileName + ".html'>Related</a></li>")
+                        |_->()
+                    )
+                swItemDetailTextFileWriter.WriteLine("           </ul> ")
+            else ()
+        if relatedItems.Feedback.Length>0
+            then
+                swItemDetailTextFileWriter.WriteLine ("<h3><a name='Feedback'>Feedback</h3>")
+            else ()
         swItemDetailTextFileWriter.WriteLine("</table>")
-        swItemDetailTextFileWriter.WriteLine("<p><a href='" + (selectedItem.ModelItemName.CovertIntoOSSafeFileName  + ".amout") + "'>Code</a></p>")
+        swItemDetailTextFileWriter.WriteLine("<p><a href='" + (selectedItem.ToFileName  + ".amout") + "'>Code</a></p>")
+        let k=selectedItem.ToAbbreviatedModelHeading
         swItemDetailTextFileWriter.WriteLine ("<h3>" + "DEBUG: Incoming Data Dump" + "</h3>")
         writeModelItemDetailHtmlTableHead swItemDetailTextFileWriter
         writeModelItemDetailHtmlTableDetail swItemDetailTextFileWriter 0 selectedItem
-        relatedItems |> List.iteri(fun i j->
-            writeModelItemDetailHtmlTableDetail swItemDetailTextFileWriter i j
+        modelItems |> List.iteri(fun i j->
+            if j.ModelParent=selectedItem.Id
+                then writeModelItemDetailHtmlTableDetail swItemDetailTextFileWriter i j
+                else ()
             )
         swItemDetailTextFileWriter.WriteLine "</body></html>"
         swItemDetailTextFileWriter.Flush()
         swItemDetailTextFileWriter.Close()
-    let saveMasterIndex =
+    let saveMasterIndex opts modelItems =
         let fileName= "index.html"
         System.IO.File.Delete(fileName)
         let sw = System.IO.File.CreateText(fileName)
-        sw.WriteLine "<html>"
-        sw.WriteLine "<head>"
-        sw.WriteLine ("<title>Our Universe</title>")
-        sw.WriteLine "</head>"
+        writeHtmlBeginAndHead sw "Our Universe" "Everything We are Working On" "EasyAM" "index"
         sw.WriteLine "<body>"
         sw.WriteLine ("<h1>Our Universe</h1>")
+        let unassignedQuestions = modelItems |> List.filter(fun x->
+            match x.ItemType with
+                |Question(_)->
+                    ( (x.Genre=Genres.None) || (x.Genre=Genres.Unknown))
+                            && ((x.AbstractionLevel=AbstractionLevels.None) || (x.AbstractionLevel=AbstractionLevels.Unknown))
+                            && ((x.TemporalIndicator=TemporalIndicators.None) || (x.TemporalIndicator=TemporalIndicators.Unknown))
+                            && ((x.Bucket=Buckets.None) || (x.Bucket=Buckets.Unknown))
+                |_->false
+            )
+        if unassignedQuestions.Length>0
+            then
+                sw.WriteLine ("<h2>Questions</h2>")
+                unassignedQuestions |> List.iter(fun x->match x.ItemType with |Question(q)->sw.WriteLine("<p>" + q.Text + "</p>") |_->())   
+            else ()
         sw.WriteLine ("<h2>Overview</h2>")
         sw.WriteLine ("<h3><a href='business-behavior-abstract-to-be.html'>Benefits We Offer Our Clients</a></h3>")
         sw.WriteLine ("<h3><a href='business-structure-abstract-to-be.html'>Definitions, Terms, and Systems</h3>")
@@ -377,6 +485,20 @@
         sw.WriteLine ("<h2>Where We're Planning To Go</h2>")
         sw.WriteLine ("<h3>Release Plan</h3>")
         sw.WriteLine ("<h3>Roadmap</h3>")
+        let unassignedNotes = modelItems |> List.filter(fun x->
+            match x.ItemType with
+                |Note(_)->
+                    ( (x.Genre=Genres.None) || (x.Genre=Genres.Unknown))
+                            && ((x.AbstractionLevel=AbstractionLevels.None) || (x.AbstractionLevel=AbstractionLevels.Unknown))
+                            && ((x.TemporalIndicator=TemporalIndicators.None) || (x.TemporalIndicator=TemporalIndicators.Unknown))
+                            && ((x.Bucket=Buckets.None) || (x.Bucket=Buckets.Unknown))
+                |_->false
+            )
+        if unassignedNotes.Length>0
+            then
+                sw.WriteLine ("<h2>Notes</h2>")
+                unassignedNotes |> List.iter(fun x->match x.ItemType with |Note(q)->sw.WriteLine("<p>" + q.Text + "</p>") |_->())   
+            else ()
         sw.WriteLine ()
         sw.WriteLine "</body></html>"
         sw.Flush()
@@ -384,36 +506,54 @@
 
     let saveMasterQuestionList (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) =
         let fileName= "questions.html"
-//        let allQuestions = modelItems |> List.filter(fun x->match x.ItemType with |Question(q)->true |_->false)
-//        // has no parent or the parent is a context shift
-//        let unattachedQuestionsWithoutTagFilter = allQuestions |> List.filter(fun x->
-//            match x.Parent with
-//                | Some id->
-//                    let parent = getParent modelItems id
-//                    let parentItemType=parent.ItemType.ToString()
-//                    let lengthOk=parentItemType.Length>13
-//                    let leftSide=parentItemType.GetLeft 13
-//                    let leftSideMatches=leftSide = "CONTEXT SHIFT"
-//                    (lengthOk && leftSideMatches)
-//                | _->false
-//            )
-        //let unattachedQuestions = filterModelItemsByTag unattachedQuestionsWithoutTagFilter Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior
-        let unattachedQuestions = getRootLevelUnattachedSubItems modelItems Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior "QUESTION"
+        let allQuestions = modelItems |> List.filter(fun x->match x.ItemType with |Question(_)->true |_->false)
+        let unassignedBusinessQuestions = allQuestions |> List.filter(fun x->
+                    ( (x.Genre=Genres.Business))
+                            && ((x.AbstractionLevel=AbstractionLevels.None) || (x.AbstractionLevel=AbstractionLevels.Unknown))
+                            && ((x.TemporalIndicator=TemporalIndicators.None) || (x.TemporalIndicator=TemporalIndicators.Unknown))
+                            && ((x.Bucket=Buckets.None) || (x.Bucket=Buckets.Unknown)))
+        let unassignedBusinessBehaviorQuestions = allQuestions |> List.filter(fun x->
+                    ( (x.Genre=Genres.Business))
+                            && ((x.AbstractionLevel=AbstractionLevels.None) || (x.AbstractionLevel=AbstractionLevels.Unknown))
+                            && ((x.TemporalIndicator=TemporalIndicators.None) || (x.TemporalIndicator=TemporalIndicators.Unknown))
+                            && ((x.Bucket=Buckets.Behavior) ))
+        let unassignedBusinessStructureQuestions = allQuestions |> List.filter(fun x->
+                    ( (x.Genre=Genres.Business))
+                            && ((x.AbstractionLevel=AbstractionLevels.None) || (x.AbstractionLevel=AbstractionLevels.Unknown))
+                            && ((x.TemporalIndicator=TemporalIndicators.None) || (x.TemporalIndicator=TemporalIndicators.Unknown))
+                            && ((x.Bucket=Buckets.Structure) ))
+        let unassignedBusinessSupplementalQuestions = allQuestions |> List.filter(fun x->
+                    ( (x.Genre=Genres.Business))
+                            && ((x.AbstractionLevel=AbstractionLevels.None) || (x.AbstractionLevel=AbstractionLevels.Unknown))
+                            && ((x.TemporalIndicator=TemporalIndicators.None) || (x.TemporalIndicator=TemporalIndicators.Unknown))
+                            && ((x.Bucket=Buckets.Supplemental) ))
+        let unassignedBusinessBehaviorRealizedQuestions = allQuestions |> List.filter(fun x->
+                    ( (x.Genre=Genres.Business))
+                            && ((x.AbstractionLevel=AbstractionLevels.Realized) )
+                            && ((x.TemporalIndicator=TemporalIndicators.None) || (x.TemporalIndicator=TemporalIndicators.Unknown))
+                            && ((x.Bucket=Buckets.Behavior) ))
+        let unassignedBusinessStructureRealizedQuestions = allQuestions |> List.filter(fun x->
+                    ( (x.Genre=Genres.Business))
+                            && ((x.AbstractionLevel=AbstractionLevels.Realized))
+                            && ((x.TemporalIndicator=TemporalIndicators.None) || (x.TemporalIndicator=TemporalIndicators.Unknown))
+                            && ((x.Bucket=Buckets.Structure) ))
+        let unassignedBusinessSupplementalRealizedQuestions = allQuestions |> List.filter(fun x->
+                    ( (x.Genre=Genres.Business))
+                            && ((x.AbstractionLevel=AbstractionLevels.None))
+                            && ((x.TemporalIndicator=TemporalIndicators.None) || (x.TemporalIndicator=TemporalIndicators.Unknown))
+                            && ((x.Bucket=Buckets.Supplemental) ))
         System.IO.File.Delete(fileName)
         let sw = System.IO.File.CreateText(fileName)
-        sw.WriteLine "<html>"
-        sw.WriteLine "<head>"
-        sw.WriteLine ("<title>What we need to know</title>")
-        sw.WriteLine "</head>"
+        writeHtmlBeginAndHead sw "What We Need To Know" "Questions We Need Answers To" "EasyAM" "questions"
         sw.WriteLine "<body>"
         sw.WriteLine ("<h1>What we need to know</h1>")
         sw.WriteLine ("<h2>Business-Related Questions</h2>")
         sw.WriteLine ("<h3>Overall Business Questions</h3>")
         sw.WriteLine ("<ul>")
-        unattachedQuestions |> List.iteri(fun i x->
+        unassignedBusinessQuestions |> List.iteri(fun i x->
             match x.ItemType with
                 |Question(q)->
-                    sw.WriteLine ("<li>" + q.Text + " <a href='" + ("business-behavior-abstract-to-be" + ".amout") + "'>(Look at all related material):</a>" + "</li>")
+                    sw.WriteLine ("<li>" + q.Text + " <a href='" + ("business-behavior-abstract-to-be" + ".amout") + "'>(Related material):</a>" + "</li>")
                 |_->()
             )
         sw.WriteLine ("</ul>")
@@ -422,11 +562,11 @@
         let allQuestions = filterModelItemsByTagAndType modelItems Genres.Business AbstractionLevels.Abstract TemporalIndicators.ToBe Buckets.Behavior "QUESTION"
         allModelItemsForThisSection |> List.iteri(fun i x->
             let questionsForThisModelItem = allQuestions |> List.filter(fun y->
-                match y.Parent with |Some parent->parent=x.Id |_->false)
+                match y.SourceCodeParent with |0->false |parent->parent=x.Id)
             match questionsForThisModelItem.Length with
                 |0->()
                 |_->
-                    sw.WriteLine("<li>For " + x.ModelItemName + " <a href='" + (x.ModelItemName.CovertIntoOSSafeFileName + ".amout") + "'>(Look at all related material):</a>")
+                    sw.WriteLine("<li>For " + x.ModelItemName + " <a href='" + (x.ToFileName + ".amout") + "'>(Related material):</a>")
                     sw.WriteLine ("<ul>")
                     questionsForThisModelItem |> List.iteri(fun j y->
                         match y.ItemType with
@@ -440,11 +580,11 @@
         let allModelItemsForThisSection = getModelItemRootItems modelItems Genres.Business AbstractionLevels.Realized TemporalIndicators.ToBe Buckets.Behavior
         allModelItemsForThisSection |> List.iteri(fun i x->
             let questionsForThisModelItem = allQuestions |> List.filter(fun y->
-                match y.Parent with |Some parent->parent=x.Id |_->false)
+                match y.SourceCodeParent with |0->false |parent->parent=x.Id)
             match questionsForThisModelItem.Length with
                 |0->()
                 |_->
-                    sw.WriteLine("<li>For " + x.ModelItemName + " <a href='" + (x.ModelItemName.CovertIntoOSSafeFileName + ".amout") + "'>(Look at all related material):</a>")
+                    sw.WriteLine("<li>For " + x.ModelItemName + " <a href='" + (x.ToFileName + ".amout") + "'>(Related material):</a>")
                     sw.WriteLine ("<ul>")
                     questionsForThisModelItem |> List.iteri(fun j y->
                         match y.ItemType with
@@ -470,35 +610,35 @@
         sw.Close()
 
     let saveDetailedViewAmout (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) (selectedItem:ModelItem) =
-        let relatedItems = itemsThatAreRelatedToThisItem selectedItem modelItems
-        let itemDetailFileName=selectedItem.ModelItemName.CovertIntoOSSafeFileName + ".amout"
+        let relatedItems = createItemReport  modelItems selectedItem
+        let itemDetailFileName=selectedItem.ToFileName + ".amout"
         System.IO.File.Delete(itemDetailFileName)
         let swItemDetailTextFileWriter = System.IO.File.CreateText(itemDetailFileName)
         swItemDetailTextFileWriter.WriteLine selectedItem.ToModelHeading
         swItemDetailTextFileWriter.WriteLine("    " + selectedItem.ModelItemName)
         swItemDetailTextFileWriter.WriteLine("        NOTES")
-        relatedItems |> List.iter(fun k->
+        relatedItems.Notes |> List.iter(fun k->
             match k.ItemType with
                 |ModelItemType.Note(a) as n->
                     swItemDetailTextFileWriter.WriteLine("            " + a.Text )
                 |_->()
             )
         swItemDetailTextFileWriter.WriteLine("        QUESTIONS")
-        relatedItems |> List.iter(fun k->
+        relatedItems.Questions |> List.iter(fun k->
             match k.ItemType with
                 |ModelItemType.Question(a) as n->
                     swItemDetailTextFileWriter.WriteLine("            " + a.Text )
                 |_->()
             )
         swItemDetailTextFileWriter.WriteLine("        TODO")
-        relatedItems |> List.iter(fun k->
+        relatedItems.ToDos |> List.iter(fun k->
             match k.ItemType with
                 |ModelItemType.ToDo(a) as n->
                     swItemDetailTextFileWriter.WriteLine("            " + a.Text )
                 |_->()
             )
         swItemDetailTextFileWriter.WriteLine("        WORK")
-        relatedItems |> List.iter(fun k->
+        relatedItems.Work |> List.iter(fun k->
             match k.ItemType with
                 |ModelItemType.Work(a) as n->
                     swItemDetailTextFileWriter.WriteLine("            " + a.Text )
@@ -506,12 +646,15 @@
             )
         swItemDetailTextFileWriter.WriteLine("")
         swItemDetailTextFileWriter.WriteLine("        REALIZATIONS")
-        relatedItems |> List.iter(fun k->
+        relatedItems.Realizations |> List.iter(fun k->
             match k.ItemType with
                 |ModelItemType.ModelItem(a) as n->
                     swItemDetailTextFileWriter.WriteLine("            " + a.ModelItemName )
                 |_->()
             )
+        swItemDetailTextFileWriter.WriteLine("")
+        swItemDetailTextFileWriter.WriteLine("        FEEDBACK")
+
         swItemDetailTextFileWriter.Flush()
         swItemDetailTextFileWriter.Close()
     let saveCompiledModelSectionHtml (opts:Types.EasyAMProgramConfig) (bucketToSave:Buckets) (genreToSave:Genres) (modelItems:ModelItem list) =
@@ -521,32 +664,32 @@
         let itemDetailFileName=sectionHeading.CovertIntoOSSafeFileName + ".html"
         System.IO.File.Delete(itemDetailFileName)
         let swItemDetailTextFileWriter = System.IO.File.CreateText(itemDetailFileName)
-        swItemDetailTextFileWriter.WriteLine "<html>"
-        swItemDetailTextFileWriter.WriteLine "<head>"
-        swItemDetailTextFileWriter.WriteLine ("<title>" + sectionHeading + "</title>")
-        swItemDetailTextFileWriter.WriteLine "</head>"
+        writeHtmlBeginAndHead swItemDetailTextFileWriter sectionHeading "Section Heading" "EasyAM" itemDetailFileName
         swItemDetailTextFileWriter.WriteLine "<body>"
         swItemDetailTextFileWriter.WriteLine ("<h1>" + sectionHeading + " (" + topLevelItemsAndRelated.Length.ToString() + ")</h1>")
         swItemDetailTextFileWriter.WriteLine ()
         swItemDetailTextFileWriter.WriteLine ("</body></html>")
         let topLevelItems = topLevelItemsAndRelated |> List.filter(fun x->match x.ItemType with |ModelItemType.ModelItem(_)->true |_->false)
         topLevelItems |> List.iter(fun y->
-            let itemChildren = modelItems |> List.filter(fun j->j.Parent.IsSome&&j.Parent.Value=y.Id)
-            let modelItemDetailHtmlFileName= y.ModelItemName.CovertIntoOSSafeFileName + ".html"
-            swItemDetailTextFileWriter.WriteLine("<h2><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "'>" + y.ModelItemName + "</a> (" + itemChildren.Length.ToString() + ")</h2>")
+            //let itemChildren = modelItems |> List.filter(fun j->j.SourceCodeParent<>0&&j.SourceCodeParent=y.Id)
+            let itemChildren = createItemReport modelItems y
+            let itemChildrenCount = itemChildren.Feedback.Length + itemChildren.ItemDetail.Length + itemChildren.Notes.Length + itemChildren.Questions.Length + itemChildren.Realizations.Length + itemChildren.ToDos.Length + itemChildren.Work.Length
+            let modelItemDetailHtmlFileName= y.ToFileName + ".html"
+            swItemDetailTextFileWriter.WriteLine("<h2><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "'>" + y.ModelItemName + "</a> (" + itemChildrenCount.ToString() + ")</h2>")
             swItemDetailTextFileWriter.WriteLine "<table>"
-            swItemDetailTextFileWriter.WriteLine ("<tr><td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#ItemDetail'>Item Detail</a></td>")
+            swItemDetailTextFileWriter.WriteLine ("<tr><td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#ItemDetail'>Item Detail</a> (" + itemChildren.ItemDetail.Length.ToString() + ")</td>")
             swItemDetailTextFileWriter.WriteLine "<td></td>"
-            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Notes'>Notes</a></td>")
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Notes'>Notes</a> (" + itemChildren.Notes.Length.ToString() + ")</td>")
             swItemDetailTextFileWriter.WriteLine "<td></td>"
-            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Questions'>Questions</a></td>")
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Questions'>Questions</a> (" + itemChildren.Questions.Length.ToString() + ")</td>")
             swItemDetailTextFileWriter.WriteLine "<td></td></tr>"
-            swItemDetailTextFileWriter.WriteLine ("<tr><td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#ToDo'>To-Dos</a></td>")
+            swItemDetailTextFileWriter.WriteLine ("<tr><td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#ToDo'>To-Dos</a> (" + itemChildren.ToDos.Length.ToString() + ")</td>")
             swItemDetailTextFileWriter.WriteLine "<td></td>"
-            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Work'>Work</a></td>")
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Work'>Work</a> (" + itemChildren.Work.Length.ToString() + ")</td>")
             swItemDetailTextFileWriter.WriteLine "<td></td>"
-            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Realizations'>Realizations</a></td>")
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Realizations'>Realizations</a> (" + itemChildren.Realizations.Length.ToString() + ")</td>")
             swItemDetailTextFileWriter.WriteLine "<td></td>"
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Realizations'>Feedback</a> (" + itemChildren.Feedback.Length.ToString() + ")</td>")
             swItemDetailTextFileWriter.WriteLine "</tr></table>"
             )
         swItemDetailTextFileWriter.WriteLine()
@@ -567,11 +710,14 @@
         saveCompiledModelSectionHtml opts Buckets.Behavior Genres.Business modelItems
         saveCompiledModelSectionHtml opts Buckets.Structure Genres.Business modelItems
         saveCompiledModelSectionHtml opts Buckets.Supplemental Genres.Business modelItems
-        saveCompiledModelSectionHtml opts Buckets.Meta Genres.Business modelItems
+
         saveCompiledModelSectionHtml opts Buckets.Behavior Genres.System modelItems
         saveCompiledModelSectionHtml opts Buckets.Structure Genres.System modelItems
         saveCompiledModelSectionHtml opts Buckets.Supplemental Genres.System modelItems
-        saveCompiledModelSectionHtml opts Buckets.Meta Genres.System modelItems
+
+        saveCompiledModelSectionHtml opts Buckets.Behavior Genres.Meta modelItems
+        saveCompiledModelSectionHtml opts Buckets.Structure Genres.Meta modelItems
+        saveCompiledModelSectionHtml opts Buckets.Supplemental Genres.Meta modelItems
 
     let saveCompiledModelSection (bucketToSave:Buckets) (genreToSave:Genres) (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) =
         let fileName=(genreToSave.ToString().ToUpper() + "-" + bucketToSave.ToString() +  "-ABSTRACT-TO-BE").CovertIntoOSSafeFileName + ".amout"
@@ -605,20 +751,21 @@
     let compiledDumpIncomingModelAmout (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) =
         saveCompiledModelSection Buckets.Behavior Genres.Business opts modelItems
         saveCompiledModelSection Buckets.Behavior Genres.System opts modelItems
+        saveCompiledModelSection Buckets.Behavior Genres.Meta opts modelItems
+
         saveCompiledModelSection Buckets.Structure Genres.Business opts modelItems
         saveCompiledModelSection Buckets.Structure Genres.System opts modelItems
+        saveCompiledModelSection Buckets.Structure Genres.Meta opts modelItems
+
         saveCompiledModelSection Buckets.Supplemental Genres.Business opts modelItems
         saveCompiledModelSection Buckets.Supplemental Genres.System opts modelItems
-        saveCompiledModelSection Buckets.Meta Genres.Business opts modelItems
-        saveCompiledModelSection Buckets.Meta Genres.System opts modelItems
+        saveCompiledModelSection Buckets.Supplemental Genres.Meta opts modelItems
 
     let rawDumpIncomingModel (opts:Types.EasyAMProgramConfig) (modelItems:ModelItem list) =
-        let fileName="incomingLines-DEBUG.html"
-        System.IO.File.Delete(fileName)
-        let sw = System.IO.File.CreateText(fileName)
-        sw.WriteLine "<html>"
-        sw.WriteLine "<head>"
-        sw.WriteLine "</head>"
+        let fileName="incoming-lines-DEBUG" 
+        System.IO.File.Delete(fileName + ".html")
+        let sw = System.IO.File.CreateText(fileName + ".html")
+        writeHtmlBeginAndHead sw "Incoming File Dump" "Incoming files processed by line for the EasyAM program" "EasyAM" fileName
         sw.WriteLine "<body>"
         writeModelItemDetailHtmlTableHead sw
         modelItems |> List.iteri(fun i x->

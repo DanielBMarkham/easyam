@@ -1,0 +1,10 @@
+BUSINESS STRUCTURE ABSTRACT TO-BE
+    Recipe CONTAINS Ingredients
+        NOTES
+        QUESTIONS
+        TODO
+        WORK
+
+        REALIZATIONS
+
+        FEEDBACK
