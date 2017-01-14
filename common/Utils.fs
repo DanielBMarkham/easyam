@@ -745,12 +745,19 @@
         System.IO.File.Delete(fileName)
         let sw = System.IO.File.CreateText(fileName)
         sw.WriteLine fileTitle
-        let rootModelItems = getModelItemRootItems modelItems genreToSave AbstractionLevels.Abstract TemporalIndicators.ToBe bucketToSave 
-        rootModelItems |> List.iteri(fun i x->
+        let abstractRootModelItems = getModelItemRootItems modelItems genreToSave AbstractionLevels.Abstract TemporalIndicators.ToBe bucketToSave 
+        abstractRootModelItems |> List.iteri(fun i x->
             sw.WriteLine ("    " + x.ModelItemName)
             saveDetailedViewHtml opts modelItems x
             saveDetailedViewAmout opts modelItems x
             )
+        let realizedRootModelItems = getModelItemRootItems modelItems genreToSave AbstractionLevels.Realized TemporalIndicators.ToBe bucketToSave 
+        realizedRootModelItems |> List.iteri(fun i x->
+            sw.WriteLine ("    " + x.ModelItemName)
+            saveDetailedViewHtml opts modelItems x
+            saveDetailedViewAmout opts modelItems x
+            )
+
         let rootItems = getAllRootItemsForTags modelItems genreToSave AbstractionLevels.Abstract TemporalIndicators.ToBe bucketToSave 
         sw.WriteLine ""
         sw.WriteLine "    NOTES  //Notes not attached to any specific item"

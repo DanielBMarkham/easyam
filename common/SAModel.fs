@@ -236,7 +236,9 @@
             member self.ToAbbreviatedModelHeading =
                 (self.Genre.ToString().GetLeft 1).ToLower() + (self.Bucket.ToString().GetLeft 1).ToLower() + (self.AbstractionLevel.ToString().GetLeft 1).ToLower() + (self.TemporalIndicator.ToString().GetLeft 1).ToLower()
             member self.ToFileName =
-                self.ToAbbreviatedModelHeading + "-" + self.ModelItemName.CovertIntoOSSafeFileName
+                let tempName=(self.ToAbbreviatedModelHeading + "-" + self.ModelItemName.CovertIntoOSSafeFileName)
+                let ret=tempName.ReplaceAny [|'/';'\\'|] '-'
+                ret
             member self.HasAModelParent = 
                 self.ModelParent<>0
     and ProcessContext = {ContextStack:System.Collections.Generic.Stack<ModelItem>; Lines:ModelItem list; LastAddedModelItem:ModelItem}

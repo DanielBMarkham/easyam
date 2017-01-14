@@ -1,0 +1,12 @@
+BUSINESS BEHAVIOR REALIZED TO-BE
+    Make Appointment (and save)
+        NOTES
+            Verify it was saved by having a chron DB dump sent to a page that users can monitor
+            Verify it was saved by having a chron DB dump sent to a page that users can monitor
+        QUESTIONS
+        TODO
+        WORK
+
+        REALIZATIONS
+
+        FEEDBACK
