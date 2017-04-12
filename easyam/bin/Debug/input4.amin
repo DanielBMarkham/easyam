@@ -35,13 +35,13 @@ META BEHAVIOR
 
 BUSINESS BEHAVIOR ABSTRACT
 	Buy Lemonade
+		ASA Customer
+		INEEDTO Schedule Birthday Parties
 	Count Inventory
 	Recieve Shipments
 
 		Q: Do they do their own stocking? Or just record BOLs for shipments?
 
 // We can enter in as much of a title as we know about
-ASA Customer
-INEEDTO Schedule Birthday Parties
 
 // Next time, let's find out about the giant lemon

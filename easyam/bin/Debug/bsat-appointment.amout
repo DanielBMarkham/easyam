@@ -1,5 +1,7 @@
 BUSINESS STRUCTURE ABSTRACT TO-BE
     Appointment
+        HASA Procedure
+
         NOTES
         QUESTIONS
         TODO

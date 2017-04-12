@@ -1,5 +1,7 @@
 BUSINESS STRUCTURE ABSTRACT TO-BE
     Patient
+        HASA Appointment, Teeth, Treatment History, Billing History
+
         NOTES
         QUESTIONS
             Are all dogs furry?

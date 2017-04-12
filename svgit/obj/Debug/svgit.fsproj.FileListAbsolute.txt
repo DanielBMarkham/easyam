@@ -21,3 +21,10 @@ C:\Users\Daniel Markham\Dropbox\source\git-repos\easyam\svgit\bin\Debug\GemBox.S
 C:\Users\Daniel Markham\Dropbox\source\git-repos\easyam\svgit\bin\Debug\FSharp.Core.xml
 C:\Users\Daniel Markham\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.exe
 C:\Users\Daniel Markham\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.pdb
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.exe.config
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.exe
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.pdb
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\FSharp.Core.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\GemBox.Spreadsheet.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\GemBox.Spreadsheet.xml
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\FSharp.Core.xml

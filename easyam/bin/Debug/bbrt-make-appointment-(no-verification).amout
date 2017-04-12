@@ -1,5 +1,6 @@
 BUSINESS BEHAVIOR REALIZED TO-BE
-    Make Appointment (no verification)
+    Make Appointment (no verification) PARENT Schedule Appointment
+
         NOTES
             Just enter in all data. Any front-end validation in-place
             Just enter in all data. Any front-end validation in-place

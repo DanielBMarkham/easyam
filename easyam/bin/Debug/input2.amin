@@ -8,3 +8,8 @@ MASTER BACKLOG
 	Schedule Appointment
 		Q: Are these appointment in hour intervals? Half-hour? Variable?
 		NOTE: Appointments cannot be made same-day
+		WHEN I'm in pain, concerned about my health
+		ASA Potential Customer
+		INEEDTO Schedule an Appointment
+		SOTHAT I can receive service
+

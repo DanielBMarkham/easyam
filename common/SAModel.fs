@@ -148,19 +148,44 @@
             ToDos:ToDo list
             WorkHistory:Work list
         }
+
+    type ModelItemQualifierType =
+        |Trigger
+        |Actor
+        |Goal
+        |LargerContext    
+        |Attribute
+         static member ToList() =
+            [Trigger; Actor; Goal;LargerContext;Attribute]
+         override self.ToString() =
+          match self with
+            | Trigger->"Trigger"
+            | Actor->"Actor"
+            | Goal->"Goal"
+            | LargerContext->"LargerContext"
+            | Attribute->"Attribute"
+
     type ItemConnectorType =
         | ParentChild
         | HasA
         | Affects
         | Contains
+        | When
+        | AsA
+        | INeedTo
+        | SoThat
          static member ToList() =
-            [ParentChild;Affects;HasA;Contains]
+            [ParentChild;Affects;HasA;Contains; When; AsA; INeedTo;SoThat]
          override self.ToString() =
           match self with
             | ParentChild->"ParentChild"
             | HasA->"HasA"
             | Affects->"Affects"
             | Contains->"Contains"
+            | When->"When"
+            | AsA->"AsA"
+            | INeedTo->"INeedTo"
+            | SoThat->"SoThat"
     type ItemConnection = 
         {
             ConnectionType:ItemConnectorType
@@ -175,6 +200,7 @@
         | Label                         // arbitrary labels for items
         | Connection of ItemConnection  // joins up Items
         | ModelItem of ModelItem        // items
+        | ModelItemQualifier of (ModelItemQualifierType*ModelItem) // "junior" items, like attributes
         | NameValueTag of NameValueTag
         | Question of Question
         | Note of Note
@@ -193,6 +219,10 @@
                                     |HasA->"HasA Conntection: " + b.ToString() + " has " + c.ToString()
                                     |Affects->"Affects Conntection: " + b.ToString() + " affects " + c.ToString()
                                     |Contains->"Contains Connection: " + b.ToString() + " contains " + c.ToString()
+                                    |When->"When Conntection: " + b.ToString() + " begins when " + c.ToString()
+                                    |AsA->"AsA Conntection: " + b.ToString() + " is needed by " + c.ToString()
+                                    |INeedTo->"I Need To Conntection: " + b.ToString() + " - " + c.ToString()
+                                    |SoThat->"So That Conntection: " + b.ToString() + " - " + c.ToString()
             | ModelItem({
                             Id=a
                             SourceCodeParent=b
@@ -205,6 +235,21 @@
                             SourceReferences=i
                             ModelItemName=j
                         })->"MODELITEM: " + j
+            | ModelItemQualifier (miqt,mi)->
+                                    let modelItem = mi
+                                    let modelIemQualifierType = miqt
+//                                     {
+//                                    Id=a
+//                                    SourceCodeParent=b
+//                                    ItemType=c
+//                                    Bucket=d
+//                                    Genre=e
+//                                    AbstractionLevel=f
+//                                    TemporalIndicator=g
+//                                    ItemAnnotation=h
+//                                    SourceReferences=i
+//                                    ModelItemName=j
+                                    miqt.ToString().ToUpper() + ": " + mi.ModelItemName
             | NameValueTag({Name=x;Value=y;SourceReference=z})->"NAME-VALUE TAG: " + x + "=" + y
             | Question({Text=x; SourceReference=y})->"QUESTION: " + x
             | Note({Text=x; SourceReference=y})->"NOTE: " + x
@@ -534,11 +579,6 @@
             let modelItemNamesEqual=x.ModelItemName=myModelItemToTest.ModelItemName
             let r=9
             genresEqual && abstractionsEqual && bucketsEqual && temporalIndicatorsEqual && modelItemNamesEqual)
-//            ((x.Genre=myModelItemToTest.Genre))
-//            && ((x.AbstractionLevel=myModelItemToTest.AbstractionLevel))
-//            && ((x.Bucket=myModelItemToTest.Bucket))
-//            && ((x.TemporalIndicator=myModelItemToTest.TemporalIndicator))
-//            && ((x.ModelItemName=myModelItemToTest.ModelItemName)))
     let isThereAnAbstractModelItemAlreadyWithThisNameInThisContext (myModelItemToTest:ModelItem) (currentContext:ProcessContext) =
         currentContext.Lines |> List.tryFind(fun x->
             let genresEqual = x.Genre=myModelItemToTest.Genre
@@ -548,11 +588,6 @@
             let modelItemNamesEqual=x.ModelItemName=myModelItemToTest.ModelItemName
             let r=9
             genresEqual && abstractionsEqual && bucketsEqual && temporalIndicatorsEqual && modelItemNamesEqual)
-//            ((x.Genre=myModelItemToTest.Genre))
-//            && ((x.AbstractionLevel=AbstractionLevels.Abstract))
-//            && ((x.Bucket=myModelItemToTest.Bucket))
-//            && ((x.TemporalIndicator=myModelItemToTest.TemporalIndicator))
-//            && ((x.ModelItemName=myModelItemToTest.ModelItemName)))
     let replaceAModelItemInAModelItemListById (modelLines:ModelItem list) (newModelItem:ModelItem)  = 
         // split the list taking out the dupe. Then replace
         let splitLineListFirstPart =fst (modelLines |> List.partition(fun z->z.Id<newModelItem.Id))
@@ -560,13 +595,118 @@
         let splitLineListSecondPart =fst (modelLines |> List.partition(fun z->z.Id>newModelItem.Id))
         let newLines =  splitLineListSecondPart |> List.append [newModelItem] |> List.append splitLineListFirstPart
         newLines
+    type tokenTargetTypes =
+        |OneMatchEverythingUntilTheEndOfTheLine
+        |ManyMatchesEverythingUntilNextStopToken
+        |NothingJustChangeContext
+    let commandTokens=
+        [
+            ("HYP:", OneMatchEverythingUntilTheEndOfTheLine); ("HYPOTHESIS:",OneMatchEverythingUntilTheEndOfTheLine); ("HYPOTHESES",ManyMatchesEverythingUntilNextStopToken); ("OBSERVATION:",OneMatchEverythingUntilTheEndOfTheLine); ("EXPECTED ACTORS IMPACTED",ManyMatchesEverythingUntilNextStopToken); ("EXPECTED IMPACT METRICS GIVEN",ManyMatchesEverythingUntilNextStopToken); ("EXPECTED SUCCESSFUL RESULT",ManyMatchesEverythingUntilNextStopToken); ("PROPOSED CHANGES",ManyMatchesEverythingUntilNextStopToken); ("EXPECTED EXPERIMENT SUSPENSE TIME",OneMatchEverythingUntilTheEndOfTheLine); ("EXPERIMENT START DATE:",OneMatchEverythingUntilTheEndOfTheLine)
+            ;("T:",OneMatchEverythingUntilTheEndOfTheLine); ("TASK:",OneMatchEverythingUntilTheEndOfTheLine); ("TASKS",ManyMatchesEverythingUntilNextStopToken)
+            ;("US:",OneMatchEverythingUntilTheEndOfTheLine);("USER STORY:",OneMatchEverythingUntilTheEndOfTheLine);("USER STORIES",ManyMatchesEverythingUntilNextStopToken); ("WHEN",ManyMatchesEverythingUntilNextStopToken); ("ASA",ManyMatchesEverythingUntilNextStopToken); ("INEEDTO",ManyMatchesEverythingUntilNextStopToken);("SOTHAT",ManyMatchesEverythingUntilNextStopToken);("PARENT",ManyMatchesEverythingUntilNextStopToken);("USES",ManyMatchesEverythingUntilNextStopToken);("AFFECTEDBY",ManyMatchesEverythingUntilNextStopToken)
+            ;("ENT:",OneMatchEverythingUntilTheEndOfTheLine);("ENTITY:",OneMatchEverythingUntilTheEndOfTheLine);("ENTITIES",ManyMatchesEverythingUntilNextStopToken); ("HASA",ManyMatchesEverythingUntilNextStopToken); ("CONTAINS",ManyMatchesEverythingUntilNextStopToken); ("USEDBY",ManyMatchesEverythingUntilNextStopToken)
+            ;("SUPPL:",OneMatchEverythingUntilTheEndOfTheLine);("SUPPLEMENTAL:",OneMatchEverythingUntilTheEndOfTheLine);("SUPPLEMENTALS",ManyMatchesEverythingUntilNextStopToken); ("BECAUSE",ManyMatchesEverythingUntilNextStopToken); ("WHENEVER",ManyMatchesEverythingUntilNextStopToken); ("IT HAS TO BE",ManyMatchesEverythingUntilNextStopToken); ("AFFECTS",ManyMatchesEverythingUntilNextStopToken)
+            ;("BUSINESS",NothingJustChangeContext);("SYSTEM",NothingJustChangeContext);("META",NothingJustChangeContext);("BEHAVIOR",NothingJustChangeContext);("STRUCTURE",NothingJustChangeContext);("SUPPLEMENTAL",NothingJustChangeContext); ("ABSTRACT",NothingJustChangeContext); ("REALIZED",NothingJustChangeContext); ("WAS",NothingJustChangeContext); ("AS-IS",NothingJustChangeContext); ("TO-BE",NothingJustChangeContext)
+            ;("MASTER BACKLOG",NothingJustChangeContext); ("PRODUCT BACKLOG",NothingJustChangeContext); ("PROGRAM BACKLOG",NothingJustChangeContext); ("PROJECT BACKLOG",NothingJustChangeContext); ("SPRINT BACKLOG",NothingJustChangeContext)
+            ;("MASTER DOMAIN MODEL",NothingJustChangeContext); ("PROJECT DOMAIN MODEL",NothingJustChangeContext)
+            ;("MASTER SUPPLEMENTAL MODEL",NothingJustChangeContext); ("PROJECT SUPPLEMENTAL MODEL",NothingJustChangeContext)
+            ;("NOTE:",OneMatchEverythingUntilTheEndOfTheLine); ("//",OneMatchEverythingUntilTheEndOfTheLine);("NOTES",ManyMatchesEverythingUntilNextStopToken)
+            ;("Q:",OneMatchEverythingUntilTheEndOfTheLine); ("QUESTION:",OneMatchEverythingUntilTheEndOfTheLine); ("QUESTIONS",ManyMatchesEverythingUntilNextStopToken)
+            ;("TODO:",OneMatchEverythingUntilTheEndOfTheLine); ("TODOS",ManyMatchesEverythingUntilNextStopToken)
+            ;("WORK:",OneMatchEverythingUntilTheEndOfTheLine); ("WORK",ManyMatchesEverythingUntilNextStopToken)
+            ;("&",ManyMatchesEverythingUntilNextStopToken)
+            ;("NAMESPACE:", OneMatchEverythingUntilTheEndOfTheLine)
+        ]
+    let stopTokens = commandTokens// |> List.map(fun x->fst x)
+    let sortedStopTokens = stopTokens |> List.sortBy(fun x->(fst x).Length) |> List.rev
+    let stopTokenString = String.concat "|" (sortedStopTokens |> List.map(fun x->fst x))
 
+    type RegexTokenMacth =
+        |MATCH_TO_END_OF_LINE
+        |MATCH_TOKEN_ONLY
+        |MATCH_UNTIL_NEXT_TOKEN
+    let makeRegexToken (regexTokenMatchType:RegexTokenMacth) (keyword:string) =
+        match regexTokenMatchType with
+        |MATCH_TO_END_OF_LINE->keyword + ".?$"
+        |MATCH_TOKEN_ONLY->keyword
+        //|MATCH_UNTIL_NEXT_TOKEN->keyword + "(?:(?!//|&|:|PARENT|HASA|AFFECTS|CONTAINS|WORK:|Q:|TODO:|NOTE:|MASTER DOMAIN MODEL|MASTER BACKLOG|MASTER SUPPLEMENTAL MODEL|PRODUCT BACKLOG|BUSINESS BEHAVIOR ABSTRACT|WHEN|ASA|INEEDTO|SOTHAT).)*"
+        |MATCH_UNTIL_NEXT_TOKEN->keyword + "(?:(?!" + stopTokenString + ").)*"
+    let getModelItemById (modelItems:ModelItem list) (id:int) =
+        modelItems |> List.find(fun x->x.Id=id)
     type EasyAMToken = Token<ModelItem, ProcessContext>
     let easyAMTokens:EasyAMToken[] = 
         [|
             {
                 SearchDirection=FindFirstMatch
-                RegexMatch="NOTE:[^&|^:]*" //+ TokenSeparatorRegex
+                RegexMatch=makeRegexToken RegexTokenMacth.MATCH_UNTIL_NEXT_TOKEN  "" 
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let ctx = establishTokenHandlingContext lineWithTokenConsumed tokenMatchText currentContext lineBeingProcessed 0
+                                        let matchText=tokenMatchText.Trim()
+
+                                        let isParentTheDefaultModelItem = ctx.closestModelParentOfAnyType.Id=defaultModelItem.Id
+                                        let theresNoContextHere=isParentTheDefaultModelItem || ctx.closestModelParentOfAnyType.HasSomeContextToIt=false
+                                        let theresSomethingToAdd=tokenMatchText.Length>0
+                                        match theresNoContextHere, theresSomethingToAdd with
+                                            | true,true-> // it's a comment
+                                                let newNoteModelItemType = Note({Text=ctx.rightHandValue; SourceReference=ctx.newlyCreatedSourceReference})
+                                                let newlyCreatedModelItem = makeNewModelItemInContext ctx newNoteModelItemType 
+                                                currentContextWithNewLineInIt newlyCreatedModelItem currentContext
+                                            | false, true-> // It's a model item
+                                                //let possibleNewItem = 
+                                                let newModelItemType = ModelItem({defaultModelItem with ModelItemName=matchText; SourceReferences=[ctx.newlyCreatedSourceReference]})
+                                                let newModelParentId =
+                                                    match ctx.closestModelParentOfAnyType.ItemType with  
+                                                        |ContextShift(_)-> if ctx.closestModelParentOfAnyType.AbstractionLevel=AbstractionLevels.Abstract then 0 else 0 
+                                                        |_->ctx.closestModelParentOfAnyType.Id
+                                                let possibleNewItem = {(makeNewModelItemInContext ctx newModelItemType) with ModelParent=newModelParentId; ModelItemName=matchText}
+                                                let possibleDupe = isThereAModelItemAlreadyWithThisNameInThisContext  possibleNewItem currentContext
+                                                match possibleDupe with
+                                                    | Some dupe->
+                                                        let newLines= [possibleNewItem] |> List.append currentContext.Lines
+                                                        // split the list taking out the dupe. Then replace
+                                                        let splitLineListFirstPart =fst (currentContext.Lines |> List.partition(fun z->z.Id<dupe.Id))
+                                                        let splitLineListSecondPart =fst (currentContext.Lines |> List.partition(fun z->z.Id>dupe.Id))
+                                                        let newDupeSourceReferences = [ctx.newlyCreatedSourceReference] |> List.append dupe.SourceReferences
+                                                        let newDupe={dupe with SourceReferences=newDupeSourceReferences}
+                                                        currentContext.ContextStack.Push(newDupe)
+                                                        let newContextLines =  splitLineListSecondPart |> List.append [newDupe] |> List.append splitLineListFirstPart
+                                                        {currentContext with Lines=newContextLines; LastAddedModelItem=newDupe}
+                                                    | option.None->
+                                                        let newLines= [possibleNewItem] |> List.append currentContext.Lines
+                                                        currentContext.ContextStack.Push(possibleNewItem)
+                                                        {currentContext with Lines=newLines; LastAddedModelItem=possibleNewItem}
+                                            |_,false->currentContext // there's no text. Move along
+                                    )
+            };
+            ///
+            /// SPECIAL
+            ///
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch=makeRegexToken RegexTokenMacth.MATCH_TO_END_OF_LINE stopTokenString   
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let tokenMatch=sortedStopTokens|>List.find(fun x->System.Text.RegularExpressions.Regex.IsMatch(tokenMatchText,x))
+                                        let tokenMatchLength=tokenMatch.Length
+                                        let ctx = establishTokenHandlingContext lineWithTokenConsumed tokenMatchText currentContext lineBeingProcessed tokenMatchLength
+                                        let newModelItemType = 
+                                            match tokenMatch with
+                                            |"NOTE:" | "//"->
+                                                Note({Text=ctx.rightHandValue; SourceReference=ctx.newlyCreatedSourceReference})
+                                            | "Q:" | "QUESTION"->
+                                                Question({Text=ctx.rightHandValue; SourceReference=ctx.newlyCreatedSourceReference})
+                                            | "TODO:"->
+                                                ToDo({Text=ctx.rightHandValue; SourceReference=ctx.newlyCreatedSourceReference})
+                                            | "WORK:"->
+                                                Work({Text=ctx.rightHandValue; SourceReference=ctx.newlyCreatedSourceReference})
+                                            |_->
+                                                Note({Text=ctx.rightHandValue; SourceReference=ctx.newlyCreatedSourceReference})
+                                        let newlyCreatedModelItem = makeNewModelItemInContext ctx newModelItemType 
+                                        currentContextWithNewLineInIt newlyCreatedModelItem currentContext
+                                    )
+            };
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch=makeRegexToken RegexTokenMacth.MATCH_TO_END_OF_LINE "NOTE:"   //"NOTE:[^&|^:]*" //+ TokenSeparatorRegex
                 MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
                                         let ctx = establishTokenHandlingContext lineWithTokenConsumed tokenMatchText currentContext lineBeingProcessed 5
                                         let newNoteModelItemType = Note({Text=ctx.rightHandValue; SourceReference=ctx.newlyCreatedSourceReference})
@@ -767,125 +907,183 @@
             };
             {
                 SearchDirection=FindFirstMatch
-                RegexMatch="(?:(?!//|&|:|PARENT|HASA|AFFECTS).)*"  //This is the catch-all  OLD RegexMatch="^.*(//|$)"
+                RegexMatch="WHEN[^&|^:|^//]*"
                 MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
-                                        let ctx = establishTokenHandlingContext lineWithTokenConsumed tokenMatchText currentContext lineBeingProcessed 0
-                                        let sourceCodeParent, modelParent=getParent currentContext lineBeingProcessed
-                                        //let incomingModelItem=currentContext.ContextStack.Peek()
-                                        let matchText=tokenMatchText.Trim()
+                                        let ctx = establishTokenHandlingContext lineWithTokenConsumed tokenMatchText currentContext lineBeingProcessed 4
+                                        let whenTargets=ctx.rightHandValue.Split([|","|], System.StringSplitOptions.None)
+                                        // Go through WHEN comma-delimited list. If no WHEN TARGET, add one (the one we just created)
+                                        let newContext = whenTargets |> Array.fold(fun (affectCumulator:ProcessContext) (z:string)->
+                                                            let newConnectionModelItemType = ModelItemType.Connection({ConnectionType=When; LhsId=0; RhsId=0; SourceReference=ctx.newlyCreatedSourceReference})
+                                                            let dummyItem = 
+                                                                {
+                                                                    Id=0
+                                                                    SourceCodeParent=ctx.closestModelParentOfAnyType.Id
+                                                                    ModelParent=0
+                                                                    ItemType=ModelItemType.None
+                                                                    Bucket=Buckets.None
+                                                                    Genre=Genres.None
+                                                                    AbstractionLevel=AbstractionLevels.None
+                                                                    TemporalIndicator=TemporalIndicators.None
+                                                                    ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+                                                                    ModelItemName=z.Trim()
+                                                                    SourceReferences=[ctx.newlyCreatedSourceReference]
+                                                                }
 
-                                        let isParentTheDefaultModelItem = modelParent.Id=defaultModelItem.Id
+                                                            let possibleNewItem = 
+                                                                {
+                                                                    Id=getNextItemNumber()
+                                                                    SourceCodeParent=ctx.closestModelParentOfAnyType.Id
+                                                                    ModelParent=affectCumulator.LastAddedModelItem.Id
+                                                                    ItemType=ModelItemType.ModelItemQualifier(Trigger,dummyItem)
+                                                                    Bucket=Buckets.Behavior // WHEN has to point to a behavior. All WHENs are trigger on behavior flows
+                                                                    Genre=ctx.closestModelParentOfAnyType.Genre
+                                                                    AbstractionLevel=AbstractionLevels.Abstract
+                                                                    TemporalIndicator=ctx.closestModelParentOfAnyType.TemporalIndicator
+                                                                    ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+                                                                    SourceReferences=[ctx.newlyCreatedSourceReference]
+                                                                    ModelItemName=z.Trim()
+                                                                }
+                                                            let possibleAffectsTarget, newLines = 
+                                                                match (isThereAnAbstractModelItemAlreadyWithThisNameInThisContext possibleNewItem affectCumulator) with
+                                                                    | Some x->
+                                                                        // If there is a target for the WHEN that already exists
+                                                                        // Need to update the source references for the existing parent
+                                                                        let oldTargetSorceReferences = x.SourceReferences
+                                                                        let newTargetSourceReferences = oldTargetSorceReferences |> List.append [ctx.newlyCreatedSourceReference]
+                                                                        let newTarget = {x with SourceReferences=newTargetSourceReferences}
+                                                                        let newLines = replaceAModelItemInAModelItemListById affectCumulator.Lines newTarget
+                                                                        x,newLines
+                                                                    | option.None->
+                                                                        let newCtxLines = [possibleNewItem] |> List.append affectCumulator.Lines
+                                                                        possibleNewItem,newCtxLines
 
-                                        if isParentTheDefaultModelItem
-                                            then // It's a comment
-                                                let newNoteModelItemType = Note({Text=ctx.rightHandValue; SourceReference=ctx.newlyCreatedSourceReference})
-                                                let newlyCreatedModelItem = makeNewModelItemInContext ctx newNoteModelItemType 
-                                                currentContextWithNewLineInIt newlyCreatedModelItem currentContext
-                                            else // It's a ModelItem
-                                                let possibleNewItem = 
-                                                    {
-                                                        Id=getNextItemNumber()
-                                                        SourceCodeParent=modelParent.Id
-                                                        ModelParent=0
-                                                        ItemType=ModelItemType.ModelItem(
-                                                                                        {
-                                                                                            Id=0
-                                                                                            SourceCodeParent=modelParent.Id
-                                                                                            ModelParent=0
-                                                                                            ItemType=ModelItemType.None
-                                                                                            Bucket=Buckets.None
-                                                                                            Genre=Genres.None
-                                                                                            AbstractionLevel=AbstractionLevels.None
-                                                                                            TemporalIndicator=TemporalIndicators.None
-                                                                                            ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
-                                                                                            ModelItemName=matchText
-                                                                                            SourceReferences=[ctx.newlyCreatedSourceReference]
-                                                                                        }
-                                                                                    )
-                                                        Bucket=modelParent.Bucket
-                                                        Genre=modelParent.Genre
-                                                        AbstractionLevel=modelParent.AbstractionLevel
-                                                        TemporalIndicator=modelParent.TemporalIndicator
-                                                        ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
-                                                        SourceReferences=[ctx.newlyCreatedSourceReference]
-                                                        ModelItemName=matchText
-                                                    }
-                                                let possibleDupe = isThereAModelItemAlreadyWithThisNameInThisContext  possibleNewItem currentContext
-                                                match possibleDupe with
-                                                    | Some dupe->
-                                                        let newLines= [possibleNewItem] |> List.append currentContext.Lines
-                                                        // split the list taking out the dupe. Then replace
-                                                        let splitLineListFirstPart =fst (currentContext.Lines |> List.partition(fun z->z.Id<dupe.Id))
-                                                        let splitLineListSecondPart =fst (currentContext.Lines |> List.partition(fun z->z.Id>dupe.Id))
-                                                        let newDupeSourceReferences = [ctx.newlyCreatedSourceReference] |> List.append dupe.SourceReferences
-                                                        let newDupe={dupe with SourceReferences=newDupeSourceReferences}
-                                                        currentContext.ContextStack.Push(newDupe)
-                                                        let newContextLines =  splitLineListSecondPart |> List.append [newDupe] |> List.append splitLineListFirstPart
-                                                        {currentContext with Lines=newContextLines; LastAddedModelItem=newDupe}
-                                                    | option.None->
-                                                        let newLines= [possibleNewItem] |> List.append currentContext.Lines
-                                                        currentContext.ContextStack.Push(possibleNewItem)
-                                                        {currentContext with Lines=newLines; LastAddedModelItem=possibleNewItem}
+                                                            // no matter what, we need to add a connector from the previous item to the found/created parent
+                                                            let newConnectionModelItemType = Connection({ConnectionType=When; LhsId=affectCumulator.LastAddedModelItem.Id; RhsId=possibleAffectsTarget.Id; SourceReference=ctx.newlyCreatedSourceReference})
+                                                            let newlyCreatedModelItem = {(makeNewModelItemInContext ctx newConnectionModelItemType) with ModelParent=ctx.closestModelParentOfAnyType.Id} 
+                                                            let newLinesWithTheConnectionAdded = [newlyCreatedModelItem] |> List.append newLines
+                                                            {affectCumulator with Lines=newLinesWithTheConnectionAdded}
+                                                            ) currentContext
+                                        newContext
                                     )
             };
             {
                 SearchDirection=FindFirstMatch
-                RegexMatch="PARENT[^&|^:|^//]*"
+                RegexMatch="INEEDTO[^&|^:|^//]*"
                 MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
                                         let ctx = establishTokenHandlingContext lineWithTokenConsumed tokenMatchText currentContext lineBeingProcessed 7
-                                        let newConnectionModelItemType = ModelItemType.Connection({ConnectionType=ParentChild; LhsId=0; RhsId=0; SourceReference=ctx.newlyCreatedSourceReference})
-                                        let possibleNewItem = 
-                                            {
-                                                Id=getNextItemNumber()
-                                                SourceCodeParent=ctx.closestModelParentOfAnyType.Id
-                                                ModelParent=0
-                                                ItemType=ModelItemType.ModelItem(
-                                                                                {
-                                                                                    Id=0
-                                                                                    SourceCodeParent=ctx.closestModelParentOfAnyType.Id
-                                                                                    ModelParent=0
-                                                                                    ItemType=ModelItemType.None
-                                                                                    Bucket=Buckets.None
-                                                                                    Genre=Genres.None
-                                                                                    AbstractionLevel=AbstractionLevels.None
-                                                                                    TemporalIndicator=TemporalIndicators.None
-                                                                                    ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
-                                                                                    ModelItemName=ctx.rightHandValue.Trim()
-                                                                                    SourceReferences=[ctx.newlyCreatedSourceReference]
-                                                                                }
-                                                                            )
-                                                Bucket=ctx.closestModelParentOfAnyType.Bucket
-                                                Genre=ctx.closestModelParentOfAnyType.Genre
-                                                AbstractionLevel=AbstractionLevels.Abstract
-                                                TemporalIndicator=ctx.closestModelParentOfAnyType.TemporalIndicator
-                                                ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
-                                                SourceReferences=[ctx.newlyCreatedSourceReference]
-                                                ModelItemName=ctx.rightHandValue.Trim()
-                                            }
-                                        // if no parent, add one (the one we just created)
-                                        let possibleParent, newLines = 
-                                            match (isThereAnAbstractModelItemAlreadyWithThisNameInThisContext possibleNewItem currentContext) with
-                                                | Some x->
-                                                    // If there is a parent
-                                                    // Need to update the source references for the existing parent
-                                                    //replaceAModelItemInAModelItemListById (modelLines:ModelItem list) (newModelItem:ModelItem)
-                                                    let oldParentSorceReferences = x.SourceReferences
-                                                    let newParentSourceReferences = oldParentSorceReferences |> List.append [ctx.newlyCreatedSourceReference]
-                                                    let newParent = {x with SourceReferences=newParentSourceReferences}
-                                                    let newLines = replaceAModelItemInAModelItemListById currentContext.Lines newParent 
-                                                    x,currentContext.Lines
-                                                | option.None->
-                                                    let neCtxLines = [possibleNewItem] |> List.append currentContext.Lines
-                                                    possibleNewItem,neCtxLines
-                                        // no matter what, we need to add a connector from the previous item to the found/created parent
-                                        let newConnectionModelItemType = Connection({ConnectionType=ParentChild; LhsId=possibleParent.Id; RhsId=currentContext.LastAddedModelItem.Id; SourceReference=ctx.newlyCreatedSourceReference})
-                                        let newlyCreatedModelItem = {(makeNewModelItemInContext ctx newConnectionModelItemType) with ModelParent=possibleParent.Id} 
-                                        let newLinesWithTheConnectionAdded = [newlyCreatedModelItem] |> List.append newLines
-                                        // now update the child to point to the parent we've found
-                                        let childtWereWorkingOn = newLinesWithTheConnectionAdded |> List.find(fun x->x.Id=currentContext.LastAddedModelItem.Id)
-                                        let childWithUpdatedParent = {childtWereWorkingOn with ModelParent=possibleParent.Id}
-                                        let linesWithConnectionAndUpdatedKid = replaceAModelItemInAModelItemListById newLinesWithTheConnectionAdded childWithUpdatedParent
-                                        {currentContext with Lines=linesWithConnectionAndUpdatedKid; LastAddedModelItem=childWithUpdatedParent}
+                                        let whenTargets=ctx.rightHandValue.Split([|","|], System.StringSplitOptions.None)
+                                        // Go through WHEN comma-delimited list. If no WHEN TARGET, add one (the one we just created)
+                                        let newContext = whenTargets |> Array.fold(fun (affectCumulator:ProcessContext) (z:string)->
+                                                            let newConnectionModelItemType = ModelItemType.Connection({ConnectionType=When; LhsId=0; RhsId=0; SourceReference=ctx.newlyCreatedSourceReference})
+                                                            let possibleNewItem = 
+                                                                {
+                                                                    Id=getNextItemNumber()
+                                                                    SourceCodeParent=ctx.closestModelParentOfAnyType.Id
+                                                                    ModelParent=affectCumulator.LastAddedModelItem.Id
+                                                                    ItemType=ModelItemType.ModelItemQualifier(
+                                                                                                    Goal,{
+                                                                                                        Id=0
+                                                                                                        SourceCodeParent=ctx.closestModelParentOfAnyType.Id
+                                                                                                        ModelParent=0
+                                                                                                        ItemType=ModelItemType.None
+                                                                                                        Bucket=Buckets.None
+                                                                                                        Genre=Genres.None
+                                                                                                        AbstractionLevel=AbstractionLevels.None
+                                                                                                        TemporalIndicator=TemporalIndicators.None
+                                                                                                        ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+                                                                                                        ModelItemName=z.Trim()
+                                                                                                        SourceReferences=[ctx.newlyCreatedSourceReference]
+                                                                                                    }
+                                                                                                )
+                                                                    Bucket=Buckets.Behavior // WHEN has to point to a behavior. All WHENs are trigger on behavior flows
+                                                                    Genre=ctx.closestModelParentOfAnyType.Genre
+                                                                    AbstractionLevel=AbstractionLevels.Abstract
+                                                                    TemporalIndicator=ctx.closestModelParentOfAnyType.TemporalIndicator
+                                                                    ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+                                                                    SourceReferences=[ctx.newlyCreatedSourceReference]
+                                                                    ModelItemName=z.Trim()
+                                                                }
+                                                            let possibleAffectsTarget, newLines = 
+                                                                match (isThereAnAbstractModelItemAlreadyWithThisNameInThisContext possibleNewItem affectCumulator) with
+                                                                    | Some x->
+                                                                        // If there is a target for the WHEN that already exists
+                                                                        // Need to update the source references for the existing parent
+                                                                        let oldTargetSorceReferences = x.SourceReferences
+                                                                        let newTargetSourceReferences = oldTargetSorceReferences |> List.append [ctx.newlyCreatedSourceReference]
+                                                                        let newTarget = {x with SourceReferences=newTargetSourceReferences}
+                                                                        let newLines = replaceAModelItemInAModelItemListById affectCumulator.Lines newTarget
+                                                                        x,newLines
+                                                                    | option.None->
+                                                                        let newCtxLines = [possibleNewItem] |> List.append affectCumulator.Lines
+                                                                        possibleNewItem,newCtxLines
+
+                                                            // no matter what, we need to add a connector from the previous item to the found/created parent
+                                                            let newConnectionModelItemType = Connection({ConnectionType=INeedTo; LhsId=affectCumulator.LastAddedModelItem.Id; RhsId=possibleAffectsTarget.Id; SourceReference=ctx.newlyCreatedSourceReference})
+                                                            let newlyCreatedModelItem = {(makeNewModelItemInContext ctx newConnectionModelItemType) with ModelParent=ctx.closestModelParentOfAnyType.Id} 
+                                                            let newLinesWithTheConnectionAdded = [newlyCreatedModelItem] |> List.append newLines
+                                                            {affectCumulator with Lines=newLinesWithTheConnectionAdded}
+                                                            ) currentContext
+                                        newContext
+                                    )
+            };
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch="SOTHAT[^&|^:|^//]*"
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let ctx = establishTokenHandlingContext lineWithTokenConsumed tokenMatchText currentContext lineBeingProcessed 6
+                                        let whenTargets=ctx.rightHandValue.Split([|","|], System.StringSplitOptions.None)
+                                        // Go through WHEN comma-delimited list. If no WHEN TARGET, add one (the one we just created)
+                                        let newContext = whenTargets |> Array.fold(fun (affectCumulator:ProcessContext) (z:string)->
+                                                            let newConnectionModelItemType = ModelItemType.Connection({ConnectionType=When; LhsId=0; RhsId=0; SourceReference=ctx.newlyCreatedSourceReference})
+                                                            let possibleNewItem = 
+                                                                {
+                                                                    Id=getNextItemNumber()
+                                                                    SourceCodeParent=ctx.closestModelParentOfAnyType.Id
+                                                                    ModelParent=affectCumulator.LastAddedModelItem.Id
+                                                                    ItemType=ModelItemType.ModelItem(
+                                                                                                    {
+                                                                                                        Id=0
+                                                                                                        SourceCodeParent=ctx.closestModelParentOfAnyType.Id
+                                                                                                        ModelParent=0
+                                                                                                        ItemType=ModelItemType.None
+                                                                                                        Bucket=Buckets.None
+                                                                                                        Genre=Genres.None
+                                                                                                        AbstractionLevel=AbstractionLevels.None
+                                                                                                        TemporalIndicator=TemporalIndicators.None
+                                                                                                        ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+                                                                                                        ModelItemName=z.Trim()
+                                                                                                        SourceReferences=[ctx.newlyCreatedSourceReference]
+                                                                                                    }
+                                                                                                )
+                                                                    Bucket=Buckets.Behavior // WHEN has to point to a behavior. All WHENs are trigger on behavior flows
+                                                                    Genre=ctx.closestModelParentOfAnyType.Genre
+                                                                    AbstractionLevel=AbstractionLevels.Abstract
+                                                                    TemporalIndicator=ctx.closestModelParentOfAnyType.TemporalIndicator
+                                                                    ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+                                                                    SourceReferences=[ctx.newlyCreatedSourceReference]
+                                                                    ModelItemName=z.Trim()
+                                                                }
+                                                            let possibleAffectsTarget, newLines = 
+                                                                match (isThereAnAbstractModelItemAlreadyWithThisNameInThisContext possibleNewItem affectCumulator) with
+                                                                    | Some x->
+                                                                        // If there is a target for the WHEN that already exists
+                                                                        // Need to update the source references for the existing parent
+                                                                        let oldTargetSorceReferences = x.SourceReferences
+                                                                        let newTargetSourceReferences = oldTargetSorceReferences |> List.append [ctx.newlyCreatedSourceReference]
+                                                                        let newTarget = {x with SourceReferences=newTargetSourceReferences}
+                                                                        let newLines = replaceAModelItemInAModelItemListById affectCumulator.Lines newTarget
+                                                                        x,newLines
+                                                                    | option.None->
+                                                                        let newCtxLines = [possibleNewItem] |> List.append affectCumulator.Lines
+                                                                        possibleNewItem,newCtxLines
+
+                                                            // no matter what, we need to add a connector from the previous item to the found/created parent
+                                                            let newConnectionModelItemType = Connection({ConnectionType=SoThat; LhsId=affectCumulator.LastAddedModelItem.Id; RhsId=possibleAffectsTarget.Id; SourceReference=ctx.newlyCreatedSourceReference})
+                                                            let newlyCreatedModelItem = {(makeNewModelItemInContext ctx newConnectionModelItemType) with ModelParent=ctx.closestModelParentOfAnyType.Id} 
+                                                            let newLinesWithTheConnectionAdded = [newlyCreatedModelItem] |> List.append newLines
+                                                            {affectCumulator with Lines=newLinesWithTheConnectionAdded}
+                                                            ) currentContext
+                                        newContext
                                     )
             };
             {
@@ -948,6 +1146,185 @@
                                         //let linesWithConnectionAndUpdatedKid = replaceAModelItemInAModelItemListById newLinesWithTheConnectionAdded childWithUpdatedParent
                                         //{currentContext with Lines=linesWithConnectionAndUpdatedKid}
                                         {currentContext with Lines=newLinesWithTheConnectionAdded}
+                                    )
+            };
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch="ASA[^&|^:|^//]*"
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let ctx = establishTokenHandlingContext lineWithTokenConsumed tokenMatchText currentContext lineBeingProcessed 4
+                                        let whenTargets=ctx.rightHandValue.Split([|","|], System.StringSplitOptions.None)
+                                        // Go through WHEN comma-delimited list. If no WHEN TARGET, add one (the one we just created)
+                                        let newContext = whenTargets |> Array.fold(fun (affectCumulator:ProcessContext) (z:string)->
+                                                            let newConnectionModelItemType = ModelItemType.Connection({ConnectionType=When; LhsId=0; RhsId=0; SourceReference=ctx.newlyCreatedSourceReference})
+                                                            let possibleNewItem = 
+                                                                {
+                                                                    Id=getNextItemNumber()
+                                                                    SourceCodeParent=ctx.closestModelParentOfAnyType.Id
+                                                                    ModelParent=affectCumulator.LastAddedModelItem.Id
+                                                                    ItemType=ModelItemType.ModelItemQualifier(
+                                                                                                    Actor,{
+                                                                                                        Id=0
+                                                                                                        SourceCodeParent=ctx.closestModelParentOfAnyType.Id
+                                                                                                        ModelParent=0
+                                                                                                        ItemType=ModelItemType.None
+                                                                                                        Bucket=Buckets.None
+                                                                                                        Genre=Genres.None
+                                                                                                        AbstractionLevel=AbstractionLevels.None
+                                                                                                        TemporalIndicator=TemporalIndicators.None
+                                                                                                        ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+                                                                                                        ModelItemName=z.Trim()
+                                                                                                        SourceReferences=[ctx.newlyCreatedSourceReference]
+                                                                                                    }
+                                                                                                )
+                                                                    Bucket=Buckets.Behavior // WHEN has to point to a behavior. All WHENs are trigger on behavior flows
+                                                                    Genre=ctx.closestModelParentOfAnyType.Genre
+                                                                    AbstractionLevel=AbstractionLevels.Abstract
+                                                                    TemporalIndicator=ctx.closestModelParentOfAnyType.TemporalIndicator
+                                                                    ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+                                                                    SourceReferences=[ctx.newlyCreatedSourceReference]
+                                                                    ModelItemName=z.Trim()
+                                                                }
+                                                            let possibleAffectsTarget, newLines = 
+                                                                match (isThereAnAbstractModelItemAlreadyWithThisNameInThisContext possibleNewItem affectCumulator) with
+                                                                    | Some x->
+                                                                        // If there is a target for the WHEN that already exists
+                                                                        // Need to update the source references for the existing parent
+                                                                        let oldTargetSorceReferences = x.SourceReferences
+                                                                        let newTargetSourceReferences = oldTargetSorceReferences |> List.append [ctx.newlyCreatedSourceReference]
+                                                                        let newTarget = {x with SourceReferences=newTargetSourceReferences}
+                                                                        let newLines = replaceAModelItemInAModelItemListById affectCumulator.Lines newTarget
+                                                                        x,newLines
+                                                                    | option.None->
+                                                                        let newCtxLines = [possibleNewItem] |> List.append affectCumulator.Lines
+                                                                        possibleNewItem,newCtxLines
+
+                                                            // no matter what, we need to add a connector from the previous item to the found/created parent
+                                                            let newConnectionModelItemType = Connection({ConnectionType=AsA; LhsId=affectCumulator.LastAddedModelItem.Id; RhsId=possibleAffectsTarget.Id; SourceReference=ctx.newlyCreatedSourceReference})
+                                                            let newlyCreatedModelItem = {(makeNewModelItemInContext ctx newConnectionModelItemType) with ModelParent=ctx.closestModelParentOfAnyType.Id} 
+                                                            let newLinesWithTheConnectionAdded = [newlyCreatedModelItem] |> List.append newLines
+                                                            {affectCumulator with Lines=newLinesWithTheConnectionAdded}
+                                                            ) currentContext
+                                        newContext
+                                    )
+            };
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch="CONTAINS[^&|^:|^//]*"
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let ctx = establishTokenHandlingContext lineWithTokenConsumed tokenMatchText currentContext lineBeingProcessed 8
+                                        let whenTargets=ctx.rightHandValue.Split([|","|], System.StringSplitOptions.None)
+                                        // Go through CONTAINS comma-delimited list. If no CONTAINS TARGET, add one (the one we just created)
+                                        let newContext = whenTargets |> Array.fold(fun (affectCumulator:ProcessContext) (z:string)->
+                                                            let newConnectionModelItemType = ModelItemType.Connection({ConnectionType=Contains; LhsId=0; RhsId=0; SourceReference=ctx.newlyCreatedSourceReference})
+                                                            let possibleNewItem = 
+                                                                {
+                                                                    Id=getNextItemNumber()
+                                                                    SourceCodeParent=ctx.closestModelParentOfAnyType.Id
+                                                                    ModelParent=affectCumulator.LastAddedModelItem.Id
+                                                                    ItemType=ModelItemType.ModelItemQualifier(
+                                                                                                    Attribute,{
+                                                                                                        Id=0
+                                                                                                        SourceCodeParent=ctx.closestModelParentOfAnyType.Id
+                                                                                                        ModelParent=0
+                                                                                                        ItemType=ModelItemType.None
+                                                                                                        Bucket=Buckets.None
+                                                                                                        Genre=Genres.None
+                                                                                                        AbstractionLevel=AbstractionLevels.None
+                                                                                                        TemporalIndicator=TemporalIndicators.None
+                                                                                                        ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+                                                                                                        ModelItemName=z.Trim()
+                                                                                                        SourceReferences=[ctx.newlyCreatedSourceReference]
+                                                                                                    }
+                                                                                                )
+                                                                    Bucket=Buckets.Behavior // WHEN has to point to a behavior. All WHENs are trigger on behavior flows
+                                                                    Genre=ctx.closestModelParentOfAnyType.Genre
+                                                                    AbstractionLevel=AbstractionLevels.Abstract
+                                                                    TemporalIndicator=ctx.closestModelParentOfAnyType.TemporalIndicator
+                                                                    ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+                                                                    SourceReferences=[ctx.newlyCreatedSourceReference]
+                                                                    ModelItemName=z.Trim()
+                                                                }
+                                                            let possibleAffectsTarget, newLines = 
+                                                                match (isThereAnAbstractModelItemAlreadyWithThisNameInThisContext possibleNewItem affectCumulator) with
+                                                                    | Some x->
+                                                                        // If there is a target for the WHEN that already exists
+                                                                        // Need to update the source references for the existing parent
+                                                                        let oldTargetSorceReferences = x.SourceReferences
+                                                                        let newTargetSourceReferences = oldTargetSorceReferences |> List.append [ctx.newlyCreatedSourceReference]
+                                                                        let newTarget = {x with SourceReferences=newTargetSourceReferences}
+                                                                        let newLines = replaceAModelItemInAModelItemListById affectCumulator.Lines newTarget
+                                                                        x,newLines
+                                                                    | option.None->
+                                                                        let newCtxLines = [possibleNewItem] |> List.append affectCumulator.Lines
+                                                                        possibleNewItem,newCtxLines
+
+                                                            // no matter what, we need to add a connector from the previous item to the found/created parent
+                                                            let newConnectionModelItemType = Connection({ConnectionType=Contains; LhsId=affectCumulator.LastAddedModelItem.Id; RhsId=possibleAffectsTarget.Id; SourceReference=ctx.newlyCreatedSourceReference})
+                                                            let newlyCreatedModelItem = {(makeNewModelItemInContext ctx newConnectionModelItemType) with ModelParent=ctx.closestModelParentOfAnyType.Id} 
+                                                            let newLinesWithTheConnectionAdded = [newlyCreatedModelItem] |> List.append newLines
+                                                            {affectCumulator with Lines=newLinesWithTheConnectionAdded}
+                                                            ) currentContext
+                                        newContext
+                                    )
+            };
+            {
+                SearchDirection=FindFirstMatch
+                RegexMatch="PARENT[^&|^:|^//]*"
+                MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
+                                        let ctx = establishTokenHandlingContext lineWithTokenConsumed tokenMatchText currentContext lineBeingProcessed 7
+                                        let newConnectionModelItemType = ModelItemType.Connection({ConnectionType=ParentChild; LhsId=0; RhsId=0; SourceReference=ctx.newlyCreatedSourceReference})
+                                        let possibleNewItem = 
+                                            {
+                                                Id=getNextItemNumber()
+                                                SourceCodeParent=ctx.closestModelParentOfAnyType.Id
+                                                ModelParent=0
+                                                ItemType=ModelItemType.ModelItem(
+                                                                                {
+                                                                                    Id=0
+                                                                                    SourceCodeParent=ctx.closestModelParentOfAnyType.Id
+                                                                                    ModelParent=0
+                                                                                    ItemType=ModelItemType.None
+                                                                                    Bucket=Buckets.None
+                                                                                    Genre=Genres.None
+                                                                                    AbstractionLevel=AbstractionLevels.None
+                                                                                    TemporalIndicator=TemporalIndicators.None
+                                                                                    ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+                                                                                    ModelItemName=ctx.rightHandValue.Trim()
+                                                                                    SourceReferences=[ctx.newlyCreatedSourceReference]
+                                                                                }
+                                                                            )
+                                                Bucket=ctx.closestModelParentOfAnyType.Bucket
+                                                Genre=ctx.closestModelParentOfAnyType.Genre
+                                                AbstractionLevel=AbstractionLevels.Abstract
+                                                TemporalIndicator=ctx.closestModelParentOfAnyType.TemporalIndicator
+                                                ItemAnnotation={Notes=[];Questions=[];ToDos=[];WorkHistory=[]}
+                                                SourceReferences=[ctx.newlyCreatedSourceReference]
+                                                ModelItemName=ctx.rightHandValue.Trim()
+                                            }
+                                        // if no parent, add one (the one we just created)
+                                        let possibleParent, newLines = 
+                                            match (isThereAnAbstractModelItemAlreadyWithThisNameInThisContext possibleNewItem currentContext) with
+                                                | Some x->
+                                                    // If there is a parent
+                                                    // Need to update the source references for the existing parent
+                                                    let oldParentSorceReferences = x.SourceReferences
+                                                    let newParentSourceReferences = oldParentSorceReferences |> List.append [ctx.newlyCreatedSourceReference]
+                                                    let newParent = {x with SourceReferences=newParentSourceReferences}
+                                                    let newLines = replaceAModelItemInAModelItemListById currentContext.Lines newParent 
+                                                    x,currentContext.Lines
+                                                | option.None->
+                                                    let neCtxLines = [possibleNewItem] |> List.append currentContext.Lines
+                                                    possibleNewItem,neCtxLines
+                                        // no matter what, we need to add a connector from the previous item to the found/created parent
+                                        let newConnectionModelItemType = Connection({ConnectionType=ParentChild; LhsId=possibleParent.Id; RhsId=currentContext.LastAddedModelItem.Id; SourceReference=ctx.newlyCreatedSourceReference})
+                                        let newlyCreatedModelItem = {(makeNewModelItemInContext ctx newConnectionModelItemType) with ModelParent=possibleParent.Id} 
+                                        let newLinesWithTheConnectionAdded = [newlyCreatedModelItem] |> List.append newLines
+                                        // now update the child to point to the parent we've found
+                                        let childtWereWorkingOn = newLinesWithTheConnectionAdded |> List.find(fun x->x.Id=currentContext.LastAddedModelItem.Id)
+                                        let childWithUpdatedParent = {childtWereWorkingOn with ModelParent=possibleParent.Id}
+                                        let linesWithConnectionAndUpdatedKid = replaceAModelItemInAModelItemListById newLinesWithTheConnectionAdded childWithUpdatedParent
+                                        {currentContext with Lines=linesWithConnectionAndUpdatedKid; LastAddedModelItem=childWithUpdatedParent}
                                     )
             };
             {
@@ -1064,30 +1441,6 @@
             }
         |]
 
-
-
-
-
-    // Compilation Language
-    let ItemRelationTokens = [|
-        ("HASA ", Buckets.Structure);
-        ("CONTAINS ", Buckets.Structure);
-        ("WHEN ", Buckets.Behavior);
-        ("ASA ", Buckets.Behavior);
-        ("INEEDTO ", Buckets.Behavior);
-        ("SOTHAT ", Buckets.Behavior);
-        ("INITIAL ", Buckets.Behavior);
-        ("FINAL ", Buckets.Behavior);
-        ("MERGENODE ", Buckets.Behavior);
-        ("MERGE ", Buckets.Behavior);
-        ("FORK ", Buckets.Behavior);
-        ("DO ", Buckets.Behavior);
-        ("DATA ", Buckets.Supplemental);
-        |]
-    let ItemRelationTokenVals = ItemRelationTokens |> Array.map(fun x->
-            let a,b = x
-            a
-        )
 
 
 

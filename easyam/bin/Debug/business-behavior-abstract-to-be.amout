@@ -1,37 +1,13 @@
 BUSINESS BEHAVIOR ABSTRACT TO-BE
     Perform Procedure
-    Schedule Appointment
-    Plan Daily Work
-    Reorder Supplies
     Review Patient History
-    Record Patient Treatment
-    Conduct Patient Follow-up Call
     Buy Lemonade
-    Count Inventory
-    Recieve Shipments
-    DO Review financials
-    DATA notes on financials
-    FORKBY Financials
-    Business OODA Loop no longer than a month
-    No more than 10% of reserve capital allocated for growth
-    TO-BE Items.
+    Plan new store
     Plan Office Load
     See Appointment Screen
-    See Appointment Screen (with my data)
-    Make Appointment (no verification)
-    Make Appointment (and save)
-    View Appointments
-    TO-BE Items
     Buy Lemonade (IM/Text Hack)
-    Use Coupon (Gesture-based)
-    TASK
-    TESTGROUP
-    BUGS
 
     NOTES  //Notes not attached to any specific item
-        There may be some kind of office supply system to develop
-        this is the UserStory short name
     QUESTIONS  //Questions not attached to any specific item
-        How do they tell the difference between office supplies and janitorial supplies?
     TODO  //To-do items not attached to any specific item
     WORK  //Work not attached to any specific item

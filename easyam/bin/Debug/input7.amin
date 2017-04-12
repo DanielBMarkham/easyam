@@ -13,19 +13,19 @@ there cannot be conflicting definitions
 
 Domain (structure) models are forced into HASA DAGs
 It's usually good to keep noun clauses singular and capitalize them
+MASTER DOMAIN MODEL
+	Lemonade HASA Recipe
+	Recipe HASA Ingredient
+	Recipe CONTAINS Instructions
 
-Lemonade HASA Recipe
-Recipe HASA Ingredient
-Recipe CONTAINS Instruction
+	Ingredients HASA Lemon
+	Ingredients HASA Sugar
 
-Ingredients HASA Lemon
-Ingredients HASA Sugar
+	Order HASA Glass
 
-Order HASA Glass
+	Store HASA Menu
+	Store HASA Table
+	Store HASA Schedule
+	Store HASA Employee
 
-Store HASA Menu
-Store HASA Table
-Store HASA Schedule
-Store HASA Employee
-
-Employee CONTAINS Mixer Skills
+	Employee CONTAINS Mixer Skills

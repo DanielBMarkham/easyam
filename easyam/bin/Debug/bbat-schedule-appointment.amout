@@ -1,7 +1,15 @@
 BUSINESS BEHAVIOR ABSTRACT TO-BE
     Schedule Appointment
+        WHEN I'm in pain, concerned about my health
+        ASA Potential Customer
+        INEEDTO Schedule an Appointment
+        SOTHAT I can receive service
+
         NOTES
-            This seems to be a hot button with Joe
+            Just be able to bring up a dummy page
+            Include my information
+            Just enter in all data. Any front-end validation in-place
+            Verify it was saved by having a chron DB dump sent to a page that users can monitor
             Appointments cannot be made same-day
         QUESTIONS
             Are these appointment in hour intervals? Half-hour? Variable?
@@ -9,9 +17,6 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
         WORK
 
         REALIZATIONS
-            See Appointment Screen
-            See Appointment Screen (with my data)
-            Make Appointment (no verification)
-            Make Appointment (and save)
+            I can receive service
 
         FEEDBACK

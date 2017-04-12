@@ -1,0 +1,15 @@
+BUSINESS STRUCTURE ABSTRACT TO-BE
+    Store
+        HASA Menu, Table, Schedule, Employee
+
+        NOTES
+        QUESTIONS
+        TODO
+        WORK
+
+        REALIZATIONS
+            Menu
+            Table
+            Employee
+
+        FEEDBACK

@@ -1,5 +1,4 @@
 C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\easyam.XML
-C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.fsprojResolveAssemblyReference.cache
 C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.exe
 C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.pdb
 C:\Users\Daniel Markham\Dropbox\source\git-repos\easyam\easyam\bin\Debug\easyam.exe.config
@@ -40,3 +39,18 @@ E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FParsecCS.xml
 E:\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FSharp.Core.xml
 E:\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.exe
 E:\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.pdb
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\easyam.exe.config
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\easyam.exe
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\easyam.pdb
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FParsec.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FParsecCS.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FSharp.Core.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FSharp.Data.TypeProviders.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\mscorlib.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\System.Data.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\System.Data.Linq.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\System.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\System.Numerics.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FParsec.xml
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FParsecCS.xml
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\FSharp.Core.xml

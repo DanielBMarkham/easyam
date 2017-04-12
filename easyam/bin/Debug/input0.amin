@@ -16,7 +16,9 @@ MASTER DOMAIN MODEL
 
 MASTER BACKLOG
 	Perform Procedure
+		WHEN the dogs come home
 	Schedule Appointment // This seems to be a hot button with Joe
+		TODO: Watch an appointment to see what happens
 	Plan Daily Work
 		NOTE: used by the office manager and others (?) to optimize day
 	Reorder Supplies&sampledata=needed

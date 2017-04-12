@@ -1,5 +1,6 @@
 BUSINESS BEHAVIOR REALIZED TO-BE
-    Make Appointment (and save)
+    Make Appointment (and save) PARENT Schedule Appointment
+
         NOTES
             Verify it was saved by having a chron DB dump sent to a page that users can monitor
             Verify it was saved by having a chron DB dump sent to a page that users can monitor

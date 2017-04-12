@@ -6,6 +6,8 @@
     open System.Net
 
 
+
+
     let commandLinePrintWhileEnter (opts:ConfigBase) fnPrintMe =
                 // Entering program command line report
             match opts.verbose.parameterValue with
@@ -207,6 +209,7 @@
 
     type ItemReport =
         {
+            ItemQualifiers:(ItemConnectorType*ModelItem) list
             ItemDetail:ModelItem list
             Notes:ModelItem list
             Questions:ModelItem list
@@ -218,6 +221,30 @@
         with member self.AllTogether =
                 List.concat [self.ItemDetail; self.Notes; self.Questions; self.ToDos; self.Work; self.Realizations; self.Feedback]
     let createItemReport (modelItems:ModelItem list) (selectedModelItem:ModelItem) =
+        // add any item qualifiers (modelItem juniors) that apply
+        let qualifierConnectionList = modelItems |> List.choose(fun z->
+            match z.ItemType with
+                |Connection(c)->
+                    match c.ConnectionType with
+                        |ParentChild->option.None
+                        |_->
+                            if c.LhsId=selectedModelItem.Id
+                                then
+                                    let targetItem = getModelItemById modelItems c.RhsId                                 
+                                    Some(c.ConnectionType, targetItem)
+                                else option.None
+                |_->option.None
+            )
+//        let sortedQualifierConnection = qualifierConnectionList |> Seq.groupBy(fun z->
+//            (fst z))
+//        sortedqualifierconnection |> seq.iter(fun y->
+//            switemdetailtextfilewriter.write("        " + (fst y).tostring().toupper() + " ")
+//            //(snd y) |> seq.iter(fun z->switemdetailtextfilewriter.write(" " + (snd z).modelitemname))
+//            let listofstringstojoin = (snd y) |> seq.map(fun z->(snd z).modelitemname)
+//            let linetowrite = string.concat ", " listofstringstojoin
+//            switemdetailtextfilewriter.writeline(linetowrite)
+//            )
+
         let collectedNotes= modelItems |> List.filter(fun x->
             match x.ItemType with
                 |Note(_)->x.ModelParent=selectedModelItem.Id
@@ -244,6 +271,7 @@
                 |_->false
             )
         {
+            ItemQualifiers=qualifierConnectionList
             ItemDetail=[]
             Notes=collectedNotes
             Questions=collectedQuestions
@@ -256,8 +284,8 @@
         genre.ToString() + " " + bucket.ToString() + " " + abstractionLevel.ToString() + " " + temporalIndicator.ToString()
     let writeATableCell (sb:System.Text.StringBuilder) s =
         sb.Append ("    <td>" + s + "</td>\n") |> ignore
-    let getModelItemById (modelItems:ModelItem list) (id:int) =
-        modelItems |> List.find(fun x->x.Id=id)
+//    let getModelItemById (modelItems:ModelItem list) (id:int) =
+//        modelItems |> List.find(fun x->x.Id=id)
     let filterModelItemsByTag (modelItems:ModelItem list) (genre:Genres) (abstractionLevel:AbstractionLevels) (temporalIndicator:TemporalIndicators) (bucket:Buckets) =
         modelItems |> List.filter(fun x->
             ((x.Genre=genre) || (genre=Genres.Unknown))
@@ -368,6 +396,18 @@
         swItemDetailTextFileWriter.WriteLine "<body>"
         swItemDetailTextFileWriter.WriteLine ("<h2>" + selectedItem.ToModelHeading + "</h2>")
         swItemDetailTextFileWriter.WriteLine ("<h1>" + selectedItem.ModelItemName + "</h1>")
+
+        swItemDetailTextFileWriter.WriteLine("<p>")
+        let sortedQualifierConnection = relatedItems.ItemQualifiers |> Seq.groupBy(fun z->
+            (fst z))
+        sortedQualifierConnection |> Seq.iter (fun y->
+            swItemDetailTextFileWriter.Write("        " + (fst y).ToString().ToUpper() + " ")
+            let listofstringstojoin = (snd y) |> Seq.map(fun z->(snd z).ModelItemName)
+            let linetowrite = String.concat ", " listofstringstojoin
+            swItemDetailTextFileWriter.WriteLine(linetowrite)
+            )
+        swItemDetailTextFileWriter.WriteLine("</p>")
+
         swItemDetailTextFileWriter.WriteLine ()
         if relatedItems.ItemDetail.Length>0
             then
@@ -635,7 +675,27 @@
         System.IO.File.Delete(itemDetailFileName)
         let swItemDetailTextFileWriter = System.IO.File.CreateText(itemDetailFileName)
         swItemDetailTextFileWriter.WriteLine selectedItem.ToModelHeading
-        swItemDetailTextFileWriter.WriteLine("    " + selectedItem.ModelItemName)
+        swItemDetailTextFileWriter.Write("    " + selectedItem.ModelItemName)
+        // add a parent in, if applicable
+        if selectedItem.AbstractionLevel=AbstractionLevels.Realized
+            then
+                if selectedItem.ModelParent <> 0
+                    then
+                        let parent = getModelItemById modelItems selectedItem.ModelParent
+                        swItemDetailTextFileWriter.WriteLine(" PARENT " + parent.ModelItemName)
+                        else swItemDetailTextFileWriter.WriteLine("#### MISSING PARENT ####")
+            else swItemDetailTextFileWriter.WriteLine()
+//        // add any item qualifiers (modelItem juniors) that apply
+        let sortedQualifierConnection = relatedItems.ItemQualifiers |> Seq.groupBy(fun z->
+            (fst z))
+        sortedQualifierConnection |> Seq.iter (fun y->
+            swItemDetailTextFileWriter.Write("        " + (fst y).ToString().ToUpper() + " ")
+            let listofstringstojoin = (snd y) |> Seq.map(fun z->(snd z).ModelItemName)
+            let linetowrite = String.concat ", " listofstringstojoin
+            swItemDetailTextFileWriter.WriteLine(linetowrite)
+            )
+
+        swItemDetailTextFileWriter.WriteLine("")
         swItemDetailTextFileWriter.WriteLine("        NOTES")
         relatedItems.Notes |> List.iter(fun k->
             match k.ItemType with

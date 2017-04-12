@@ -28,7 +28,7 @@ LABEL: Product Backlog
 		See Appointment Screen PARENT Schedule Appointment
 			NOTE: Just be able to bring up a dummy page
 		See Appointment Screen (with my data) PARENT Schedule Appointment &Points=8
-			NOTE: Include my information
+			NOTE: Include my relevant information
 		Make Appointment (no verification) PARENT Schedule Appointment &Points=3
 			NOTE: Just enter in all data. Any front-end validation in-place
 		Make Appointment (and save) PARENT Schedule Appointment &Points=2

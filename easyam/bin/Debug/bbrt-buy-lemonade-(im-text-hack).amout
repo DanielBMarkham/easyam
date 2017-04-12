@@ -1,5 +1,6 @@
 BUSINESS BEHAVIOR REALIZED TO-BE
-    Buy Lemonade (IM/Text Hack)
+    Buy Lemonade (IM/Text Hack) PARENT Buy Lemonade
+
         NOTES
             People SMS their order to our bot while in-line. Order placed automatically
         QUESTIONS

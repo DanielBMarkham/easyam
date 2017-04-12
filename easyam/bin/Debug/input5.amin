@@ -32,11 +32,11 @@ dozens of conversations about all kinds of other things that affect
 this desired behavior
 
 BUSINESS BEHAVIOR ABSTRACT
-
-WHEN the business financials look good for growth
-ASA District Manager, Franchise Owner
-INEEDTO create potential new store location list // this is the UserStory short name
-SOTHAT the organization can continue to grow
+	Plan new store
+		WHEN the business financials look good for growth
+		ASA District Manager, Franchise Owner
+		INEEDTO create potential new store location list // this is the UserStory short name
+		SOTHAT the organization can continue to grow
 
 INITIAL Business financials are created
 	DO Review financials
