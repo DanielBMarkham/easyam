@@ -9,9 +9,9 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>easyam</RootNamespace>
     <AssemblyName>easyam</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFSharpCoreVersion>4.3.0.0</TargetFSharpCoreVersion>
+    <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <Name>easyam</Name>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -71,6 +71,10 @@
     <Compile Include="..\common\Persist.fs">
       <Link>Persist.fs</Link>
     </Compile>
+    <Compile Include="EasyamParsingEngine.fs" />
+    <Compile Include="FreeFormTextTests.fs" />
+    <Compile Include="initialProcessingOfIncomingFileLinesTest.fs" />
+    <Compile Include="MiscSingleWordCommandTests.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <None Include="post-build.ps1" />
@@ -86,14 +90,23 @@
       <HintPath>packages\FParsec.1.0.2\lib\net40-client\FParsecCS.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FSharp.Core">
+      <HintPath>packages\FSharp.Core.3.1.2.5\lib\net40\FSharp.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FSharp.Data.TypeProviders, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>True</SpecificVersion>
+    </Reference>
+    <Reference Include="FsUnit.NUnit">
+      <HintPath>packages\FsUnit.3.0.0\lib\net45\FsUnit.NUnit.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <Private>True</Private>
       <SpecificVersion>True</SpecificVersion>
     </Reference>
-    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <Reference Include="nunit.framework">
+      <HintPath>packages\NUnit.3.6.0\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

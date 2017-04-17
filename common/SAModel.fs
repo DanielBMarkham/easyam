@@ -685,11 +685,11 @@
                 SearchDirection=FindFirstMatch
                 RegexMatch=makeRegexToken RegexTokenMacth.MATCH_TO_END_OF_LINE stopTokenString   
                 MakeNewModelItemAndUpdateStack=(fun(lineWithTokenConsumed:string, tokenMatchText:string, currentContext:ProcessContext, lineBeingProcessed)->
-                                        let tokenMatch=sortedStopTokens|>List.find(fun x->System.Text.RegularExpressions.Regex.IsMatch(tokenMatchText,x))
-                                        let tokenMatchLength=tokenMatch.Length
+                                        let tokenMatch=sortedStopTokens|>List.find(fun x->System.Text.RegularExpressions.Regex.IsMatch(tokenMatchText,(fst x)))
+                                        let tokenMatchLength=(fst tokenMatch).Length
                                         let ctx = establishTokenHandlingContext lineWithTokenConsumed tokenMatchText currentContext lineBeingProcessed tokenMatchLength
                                         let newModelItemType = 
-                                            match tokenMatch with
+                                            match (fst tokenMatch) with
                                             |"NOTE:" | "//"->
                                                 Note({Text=ctx.rightHandValue; SourceReference=ctx.newlyCreatedSourceReference})
                                             | "Q:" | "QUESTION"->
