@@ -41,6 +41,7 @@
             Message:string
             SourceLine:IncomingLine
         }
+    type CompilerReturn = CompilerMessage list*ModelItem list
 
     let initialProcessingOfIncomingFileLines (fileLoadingState:FileLoadingState) (rawLines:string []) =
         let whiteSpaceRegex=new System.Text.RegularExpressions.Regex("^\s+")
@@ -83,10 +84,42 @@
                         SourceEmptyLinesStrippedLineNumber= fileLoadingState.IncomingLineCountWithEmptyLinesDeletedCount+i+1
                 }
             )
+    let stuffModel (incomingLines:IncomingLine []):CompilerReturn =
+        let compilerMessageList = List.empty<CompilerMessage>
+        let modelItemList = List.empty<ModelItem>
+        // process entire line
+        let compiledContext = 
+            incomingLines |> Array.fold(fun (lineProcessorAccumulator:CompilerReturn) incomingLineBeingProcessed->
+                let freeTextRegex = new System.Text.RegularExpressions.Regex("^.*$")
+                let regexMatches = freeTextRegex.Matches(incomingLineBeingProcessed.LineWithoutLeadingSpaces)
+                // process multiple tokens inside a line
+                let newCompilerReturn =
+                    if regexMatches.Count>0 
+                        then
+                            let newModelItem =  
+                                let newModelItemType = Note({Text=regexMatches.[0].Value; SourceReference={File=incomingLineBeingProcessed.File; LineNumber=incomingLineBeingProcessed.SourceRawLineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}})
+                                {
+                                    defaultModelItem with
+                                        Id=getNextItemNumber()
+                                        SourceCodeParent=0
+                                        ModelParent=0
+                                        ItemType= newModelItemType
+                                        SourceReferences=[{File=incomingLineBeingProcessed.File; LineNumber=incomingLineBeingProcessed.SourceRawLineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}]
+                                }                                
+                                 
+                            let newModelItems = (snd lineProcessorAccumulator) |> List.append [newModelItem]
+                            ((fst lineProcessorAccumulator), newModelItems)
+                        else 
+                            lineProcessorAccumulator
+                newCompilerReturn
+                ) (compilerMessageList,modelItemList)
 
+        compiledContext
 
-    let parseLines (rawLines:string[]) : CompilerMessage list*ModelItemType list = 
+    let parseLines (rawLines:string[]) : CompilerReturn = 
         let fileLoadingStatus=dummyFileLoadingStatus
-        let ret = initialProcessingOfIncomingFileLines fileLoadingStatus rawLines
-        (List.empty<CompilerMessage>, List.empty<ModelItemType>)
+        let incomingLines = initialProcessingOfIncomingFileLines fileLoadingStatus rawLines
+        let stufferCompilerMessages, stuffedNotValidatedModel  =  stuffModel incomingLines
+        (stufferCompilerMessages, stuffedNotValidatedModel)
+        
 
