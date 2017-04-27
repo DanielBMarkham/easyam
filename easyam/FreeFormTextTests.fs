@@ -38,9 +38,25 @@
         let compilerMessages,modelItems = parseLines testText
         modelItems |> should haveLength 2
     [<Test>]
-    let ``FREEFORM TEXT: Single line freeform text has proper result test``() =
+    let ``FREEFORM TEXT: Single line freeform text has proper result NodeType test``() =
         let testText = [|"This is some freeform text"|]
         let compilerMessages,modelItems = parseLines testText
         let objType=modelItems.Item(0).ItemType.ToString()
         objType.GetLeft 5 |> should equal "NOTE:"
+    [<Test>]
+    let ``FREEFORM TEXT: Single line freeform text has proper result Bucket tag test``() =
+        let testText = [|"This is some freeform text"|]
+        let compilerMessages,modelItems = parseLines testText
+        modelItems.Item(0).Bucket |> should equal Buckets.None
+    [<Test>]
+    let ``FREEFORM TEXT: Single line freeform text has proper result Abstraction Level tag test``() =
+        let testText = [|"This is some freeform text"|]
+        let compilerMessages,modelItems = parseLines testText
+        modelItems.Item(0).AbstractionLevel |> should equal AbstractionLevels.None
+    [<Test>]
+    let ``FREEFORM TEXT: Single line freeform text has proper result temporal tag test``() =
+        let testText = [|"This is some freeform text"|]
+        let compilerMessages,modelItems = parseLines testText
+        modelItems.Item(0).TemporalIndicator |> should equal TemporalIndicators.None
+        
         
