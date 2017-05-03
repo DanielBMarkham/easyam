@@ -90,24 +90,45 @@
         // process entire line
         let compiledContext = 
             incomingLines |> Array.fold(fun (lineProcessorAccumulator:CompilerReturn) incomingLineBeingProcessed->
-                let freeTextRegex = new System.Text.RegularExpressions.Regex("^.*$")
+                //let matchUntilNextToken="(?:(?!//|&|:|PARENT|HASA|AFFECTS|CONTAINS|WORK:|Q:|TODO:|NOTE:|MASTER DOMAIN MODEL|MASTER BACKLOG|MASTER SUPPLEMENTAL MODEL|PRODUCT BACKLOG|BUSINESS BEHAVIOR ABSTRACT|WHEN|ASA|INEEDTO|SOTHAT).)*"
+                let matchUntilNextToken= ".*(?:(?!Q:).)*"
+                let matchCommandItselfRegex= new System.Text.RegularExpressions.Regex("(Q:)")
+                let matchATokenRegex= new System.Text.RegularExpressions.Regex(".*(?!Q:)")
+                let freeTextRegex = new System.Text.RegularExpressions.Regex("^" + matchUntilNextToken)
                 let regexMatches = freeTextRegex.Matches(incomingLineBeingProcessed.LineWithoutLeadingSpaces)
-                // process multiple tokens inside a line
+                // process multiple tokens inside a line 
                 let newCompilerReturn =
                     if regexMatches.Count>0 
                         then
-                            let newModelItem =  
-                                let newModelItemType = Note({Text=regexMatches.[0].Value; SourceReference={File=incomingLineBeingProcessed.File; LineNumber=incomingLineBeingProcessed.SourceRawLineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}})
-                                {
-                                    defaultModelItem with
-                                        Id=getNextItemNumber()
-                                        SourceCodeParent=0
-                                        ModelParent=0
-                                        ItemType= newModelItemType
-                                        SourceReferences=[{File=incomingLineBeingProcessed.File; LineNumber=incomingLineBeingProcessed.SourceRawLineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}]
-                                }                                
-                                 
-                            let newModelItems = (snd lineProcessorAccumulator) |> List.append [newModelItem]
+                            let newModelItem =
+                                match matchCommandItselfRegex.IsMatch(regexMatches.[0].Value) with
+                                    |true-> // there's a command here
+                                        let commandFound = matchCommandItselfRegex.Matches(regexMatches.[0].Value).[0].Value
+                                        // Just question for now
+                                        let theQuestionCommand = matchATokenRegex.Matches(commandFound)
+                                        let textWithoutCommand = if theQuestionCommand.Count>0 then commandFound.Substring (theQuestionCommand.[0].Value.Length) else commandFound
+                                        let newModelItemType = Question({Text=textWithoutCommand; SourceReference={File=incomingLineBeingProcessed.File; LineNumber=incomingLineBeingProcessed.SourceRawLineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}})
+                                        {
+                                            defaultModelItem with
+                                                Id=getNextItemNumber()
+                                                SourceCodeParent=0
+                                                ModelParent=0
+                                                ItemType= newModelItemType
+                                                SourceReferences=[{File=incomingLineBeingProcessed.File; LineNumber=incomingLineBeingProcessed.SourceRawLineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}]
+                                        }                                
+
+                                    |false->  // it's just text until the end of the line
+                                        let newModelItemType = Note({Text=regexMatches.[0].Value; SourceReference={File=incomingLineBeingProcessed.File; LineNumber=incomingLineBeingProcessed.SourceRawLineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}})
+                                        {
+                                            defaultModelItem with
+                                                Id=getNextItemNumber()
+                                                SourceCodeParent=0
+                                                ModelParent=0
+                                                ItemType= newModelItemType
+                                                SourceReferences=[{File=incomingLineBeingProcessed.File; LineNumber=incomingLineBeingProcessed.SourceRawLineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}]
+                                        }                                
+                            let oldModelItemList = (snd lineProcessorAccumulator)
+                            let newModelItems = [newModelItem] |> List.append  oldModelItemList
                             ((fst lineProcessorAccumulator), newModelItems)
                         else 
                             lineProcessorAccumulator
