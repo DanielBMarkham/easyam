@@ -4,22 +4,63 @@
     open Utils
     open Persist
 
-    let CommandTokens = [
-        "NOTE:";
-        "NOTE ";
-        "NOTES ";
-        "//";
-        "Q:";
-        "QUESTION:";
-        "QUESTION ";
-        "QUESTIONS ";
-        "TODO:";
-        "TODO ";
-        "TODOS ";
-        "WORK:";
-        "WORK ";
-        "WORKS "
+    let ModelItemIntegerFactory = 
+        let counter = ref 0
+        fun () -> 
+            counter.Value <- !counter + 1
+            !counter
+    let getNextModelItemNumber()=IntegerFactory()
+
+    [<NoComparison>]
+    type TOKEN_TYPE =
+        |RELATIVE_LOCATOR
+        |ABSOLUTE_LOCATOR
+        |JOINER
+    [<NoComparison>]
+    type TOKEN_TARGET_TYPE =
+        |SINGLE_TARGET
+        |MULTIPLE_TARGETS
+    [<NoComparison>]
+    type TOKEN_CATEGORY = 
+        |BEHAVIOR
+        |TASKS
+        |STRUCTURE
+        |SUPPLEMENTAL
+        |MISC
+        |HDD
+        |SCOPING
+        |SHORTCUT
+        |CONNECTIVE
+    [<NoComparison>]
+    type EASYAM_TOKEN =
+        {
+            Type:TOKEN_TYPE
+            TargetType:TOKEN_TARGET_TYPE
+            Category:TOKEN_CATEGORY
+            Token:string
+        }
+    let EasyAMTokens = 
+        [
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="NOTE "};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="NOTE:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;          Token="NOTES "};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="//"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="Q:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="QUESTION: "};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="QUESTION "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;          Token="QUESTIONS "};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="TODO: "};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="TODO "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;          Token="TODOS "};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="WORK: "};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="WORK "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;          Token="WORKS "}
+            //{Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=TASKS;         Token="T: "};
+            //{Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=TASKS;         Token="TASK: "};
+            //{Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=TASKS;         Token="TASK "};
+            //{Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TASKS;         Token="TASKS "};
         ]
+    let CommandTokens = EasyAMTokens |> List.map(fun x->x.Token)
 
     ///
     /// TOKEN PROCESSING. TAKES A LINE AND MAKES A LIST OF COMMANDS AND VALUES
@@ -157,6 +198,14 @@
             SourceLine:IncomingLine
         }
     [<NoComparison>]
+    type ModelItemLocation =
+        {
+            Bucket:Buckets
+            Genre:Genres
+            AbstractionLevel:AbstractionLevels
+            TemporalIndicator:TemporalIndicators
+        }
+    [<NoComparison>]
     type ModelItem2 =
         {
             Id:int
@@ -174,8 +223,8 @@
     [<NoComparison>]
     type CompilerReturn = 
         {
-            CompilerMessages:CompilerMessage list
-            ModelItems:ModelItem2 list
+            CompilerMessages:CompilerMessage []
+            ModelItems:ModelItem2 []
         }
     [<NoComparison>]
     type RunningStatus =
@@ -190,7 +239,7 @@
     /// Takes a list of files, cleans and concatenates the contents of each one
     ///
     let bulkFileLineProcessing (filesToProcess:(System.IO.FileInfo*string []) list) =
-        let newCompilerReturn = {CompilerMessages=List<CompilerMessage>.Empty; ModelItems=List<ModelItem2>.Empty}
+        let newCompilerReturn = {CompilerMessages=Array.empty; ModelItems=Array.empty} //{CompilerMessages=List<CompilerMessage>.Empty; ModelItems=List<ModelItem2>.Empty}
         let completedRunningStatus =
             filesToProcess |> List.fold(fun (acc:RunningStatus) x->
                 let allFileText=snd x
@@ -208,15 +257,19 @@
 
     
     let makeRawModel (incomingLines:IncomingLine []) (currentCompilerStatus:CompilerReturn) =
-        let initialModelLines = incomingLines |> Array.fold(fun acc x->
-                                let modelItemsOnThisLine = x.Commands |> Array.map(fun y->
-                                        {
-                                            Id=getNextItemNumber()
-                                            SourceReferences=[|x|]
-                                        }
-                                    )
-                                let newacc = modelItemsOnThisLine |> Array.append acc
-                                newacc
+        let initialModelLines = incomingLines |> Array.fold(fun currentModelList x->
+                                        let modelItemsOnThisLine = x.Commands |> Array.fold(fun currentLineModelArray y->
+                                                                    let tokenForCommand = EasyAMTokens |> List.tryFind(fun z->true)
+                                                                    let newModelItem = 
+                                                                        {
+                                                                            Id=getNextModelItemNumber()
+                                                                            SourceReferences=[|x|]
+                                                                        }
+                                                                    let newLineModelList = [|newModelItem|] |> Array.append currentLineModelArray
+                                                                    newLineModelList
+                                                                    ) currentModelList
+                                        let newacc = modelItemsOnThisLine
+                                        newacc
                                 ) Array.empty
         initialModelLines
 

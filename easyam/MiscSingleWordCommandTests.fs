@@ -66,7 +66,7 @@
         let testText = [|"Q: Is this the real life? Is this just fantasy?"|]
         let ret = setupCompilationScenario 0 0 0 testText
         ret |> should haveLength 1
-        let beginningCompilerStatus = {CompilerMessages=List<CompilerMessage>.Empty; ModelItems=List<ModelItem2>.Empty}
+        let beginningCompilerStatus = {CompilerMessages=Array.empty; ModelItems=Array.empty}
         let rawModelItems=makeRawModel ret beginningCompilerStatus
         rawModelItems |> should haveLength 1
     [<Test>]
@@ -74,7 +74,7 @@
         let testText = [|"Q: Is this the real life? Is this just fantasy?";"Caught in a landslide, no escape from reality"|]
         let ret = setupCompilationScenario 0 0 0 testText
         ret |> should haveLength 2
-        let beginningCompilerStatus = {CompilerMessages=List<CompilerMessage>.Empty; ModelItems=List<ModelItem2>.Empty}
+        let beginningCompilerStatus = {CompilerMessages=Array.empty; ModelItems=Array.empty}
         let rawModelItems=makeRawModel ret beginningCompilerStatus
         rawModelItems |> should haveLength 2
         rawModelItems.[0].Id=rawModelItems.[1].Id |> should equal false
@@ -83,10 +83,10 @@
         let testText = [|"Hi there"; "I'm a complext line. I have many uses NOTE:Like I believe that! Q:Who is talking?"; "I am not a complex line."|]
         let ret = setupCompilationScenario 0 0 0 testText
         ret |> should haveLength 3
-        let beginningCompilerStatus = {CompilerMessages=List<CompilerMessage>.Empty; ModelItems=List<ModelItem2>.Empty}
+        let beginningCompilerStatus = {CompilerMessages=Array.empty; ModelItems=Array.empty}
         let rawModelItems=makeRawModel ret beginningCompilerStatus
         rawModelItems |> should haveLength 5
-        //rawModelItems.[0].Id=rawModelItems.[1].Id |> should equal false
+
 
     //[<Test>]
     //let ``MISC SINGLE WORD: Lines prefixed with a Q: are tagged as questions``() =
