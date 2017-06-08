@@ -8,9 +8,6 @@ E:\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.exe
 E:\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.pdb
 E:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\GemBox.Spreadsheet.dll
 E:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\GemBox.Spreadsheet.xml
-C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.XML
-C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.exe
-C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.pdb
 C:\Users\Daniel Markham\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.exe.config
 C:\Users\Daniel Markham\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.XML
 C:\Users\Daniel Markham\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.exe
@@ -21,13 +18,6 @@ C:\Users\Daniel Markham\Dropbox\source\git-repos\easyam\svgit\bin\Debug\GemBox.S
 C:\Users\Daniel Markham\Dropbox\source\git-repos\easyam\svgit\bin\Debug\FSharp.Core.xml
 C:\Users\Daniel Markham\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.exe
 C:\Users\Daniel Markham\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.pdb
-C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.exe.config
-C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.exe
-C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.pdb
-C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\FSharp.Core.dll
-C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\GemBox.Spreadsheet.dll
-C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\GemBox.Spreadsheet.xml
-C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\FSharp.Core.xml
 D:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.XML
 D:\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.exe
 D:\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.pdb
@@ -35,6 +25,12 @@ D:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.exe.config
 D:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.exe
 D:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.pdb
 D:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\FSharp.Core.dll
-D:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\GemBox.Spreadsheet.dll
-D:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\GemBox.Spreadsheet.xml
 D:\Dropbox\source\git-repos\easyam\svgit\bin\Debug\FSharp.Core.xml
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.exe.config
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.XML
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.exe
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\svgit.pdb
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\FSharp.Core.dll
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\bin\Debug\FSharp.Core.xml
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.exe
+C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\svgit\obj\Debug\svgit.pdb

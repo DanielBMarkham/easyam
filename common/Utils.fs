@@ -10,6 +10,7 @@
 
     let commandLinePrintWhileEnter (opts:ConfigBase) fnPrintMe =
                 // Entering program command line report
+            let nowString = string System.DateTime.Now
             match opts.verbose.parameterValue with
                 | Verbosity.Silent ->
                     ()
@@ -20,26 +21,27 @@
                     //printfn "Begin %s. %s" opts.programName opts.programTagLine
                 | Verbosity.BatchNormal ->
                     printfn "%s. %s" opts.programName opts.programTagLine
-                    printfn "Begin: %s" (System.DateTime.Now.ToString())
+                    printfn "Begin: %s" (nowString)
                 | Verbosity.Normal ->
                     printfn "%s. %s" opts.programName opts.programTagLine
-                    printfn "Begin: %s" (System.DateTime.Now.ToString())
+                    printfn "Begin: %s" (nowString)
                     printfn "Verbosity: Normal" 
                 | Verbosity.BatchVerbose ->
                     printfn "%s. %s" opts.programName opts.programTagLine
-                    printfn "Begin: %s" (System.DateTime.Now.ToString())
+                    printfn "Begin: %s" (nowString)
                     fnPrintMe()
                 | Verbosity.Verbose ->
                     printfn "%s. %s" opts.programName opts.programTagLine
-                    printfn "Begin: %s" (System.DateTime.Now.ToString())
+                    printfn "Begin: %s" (nowString)
                     fnPrintMe()
                 |_ ->
                     printfn "%s. %s" opts.programName opts.programTagLine
-                    printfn "Begin: %s" (System.DateTime.Now.ToString())
+                    printfn "Begin: %s" (nowString)
                     fnPrintMe()
 
     let commandLinePrintWhileExit (baseOptions:ConfigBase) =
             // Exiting program command line report
+        let nowString = string System.DateTime.Now
         match baseOptions.verbose.parameterValue with
             | Verbosity.Silent ->
                 ()
@@ -49,13 +51,13 @@
                 ()
                 //printfn "End %s" baseOptions.programName
             | Verbosity.BatchNormal ->
-                printfn "End:   %s" (System.DateTime.Now.ToString())
+                printfn "End:   %s" (nowString)
             | Verbosity.Normal ->
-                printfn "End:   %s" (System.DateTime.Now.ToString())
+                printfn "End:   %s" (nowString)
             | Verbosity.BatchVerbose ->
-                printfn "End:   %s" (System.DateTime.Now.ToString())
+                printfn "End:   %s" (nowString)
             | Verbosity.Verbose ->
-                printfn "End:   %s" (System.DateTime.Now.ToString())
+                printfn "End:   %s" (nowString)
             |_ ->
                 ()
 
@@ -165,14 +167,14 @@
 
     let drawEntityBox (sw:System.IO.StreamWriter) (box:SVGEntityBox) (svgConfig:SVGSetup) =
         sw.WriteLine ("<rect x=\"" + box.xPos.ToString() + "\" y=\"" + box.yPos.ToString() + "\" height=\"" + box.height.ToString() + "\" width=\"" + box.width.ToString() + "\" style=\"stroke:" + svgConfig.EntityBorderColor + "; fill: " + svgConfig.EntityFillColor  + "; fill-opacity: " + svgConfig.EntityFillOpacity  + "\"/>")
-        sw.WriteLine ("<text x=\"" + (box.xPos+svgConfig.TextMargin).ToString() + "\" y=\"" + (box.yPos+svgConfig.FontSize+svgConfig.TextMargin).ToString() + "\" font-family=\"Verdana\" font-size=\"" + svgConfig.FontSize.ToString() + "\">")
+        sw.WriteLine ("<text x=\"" + string (box.xPos+svgConfig.TextMargin) + "\" y=\"" + string (box.yPos+svgConfig.FontSize+svgConfig.TextMargin) + "\" font-family=\"Verdana\" font-size=\"" + svgConfig.FontSize.ToString() + "\">")
         sw.WriteLine box.Entity.Title.text
         sw.WriteLine "</text>"
         let dividerYPos = box.yPos + svgConfig.FontSize * 2
-        sw.WriteLine ("<line x1=\"" + box.xPos.ToString() + "\" y1=\"" + dividerYPos.ToString() + "\" x2=\"" + (box.xPos + box.width).ToString() + "\" y2=\"" + dividerYPos.ToString() + "\" stroke-width=\"" + svgConfig.EntityBorderWidth + "\" stroke=\"" + svgConfig.EntityBorderColor + "\"/>")
+        sw.WriteLine ("<line x1=\"" + box.xPos.ToString() + "\" y1=\"" + dividerYPos.ToString() + "\" x2=\"" + string (box.xPos + box.width) + "\" y2=\"" + string dividerYPos + "\" stroke-width=\"" + svgConfig.EntityBorderWidth + "\" stroke=\"" + svgConfig.EntityBorderColor + "\"/>")
         box.Entity.Attributes |> List.iteri(fun i x->
             let attributeTextYPos = dividerYPos + svgConfig.FontSize + (i * svgConfig.FontSize)
-            sw.WriteLine ("<text x=\"" + (box.xPos+svgConfig.TextMargin).ToString() + "\" y=\"" + (attributeTextYPos+svgConfig.TextMargin).ToString() + "\" font-family=\"Verdana\" font-size=\"" + svgConfig.FontSize.ToString() + "\">")
+            sw.WriteLine ("<text x=\"" + string (box.xPos+svgConfig.TextMargin) + "\" y=\"" + string (attributeTextYPos+svgConfig.TextMargin) + "\" font-family=\"Verdana\" font-size=\"" + string svgConfig.FontSize + "\">")
             let attText:string = x.Title.text
             sw.WriteLine (attText)
             sw.WriteLine "</text>"
@@ -206,7 +208,7 @@
         sw.WriteLine("        <link href='main.css' type='text/css' rel='stylesheet'> ")
         sw.WriteLine("        <link href='" + fileShortName + ".css' type='text/css' rel='stylesheet'> ")
         sw.WriteLine("    </head> ")
-
+    [<NoComparison>]
     type ItemReport =
         {
             ItemQualifiers:(ItemConnectorType*ModelItem) list
@@ -746,7 +748,7 @@
         let swItemDetailTextFileWriter = System.IO.File.CreateText(itemDetailFileName)
         writeHtmlBeginAndHead swItemDetailTextFileWriter sectionHeading "Section Heading" "EasyAM" itemDetailFileName
         swItemDetailTextFileWriter.WriteLine "<body>"
-        swItemDetailTextFileWriter.WriteLine ("<h1>" + sectionHeading + " (" + topLevelItemsAndRelated.Length.ToString() + ")</h1>")
+        swItemDetailTextFileWriter.WriteLine ("<h1>" + sectionHeading + " (" + string topLevelItemsAndRelated.Length + ")</h1>")
         swItemDetailTextFileWriter.WriteLine ()
         swItemDetailTextFileWriter.WriteLine ("</body></html>")
         let topLevelItems = topLevelItemsAndRelated |> List.filter(fun x->match x.ItemType with |ModelItemType.ModelItem(_)->true |_->false)
@@ -757,19 +759,19 @@
             let modelItemDetailHtmlFileName= y.ToFileName + ".html"
             swItemDetailTextFileWriter.WriteLine("<h2><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "'>" + y.ModelItemName + "</a> (" + itemChildrenCount.ToString() + ")</h2>")
             swItemDetailTextFileWriter.WriteLine "<table>"
-            swItemDetailTextFileWriter.WriteLine ("<tr><td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#ItemDetail'>Item Detail</a> (" + itemChildren.ItemDetail.Length.ToString() + ")</td>")
+            swItemDetailTextFileWriter.WriteLine ("<tr><td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#ItemDetail'>Item Detail</a> (" + string itemChildren.ItemDetail.Length + ")</td>")
             swItemDetailTextFileWriter.WriteLine "<td></td>"
-            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Notes'>Notes</a> (" + itemChildren.Notes.Length.ToString() + ")</td>")
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Notes'>Notes</a> (" + string itemChildren.Notes.Length + ")</td>")
             swItemDetailTextFileWriter.WriteLine "<td></td>"
-            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Questions'>Questions</a> (" + itemChildren.Questions.Length.ToString() + ")</td>")
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Questions'>Questions</a> (" + string itemChildren.Questions.Length + ")</td>")
             swItemDetailTextFileWriter.WriteLine "<td></td></tr>"
-            swItemDetailTextFileWriter.WriteLine ("<tr><td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#ToDo'>To-Dos</a> (" + itemChildren.ToDos.Length.ToString() + ")</td>")
+            swItemDetailTextFileWriter.WriteLine ("<tr><td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#ToDo'>To-Dos</a> (" + string itemChildren.ToDos.Length + ")</td>")
             swItemDetailTextFileWriter.WriteLine "<td></td>"
-            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Work'>Work</a> (" + itemChildren.Work.Length.ToString() + ")</td>")
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Work'>Work</a> (" + string itemChildren.Work.Length + ")</td>")
             swItemDetailTextFileWriter.WriteLine "<td></td>"
-            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Realizations'>Realizations</a> (" + itemChildren.Realizations.Length.ToString() + ")</td>")
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Realizations'>Realizations</a> (" + string itemChildren.Realizations.Length + ")</td>")
             swItemDetailTextFileWriter.WriteLine "<td></td>"
-            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Realizations'>Feedback</a> (" + itemChildren.Feedback.Length.ToString() + ")</td>")
+            swItemDetailTextFileWriter.WriteLine ("<td><a href='" + modelItemDetailHtmlFileName.CovertIntoOSSafeFileName + "#Realizations'>Feedback</a> (" + string itemChildren.Feedback.Length + ")</td>")
             swItemDetailTextFileWriter.WriteLine "</tr></table>"
             )
         swItemDetailTextFileWriter.WriteLine()

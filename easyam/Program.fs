@@ -25,11 +25,11 @@
         // set up any folders needed by the tool
         let sourceDirectoryInfo = forceDirectoryCreation opts.sourceDirectory
         let destinationDirectoryInfo = forceDirectoryCreation opts.destinationDirectory
-
-        let BehaviorDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + System.IO.Path.DirectorySeparatorChar.ToString() + "Behavior")
-        let StructureDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + System.IO.Path.DirectorySeparatorChar.ToString() + "Structure")
-        let SupplementalDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + System.IO.Path.DirectorySeparatorChar.ToString() + "Supplemental")
-        let MetaDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + System.IO.Path.DirectorySeparatorChar.ToString() + "Meta")
+        let directorySeparatorCharacter = string System.IO.Path.DirectorySeparatorChar
+        let BehaviorDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Behavior")
+        let StructureDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Structure")
+        let SupplementalDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Supplemental")
+        let MetaDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Meta")
         {
             SourceDirectoryInfo=sourceDirectoryInfo
             DestinationDirectoryInfo=destinationDirectoryInfo
@@ -122,7 +122,7 @@
         let fileList = allFiles |> Seq.toArray |> Array.map(fun x->System.IO.FileInfo(x)) |> Array.sortBy(fun x->x.FullName)
         let incomingLines = loadInAllIncomingLines fileList
         let structuredAnalysisModel = processIncomingLines incomingLines
-        System.Console.WriteLine (structuredAnalysisModel.Length.ToString())
+        System.Console.WriteLine (string structuredAnalysisModel.Length)
         rawDumpIncomingModel opts structuredAnalysisModel
         compiledDumpIncomingModelAmout opts structuredAnalysisModel
         compiledDumpIncomingModelHtml opts structuredAnalysisModel
@@ -143,7 +143,7 @@
             | :? UserNeedsHelp as hex ->
                 defaultBaseOptions.printThis
                 0
-            | :? System.Exception as ex ->
+            | ex ->
                 System.Console.WriteLine ("Program terminated abnormally " + ex.Message)
                 System.Console.WriteLine (ex.StackTrace)
                 if ex.InnerException = null

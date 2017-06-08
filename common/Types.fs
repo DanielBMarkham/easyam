@@ -208,6 +208,7 @@
                         defaultConfig.swapInNewValue (System.DateTime.Parse(parmValue.Value))
                     else
                         defaultConfig
+    [<NoComparison>]
     type InterimProgress =
         {
             items:System.Collections.Generic.Dictionary<string, System.Text.StringBuilder>
@@ -226,6 +227,7 @@
                     this.items.Item(key).ToString()
                 else
                     ""
+    [<NoComparison>]
     type ConfigBase =
         {
             programName:string
@@ -240,6 +242,7 @@
             printfn "%s" this.programName
             this.programHelpText |> Seq.iter(System.Console.WriteLine)
 
+    [<NoComparison>]
     type EasyAMProgramConfig =
         {
             configBase:ConfigBase
@@ -277,6 +280,7 @@
             EntityFillColor="#dddddd"
             EntityFillOpacity="80%"
         }
+    [<NoComparison>]
     type ProgramDirectories =
         {
             SourceDirectoryInfo:System.IO.DirectoryInfo
@@ -286,6 +290,7 @@
             SupplementalDirectoryInfo:System.IO.DirectoryInfo
             MetaDirectoryInfo:System.IO.DirectoryInfo
         }
+    [<NoComparison>]
     type ProgramInputFiles = 
         {
             Files:System.IO.FileInfo list

@@ -2,6 +2,549 @@
 <doc>
 <assembly><name>FParsec</name></assembly>
 <members>
+<member name="M:FParsec.InternalsModule.LineWrapper.Break(System.String)">
+<summary>
+ breaks a string into multiple lines along text element boundaries.
+</summary>
+</member>
+<member name="T:FParsec.InternalsModule.LineWrapper">
+<summary>
+ A primitive pretty printer.
+</summary>
+</member>
+<member name="M:FParsec.Error.ParserError.WriteTo(System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.IO.TextWriter,Microsoft.FSharp.Core.FSharpFunc{FParsec.Position,Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.Unit}}}}},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String})">
+<summary>
+ Writes a string representation of the `ParserError` to the given `TextWriter` value.
+
+ The format of the position information can be customized by specifying the `positionPrinter`
+ argument. The given function is expected to print a representation of the passed `Position` value
+ to the passed `TextWriter` value. If possible, it should indent text lines with the passed string
+ and take into account the maximum column count (including indention) passed as the last argument.
+</summary>
+</member>
+<member name="M:FParsec.Error.ParserError.WriteTo``1(System.IO.TextWriter,Microsoft.FSharp.Core.FSharpFunc{FParsec.Position,FParsec.CharStream{``0}},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String})">
+<summary>
+ Writes a string representation of the `ParserError` to the given `TextWriter` value.
+
+ For each error position `getStreamByName` is called with the `StreamName` of the `Position`.
+ The returned `CharStream` must be `null` or contain the content of the `CharStream` for which
+ the error was generated (at the original indices).
+
+ If `getStreamByName` returns a non-null `CharStream`, the printed error position information is
+ augmented with the line of text surrounding the error position, together with a &apos;^&apos;-marker
+ pointing to the exact location of the error in the input stream.
+</summary>
+</member>
+<member name="M:FParsec.Error.ParserError.WriteTo``1(System.IO.TextWriter,FParsec.CharStream{``0},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String})">
+<summary>
+ Writes a string representation of the `ParserError` to the given `TextWriter` value.
+
+ The given `CharStream` must contain the content of the original `CharStream`
+ for which this `ParserError` was generated (at the original indices).
+
+ For each error location the printed position information is augmented
+ with the line of text surrounding the error position, together with a &apos;^&apos;-marker
+ pointing to the exact location of the error in the input stream.
+</summary>
+</member>
+<member name="M:FParsec.Error.ParserError.ToString``1(FParsec.CharStream{``0})">
+<summary>
+ Returns a string representation of the `ParserError`.
+
+ The given `CharStream` must contain the content of the original `CharStream`
+ for which this `ParserError` was generated (at the original indices).
+
+ For each error location the printed position information is augmented
+ with the line of text surrounding the error position, together with a &apos;^&apos;-marker
+ pointing to the exact location of the error in the input stream.
+</summary>
+</member>
+<member name="M:FParsec.Error.ParserError.ToString">
+<summary>
+ Returns a string representation of the `ParserError`.
+</summary>
+</member>
+<member name="T:FParsec.Error.ParserError">
+<summary>
+ Represents a simple container type that brings together the position, user state and error messages of a parser error.
+</summary>
+</member>
+<member name="M:FParsec.Error.mergeErrors(FParsec.ErrorMessageList,FParsec.ErrorMessageList)">
+<summary>
+ `mergeErrors error1 error2` is equivalent to `ErrorMessageList.Merge(error1, error2)`.
+</summary>
+</member>
+<member name="M:FParsec.Error.compoundError``1(System.String,FParsec.CharStream{``0},FParsec.ErrorMessageList)">
+<summary>
+ `compoundError label state msgs` creates an `ErrorMessageList` with a single `CompoundError label stream.Position msgs` message,
+ except if `msgs` is an `ErrorMessageList` with a single `BacktrackPoint(pos2, msgs2)` message,
+ in which case an `ErrorMessageList` with a single `CompoundError label pos2 msgs2` message is returned instead.
+</summary>
+</member>
+<member name="M:FParsec.Error.nestedError``1(FParsec.CharStream{``0},FParsec.ErrorMessageList)">
+<summary>
+ `backtrackError stream msgs` creates an `ErrorMessageList` with a single `BacktrackPoint stream.Position msgs` message,
+ except if `msgs` is already an `ErrorMessageList` with a single `BacktrackPoint(_, _)` message,
+ in which case `msgs` is returned instead.
+</summary>
+</member>
+<member name="M:FParsec.Error.otherError(System.Object)">
+<summary>
+ `otherError o` creates an `ErrorMessageList` with a single `OtherError o` message.
+</summary>
+</member>
+<member name="M:FParsec.Error.messageError(System.String)">
+<summary>
+ `messageError msg` creates an `ErrorMessageList` with a single `Message msg` message.
+</summary>
+</member>
+<member name="M:FParsec.Error.unexpectedStringCI(System.String)">
+<summary>
+ `unexpectedStringCIError str` creates an `ErrorMessageList` with a single `UnexpectedStringCI str` message.
+</summary>
+</member>
+<member name="M:FParsec.Error.unexpectedString(System.String)">
+<summary>
+ `unexpectedStringError str` creates an `ErrorMessageList` with a single `UnexpectedString str` message.
+</summary>
+</member>
+<member name="M:FParsec.Error.unexpected(System.String)">
+<summary>
+ `unexpectedError label` creates an `ErrorMessageList` with a single `Unexpected label` message.
+</summary>
+</member>
+<member name="M:FParsec.Error.expectedStringCI(System.String)">
+<summary>
+ `expectedStringCIError str` creates an `ErrorMessageList` with a single `ExpectedStringCI str` message.
+</summary>
+</member>
+<member name="M:FParsec.Error.expectedString(System.String)">
+<summary>
+ `expectedStringError str` creates an `ErrorMessageList` with a single `ExpectedString str` message.
+</summary>
+</member>
+<member name="M:FParsec.Error.expected(System.String)">
+<summary>
+ `expectedError label` creates an `ErrorMessageList` with a single `Expected label` message.
+</summary>
+</member>
+<member name="T:FParsec.Primitives.ParserCombinator">
+<summary>
+ The type of the &quot;builder object&quot; that can be used to build parsers with
+ F#&apos;s &quot;computation expression&quot; syntax a.k.a. &quot;workflow&quot; syntax.
+</summary>
+</member>
+<member name="T:FParsec.Primitives.Parser`2">
+<summary>
+ The type of the parser functions supported by FParsec combinators.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.createParserForwardedToRef``2">
+<summary>
+ `let p, pRef = createParserForwardedToRef()` creates a parser `p` that forwards all
+ calls to the parser in the reference cell `pRef`. Initially, `pRef` holds a reference
+ to a dummy parser that raises an exception on any invocation.
+</summary>
+</member>
+<member name="P:FParsec.Primitives.parse">
+<summary>
+ The builder object for building parsers using F#&apos;s computation expression syntax.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.chainr``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,``0}}}},``0)">
+<summary>
+ The parser `chainr p op defVal` is equivalent to `chainr1 p op &lt;|&gt;% defVal`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.chainr1``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,``0}}}})">
+<summary>
+ The parser `chainr1 p op` parses one or more occurrences of `p` separated by `op`
+ (in EBNF notation: `p (op p)*`).
+ It returns the value obtained by *right* associative application of all functions
+ returned by `op` to the results returned by `p`,
+ i.e. `f1 x_1 (f_2 x_2 (... (f_n x_n x_n+1) ...))`,
+ where `f_1` to `f_n` are the functions returned by the parser `op` and
+ `x_1` to `x_n+1` are the values returned by `p`. If only a single occurance
+ of `p` and no occurance of `op` is parsed, the result of `p` is returned directly.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.chainl``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,``0}}}},``0)">
+<summary>
+ The parser `chainl p op defVal` is equivalent to `chainl1 p op &lt;|&gt;% defVal`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.chainl1``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,``0}}}})">
+<summary>
+ The parser `chainl1 p op` parses one or more occurrences of `p` separated by `op`
+ (in EBNF notation: `p (op p)*`).
+ It returns the value obtained by *left* associative application of all functions
+ returned by `op` to the results returned by `p`,
+ i.e. `f_n (... (f_2 (f_1 x_1 x_2) x_3) ...) x_n+1`,
+ where `f_1` to `f_n` are the functions returned by the parser `op` and
+ `x_1` to `x_n+1` are the values returned by `p`. If only a single occurance
+ of `p` and no occurance of `op` is parsed, the result of `p` is returned directly.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.many1Till``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `many1Till p endp` behaves like `manyTill p endp`, except that it requires `p` to succeed at least one time.
+ `many1Till p endp` is an optimized implementation of `pipe2 p (manyTill p endp) (fun hd tl -&gt; hd::tl)`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.skipManyTill``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `skipManyTill p endp` is an optimized implementation of `manyTill p endp |&gt;&gt; ignore`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.manyTill``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The `parser manyTill p endp` repeatedly applies the parser `p` 
+ for as long as `endp` fails (without changing the parser state).
+ It returns a list of the results returned by `p`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.skipSepEndBy1``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `skipSepEndBy1 p sep` is an optimized implementation of `sepEndBy1 p sep |&gt;&gt; ignore`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.sepEndBy1``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `sepEndBy1 p sep` parses *one* or more occurrences of `p` separated and
+ optionally ended by `sep` (in EBNF notation: `p (sep p)* sep?`).
+ It returns a list of the results returned by `p`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.skipSepEndBy``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `skipSepEndBy p sep` is an optimized implementation of `sepEndBy p sep |&gt;&gt; ignore`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.sepEndBy``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `sepEndBy p sep` parses *zero* or more occurrences of `p` separated and
+ optionally ended by `sep` (in EBNF notation: `(p (sep p)* sep?)?`).
+ It returns a list of the results returned by `p`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.skipSepBy1``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `skipSepBy1 p sep` is an optimized implementation of `sepBy1 p sep |&gt;&gt; ignore`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.sepBy1``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `sepBy1 p sep` parses *one* or more occurrences of `p` separated by `sep`
+ (in EBNF notation: `p (sep p)*`).
+</summary>
+</member>
+<member name="M:FParsec.Primitives.skipSepBy``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `skipSepBy p sep` is an optimized implementation of `sepBy p sep |&gt;&gt; ignore`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.sepBy``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `sepBy p sep` parses *zero* or more occurrences of `p` separated by `sep`
+ (in EBNF notation: `(p (sep p)*)?`).
+</summary>
+</member>
+<member name="M:FParsec.Primitives.skipMany1``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `skipMany1 p` is an optimized implementation of `many1 p |&gt;&gt; ignore`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.many1``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `many1 p` behaves like `many p`, except that it requires `p` to succeed at least one time.
+ `many1 p` is an optimized implementation of `pipe2 p (many p) (fun hd tl -&gt; hd::tl)`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.skipMany``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `skipMany p` is an optimized implementation of `many p |&gt;&gt; ignore`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.many``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `many p` repeatedly applies the parser `p` until `p` fails.
+ It returns a list of the results returned by `p`.
+ At the end of the sequence `p` must fail without changing the parser state and without
+ signalling a `FatalError`, otherwise `many p` will fail with the error reported by `p`.
+ `many p` tries to guard against an infinite loop by throwing an exception
+ if `p` succeeds without changing the parser state.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.skipArray``2(System.Int32,Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `skipArray n p` is an optimized implementation of `parray n p |&gt;&gt; ignore`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.parray``2(System.Int32,Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `parray n p` parses `n` occurences of `p` and
+ returns the returns the results in an array.
+ For example, `parray 3 p` is equivalent to `pipe3 p p p (fun a b c -&gt; [|a;b;c|])`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.tuple5``6(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``4}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``5}})">
+<summary>
+ The parser `tuple5 p1 p2 p3 p4 p5` applies the parsers `p1`, `p2`, `p3`, `p4` and `p5` in sequence and
+ returns the results in a tuple.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.tuple4``5(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``4}})">
+<summary>
+ The parser `tuple4 p1 p2 p3 p4` applies the parsers `p1`, `p2`, `p3` and `p4` in sequence and
+ returns the results in a tuple.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.tuple3``4(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}})">
+<summary>
+ The parser `tuple3 p1 p2 p3` applies the parsers `p1`, `p2` and `p3` in sequence and
+ returns the results in a tuple.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.tuple2``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `tuple2 p1 p2` applies the parsers `p1` and `p2` in sequence and
+ returns the results in a tuple.
+ `tuple2 p1 p2` is defined as `p1 .&gt;&gt;. p2`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.failFatally``2(System.String)">
+<summary>
+ The parser `failFatally msg` always fails with a `messageError msg`. It signals a
+ FatalError, so that no error recovery is attempted (except via backtracking constructs).
+</summary>
+</member>
+<member name="M:FParsec.Primitives.fail``2(System.String)">
+<summary>
+ The parser `fail msg` always fails with a `messageError msg`.
+ The error message will be displayed together with other error messages generated for
+ the same input position.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_LessQmarkQmarkGreater``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},System.String)">
+<summary>
+ The parser `p &lt;??&gt; label` behaves like `p &lt;?&gt; label`, except that when `p` fails
+ after changing the parser state (for example, because `p` consumes input before it fails),
+ a `CompoundError` message is generated with both the given string `label` and the
+ error messages generated by `p`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_LessQmarkGreater``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},System.String)">
+<summary>
+ The parser `p &lt;?&gt; label` applies the parser `p`. If `p` does not change the parser state
+ (usually because `p` failed), the error messages are replaced with `expected label`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.lookAhead``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `lookAhead p` parses `p` and restores the original parse state afterwards.
+ In case `p` fails after changing the parser state, the error messages are wrapped in a `NestedError`.
+ If it succeeds, any error messages are discarded. Fatal errors are turned into normal errors.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.notFollowedByL``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},System.String)">
+<summary>
+ The parser `notFollowedByL p` behaves like `notFollowedBy p`,
+ except that it returns an `Unexpected label` error message when the parser `p` fails.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.notFollowedBy``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `notFollowedBy p` succeeds if the parser `p` fails to parse at the current position.
+ Otherwise it fails with a non-fatal error. This parser never changes the parser state.
+ If the parser `notFollowedBy p` fails, it returns no descriptive error message.
+ Hence it should only be used together with other parsers that take care of a potential error.
+ Alternatively, `notFollowedByL p label` can be used to ensure a more descriptive error message.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.followedByL``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},System.String)">
+<summary>
+ The parser `followedByL p` behaves like `followedBy p`,
+ except that it returns an `Expected label` error message when the parser `p` fails.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.followedBy``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `followedBy p` succeeds if the parser `p` succeeds at the current position.
+ Otherwise it fails with a non-fatal error. This parser never changes the parser state.
+ If the parser `followedBy p` fails, it returns no descriptive error message.
+ Hence it should only be used together with other parsers that take care of a potential error.
+ Alternatively, `followedByL p label` can be used to ensure a more descriptive error message.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.notEmpty``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `notEmpty p` behaves like `p`,
+ except that it fails when `p` succeeds without consuming input
+ or changing the parser state in any other way.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_DotGreaterGreaterDotQmark``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `p1 .&gt;&gt;.? p2` behaves like `p1 .&gt;&gt;. p2`, except that it will backtrack
+ to the beginning if `p2` fails with a non-fatal error and without changing the parser state,
+ even if `p1` has changed the parser state.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_DotGreaterGreaterQmark``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `p1 .&gt;&gt;? p2` behaves like `p1 .&gt;&gt; p2`, except that it will backtrack
+ to the beginning if `p2` fails with a non-fatal error and without changing the parser state,
+ even if `p1` has changed the parser state.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_GreaterGreaterQmark``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `p1 &gt;&gt;? p2` behaves like `p1 &gt;&gt;. p2`, except that it will backtrack
+ to the beginning if `p2` fails with a non-fatal error and without changing the parser state,
+ even if `p1` has changed the parser state.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_GreaterGreaterEqualsQmark``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}}})">
+<summary>
+ The parser `p &gt;&gt;=? f` behaves like `p &gt;&gt;= f`, except that it will backtrack to the beginning
+ if the parser returned by `f` fails with a non-fatal error and without changing the parser state,
+ even if `p` has changed the parser state.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.attempt``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `attempt p` applies the parser `p`.
+ If `p` fails after changing the parser state or with a fatal error,
+ `attempt p` will backtrack to the original parser state and report a non-fatal error.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.optional``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `optional p` skips over an optional occurrence of `p`.
+ `optional p` is an optimized implementation of `(p &gt;&gt;% ()) &lt;|&gt;% ()`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.opt``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `opt p` parses an optional occurrence of `p` as an option value.
+ `opt p` is an optimized implementation of `(p |&gt;&gt; Some) &lt;|&gt;% None`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_LessBarGreaterPercent``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},``0)">
+<summary>
+ The parser `p &lt;|&gt;% x` is an optimized implementation of `p &lt;|&gt; preturn x`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.choiceL``2(System.Collections.Generic.IEnumerable{Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}}},System.String)">
+<summary>
+ The parser `choiceL ps label` is an optimized implementation of `choice ps &lt;?&gt; label`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.choice``2(System.Collections.Generic.IEnumerable{Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}}})">
+<summary>
+ The parser `choice ps` is an optimized implementation of `p1 &lt;|&gt; p2 &lt;|&gt; ... &lt;|&gt; pn`,
+ where `p1` ... `pn` are the parsers in the sequence `ps`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_LessBarGreater``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
+<summary>
+ The parser `p1 &lt;|&gt; p2` first applies the parser `p1`.
+ If `p1` succeeds, the result of `p1` is returned.
+ If `p1` fails with a non-fatal error and *without changing the parser state*,
+ the parser `p2` is applied.
+ Note: The stream position is part of the parser state, so if `p1` fails after consuming input,
+ `p2` will not be applied.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.pipe5``7(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``4}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``5}},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``2,Microsoft.FSharp.Core.FSharpFunc{``3,Microsoft.FSharp.Core.FSharpFunc{``4,Microsoft.FSharp.Core.FSharpFunc{``5,``6}}}}})">
+<summary>
+ The parser `pipe5 p1 p2 p3 p4 p5 f` applies the parsers `p1`, `p2`, `p3`, `p4` and `p5` in sequence.
+ It returns the result of the function application `f a b c d e`, where `a`, `b`, `c`, `d` and `e` are the results returned by `p1`, `p2`, `p3`, `p4` and `p5`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.pipe4``6(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``4}},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``2,Microsoft.FSharp.Core.FSharpFunc{``3,Microsoft.FSharp.Core.FSharpFunc{``4,``5}}}})">
+<summary>
+ The parser `pipe4 p1 p2 p3 p4 f` applies the parsers `p1`, `p2`, `p3` and `p4` in sequence.
+ It returns the result `f a b c d`, where `a`, `b`, `c` and `d` are the results returned by `p1`, `p2`, `p3` and `p4`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.pipe3``5(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``2,Microsoft.FSharp.Core.FSharpFunc{``3,``4}}})">
+<summary>
+ The parser `pipe3 p1 p2 p3 f` applies the parsers `p1`, `p2` and `p3` in sequence.
+ It returns the result `f a b c`, where `a`, `b` and `c` are the results returned by `p1`, `p2` and `p3`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.pipe2``4(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``2,``3}})">
+<summary>
+ The parser `pipe2 p1 p2 f` applies the parsers `p1` and `p2` in sequence.
+ It returns the result `f a b`, where `a` and `b` are the results returned by `p1` and `p2`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_BarGreaterGreater``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{``0,``2})">
+<summary>
+ The parser `p |&gt;&gt; f` applies the parser `p` and
+ returns the result `f x`,  where `x` is the result returned by `p`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.between``4(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}})">
+<summary>
+ The parser `between popen pclose p` applies the parsers `pOpen`, `p` and `pEnd` in sequence.
+ It returns the result of `p`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_DotGreaterGreaterDot``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `p1 .&gt;&gt;. p2` applies the parsers `p1` and `p2` in sequence and returns the results in a tuple.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_DotGreaterGreater``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `p1 .&gt;&gt; p2` applies the parsers `p1` and `p2` in sequence and returns the result of `p1`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_GreaterGreaterDot``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
+<summary>
+ The parser `p1 &gt;&gt;. p2` applies the parsers `p1` and `p2` in sequence and returns the result of `p2`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_GreaterGreaterPercent``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},``2)">
+<summary>
+ The parser `p &gt;&gt;% x` applies the parser `p` and returns the result `x`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.op_GreaterGreaterEquals``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}}})">
+<summary>
+ The parser `p &gt;&gt;= f` first applies the parser `p` to the input, then applies the function `f`
+ to the result returned by `p` and finally applies the parser returned by `f` to the input.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.pzero``2">
+<summary>
+ The parser `pzero` always fails with an empty error message list, i.e. an unspecified error.
+ `pzero x` is defined as `fun stream -&gt; Reply(Error, NoErrorMessages)`.
+</summary>
+</member>
+<member name="M:FParsec.Primitives.preturn``2(``0)">
+<summary>
+ The parser `preturn x` always succeeds with the result `x` (without changing the parser state).
+ `preturn x` is defined as `fun stream -&gt; Reply(x)`.
+</summary>
+</member>
+<member name="P:FParsec.Primitives.FatalError">
+<summary>
+ The parser failed and no error recovery (except after backtracking) should be tried.
+</summary>
+</member>
+<member name="P:FParsec.Primitives.Error">
+<summary>
+ The parser failed.
+</summary>
+</member>
+<member name="P:FParsec.Primitives.Ok">
+<summary>
+ The parser succeeded.
+</summary>
+</member>
 <member name="T:FParsec.CharParsers.NumberLiteralResultFlags">
 <summary>
  Encodes various bits of information about a parsed number literal.
@@ -315,6 +858,12 @@
 <summary>
  `skipped p` applies the parser `p` and returns the chars skipped over by `p` as a string.
  All newlines (&quot;\r\n&quot;, &quot;\r&quot; or &quot;\n&quot;) are normalized to &quot;\n&quot;.
+</summary>
+</member>
+<member name="M:FParsec.CharParsers.stringsSepBy1``1(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``0},FParsec.Reply{System.String}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``0},FParsec.Reply{System.String}})">
+<summary>
+ `stringsSepBy1 sp sep` parses *one* or more occurrences of `sp` separated by `sep`.
+ It returns the strings parsed by `sp` *and* `sep` in concatenated form.
 </summary>
 </member>
 <member name="M:FParsec.CharParsers.stringsSepBy``1(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``0},FParsec.Reply{System.String}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``0},FParsec.Reply{System.String}})">
@@ -989,549 +1538,6 @@
  starting with the initial user state `ustate`. The `streamName` is used in error messages to describe
  the source of the input (e.g. a file path) and may be empty.
  The parser&apos;s `Reply` is captured and returned as a `ParserResult` value.
-</summary>
-</member>
-<member name="M:FParsec.Error.ParserError.WriteTo(System.IO.TextWriter,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Core.FSharpFunc{System.IO.TextWriter,Microsoft.FSharp.Core.FSharpFunc{FParsec.Position,Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.Unit}}}}},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String})">
-<summary>
- Writes a string representation of the `ParserError` to the given `TextWriter` value.
-
- The format of the position information can be customized by specifying the `positionPrinter`
- argument. The given function is expected to print a representation of the passed `Position` value
- to the passed `TextWriter` value. If possible, it should indent text lines with the passed string
- and take into account the maximum column count (including indention) passed as the last argument.
-</summary>
-</member>
-<member name="M:FParsec.Error.ParserError.WriteTo``1(System.IO.TextWriter,Microsoft.FSharp.Core.FSharpFunc{FParsec.Position,FParsec.CharStream{``0}},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String})">
-<summary>
- Writes a string representation of the `ParserError` to the given `TextWriter` value.
-
- For each error position `getStreamByName` is called with the `StreamName` of the `Position`.
- The returned `CharStream` must be `null` or contain the content of the `CharStream` for which
- the error was generated (at the original indices).
-
- If `getStreamByName` returns a non-null `CharStream`, the printed error position information is
- augmented with the line of text surrounding the error position, together with a &apos;^&apos;-marker
- pointing to the exact location of the error in the input stream.
-</summary>
-</member>
-<member name="M:FParsec.Error.ParserError.WriteTo``1(System.IO.TextWriter,FParsec.CharStream{``0},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.String},Microsoft.FSharp.Core.FSharpOption{System.String})">
-<summary>
- Writes a string representation of the `ParserError` to the given `TextWriter` value.
-
- The given `CharStream` must contain the content of the original `CharStream`
- for which this `ParserError` was generated (at the original indices).
-
- For each error location the printed position information is augmented
- with the line of text surrounding the error position, together with a &apos;^&apos;-marker
- pointing to the exact location of the error in the input stream.
-</summary>
-</member>
-<member name="M:FParsec.Error.ParserError.ToString``1(FParsec.CharStream{``0})">
-<summary>
- Returns a string representation of the `ParserError`.
-
- The given `CharStream` must contain the content of the original `CharStream`
- for which this `ParserError` was generated (at the original indices).
-
- For each error location the printed position information is augmented
- with the line of text surrounding the error position, together with a &apos;^&apos;-marker
- pointing to the exact location of the error in the input stream.
-</summary>
-</member>
-<member name="M:FParsec.Error.ParserError.ToString">
-<summary>
- Returns a string representation of the `ParserError`.
-</summary>
-</member>
-<member name="T:FParsec.Error.ParserError">
-<summary>
- Represents a simple container type that brings together the position, user state and error messages of a parser error.
-</summary>
-</member>
-<member name="M:FParsec.Error.mergeErrors(FParsec.ErrorMessageList,FParsec.ErrorMessageList)">
-<summary>
- `mergeErrors error1 error2` is equivalent to `ErrorMessageList.Merge(error1, error2)`.
-</summary>
-</member>
-<member name="M:FParsec.Error.compoundError``1(System.String,FParsec.CharStream{``0},FParsec.ErrorMessageList)">
-<summary>
- `compoundError label state msgs` creates an `ErrorMessageList` with a single `CompoundError label stream.Position msgs` message,
- except if `msgs` is an `ErrorMessageList` with a single `BacktrackPoint(pos2, msgs2)` message,
- in which case an `ErrorMessageList` with a single `CompoundError label pos2 msgs2` message is returned instead.
-</summary>
-</member>
-<member name="M:FParsec.Error.nestedError``1(FParsec.CharStream{``0},FParsec.ErrorMessageList)">
-<summary>
- `backtrackError stream msgs` creates an `ErrorMessageList` with a single `BacktrackPoint stream.Position msgs` message,
- except if `msgs` is already an `ErrorMessageList` with a single `BacktrackPoint(_, _)` message,
- in which case `msgs` is returned instead.
-</summary>
-</member>
-<member name="M:FParsec.Error.otherError(System.Object)">
-<summary>
- `otherError o` creates an `ErrorMessageList` with a single `OtherError o` message.
-</summary>
-</member>
-<member name="M:FParsec.Error.messageError(System.String)">
-<summary>
- `messageError msg` creates an `ErrorMessageList` with a single `Message msg` message.
-</summary>
-</member>
-<member name="M:FParsec.Error.unexpectedStringCI(System.String)">
-<summary>
- `unexpectedStringCIError str` creates an `ErrorMessageList` with a single `UnexpectedStringCI str` message.
-</summary>
-</member>
-<member name="M:FParsec.Error.unexpectedString(System.String)">
-<summary>
- `unexpectedStringError str` creates an `ErrorMessageList` with a single `UnexpectedString str` message.
-</summary>
-</member>
-<member name="M:FParsec.Error.unexpected(System.String)">
-<summary>
- `unexpectedError label` creates an `ErrorMessageList` with a single `Unexpected label` message.
-</summary>
-</member>
-<member name="M:FParsec.Error.expectedStringCI(System.String)">
-<summary>
- `expectedStringCIError str` creates an `ErrorMessageList` with a single `ExpectedStringCI str` message.
-</summary>
-</member>
-<member name="M:FParsec.Error.expectedString(System.String)">
-<summary>
- `expectedStringError str` creates an `ErrorMessageList` with a single `ExpectedString str` message.
-</summary>
-</member>
-<member name="M:FParsec.Error.expected(System.String)">
-<summary>
- `expectedError label` creates an `ErrorMessageList` with a single `Expected label` message.
-</summary>
-</member>
-<member name="M:FParsec.InternalsModule.LineWrapper.Break(System.String)">
-<summary>
- breaks a string into multiple lines along text element boundaries.
-</summary>
-</member>
-<member name="T:FParsec.InternalsModule.LineWrapper">
-<summary>
- A primitive pretty printer.
-</summary>
-</member>
-<member name="T:FParsec.Primitives.ParserCombinator">
-<summary>
- The type of the &quot;builder object&quot; that can be used to build parsers with
- F#&apos;s &quot;computation expression&quot; syntax a.k.a. &quot;workflow&quot; syntax.
-</summary>
-</member>
-<member name="T:FParsec.Primitives.Parser`2">
-<summary>
- The type of the parser functions supported by FParsec combinators.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.createParserForwardedToRef``2">
-<summary>
- `let p, pRef = createParserForwardedToRef()` creates a parser `p` that forwards all
- calls to the parser in the reference cell `pRef`. Initially, `pRef` holds a reference
- to a dummy parser that raises an exception on any invocation.
-</summary>
-</member>
-<member name="P:FParsec.Primitives.parse">
-<summary>
- The builder object for building parsers using F#&apos;s computation expression syntax.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.chainr``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,``0}}}},``0)">
-<summary>
- The parser `chainr p op defVal` is equivalent to `chainr1 p op &lt;|&gt;% defVal`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.chainr1``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,``0}}}})">
-<summary>
- The parser `chainr1 p op` parses one or more occurrences of `p` separated by `op`
- (in EBNF notation: `p (op p)*`).
- It returns the value obtained by *right* associative application of all functions
- returned by `op` to the results returned by `p`,
- i.e. `f1 x_1 (f_2 x_2 (... (f_n x_n x_n+1) ...))`,
- where `f_1` to `f_n` are the functions returned by the parser `op` and
- `x_1` to `x_n+1` are the values returned by `p`. If only a single occurance
- of `p` and no occurance of `op` is parsed, the result of `p` is returned directly.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.chainl``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,``0}}}},``0)">
-<summary>
- The parser `chainl p op defVal` is equivalent to `chainl1 p op &lt;|&gt;% defVal`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.chainl1``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,``0}}}})">
-<summary>
- The parser `chainl1 p op` parses one or more occurrences of `p` separated by `op`
- (in EBNF notation: `p (op p)*`).
- It returns the value obtained by *left* associative application of all functions
- returned by `op` to the results returned by `p`,
- i.e. `f_n (... (f_2 (f_1 x_1 x_2) x_3) ...) x_n+1`,
- where `f_1` to `f_n` are the functions returned by the parser `op` and
- `x_1` to `x_n+1` are the values returned by `p`. If only a single occurance
- of `p` and no occurance of `op` is parsed, the result of `p` is returned directly.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.many1Till``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `many1Till p endp` behaves like `manyTill p endp`, except that it requires `p` to succeed at least one time.
- `many1Till p endp` is an optimized implementation of `pipe2 p (manyTill p endp) (fun hd tl -&gt; hd::tl)`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.skipManyTill``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `skipManyTill p endp` is an optimized implementation of `manyTill p endp |&gt;&gt; ignore`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.manyTill``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The `parser manyTill p endp` repeatedly applies the parser `p` 
- for as long as `endp` fails (without changing the parser state).
- It returns a list of the results returned by `p`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.skipSepEndBy1``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `skipSepEndBy1 p sep` is an optimized implementation of `sepEndBy1 p sep |&gt;&gt; ignore`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.sepEndBy1``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `sepEndBy1 p sep` parses *one* or more occurrences of `p` separated and
- optionally ended by `sep` (in EBNF notation: `p (sep p)* sep?`).
- It returns a list of the results returned by `p`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.skipSepEndBy``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `skipSepEndBy p sep` is an optimized implementation of `sepEndBy p sep |&gt;&gt; ignore`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.sepEndBy``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `sepEndBy p sep` parses *zero* or more occurrences of `p` separated and
- optionally ended by `sep` (in EBNF notation: `(p (sep p)* sep?)?`).
- It returns a list of the results returned by `p`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.skipSepBy1``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `skipSepBy1 p sep` is an optimized implementation of `sepBy1 p sep |&gt;&gt; ignore`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.sepBy1``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `sepBy1 p sep` parses *one* or more occurrences of `p` separated by `sep`
- (in EBNF notation: `p (sep p)*`).
-</summary>
-</member>
-<member name="M:FParsec.Primitives.skipSepBy``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `skipSepBy p sep` is an optimized implementation of `sepBy p sep |&gt;&gt; ignore`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.sepBy``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `sepBy p sep` parses *zero* or more occurrences of `p` separated by `sep`
- (in EBNF notation: `(p (sep p)*)?`).
-</summary>
-</member>
-<member name="M:FParsec.Primitives.skipMany1``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `skipMany1 p` is an optimized implementation of `many1 p |&gt;&gt; ignore`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.many1``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `many1 p` behaves like `many p`, except that it requires `p` to succeed at least one time.
- `many1 p` is an optimized implementation of `pipe2 p (many p) (fun hd tl -&gt; hd::tl)`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.skipMany``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `skipMany p` is an optimized implementation of `many p |&gt;&gt; ignore`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.many``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `many p` repeatedly applies the parser `p` until `p` fails.
- It returns a list of the results returned by `p`.
- At the end of the sequence `p` must fail without changing the parser state and without
- signalling a `FatalError`, otherwise `many p` will fail with the error reported by `p`.
- `many p` tries to guard against an infinite loop by throwing an exception
- if `p` succeeds without changing the parser state.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.skipArray``2(System.Int32,Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `skipArray n p` is an optimized implementation of `parray n p |&gt;&gt; ignore`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.parray``2(System.Int32,Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `parray n p` parses `n` occurences of `p` and
- returns the returns the results in an array.
- For example, `parray 3 p` is equivalent to `pipe3 p p p (fun a b c -&gt; [|a;b;c|])`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.tuple5``6(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``4}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``5}})">
-<summary>
- The parser `tuple5 p1 p2 p3 p4 p5` applies the parsers `p1`, `p2`, `p3`, `p4` and `p5` in sequence and
- returns the results in a tuple.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.tuple4``5(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``4}})">
-<summary>
- The parser `tuple4 p1 p2 p3 p4` applies the parsers `p1`, `p2`, `p3` and `p4` in sequence and
- returns the results in a tuple.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.tuple3``4(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}})">
-<summary>
- The parser `tuple3 p1 p2 p3` applies the parsers `p1`, `p2` and `p3` in sequence and
- returns the results in a tuple.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.tuple2``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `tuple2 p1 p2` applies the parsers `p1` and `p2` in sequence and
- returns the results in a tuple.
- `tuple2 p1 p2` is defined as `p1 .&gt;&gt;. p2`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.failFatally``2(System.String)">
-<summary>
- The parser `failFatally msg` always fails with a `messageError msg`. It signals a
- FatalError, so that no error recovery is attempted (except via backtracking constructs).
-</summary>
-</member>
-<member name="M:FParsec.Primitives.fail``2(System.String)">
-<summary>
- The parser `fail msg` always fails with a `messageError msg`.
- The error message will be displayed together with other error messages generated for
- the same input position.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_LessQmarkQmarkGreater``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},System.String)">
-<summary>
- The parser `p &lt;??&gt; label` behaves like `p &lt;?&gt; label`, except that when `p` fails
- after changing the parser state (for example, because `p` consumes input before it fails),
- a `CompoundError` message is generated with both the given string `label` and the
- error messages generated by `p`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_LessQmarkGreater``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},System.String)">
-<summary>
- The parser `p &lt;?&gt; label` applies the parser `p`. If `p` does not change the parser state
- (usually because `p` failed), the error messages are replaced with `expected label`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.lookAhead``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `lookAhead p` parses `p` and restores the original parse state afterwards.
- In case `p` fails after changing the parser state, the error messages are wrapped in a `NestedError`.
- If it succeeds, any error messages are discarded. Fatal errors are turned into normal errors.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.notFollowedByL``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},System.String)">
-<summary>
- The parser `notFollowedByL p` behaves like `notFollowedBy p`,
- except that it returns an `Unexpected label` error message when the parser `p` fails.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.notFollowedBy``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `notFollowedBy p` succeeds if the parser `p` fails to parse at the current position.
- Otherwise it fails with a non-fatal error. This parser never changes the parser state.
- If the parser `notFollowedBy p` fails, it returns no descriptive error message.
- Hence it should only be used together with other parsers that take care of a potential error.
- Alternatively, `notFollowedByL p label` can be used to ensure a more descriptive error message.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.followedByL``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},System.String)">
-<summary>
- The parser `followedByL p` behaves like `followedBy p`,
- except that it returns an `Expected label` error message when the parser `p` fails.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.followedBy``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `followedBy p` succeeds if the parser `p` succeeds at the current position.
- Otherwise it fails with a non-fatal error. This parser never changes the parser state.
- If the parser `followedBy p` fails, it returns no descriptive error message.
- Hence it should only be used together with other parsers that take care of a potential error.
- Alternatively, `followedByL p label` can be used to ensure a more descriptive error message.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.notEmpty``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `notEmpty p` behaves like `p`,
- except that it fails when `p` succeeds without consuming input
- or changing the parser state in any other way.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_DotGreaterGreaterDotQmark``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `p1 .&gt;&gt;.? p2` behaves like `p1 .&gt;&gt;. p2`, except that it will backtrack
- to the beginning if `p2` fails with a non-fatal error and without changing the parser state,
- even if `p1` has changed the parser state.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_DotGreaterGreaterQmark``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `p1 .&gt;&gt;? p2` behaves like `p1 .&gt;&gt; p2`, except that it will backtrack
- to the beginning if `p2` fails with a non-fatal error and without changing the parser state,
- even if `p1` has changed the parser state.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_GreaterGreaterQmark``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `p1 &gt;&gt;? p2` behaves like `p1 &gt;&gt;. p2`, except that it will backtrack
- to the beginning if `p2` fails with a non-fatal error and without changing the parser state,
- even if `p1` has changed the parser state.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_GreaterGreaterEqualsQmark``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}}})">
-<summary>
- The parser `p &gt;&gt;=? f` behaves like `p &gt;&gt;= f`, except that it will backtrack to the beginning
- if the parser returned by `f` fails with a non-fatal error and without changing the parser state,
- even if `p` has changed the parser state.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.attempt``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `attempt p` applies the parser `p`.
- If `p` fails after changing the parser state or with a fatal error,
- `attempt p` will backtrack to the original parser state and report a non-fatal error.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.optional``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `optional p` skips over an optional occurrence of `p`.
- `optional p` is an optimized implementation of `(p &gt;&gt;% ()) &lt;|&gt;% ()`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.opt``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `opt p` parses an optional occurrence of `p` as an option value.
- `opt p` is an optimized implementation of `(p |&gt;&gt; Some) &lt;|&gt;% None`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_LessBarGreaterPercent``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},``0)">
-<summary>
- The parser `p &lt;|&gt;% x` is an optimized implementation of `p &lt;|&gt; preturn x`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.choiceL``2(System.Collections.Generic.IEnumerable{Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}}},System.String)">
-<summary>
- The parser `choiceL ps label` is an optimized implementation of `choice ps &lt;?&gt; label`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.choice``2(System.Collections.Generic.IEnumerable{Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}}})">
-<summary>
- The parser `choice ps` is an optimized implementation of `p1 &lt;|&gt; p2 &lt;|&gt; ... &lt;|&gt; pn`,
- where `p1` ... `pn` are the parsers in the sequence `ps`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_LessBarGreater``2(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}})">
-<summary>
- The parser `p1 &lt;|&gt; p2` first applies the parser `p1`.
- If `p1` succeeds, the result of `p1` is returned.
- If `p1` fails with a non-fatal error and *without changing the parser state*,
- the parser `p2` is applied.
- Note: The stream position is part of the parser state, so if `p1` fails after consuming input,
- `p2` will not be applied.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.pipe5``7(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``4}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``5}},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``2,Microsoft.FSharp.Core.FSharpFunc{``3,Microsoft.FSharp.Core.FSharpFunc{``4,Microsoft.FSharp.Core.FSharpFunc{``5,``6}}}}})">
-<summary>
- The parser `pipe5 p1 p2 p3 p4 p5 f` applies the parsers `p1`, `p2`, `p3`, `p4` and `p5` in sequence.
- It returns the result of the function application `f a b c d e`, where `a`, `b`, `c`, `d` and `e` are the results returned by `p1`, `p2`, `p3`, `p4` and `p5`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.pipe4``6(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``4}},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``2,Microsoft.FSharp.Core.FSharpFunc{``3,Microsoft.FSharp.Core.FSharpFunc{``4,``5}}}})">
-<summary>
- The parser `pipe4 p1 p2 p3 p4 f` applies the parsers `p1`, `p2`, `p3` and `p4` in sequence.
- It returns the result `f a b c d`, where `a`, `b`, `c` and `d` are the results returned by `p1`, `p2`, `p3` and `p4`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.pipe3``5(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``2,Microsoft.FSharp.Core.FSharpFunc{``3,``4}}})">
-<summary>
- The parser `pipe3 p1 p2 p3 f` applies the parsers `p1`, `p2` and `p3` in sequence.
- It returns the result `f a b c`, where `a`, `b` and `c` are the results returned by `p1`, `p2` and `p3`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.pipe2``4(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``2,``3}})">
-<summary>
- The parser `pipe2 p1 p2 f` applies the parsers `p1` and `p2` in sequence.
- It returns the result `f a b`, where `a` and `b` are the results returned by `p1` and `p2`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_BarGreaterGreater``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{``0,``2})">
-<summary>
- The parser `p |&gt;&gt; f` applies the parser `p` and
- returns the result `f x`,  where `x` is the result returned by `p`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.between``4(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``3}})">
-<summary>
- The parser `between popen pclose p` applies the parsers `pOpen`, `p` and `pEnd` in sequence.
- It returns the result of `p`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_DotGreaterGreaterDot``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `p1 .&gt;&gt;. p2` applies the parsers `p1` and `p2` in sequence and returns the results in a tuple.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_DotGreaterGreater``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `p1 .&gt;&gt; p2` applies the parsers `p1` and `p2` in sequence and returns the result of `p1`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_GreaterGreaterDot``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}})">
-<summary>
- The parser `p1 &gt;&gt;. p2` applies the parsers `p1` and `p2` in sequence and returns the result of `p2`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_GreaterGreaterPercent``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},``2)">
-<summary>
- The parser `p &gt;&gt;% x` applies the parser `p` and returns the result `x`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.op_GreaterGreaterEquals``3(Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``0}},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{FParsec.CharStream{``1},FParsec.Reply{``2}}})">
-<summary>
- The parser `p &gt;&gt;= f` first applies the parser `p` to the input, then applies the function `f`
- to the result returned by `p` and finally applies the parser returned by `f` to the input.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.pzero``2">
-<summary>
- The parser `pzero` always fails with an empty error message list, i.e. an unspecified error.
- `pzero x` is defined as `fun stream -&gt; Reply(Error, NoErrorMessages)`.
-</summary>
-</member>
-<member name="M:FParsec.Primitives.preturn``2(``0)">
-<summary>
- The parser `preturn x` always succeeds with the result `x` (without changing the parser state).
- `preturn x` is defined as `fun stream -&gt; Reply(x)`.
-</summary>
-</member>
-<member name="P:FParsec.Primitives.FatalError">
-<summary>
- The parser failed and no error recovery (except after backtracking) should be tried.
-</summary>
-</member>
-<member name="P:FParsec.Primitives.Error">
-<summary>
- The parser failed.
-</summary>
-</member>
-<member name="P:FParsec.Primitives.Ok">
-<summary>
- The parser succeeded.
 </summary>
 </member>
 </members>

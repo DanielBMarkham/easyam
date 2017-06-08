@@ -12,5 +12,29 @@
  writeHtmlBeginAndHead (sw:System.IO.StreamWriter) (title:string) (description:string) (author:string) (fileShortName:string)
 </summary>
 </member>
+<member name="T:EasyamParsingEngine.IncomingLine">
+<summary>
+ INITIAL INCOMING FILE PROCESSING. TAKES A LIST OF STRINGS AND MAKES A LIST OF COMMANDS
+
+</summary>
+</member>
+<member name="M:EasyamParsingEngine.bulkFileLineProcessing(Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.IO.FileInfo,System.String[]}})">
+<summary>
+ Takes a list of files, cleans and concatenates the contents of each one
+
+</summary>
+</member>
+<member name="M:EasyamParsingEngine.findInitialTextKeywordAndRemainingTextOnALine(Microsoft.FSharp.Collections.FSharpList{System.String},System.String)">
+<summary>
+ TOKEN PROCESSING. TAKES A LINE AND MAKES A LIST OF COMMANDS AND VALUES
+
+</summary>
+</member>
+<member name="P:findInitialTextKeywordAndRemainingTextOnALineTests.miscCommandTokens">
+<summary>
+ Splitting a line up into commands and values
+
+</summary>
+</member>
 </members>
 </doc>
