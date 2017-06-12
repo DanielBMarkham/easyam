@@ -22,10 +22,11 @@
         |MULTIPLE_TARGETS
     [<NoComparison>]
     type TOKEN_CATEGORY = 
-        |BEHAVIOR
+        |BUCKETS
+        |GENRE
+        |TEMPORAL
+        |ABSTRACTION_LEVEL
         |TASKS
-        |STRUCTURE
-        |SUPPLEMENTAL
         |MISC
         |HDD
         |SCOPING
@@ -39,26 +40,49 @@
             Category:TOKEN_CATEGORY
             Token:string
         }
+    type ANNOTATION_TOKEN_TYPE =
+        | None
+        | Note
+        | Question
+        | ToDo
+        | Work
     let EasyAMTokens = 
         [
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="NOTE "};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="NOTE:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;          Token="NOTES "};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="//"};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="Q:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="QUESTION: "};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="QUESTION "};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;          Token="QUESTIONS "};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="TODO: "};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="TODO "};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;          Token="TODOS "};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="WORK: "};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;          Token="WORK "};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;          Token="WORKS "}
-            //{Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=TASKS;         Token="T: "};
-            //{Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=TASKS;         Token="TASK: "};
-            //{Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=TASKS;         Token="TASK "};
-            //{Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TASKS;         Token="TASKS "};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="NOTE "};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="NOTE:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES: "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="//"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="Q:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="QUESTION: "};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="QUESTION "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="QUESTIONS "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="QUESTIONS: "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="QUESTIONS:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="TODO: "};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="TODO "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TODOS "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TODOS: "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TODOS:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="WORK: "};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="WORK "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS "}
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS: "}
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS:"};
+
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="BEHAVIOR"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="STRUCTURE"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTAL"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="BUSINESS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="SYSTEM"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="META"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="WAS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="AS-IS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="TO-BE"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="ABSTRACT"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="REALIZED"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="HDD"};
         ]
     let CommandTokens = EasyAMTokens |> List.map(fun x->x.Token)
 
@@ -198,33 +222,66 @@
             SourceLine:IncomingLine
         }
     [<NoComparison>]
-    type ModelItemLocation =
+    type ModelLocationPointer =
         {
+            Namespace:string
+            ParentId:int
+            TagValueList:(string*string) list
+            InHDDMode:bool
             Bucket:Buckets
             Genre:Genres
             AbstractionLevel:AbstractionLevels
             TemporalIndicator:TemporalIndicators
+            AnnotationIndicator:ANNOTATION_TOKEN_TYPE
+        }
+    let defaultModelLocationPointer =
+        {
+            Namespace = ""
+            ParentId = -1
+            TagValueList = []
+            InHDDMode=false
+            Bucket=Buckets.None
+            Genre=Genres.None
+            AbstractionLevel=AbstractionLevels.None
+            TemporalIndicator=TemporalIndicators.None
+            AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None
         }
     [<NoComparison>]
     type ModelItem2 =
         {
             Id:int
+            Location:ModelLocationPointer
+            Description:string
+            Annotations:(ANNOTATION_TOKEN_TYPE*string) []
             SourceReferences:IncomingLine []
-            //ParentId:int
-            //ItemType:ModelItemType
-            //Bucket:Buckets
-            //Genre:Genres
-            //AbstractionLevel:AbstractionLevels
-            //TemporalIndicator:TemporalIndicators
-            //ItemAnnotation:ItemAnnotation
-            //ModelItemName:string
         }
-
+    let defaultModelItem2:ModelItem2 =
+        {
+            Id=(-1)
+            Location=defaultModelLocationPointer
+            Description=""
+            Annotations=[||]
+            SourceReferences=[||]
+        }
+    [<NoComparison>]
+    type CompilerWaitingFor =
+        |Nothing
+        |SingleTarget
+        |MultipleTargets
     [<NoComparison>]
     type CompilerReturn = 
         {
+            CurrentLocation:ModelLocationPointer
+            CompilerWaitingForState:CompilerWaitingFor
             CompilerMessages:CompilerMessage []
             ModelItems:ModelItem2 []
+        }
+    let beginningCompilerStatus =
+        {
+            CurrentLocation=defaultModelLocationPointer
+            CompilerWaitingForState=CompilerWaitingFor.Nothing
+            CompilerMessages=[||]
+            ModelItems= [|defaultModelItem2|]
         }
     [<NoComparison>]
     type RunningStatus =
@@ -239,7 +296,7 @@
     /// Takes a list of files, cleans and concatenates the contents of each one
     ///
     let bulkFileLineProcessing (filesToProcess:(System.IO.FileInfo*string []) list) =
-        let newCompilerReturn = {CompilerMessages=Array.empty; ModelItems=Array.empty} //{CompilerMessages=List<CompilerMessage>.Empty; ModelItems=List<ModelItem2>.Empty}
+        let newCompilerReturn = beginningCompilerStatus
         let completedRunningStatus =
             filesToProcess |> List.fold(fun (acc:RunningStatus) x->
                 let allFileText=snd x
@@ -255,91 +312,128 @@
                 ) {FileNumber=0; IncomingRawLineCount=0; IncomingLineCountWithEmptyLinesStripped=0; IncomingLinesConcatenated=[||]; CompilerReturn=newCompilerReturn}
         completedRunningStatus.IncomingLinesConcatenated, completedRunningStatus.CompilerReturn
 
+    let updateModelItem (compilerStatus:CompilerReturn) (updatedModelItem:ModelItem2) = 
+        let splitItemsListFirstPart =fst (compilerStatus.ModelItems |> Array.partition(fun z->z.Id<updatedModelItem.Id))
+        let previousVersionOfItem = compilerStatus.ModelItems |> Array.find(fun x->x.Id=updatedModelItem.Id)
+        let splitItemsListSecondPart =fst (compilerStatus.ModelItems |> Array.partition(fun z->z.Id>updatedModelItem.Id))
+        let newModelItems =  splitItemsListSecondPart |> Array.append [|updatedModelItem|] |> Array.append splitItemsListFirstPart
+        {compilerStatus with ModelItems=newModelItems}
+
+    let addAnnotation (parentId:int) (annotationType:ANNOTATION_TOKEN_TYPE) (annotationValue:string) (sourceLine:IncomingLine) (currentCompilerStatus:CompilerReturn) =
+        if annotationValue="" then currentCompilerStatus
+            else
+                let modelItemToChange = currentCompilerStatus.ModelItems |> Array.tryFind(fun x->x.Id=parentId)
+                if modelItemToChange.IsNone
+                    then currentCompilerStatus
+                    else
+                        let newAnnotation = (annotationType,annotationValue)
+                        let newAnnotations = [|newAnnotation|] |> Array.append modelItemToChange.Value.Annotations
+                        let newSourceReferences = [|sourceLine|] |> Array.append modelItemToChange.Value.SourceReferences
+                        let newModelItem = {modelItemToChange.Value with Annotations=newAnnotations; SourceReferences=newSourceReferences}
+                        let newCompilerStatus=updateModelItem currentCompilerStatus newModelItem
+                        newCompilerStatus
+    let updateModelLocationPointer (incomingCompilerStatus:CompilerReturn) (incomingLine:IncomingLine) (incomingCommand:Command):CompilerReturn =
+        let tokenForCommand = EasyAMTokens |> List.tryFind(fun z->z.Token.Trim()=incomingCommand.Token.Trim())
+        match tokenForCommand with 
+            |option.None->
+                match incomingCompilerStatus.CompilerWaitingForState with 
+                    |CompilerWaitingFor.Nothing->
+                        let newCompilerStatus = addAnnotation incomingCompilerStatus.CurrentLocation.ParentId ANNOTATION_TOKEN_TYPE.Note incomingCommand.Value incomingLine incomingCompilerStatus 
+                        newCompilerStatus
+                    |CompilerWaitingFor.MultipleTargets->
+                        //let lastModelItemAdded=incomingCompilerStatus.ModelItems.[incomingCompilerStatus.ModelItems.Length-1]
+                        let newCompilerStatus = addAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus 
+                        newCompilerStatus
+                    |_->
+                        let newModelItem =
+                            {
+                                Id=getNextModelItemNumber()
+                                Location=incomingCompilerStatus.CurrentLocation
+                                Description=incomingCommand.Value
+                                Annotations=[||]
+                                SourceReferences= [||]
+                            }
+                        let newModelItemList = [|newModelItem|] |> Array.append incomingCompilerStatus.ModelItems
+                        {incomingCompilerStatus with ModelItems=newModelItemList}
+            |Some token->
+                match token.TargetType,token.Type,token.Category with 
+                    |TOKEN_TARGET_TYPE.SINGLE_TARGET,TOKEN_TYPE.RELATIVE_LOCATOR,TOKEN_CATEGORY.MISC->
+                        let newTempAnnotationIndicator=
+                            match token.Token with 
+                                | "Q " | "Q:" | "QUESTION " | "QUESTION"->ANNOTATION_TOKEN_TYPE.Question
+                                | "//" | "NOTE " | "NOTE: "->ANNOTATION_TOKEN_TYPE.ToDo
+                                | "TODO " | "TODO: "->ANNOTATION_TOKEN_TYPE.ToDo
+                                | "WORK: " | "WORK "->ANNOTATION_TOKEN_TYPE.Work
+                                |_->ANNOTATION_TOKEN_TYPE.Note // ERROR ERROR
+                        let newCompilerStatus = addAnnotation incomingCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus 
+                        {newCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.Nothing}
+                    |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.RELATIVE_LOCATOR,TOKEN_CATEGORY.MISC->
+                        let newTempAnnotationIndicator=
+                            match token.Token with 
+                                | "QUESTIONS " | "QUESTIONS: " | "QUESTIONS:"->ANNOTATION_TOKEN_TYPE.Question
+                                | "NOTES " | "NOTES: "|"NOTES:"->ANNOTATION_TOKEN_TYPE.Note
+                                | "TODOS " | "TODOS: "|"TODOS:"->ANNOTATION_TOKEN_TYPE.ToDo
+                                | "WORKS: " | "WORKS "|"WORKS:"->ANNOTATION_TOKEN_TYPE.Work
+                                |_->ANNOTATION_TOKEN_TYPE.Note // ERROR ERROR
+                        // run through everything split on this line by a comma and add
+                        let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                        let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                let newAccumulatorCompilerStatus=addAnnotation accumulatorCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator (x.Trim()) incomingLine accumulatorCompilerStatus 
+                                                newAccumulatorCompilerStatus
+                                                ) incomingCompilerStatus
+                        let newLocation = {newCompilerStatus.CurrentLocation with AnnotationIndicator=newTempAnnotationIndicator}
+                        {newCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
+                    |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.ABSOLUTE_LOCATOR,_->
+                        let newLocation = match token.Category with 
+                            |TOKEN_CATEGORY.BUCKETS->
+                                let newBucket = match token.Token with 
+                                                | "BEHAVIOR" | "BEHAVIOR " | "BEHAVIORS" |"BEHAVIORS "->Buckets.Behavior
+                                                | "STRUCTURE" | "STRUCTURE " | "STRUCTURES" | "STRUCTURES " ->Buckets.Structure
+                                                | "SUPPLEMENTAL" | "SUPPLEMENTAL "|"SUPPLEMENTALS" |"SUPPLEMENTALS " |_->Buckets.Supplemental
+                                let newParentId=if incomingCompilerStatus.CurrentLocation.Bucket<>Buckets.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
+                                {incomingCompilerStatus.CurrentLocation with Bucket=newBucket; ParentId=newParentId}
+                            |TOKEN_CATEGORY.ABSTRACTION_LEVEL->
+                                let newAbstractionLevel = match token.Token with 
+                                                | "ABSTRACT" | "ABSTRACT "->AbstractionLevels.Abstract
+                                                | "REALIZED" | "REALIZED "|_->AbstractionLevels.Realized
+                                let newParentId=if incomingCompilerStatus.CurrentLocation.AbstractionLevel<>AbstractionLevels.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
+                                {incomingCompilerStatus.CurrentLocation with AbstractionLevel=newAbstractionLevel; ParentId=newParentId}
+                            |TOKEN_CATEGORY.GENRE->
+                                let newGenre = match token.Token with 
+                                                | "SYSTEM" | "SYSTEM "->Genres.System
+                                                | "BUSINESS" | "BUSINESS "->Genres.Business
+                                                | "META" | "META "|_->Genres.Meta
+                                let newParentId=if incomingCompilerStatus.CurrentLocation.Genre<>Genres.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
+                                {incomingCompilerStatus.CurrentLocation with Genre=newGenre; ParentId=newParentId}
+                            |TOKEN_CATEGORY.TEMPORAL->
+                                let newTemporalIndicator = match token.Token with 
+                                                | "TO-BE" | "TO-BE "->TemporalIndicators.ToBe
+                                                | "WAS" | "WAS "->TemporalIndicators.Was
+                                                | "AS-IS" | "AS-IS "->TemporalIndicators.AsIs
+                                let newParentId=if incomingCompilerStatus.CurrentLocation.TemporalIndicator<>TemporalIndicators.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
+                                {incomingCompilerStatus.CurrentLocation with TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
+                            |TOKEN_CATEGORY.HDD->
+                                let newBucket=Buckets.None
+                                let newAbstractionLevel=AbstractionLevels.None
+                                let newGenre=Genres.None
+                                let newTemporalIndicator=TemporalIndicators.None
+                                let newInHDDMode=true
+                                let newParentId=if incomingCompilerStatus.CurrentLocation.InHDDMode=false then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
+                                {incomingCompilerStatus.CurrentLocation with InHDDMode=newInHDDMode; Bucket=newBucket; AbstractionLevel=newAbstractionLevel; Genre=newGenre; TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
+                            |_->raise(new System.Exception("messed up"))
+                        {incomingCompilerStatus with CurrentLocation=newLocation}
+
+                    |_,_,_->incomingCompilerStatus
+                
     
-    let makeRawModel (incomingLines:IncomingLine []) (currentCompilerStatus:CompilerReturn) =
-        let initialModelLines = incomingLines |> Array.fold(fun currentModelList x->
-                                        let modelItemsOnThisLine = x.Commands |> Array.fold(fun currentLineModelArray y->
-                                                                    let tokenForCommand = EasyAMTokens |> List.tryFind(fun z->true)
-                                                                    let newModelItem = 
-                                                                        {
-                                                                            Id=getNextModelItemNumber()
-                                                                            SourceReferences=[|x|]
-                                                                        }
-                                                                    let newLineModelList = [|newModelItem|] |> Array.append currentLineModelArray
-                                                                    newLineModelList
-                                                                    ) currentModelList
+    let makeRawModel (incomingLines:IncomingLine []) (incomingCompilerStatus:CompilerReturn) =
+        let initialModelLines = incomingLines |> Array.fold(fun (currentCompilerStatus:CompilerReturn) x->
+                                        let modelItemsOnThisLine = x.Commands |> Array.fold(fun (currentLineCompilerStatus:CompilerReturn) y->
+                                                                    let newCompilerStatus=updateModelLocationPointer currentLineCompilerStatus x y
+                                                                    newCompilerStatus
+                                                                    ) currentCompilerStatus
                                         let newacc = modelItemsOnThisLine
                                         newacc
-                                ) Array.empty
+                                ) incomingCompilerStatus
         initialModelLines
 
-    //let stuffModel (incomingLines:IncomingLine []):CompilerReturn =
-    //    let compilerMessageList = List.empty<CompilerMessage>
-    //    let modelItemList = List.empty<ModelItem>
-    //    // process entire line
-    //    let compiledContext = 
-    //        incomingLines |> Array.fold(fun (lineProcessorAccumulator:CompilerReturn) incomingLineBeingProcessed->
-    //            //let matchUntilNextToken="(?:(?!//|&|:|PARENT|HASA|AFFECTS|CONTAINS|WORK:|Q:|TODO:|NOTE:|MASTER DOMAIN MODEL|MASTER BACKLOG|MASTER SUPPLEMENTAL MODEL|PRODUCT BACKLOG|BUSINESS BEHAVIOR ABSTRACT|WHEN|ASA|INEEDTO|SOTHAT).)*"
-    //            //let matchUntilNextToken= ".*(?:(?!Q:).)*"
-
-    //            let matchUntilNextToken= "(?:(?!Q:).)*"
-    //            let matchCommandItselfRegex= new System.Text.RegularExpressions.Regex("(Q:)")
-    //            let matchATokenRegex= new System.Text.RegularExpressions.Regex(".*(?!Q:)")
-    //            let freeTextRegex = new System.Text.RegularExpressions.Regex("" + matchUntilNextToken)
-    //            let getTokenMatchAndRemainingString (incomingLine:string) = 
-    //                let regexMatches = freeTextRegex.Matches(incomingLineBeingProcessed.LineWithoutLeadingSpaces)
-    //                let lengthOfFirstMatch=if regexMatches.Count>0 then regexMatches.[0].Value.Length else 0
-    //                match regexMatches.Count with
-    //                    | 0-> "",""
-    //                    | 1-> regexMatches.[0].Value, ""
-    //                    | _->
-    //                            let firstMatch = if regexMatches.[0].Value="" then regexMatches.[1].Value else regexMatches.[0].Value
-    //                            let remainingString = if lengthOfFirstMatch<=incomingLine.Length then incomingLine.Substring(lengthOfFirstMatch) else ""
-    //                            firstMatch, remainingString
-
-    //            // process multiple tokens inside a line 
-    //            let rec processKeyWords (currentMatch:string) (remainingLine:string) (currentCompilerState:CompilerReturn):CompilerReturn =
-    //                    if currentMatch.Length>0
-    //                        then
-    //                            let newModelItem =
-    //                                match matchCommandItselfRegex.IsMatch(currentMatch) with
-    //                                    |true-> // there's a command here
-    //                                        let commandFound = matchCommandItselfRegex.Matches(currentMatch).[0].Value
-    //                                        // Just question for now
-    //                                        let theQuestionCommand = matchATokenRegex.Matches(commandFound)
-    //                                        let textWithoutCommand = if theQuestionCommand.Count>0 then commandFound.Substring (theQuestionCommand.[0].Value.Length) else commandFound
-    //                                        let newModelItemType = Question({Text=textWithoutCommand; SourceReference={File=incomingLineBeingProcessed.File; LineNumber=incomingLineBeingProcessed.SourceRawLineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}})
-    //                                        {
-    //                                            defaultModelItem with
-    //                                                Id=getNextItemNumber()
-    //                                                SourceCodeParent=0
-    //                                                ModelParent=0
-    //                                                ItemType= newModelItemType
-    //                                                SourceReferences=[{File=incomingLineBeingProcessed.File; LineNumber=incomingLineBeingProcessed.SourceRawLineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}]
-    //                                        }                                
-
-    //                                    |false->  // it's just text until the end of the line
-    //                                        let newModelItemType = Note({Text=currentMatch; SourceReference={File=incomingLineBeingProcessed.File; LineNumber=incomingLineBeingProcessed.SourceRawLineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}})
-    //                                        {
-    //                                            defaultModelItem with
-    //                                                Id=getNextItemNumber()
-    //                                                SourceCodeParent=0
-    //                                                ModelParent=0
-    //                                                ItemType= newModelItemType
-    //                                                SourceReferences=[{File=incomingLineBeingProcessed.File; LineNumber=incomingLineBeingProcessed.SourceRawLineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}]
-    //                                        }                                
-    //                            let oldModelItemList = lineProcessorAccumulator.ModelItems
-    //                            let newModelItems = [newModelItem] |> List.append  oldModelItemList
-    //                            // do we have another match?
-    //                            let newFirstMatch,newRemainingLine = getTokenMatchAndRemainingString remainingLine
-    //                            if newFirstMatch.Length>0
-    //                                then
-    //                                    processKeyWords newFirstMatch newRemainingLine {CompilerMessages=lineProcessorAccumulator.CompilerMessages; ModelItems=newModelItems}
-    //                                else {CompilerMessages=lineProcessorAccumulator.CompilerMessages; ModelItems=newModelItems}
-    //                        else currentCompilerState
-
-    //            let firstMatch,remainingString = getTokenMatchAndRemainingString incomingLineBeingProcessed.LineText
-    //            processKeyWords firstMatch remainingString lineProcessorAccumulator
-    //            ) {CompilerMessages=compilerMessageList; ModelItems=modelItemList}
-
-    //    compiledContext

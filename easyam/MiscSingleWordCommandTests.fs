@@ -43,6 +43,15 @@
         ret.[0].Commands.Length |> should equal 1
         ret.[0].Commands.[0].CommandIndentLevel |> should equal 0
     [<Test>]
+    let ``MISC SINGLE WORD: Behavior without a target works``() =
+        let testText = [|"BEHAVIOR"|]
+        let ret = setupCompilationScenario 0 0 0 testText
+        ret |> should haveLength 1
+        ret.[0].Commands.Length |> should equal 1
+        ret.[0].Commands.[0].CommandIndentLevel |> should equal 0
+        ret.[0].Commands.[0].Token |> should equal "BEHAVIOR"
+        ret.[0].Commands.[0].Value |> should equal ""
+    [<Test>]
     let ``MISC SINGLE WORD: Single Command In Middle Of Comment Has Correct Command Level``() =
         let testText = [|"This is a fun day to go to the beach Q: What's a beach?"|]
         let ret = setupCompilationScenario 0 0 0 testText
@@ -60,90 +69,31 @@
         ret.[0].Commands.[1].CommandIndentLevel |> should equal 1
         ret.[0].Commands.[2].CommandIndentLevel |> should equal 2
 
-    // Begin testing the creation of the raw model item list
+    // Begin testing the creation of the model
     [<Test>]
-    let ``MISC SINGLE WORD: A simple command returns one Model Item``() =
+    let ``MISC SINGLE WORD: Free text sent by itself adds a note to the default item``() =
+        let testText = [|"Dogs are not considered wolves"|]
+        let ret = setupCompilationScenario 0 0 0 testText
+        ret |> should haveLength 1
+        let newCompilerStatus=makeRawModel ret beginningCompilerStatus
+        newCompilerStatus.ModelItems |> should haveLength 1
+        newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 1
+        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Note
+    [<Test>]
+    let ``MISC SINGLE WORD: A simple annotation Q: command adds an annotation to the default item``() =
         let testText = [|"Q: Is this the real life? Is this just fantasy?"|]
         let ret = setupCompilationScenario 0 0 0 testText
         ret |> should haveLength 1
-        let beginningCompilerStatus = {CompilerMessages=Array.empty; ModelItems=Array.empty}
-        let rawModelItems=makeRawModel ret beginningCompilerStatus
-        rawModelItems |> should haveLength 1
+        let newCompilerStatus=makeRawModel ret beginningCompilerStatus
+        newCompilerStatus.ModelItems |> should haveLength 1
+        newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 1
+        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Question
     [<Test>]
-    let ``MISC SINGLE WORD: Two lines don't have the same ID``() =
-        let testText = [|"Q: Is this the real life? Is this just fantasy?";"Caught in a landslide, no escape from reality"|]
+    let ``MISC SINGLE WORD: A simple annotation TODO: command adds an annotation to the default item``() =
+        let testText = [|"TODO: Check on Pluto"|]
         let ret = setupCompilationScenario 0 0 0 testText
-        ret |> should haveLength 2
-        let beginningCompilerStatus = {CompilerMessages=Array.empty; ModelItems=Array.empty}
-        let rawModelItems=makeRawModel ret beginningCompilerStatus
-        rawModelItems |> should haveLength 2
-        rawModelItems.[0].Id=rawModelItems.[1].Id |> should equal false
-    [<Test>]
-    let ``MISC SINGLE WORD: Multiple lines have the correct SourceReferences``() =
-        let testText = [|"Hi there"; "I'm a complext line. I have many uses NOTE:Like I believe that! Q:Who is talking?"; "I am not a complex line."|]
-        let ret = setupCompilationScenario 0 0 0 testText
-        ret |> should haveLength 3
-        let beginningCompilerStatus = {CompilerMessages=Array.empty; ModelItems=Array.empty}
-        let rawModelItems=makeRawModel ret beginningCompilerStatus
-        rawModelItems |> should haveLength 5
-
-
-    //[<Test>]
-    //let ``MISC SINGLE WORD: Lines prefixed with a Q: are tagged as questions``() =
-    //    let testText = [|"Q: What is your name?"|]
-    //    let compilerMessages,modelItems = parseLines testText
-    //    modelItems |> should haveLength 1
-    //    let objType=modelItems.Item(0).ItemType.ToString()
-    //    objType.GetLeft 9 |> should equal "QUESTION:"
-
-    //[<Test>]
-    //let ``MISC SINGLE WORD: The command word is stripped out of the line``() =
-    //    let testText = [|"Q: What is your name?"|]
-    //    let compilerMessages,modelItems = parseLines testText
-    //    modelItems |> should haveLength 1
-    //    let modelItemQuestionText = match modelItems.[0].ItemType with 
-    //                                    |Question(x)->x.Text 
-    //                                    |_->""
-    //    (modelItemQuestionText.GetLeft 2 = "Q:") |> should equal false
-
-    //[<Test>]
-    //let ``MISC SINGLE WORD: Freetext line followed by question line registers correcly``() =
-    //    let testText = [|"This is my freetext";"Q: What is your name?"|]
-    //    let compilerMessages,modelItems = parseLines testText
-    //    modelItems |> should haveLength 2
-    //    let objType=modelItems.Item(0).ItemType.ToString()
-    //    objType.GetLeft 5 |> should equal "NOTE:"
-    //    let objType=modelItems.Item(1).ItemType.ToString()
-    //    objType.GetLeft 9 |> should equal "QUESTION:"
-
-    //[<Test>]
-    //let ``MISC SINGLE WORD: Question line followed by freetext line should register correctly``() =
-    //    let testText = [|"Q: What is your name?"; "This is my freetext"|]
-    //    let compilerMessages,modelItems = parseLines testText
-    //    modelItems |> should haveLength 2
-    //    let objType=modelItems.Item(0).ItemType.ToString()
-    //    objType.GetLeft 9 |> should equal "QUESTION:"
-    //    let objType=modelItems.Item(1).ItemType.ToString()
-    //    objType.GetLeft 5 |> should equal "NOTE:"
-
-    //[<Test>]
-    //let ``MISC SINGLE WORD: Question line nestled between two freetext lines works``() =
-    //    let testText = [|"The moon rises at midnight"; "Q: What is your name?"; "This is my freetext"|]
-    //    let compilerMessages,modelItems = parseLines testText
-    //    modelItems |> should haveLength 3
-    //    let objType=modelItems.Item(0).ItemType.ToString()
-    //    objType.GetLeft 5 |> should equal "NOTE:"
-    //    let objType=modelItems.Item(1).ItemType.ToString()
-    //    objType.GetLeft 9 |> should equal "QUESTION:"
-    //    let objType=modelItems.Item(2).ItemType.ToString()
-    //    objType.GetLeft 5 |> should equal "NOTE:"
-
-    //[<Test>]
-    //let ``MISC SINGLE WORD: Single line of freetext with question in it works correctly``() =
-    //    let testText = [|"The meeting is going well Q: Who is the guy in the yellow hat?"|]
-    //    let compilerMessages,modelItems = parseLines testText
-    //    modelItems |> should haveLength 2
-    //    let objType=modelItems.Item(0).ItemType.ToString()
-    //    objType.GetLeft 5 |> should equal "NOTE:"
-    //    let objType=modelItems.Item(1).ItemType.ToString()
-    //    objType.GetLeft 9 |> should equal "QUESTION:"
+        ret |> should haveLength 1
+        let newCompilerStatus=makeRawModel ret beginningCompilerStatus
+        newCompilerStatus.ModelItems |> should haveLength 1
+        newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 1
+        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.ToDo

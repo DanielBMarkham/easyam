@@ -115,7 +115,7 @@
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         processedIncomingLines.Length |> should equal 0
         compilerReturn.CompilerMessages.Length |> should equal 0
-        compilerReturn.ModelItems.Length |> should equal 0
+        compilerReturn.ModelItems.Length |> should equal 1
     [<Test>]
     let ``INITIAL PROCESSING 2: Two one-line files resolve correctly``() =
         let fileInfo1 = getFakeFileInfo()
@@ -126,7 +126,7 @@
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         processedIncomingLines.Length |> should equal 2
         compilerReturn.CompilerMessages.Length |> should equal 0
-        compilerReturn.ModelItems.Length |> should equal 0
+        compilerReturn.ModelItems.Length |> should equal 1
         processedIncomingLines.[0].LineText |> should equal "Line 1 in file 1"
         processedIncomingLines.[1].LineText |> should equal "Line 1 in file 2"
         processedIncomingLines.[0].FileCompilationNumber |> should equal 0
@@ -143,7 +143,7 @@
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         processedIncomingLines.Length |> should equal 6
         compilerReturn.CompilerMessages.Length |> should equal 0
-        compilerReturn.ModelItems.Length |> should equal 0
+        compilerReturn.ModelItems.Length |> should equal 1
         processedIncomingLines.[5].IndentLevel |> should equal 5
     [<Test>]
     let ``INITIAL PROCESSING 2: Empty file in middle of list doesn't crash it``() =
@@ -157,7 +157,7 @@
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         processedIncomingLines.Length |> should equal 6
         compilerReturn.CompilerMessages.Length |> should equal 0
-        compilerReturn.ModelItems.Length |> should equal 0
+        compilerReturn.ModelItems.Length |> should equal 1
         processedIncomingLines.[5].IndentLevel |> should equal 5
         processedIncomingLines.[4].FileCompilationNumber |> should equal 2
 

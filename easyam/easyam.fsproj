@@ -78,6 +78,7 @@
     <Compile Include="CoreTokenProcessingTests.fs" />
     <Compile Include="InitialProcessingOfIncomingFileLinesTest.fs" />
     <Compile Include="MiscSingleWordCommandTests.fs" />
+    <Compile Include="BasicModelCreationTests.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <None Include="post-build.ps1" />
