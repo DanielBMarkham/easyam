@@ -43,6 +43,14 @@
         ret.[0].Commands.Length |> should equal 1
         ret.[0].Commands.[0].CommandIndentLevel |> should equal 0
     [<Test>]
+    let ``MISC SINGLE WORD: Question with indent is only one command``() =
+        let testText = [|"    Q: Which account are we talking about?"|]
+        let ret = setupCompilationScenario 0 0 0 testText
+        ret |> should haveLength 1
+        ret.[0].Commands.Length |> should equal 1
+
+
+    [<Test>]
     let ``MISC SINGLE WORD: Behavior without a target works``() =
         let testText = [|"BEHAVIOR"|]
         let ret = setupCompilationScenario 0 0 0 testText

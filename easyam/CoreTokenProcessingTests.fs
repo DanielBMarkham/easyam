@@ -56,24 +56,6 @@
         commandList.[1].Token.Length |> should equal 2
         commandList.[1].Token |> should equal "Q:"
         
-    [<Test>]
-    let ``CORE TOKEN PROCESSING: Empty tokens stacked in a line works``() =
-        let testTokens = ["//";"Q:";"TODO:"; "NOTE:"]
-        let testText = "//Q:TODO:NOTE:"
-        let commandList = splitOutIncomingLineIntoCommandList testTokens testText
-        commandList.Length |> should equal 4
-        commandList.[0].Value |> should equal ""
-        commandList.[0].Token |> should equal "//"
-        commandList.[1].Value |> should equal ""
-        commandList.[1].Token |> should equal "Q:"
-        commandList.[2].Value |> should equal ""
-        commandList.[2].Token |> should equal "TODO:"
-        commandList.[3].Value |> should equal ""
-        commandList.[3].Token |> should equal "NOTE:"
-
-    ///
-    /// Splitting a line up into commands and values
-    ///
     let miscCommandTokens = [
         "NOTE:";
         "NOTE ";

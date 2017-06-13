@@ -48,31 +48,29 @@
         | Work
     let EasyAMTokens = 
         [
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="NOTE "};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="NOTE:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES "};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES: "};
             {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="NOTE:"};
             {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="//"};
             {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="Q:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="QUESTION: "};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="QUESTION "};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="QUESTIONS "};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="QUESTIONS: "};
             {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="QUESTIONS:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="TODO: "};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="TODO "};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TODOS "};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TODOS: "};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="QUESTIONS"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="QUESTION:"};
             {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TODOS:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="WORK: "};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="WORK "};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS "}
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS: "}
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TODOS"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="TODO:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TO-DOS:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TO-DOS"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="TO-DO:"};
             {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS"}
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="WORK:"};
 
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="BEHAVIOR"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="STRUCTURE"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTALS:"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTALS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTAL:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTAL"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="BUSINESS"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="SYSTEM"};
@@ -82,7 +80,7 @@
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="TO-BE"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="ABSTRACT"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="REALIZED"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="HDD"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HDD"};
         ]
     let CommandTokens = EasyAMTokens |> List.map(fun x->x.Token)
 
@@ -92,7 +90,7 @@
     let findInitialTextKeywordAndRemainingTextOnALine (tokenList:string list) (incomingLine:string):(string*string*string) option =
         let tokensInARegexORStatement = tokenList |> String.concat "|"
         let regexJustFindToken = new System.Text.RegularExpressions.Regex(tokensInARegexORStatement)
-        let regexParseTokenOutOfString = "(?:(?!" + tokensInARegexORStatement + ").)*"
+        let regexParseTokenOutOfString = "(?:(?!" + tokensInARegexORStatement + "\b).)*"
         let tokenRegex = new System.Text.RegularExpressions.Regex(regexParseTokenOutOfString)
         let stringMatches = tokenRegex.Matches(incomingLine).toSeq |> Seq.toList
         let stringMatchesFiltered = stringMatches|> List.filter(fun x->x.Value.Length>0)
@@ -141,7 +139,7 @@
                             let newCommand = {Token="";Value=remainingLine;CommandIndentLevel=0}
                             let newAcc = [newCommand] |> List.append acc
                             raise (CommandParsingException(newAcc))
-                takeOutNextCommand List<Command>.Empty incomingLine
+                (takeOutNextCommand List<Command>.Empty incomingLine) |> List.filter(fun x->(x.Value=""&&x.Token="")=false)
 
     ///
     /// INITIAL INCOMING FILE PROCESSING. TAKES A LIST OF STRINGS AND MAKES A LIST OF COMMANDS
@@ -203,7 +201,7 @@
                 }
             )
         let finishedProduct = emptyLinesStripped |> Array.map(fun x->
-            let commandsFoundInLine=splitOutIncomingLineIntoCommandList CommandTokens x.LineText
+            let commandsFoundInLine=(splitOutIncomingLineIntoCommandList CommandTokens x.LineText) 
             let commandsFoundInLineWithCommandLevels = commandsFoundInLine |> List.mapi(fun j y->
                 {y with CommandIndentLevel=x.IndentLevel+j}
                 )
@@ -224,6 +222,7 @@
     [<NoComparison>]
     type ModelLocationPointer =
         {
+            LastFileNameProcessed:string
             Namespace:string
             ParentId:int
             TagValueList:(string*string) list
@@ -236,6 +235,7 @@
         }
     let defaultModelLocationPointer =
         {
+            LastFileNameProcessed=""
             Namespace = ""
             ParentId = -1
             TagValueList = []
@@ -332,7 +332,11 @@
                         let newModelItem = {modelItemToChange.Value with Annotations=newAnnotations; SourceReferences=newSourceReferences}
                         let newCompilerStatus=updateModelItem currentCompilerStatus newModelItem
                         newCompilerStatus
-    let updateModelLocationPointer (incomingCompilerStatus:CompilerReturn) (incomingLine:IncomingLine) (incomingCommand:Command):CompilerReturn =
+    let updateModelLocationPointer (originalCompilerStatus:CompilerReturn) (incomingLine:IncomingLine) (incomingCommand:Command):CompilerReturn =
+        // context resets when the file changes
+        let incomingCompilerStatus=if incomingLine.File.FullName=originalCompilerStatus.CurrentLocation.LastFileNameProcessed
+                                    then originalCompilerStatus
+                                    else {originalCompilerStatus with CompilerWaitingForState=Nothing; CurrentLocation={defaultModelLocationPointer with LastFileNameProcessed=incomingLine.File.FullName}}
         let tokenForCommand = EasyAMTokens |> List.tryFind(fun z->z.Token.Trim()=incomingCommand.Token.Trim())
         match tokenForCommand with 
             |option.None->
@@ -342,7 +346,33 @@
                         newCompilerStatus
                     |CompilerWaitingFor.MultipleTargets->
                         //let lastModelItemAdded=incomingCompilerStatus.ModelItems.[incomingCompilerStatus.ModelItems.Length-1]
-                        let newCompilerStatus = addAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus 
+                        // If there are any tags at all set, you put stuff in under the defaults. Otherwise it's a Note
+                        let newCompilerStatus = 
+                            let currentLocation = incomingCompilerStatus.CurrentLocation
+                            if currentLocation.InHDDMode=false && currentLocation.AbstractionLevel=AbstractionLevels.None && currentLocation.Bucket=Buckets.None && currentLocation.Genre=Genres.None && currentLocation.TemporalIndicator=TemporalIndicators.None && currentLocation.AnnotationIndicator<>ANNOTATION_TOKEN_TYPE.None
+                                then
+                                    addAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus 
+                                else
+                                    // some kind of tags are set
+                                    let newBucket=if currentLocation.Bucket=Buckets.None then Buckets.Behavior else currentLocation.Bucket
+                                    let newGenre= if currentLocation.Genre=Genres.None then Genres.Business else currentLocation.Genre
+                                    let newAbstractionLevel=if currentLocation.AbstractionLevel=AbstractionLevels.None then AbstractionLevels.Abstract else currentLocation.AbstractionLevel
+                                    let newTemporalIndicator=if currentLocation.TemporalIndicator=TemporalIndicators.None then TemporalIndicators.ToBe else currentLocation.TemporalIndicator
+                                    let newLocationPointer = {incomingCompilerStatus.CurrentLocation with Bucket=newBucket; Genre=newGenre; AbstractionLevel=newAbstractionLevel; TemporalIndicator=newTemporalIndicator}
+                                    let newModelItem =
+                                        {
+                                            Id=getNextModelItemNumber()
+                                            Location=newLocationPointer
+                                            Description=incomingCommand.Value
+                                            Annotations= [||]
+                                            SourceReferences=[|incomingLine|]
+                                        }
+                                    let newModelItems = [|newModelItem|] |> Array.append incomingCompilerStatus.ModelItems
+                                    if newModelItem.Description.Trim()<>""
+                                        then
+                                            {incomingCompilerStatus with ModelItems=newModelItems; CurrentLocation={newLocationPointer with ParentId=newModelItem.Id}}
+                                        else
+                                            incomingCompilerStatus
                         newCompilerStatus
                     |_->
                         let newModelItem =
@@ -360,20 +390,21 @@
                     |TOKEN_TARGET_TYPE.SINGLE_TARGET,TOKEN_TYPE.RELATIVE_LOCATOR,TOKEN_CATEGORY.MISC->
                         let newTempAnnotationIndicator=
                             match token.Token with 
-                                | "Q " | "Q:" | "QUESTION " | "QUESTION"->ANNOTATION_TOKEN_TYPE.Question
-                                | "//" | "NOTE " | "NOTE: "->ANNOTATION_TOKEN_TYPE.ToDo
-                                | "TODO " | "TODO: "->ANNOTATION_TOKEN_TYPE.ToDo
-                                | "WORK: " | "WORK "->ANNOTATION_TOKEN_TYPE.Work
+                                | "Q " | "Q:" | "QUESTION " | "QUESTION"|"QUESTION:"->ANNOTATION_TOKEN_TYPE.Question
+                                | "//" | "NOTE " | "NOTE: "|"NOTE:"->ANNOTATION_TOKEN_TYPE.Note
+                                | "TODO " | "TODO: "|"TODO:"|"TO-DO"|"TO-DO: "|"TO-DO:"->ANNOTATION_TOKEN_TYPE.ToDo
+                                | "WORK: " | "WORK "|"WORK:"->ANNOTATION_TOKEN_TYPE.Work
                                 |_->ANNOTATION_TOKEN_TYPE.Note // ERROR ERROR
                         let newCompilerStatus = addAnnotation incomingCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus 
-                        {newCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.Nothing}
+                        //{newCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.Nothing}
+                        newCompilerStatus
                     |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.RELATIVE_LOCATOR,TOKEN_CATEGORY.MISC->
                         let newTempAnnotationIndicator=
                             match token.Token with 
-                                | "QUESTIONS " | "QUESTIONS: " | "QUESTIONS:"->ANNOTATION_TOKEN_TYPE.Question
-                                | "NOTES " | "NOTES: "|"NOTES:"->ANNOTATION_TOKEN_TYPE.Note
-                                | "TODOS " | "TODOS: "|"TODOS:"->ANNOTATION_TOKEN_TYPE.ToDo
-                                | "WORKS: " | "WORKS "|"WORKS:"->ANNOTATION_TOKEN_TYPE.Work
+                                | "QUESTIONS"|"QUESTIONS " | "QUESTIONS: " | "QUESTIONS:"->ANNOTATION_TOKEN_TYPE.Question
+                                | "NOTES"|"NOTES " | "NOTES: "|"NOTES:"->ANNOTATION_TOKEN_TYPE.Note
+                                | "TODOS"|"TODOS " | "TODOS: "|"TODOS:"|"TO-DOS"|"TO-DOS "|"TO-DOS: "|"TO-DOS:"->ANNOTATION_TOKEN_TYPE.ToDo
+                                | "WORKS"|"WORKS: " | "WORKS "|"WORKS:"->ANNOTATION_TOKEN_TYPE.Work
                                 |_->ANNOTATION_TOKEN_TYPE.Note // ERROR ERROR
                         // run through everything split on this line by a comma and add
                         let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
@@ -384,34 +415,61 @@
                         let newLocation = {newCompilerStatus.CurrentLocation with AnnotationIndicator=newTempAnnotationIndicator}
                         {newCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
                     |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.ABSOLUTE_LOCATOR,_->
-                        let newLocation = match token.Category with 
+                        match token.Category with 
                             |TOKEN_CATEGORY.BUCKETS->
                                 let newBucket = match token.Token with 
                                                 | "BEHAVIOR" | "BEHAVIOR " | "BEHAVIORS" |"BEHAVIORS "->Buckets.Behavior
                                                 | "STRUCTURE" | "STRUCTURE " | "STRUCTURES" | "STRUCTURES " ->Buckets.Structure
                                                 | "SUPPLEMENTAL" | "SUPPLEMENTAL "|"SUPPLEMENTALS" |"SUPPLEMENTALS " |_->Buckets.Supplemental
                                 let newParentId=if incomingCompilerStatus.CurrentLocation.Bucket<>Buckets.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
-                                {incomingCompilerStatus.CurrentLocation with Bucket=newBucket; ParentId=newParentId}
+                                let currentLocation = incomingCompilerStatus.CurrentLocation
+                                let newGenre= if currentLocation.Genre=Genres.None then Genres.Business else currentLocation.Genre
+                                let newAbstractionLevel=if currentLocation.AbstractionLevel=AbstractionLevels.None then AbstractionLevels.Abstract else currentLocation.AbstractionLevel
+                                let newTemporalIndicator=if currentLocation.TemporalIndicator=TemporalIndicators.None then TemporalIndicators.ToBe else currentLocation.TemporalIndicator
+                                let newLocationPointer = {incomingCompilerStatus.CurrentLocation with Bucket=newBucket; Genre=newGenre; AbstractionLevel=newAbstractionLevel; TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
+                                let updatedCompilerStatus = {incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocationPointer}
+                                let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                                let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                        if x.Trim()<>""
+                                                            then
+                                                                let newModelItem =
+                                                                    {
+                                                                        Id=getNextModelItemNumber()
+                                                                        Location=newLocationPointer
+                                                                        Description=x.Trim()
+                                                                        Annotations= [||]
+                                                                        SourceReferences=[|incomingLine|]
+                                                                    }
+
+                                                                let newModelItems = [|newModelItem|] |> Array.append accumulatorCompilerStatus.ModelItems
+                                                                {incomingCompilerStatus with ModelItems=newModelItems; CurrentLocation={newLocationPointer with ParentId=newModelItem.Id}}
+                                                            else
+                                                                accumulatorCompilerStatus
+                                                        ) updatedCompilerStatus
+                                newCompilerStatus
                             |TOKEN_CATEGORY.ABSTRACTION_LEVEL->
                                 let newAbstractionLevel = match token.Token with 
                                                 | "ABSTRACT" | "ABSTRACT "->AbstractionLevels.Abstract
                                                 | "REALIZED" | "REALIZED "|_->AbstractionLevels.Realized
                                 let newParentId=if incomingCompilerStatus.CurrentLocation.AbstractionLevel<>AbstractionLevels.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
-                                {incomingCompilerStatus.CurrentLocation with AbstractionLevel=newAbstractionLevel; ParentId=newParentId}
+                                let newLocation = {incomingCompilerStatus.CurrentLocation with AbstractionLevel=newAbstractionLevel; ParentId=newParentId}
+                                {incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
                             |TOKEN_CATEGORY.GENRE->
                                 let newGenre = match token.Token with 
                                                 | "SYSTEM" | "SYSTEM "->Genres.System
                                                 | "BUSINESS" | "BUSINESS "->Genres.Business
                                                 | "META" | "META "|_->Genres.Meta
                                 let newParentId=if incomingCompilerStatus.CurrentLocation.Genre<>Genres.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
-                                {incomingCompilerStatus.CurrentLocation with Genre=newGenre; ParentId=newParentId}
+                                let newLocation = {incomingCompilerStatus.CurrentLocation with Genre=newGenre; ParentId=newParentId}
+                                {incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
                             |TOKEN_CATEGORY.TEMPORAL->
                                 let newTemporalIndicator = match token.Token with 
                                                 | "TO-BE" | "TO-BE "->TemporalIndicators.ToBe
                                                 | "WAS" | "WAS "->TemporalIndicators.Was
                                                 | "AS-IS" | "AS-IS "->TemporalIndicators.AsIs
                                 let newParentId=if incomingCompilerStatus.CurrentLocation.TemporalIndicator<>TemporalIndicators.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
-                                {incomingCompilerStatus.CurrentLocation with TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
+                                let newLocation = {incomingCompilerStatus.CurrentLocation with TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
+                                {incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
                             |TOKEN_CATEGORY.HDD->
                                 let newBucket=Buckets.None
                                 let newAbstractionLevel=AbstractionLevels.None
@@ -419,10 +477,9 @@
                                 let newTemporalIndicator=TemporalIndicators.None
                                 let newInHDDMode=true
                                 let newParentId=if incomingCompilerStatus.CurrentLocation.InHDDMode=false then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
-                                {incomingCompilerStatus.CurrentLocation with InHDDMode=newInHDDMode; Bucket=newBucket; AbstractionLevel=newAbstractionLevel; Genre=newGenre; TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
+                                let newLocation = {incomingCompilerStatus.CurrentLocation with InHDDMode=newInHDDMode; Bucket=newBucket; AbstractionLevel=newAbstractionLevel; Genre=newGenre; TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
+                                {incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
                             |_->raise(new System.Exception("messed up"))
-                        {incomingCompilerStatus with CurrentLocation=newLocation}
-
                     |_,_,_->incomingCompilerStatus
                 
     

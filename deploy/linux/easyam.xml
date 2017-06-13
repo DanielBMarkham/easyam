@@ -30,11 +30,5 @@
 
 </summary>
 </member>
-<member name="P:findInitialTextKeywordAndRemainingTextOnALineTests.miscCommandTokens">
-<summary>
- Splitting a line up into commands and values
-
-</summary>
-</member>
 </members>
 </doc>
