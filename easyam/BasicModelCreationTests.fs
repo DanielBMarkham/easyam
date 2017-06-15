@@ -314,7 +314,6 @@
         newCompilerStatus.ModelItems.[2].Description |> should equal "Customer transport page"
         newCompilerStatus.ModelItems.[2].Annotations.Length |> should equal 1
         fst newCompilerStatus.ModelItems.[2].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-    
 
     [<Test>]
     let ``BASIC MODEL CREATION: Context resets over file change``() =
@@ -322,19 +321,10 @@
         let fileInfo2 = getFakeFileInfo()
         let testText1 = [|"Here's some text"; "BUSINESS BEHAVIOR ABSTRACT TO-BE"; "  Reconcile account"; "      Pull the plug"|]
         let testText2 = [|"A new beginning"; "SYSTEM SUPPLEMENTAL REALIZED WAS"; "  Everybody gets a sticker"; "      The stickers blow up"|]
-        let listToProcess = [(fileInfo1,testText1);(fileInfo2,testText2)]
+        let listToProcess = [|(fileInfo1,testText1);(fileInfo2,testText2)|]
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 5
-        //newCompilerStatus.ModelItems.[1].Description |> should equal "Reconcile account"
-        //newCompilerStatus.ModelItems.[1].Annotations.Length |> should equal 1
-        //fst newCompilerStatus.ModelItems.[1].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Note
-        //newCompilerStatus.ModelItems.[2].Description |> should equal "Customer transport page"
-        //newCompilerStatus.ModelItems.[2].Annotations.Length |> should equal 1
-        //fst newCompilerStatus.ModelItems.[2].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-
-
-
 
 
     

@@ -18,7 +18,7 @@
 
 </summary>
 </member>
-<member name="M:EasyamParsingEngine.bulkFileLineProcessing(Microsoft.FSharp.Collections.FSharpList{System.Tuple{System.IO.FileInfo,System.String[]}})">
+<member name="M:EasyamParsingEngine.bulkFileLineProcessing(System.Tuple{System.IO.FileInfo,System.String[]}[])">
 <summary>
  Takes a list of files, cleans and concatenates the contents of each one
 

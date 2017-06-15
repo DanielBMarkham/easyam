@@ -79,6 +79,8 @@
     <Compile Include="InitialProcessingOfIncomingFileLinesTest.fs" />
     <Compile Include="MiscSingleWordCommandTests.fs" />
     <Compile Include="BasicModelCreationTests.fs" />
+    <Compile Include="IntModelCreationTests.fs" />
+    <Compile Include="BasicModelCheckTests.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <None Include="post-build.ps1" />

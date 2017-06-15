@@ -214,11 +214,30 @@
         | Error
     [<NoComparison>]
     type CompilerMessage =
-        {
-            MessageType:CompilerMessageType
-            Message:string
-            SourceLine:IncomingLine
-        }
+            {
+                MessageType:CompilerMessageType
+                Message:string
+                SourceFile:string
+                SourceLineBegin:int
+                SourceLineEnd:int option
+                SourceLineColumnBegin:int option
+                SourceLineColumnEnd:int option
+            }
+    let printCompilerMessages (compilerMessages:CompilerMessage []) =
+        compilerMessages |> Array.iteri(fun i x->
+            let messagePrefix=match x.MessageType with
+                                    |CompilerMessageType.Info->"INFO: "
+                                    |CompilerMessageType.Warning->"WARN: "
+                                    |CompilerMessageType.Error->"ERROR: "
+            let formattedMessage=match x.SourceLineEnd,x.SourceLineColumnBegin,x.SourceLineColumnEnd with 
+                                    |option.None, option.None, option.None->
+                                        x.SourceFile + ":" + string x.SourceLineBegin + ": " + messagePrefix + x.Message
+                                    |Some endingLine, option.None, option.None->
+                                        x.SourceFile + ":" + string x.SourceLineBegin + "-" + string endingLine + ": " + messagePrefix + x.Message
+                                    |_,_,_->
+                                        x.SourceFile + ": " + messagePrefix + x.Message
+            System.Console.WriteLine(formattedMessage)
+            )
     [<NoComparison>]
     type ModelLocationPointer =
         {
@@ -292,13 +311,16 @@
             IncomingLinesConcatenated:IncomingLine []
             CompilerReturn:CompilerReturn
         }
+    let logCompilerMessage (compilerStatus:CompilerReturn) (newMessage:CompilerMessage) =
+        let newMessages = [|newMessage|] |> Array.append compilerStatus.CompilerMessages
+        {compilerStatus with CompilerMessages=newMessages}
     ///
     /// Takes a list of files, cleans and concatenates the contents of each one
     ///
-    let bulkFileLineProcessing (filesToProcess:(System.IO.FileInfo*string []) list) =
+    let bulkFileLineProcessing (filesToProcess:(System.IO.FileInfo*string []) []) =
         let newCompilerReturn = beginningCompilerStatus
         let completedRunningStatus =
-            filesToProcess |> List.fold(fun (acc:RunningStatus) x->
+            filesToProcess |> Array.fold(fun (acc:RunningStatus) x->
                 let allFileText=snd x
                 let fileBeingProcessedInfo=fst x
                 let ret = initialProcessingOfIncomingFileLines acc.FileNumber fileBeingProcessedInfo acc.IncomingRawLineCount acc.IncomingLineCountWithEmptyLinesStripped allFileText
@@ -310,7 +332,20 @@
                               }
                 newacc
                 ) {FileNumber=0; IncomingRawLineCount=0; IncomingLineCountWithEmptyLinesStripped=0; IncomingLinesConcatenated=[||]; CompilerReturn=newCompilerReturn}
-        completedRunningStatus.IncomingLinesConcatenated, completedRunningStatus.CompilerReturn
+        let newMessage = "file loading completed with " + string filesToProcess.Length + " files processed along with " + string completedRunningStatus.IncomingLinesConcatenated.Length + " lines of code reviewed"
+        let firstSourceFileName=if filesToProcess.Length>0 then (fst filesToProcess.[0]).Name else ""
+        let newCompilerMessage=
+            {
+                MessageType=CompilerMessageType.Info
+                Message=newMessage
+                SourceFile=firstSourceFileName
+                SourceLineBegin=1
+                SourceLineEnd=option.None
+                SourceLineColumnBegin=option.None
+                SourceLineColumnEnd=option.None
+            }
+        let completedAndUpdatedCompilerReturn=logCompilerMessage completedRunningStatus.CompilerReturn newCompilerMessage        
+        completedRunningStatus.IncomingLinesConcatenated, completedAndUpdatedCompilerReturn
 
     let updateModelItem (compilerStatus:CompilerReturn) (updatedModelItem:ModelItem2) = 
         let splitItemsListFirstPart =fst (compilerStatus.ModelItems |> Array.partition(fun z->z.Id<updatedModelItem.Id))
@@ -345,35 +380,41 @@
                         let newCompilerStatus = addAnnotation incomingCompilerStatus.CurrentLocation.ParentId ANNOTATION_TOKEN_TYPE.Note incomingCommand.Value incomingLine incomingCompilerStatus 
                         newCompilerStatus
                     |CompilerWaitingFor.MultipleTargets->
-                        //let lastModelItemAdded=incomingCompilerStatus.ModelItems.[incomingCompilerStatus.ModelItems.Length-1]
-                        // If there are any tags at all set, you put stuff in under the defaults. Otherwise it's a Note
-                        let newCompilerStatus = 
-                            let currentLocation = incomingCompilerStatus.CurrentLocation
-                            if currentLocation.InHDDMode=false && currentLocation.AbstractionLevel=AbstractionLevels.None && currentLocation.Bucket=Buckets.None && currentLocation.Genre=Genres.None && currentLocation.TemporalIndicator=TemporalIndicators.None && currentLocation.AnnotationIndicator<>ANNOTATION_TOKEN_TYPE.None
-                                then
-                                    addAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus 
-                                else
-                                    // some kind of tags are set
-                                    let newBucket=if currentLocation.Bucket=Buckets.None then Buckets.Behavior else currentLocation.Bucket
-                                    let newGenre= if currentLocation.Genre=Genres.None then Genres.Business else currentLocation.Genre
-                                    let newAbstractionLevel=if currentLocation.AbstractionLevel=AbstractionLevels.None then AbstractionLevels.Abstract else currentLocation.AbstractionLevel
-                                    let newTemporalIndicator=if currentLocation.TemporalIndicator=TemporalIndicators.None then TemporalIndicators.ToBe else currentLocation.TemporalIndicator
-                                    let newLocationPointer = {incomingCompilerStatus.CurrentLocation with Bucket=newBucket; Genre=newGenre; AbstractionLevel=newAbstractionLevel; TemporalIndicator=newTemporalIndicator}
-                                    let newModelItem =
-                                        {
-                                            Id=getNextModelItemNumber()
-                                            Location=newLocationPointer
-                                            Description=incomingCommand.Value
-                                            Annotations= [||]
-                                            SourceReferences=[|incomingLine|]
-                                        }
-                                    let newModelItems = [|newModelItem|] |> Array.append incomingCompilerStatus.ModelItems
-                                    if newModelItem.Description.Trim()<>""
+                        // Does this item already exist? If so, don't make a new one. Use the old one as a new parent for whatever follows
+                        let itemAlreadyExists=incomingCompilerStatus.ModelItems |> Array.tryFind(fun z->z.Description=incomingCommand.Value.Trim())
+                        if itemAlreadyExists.IsNone
+                            then
+                                // If there are any tags at all set, you put stuff in under the defaults. Otherwise it's a Note
+                                let newCompilerStatus = 
+                                    let currentLocation = incomingCompilerStatus.CurrentLocation
+                                    if currentLocation.InHDDMode=false && currentLocation.AbstractionLevel=AbstractionLevels.None && currentLocation.Bucket=Buckets.None && currentLocation.Genre=Genres.None && currentLocation.TemporalIndicator=TemporalIndicators.None && currentLocation.AnnotationIndicator<>ANNOTATION_TOKEN_TYPE.None
                                         then
-                                            {incomingCompilerStatus with ModelItems=newModelItems; CurrentLocation={newLocationPointer with ParentId=newModelItem.Id}}
+                                            addAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus 
                                         else
-                                            incomingCompilerStatus
-                        newCompilerStatus
+                                            // some kind of tags are set
+                                            let newBucket=if currentLocation.Bucket=Buckets.None then Buckets.Behavior else currentLocation.Bucket
+                                            let newGenre= if currentLocation.Genre=Genres.None then Genres.Business else currentLocation.Genre
+                                            let newAbstractionLevel=if currentLocation.AbstractionLevel=AbstractionLevels.None then AbstractionLevels.Abstract else currentLocation.AbstractionLevel
+                                            let newTemporalIndicator=if currentLocation.TemporalIndicator=TemporalIndicators.None then TemporalIndicators.ToBe else currentLocation.TemporalIndicator
+                                            let newLocationPointer = {incomingCompilerStatus.CurrentLocation with Bucket=newBucket; Genre=newGenre; AbstractionLevel=newAbstractionLevel; TemporalIndicator=newTemporalIndicator}
+                                            let newModelItem =
+                                                {
+                                                    Id=getNextModelItemNumber()
+                                                    Location=newLocationPointer
+                                                    Description=incomingCommand.Value.Trim()
+                                                    Annotations= [||]
+                                                    SourceReferences=[|incomingLine|]
+                                                }
+                                            let newModelItems = [|newModelItem|] |> Array.append incomingCompilerStatus.ModelItems
+                                            if newModelItem.Description.Trim()<>""
+                                                then
+                                                    {incomingCompilerStatus with ModelItems=newModelItems; CurrentLocation={newLocationPointer with ParentId=newModelItem.Id}}
+                                                else
+                                                    incomingCompilerStatus
+                                newCompilerStatus
+                            else
+                                let newLocation = {incomingCompilerStatus.CurrentLocation with ParentId=itemAlreadyExists.Value.Id}
+                                {incomingCompilerStatus with CurrentLocation=newLocation}
                     |_->
                         let newModelItem =
                             {
@@ -449,24 +490,24 @@
                                 newCompilerStatus
                             |TOKEN_CATEGORY.ABSTRACTION_LEVEL->
                                 let newAbstractionLevel = match token.Token with 
-                                                | "ABSTRACT" | "ABSTRACT "->AbstractionLevels.Abstract
-                                                | "REALIZED" | "REALIZED "|_->AbstractionLevels.Realized
+                                                            | "ABSTRACT" | "ABSTRACT "->AbstractionLevels.Abstract
+                                                            | "REALIZED" | "REALIZED "|_->AbstractionLevels.Realized
                                 let newParentId=if incomingCompilerStatus.CurrentLocation.AbstractionLevel<>AbstractionLevels.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
                                 let newLocation = {incomingCompilerStatus.CurrentLocation with AbstractionLevel=newAbstractionLevel; ParentId=newParentId}
                                 {incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
                             |TOKEN_CATEGORY.GENRE->
                                 let newGenre = match token.Token with 
                                                 | "SYSTEM" | "SYSTEM "->Genres.System
-                                                | "BUSINESS" | "BUSINESS "->Genres.Business
-                                                | "META" | "META "|_->Genres.Meta
+                                                | "META" | "META "->Genres.Meta
+                                                | "BUSINESS" | "BUSINESS "|_->Genres.Business
                                 let newParentId=if incomingCompilerStatus.CurrentLocation.Genre<>Genres.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
                                 let newLocation = {incomingCompilerStatus.CurrentLocation with Genre=newGenre; ParentId=newParentId}
                                 {incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
                             |TOKEN_CATEGORY.TEMPORAL->
                                 let newTemporalIndicator = match token.Token with 
-                                                | "TO-BE" | "TO-BE "->TemporalIndicators.ToBe
-                                                | "WAS" | "WAS "->TemporalIndicators.Was
-                                                | "AS-IS" | "AS-IS "->TemporalIndicators.AsIs
+                                                            | "WAS" | "WAS "->TemporalIndicators.Was
+                                                            | "TO-BE" | "TO-BE "->TemporalIndicators.ToBe
+                                                            | "AS-IS" | "AS-IS "|_->TemporalIndicators.AsIs
                                 let newParentId=if incomingCompilerStatus.CurrentLocation.TemporalIndicator<>TemporalIndicators.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
                                 let newLocation = {incomingCompilerStatus.CurrentLocation with TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
                                 {incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}

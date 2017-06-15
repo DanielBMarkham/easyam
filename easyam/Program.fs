@@ -4,6 +4,7 @@
     open Utils
     open Persist
     open FParsec
+    open EasyamParsingEngine
 
 
     let defaultBaseOptions = createNewBaseOptions "easyAM" "Compile the Analysis Model." [|"Takes tagged statements created with Structural Analysis, cross-checks and compiles."|] defaultVerbosity
@@ -40,94 +41,28 @@
         }
     let allCardinalNumbers = {1..10000}
 
-    let loadInAllIncomingLines (fileList:System.IO.FileInfo[]) =
-        let whiteSpaceRegex=new System.Text.RegularExpressions.Regex("^\s+")
-        let lineDumpForAllFiles = fileList |> Array.mapi(fun i x->
-            System.IO.File.ReadAllLines(x.FullName) |> Array.mapi(fun j incomingLineBeingProcessed->
-                let indentLevel, lineWithoutLeadingSpaces = 
-                    let whiteSpaceMatches = whiteSpaceRegex.Matches(incomingLineBeingProcessed).toArray
-                    if whiteSpaceMatches.Length>0
-                        then
-                            let leadingWhiteSpace = whiteSpaceMatches.[0].Value
-                            let tabCount = leadingWhiteSpace.CountOccurences("\t")-1
-                            let spaceCount = leadingWhiteSpace.CountOccurences(" ")-1
-                            ((tabCount + (spaceCount/4)),incomingLineBeingProcessed.Substring(leadingWhiteSpace.Length))
-                        else (0,incomingLineBeingProcessed)
-                // Note that we add 1 to j for the line number. Line numbers don't start with zero
-                {FileNumber=i;FileInfo=x; LineNumber=j+1; LineText=incomingLineBeingProcessed; IndentLevel=indentLevel; LineWithoutLeadingSpaces=lineWithoutLeadingSpaces}
-                )
-            )
-        lineDumpForAllFiles |> Array.concat
+    let loadInAllIncomingLines (fileList:System.IO.FileInfo[]) =        
+        let fileInfosAndContents:(System.IO.FileInfo*string[]) [] = fileList |> Array.map(fun x->
+                                    let contentsForTheFile=System.IO.File.ReadAllLines(x.FullName)
+                                    (x,contentsForTheFile)
+                                    )
+        fileInfosAndContents
     
-    let removeNameValueTags (lineWithOnlyLabelRemaining:string) (currentContext:ModelItem) (incomingLine:incomingLine) =
-        if lineWithOnlyLabelRemaining.Contains("&")
-            then
-                let firstDelimiter=lineWithOnlyLabelRemaining.IndexOf("&")
-                let newLineWithOnlyLabelRemaining=lineWithOnlyLabelRemaining.GetLeft(firstDelimiter-1)
-                let delimterSection = lineWithOnlyLabelRemaining.Substring(firstDelimiter+1)
-                let delimiterSections=delimterSection.Split([|"&"|], System.StringSplitOptions.None)
-                let newModelItems = delimiterSections |> Array.fold(fun acc x->
-                                    let splitByEquals=x.Split([|"="|], System.StringSplitOptions.None)
-                                    let lhs, rhs = if splitByEquals.Length>1 then splitByEquals.[0],splitByEquals.[1] else "",""
-                                    List.append acc [{currentContext with Id=(Seq.take 1 allCardinalNumbers |> Seq.toArray).[0]; ModelItemName=x; ItemType=NameValueTag({ Name=lhs; Value=rhs; SourceReference={File=incomingLine.FileInfo; LineNumber=incomingLine.LineNumber; LineLevelIndent=incomingLine.IndentLevel}})}]
-                                    ) []
-                newLineWithOnlyLabelRemaining, newModelItems
-            else
-                lineWithOnlyLabelRemaining, []
-
-    let processIncomingLines incomingLines =        
-        let compiledContext = 
-            incomingLines |> Array.fold(fun lineProcessorAccumulator incomingLineBeingProcessed->
-            let lastItemInTheContextLineList=
-                if lineProcessorAccumulator.Lines.Length>0 
-                    then
-                        lineProcessorAccumulator.Lines.Item(lineProcessorAccumulator.Lines.Length-1) 
-                    else 
-                        let newSourceReferences=[{File=incomingLineBeingProcessed.FileInfo; LineNumber=incomingLineBeingProcessed.LineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel}]
-                        {defaultModelItem with SourceReferences=newSourceReferences}
-            let lastSourceReferenceForLastItemProcessed=
-                if lineProcessorAccumulator.Lines.Length=0 
-                    then {File=incomingLineBeingProcessed.FileInfo;LineNumber=incomingLineBeingProcessed.LineNumber; LineLevelIndent=incomingLineBeingProcessed.IndentLevel} 
-                    else lastItemInTheContextLineList.SourceReferences.Item(lastItemInTheContextLineList.SourceReferences.Length-1)
-            // if there's a new file from the last time, we zap the stack and start over with context
-            let newacc = 
-                //if ( (lineProcessorAccumulator<>defaultProcessContext) && (lastSourceReferenceForLastItemProcessed.File.FullName<>incomingLineBeingProcessed.FileInfo.FullName))
-                if (  (lastSourceReferenceForLastItemProcessed.File.FullName<>incomingLineBeingProcessed.FileInfo.FullName))
-                    then
-                        {defaultProcessContext with Lines=lineProcessorAccumulator.Lines}
-                    else
-                        lineProcessorAccumulator
-            let newContext = easyAMTokens |> Array.fold(fun tokenProcessingAccumulator currentTokenWeAreLookingAt->
-                                let (incomingLineToParse:string,incomingContext)=tokenProcessingAccumulator
-                                match (incomingLineToParse.Length>0),(currentTokenWeAreLookingAt.IsMatch incomingLineToParse) with
-                                    | true, true->
-                                        let tokenMatchText, lineWithTokenConsumed =currentTokenWeAreLookingAt.ConsumeToken incomingLineToParse
-                                        let updatedContext = currentTokenWeAreLookingAt.MakeNewModelItemAndUpdateStack (lineWithTokenConsumed, tokenMatchText,incomingContext, incomingLineBeingProcessed)
-                                        (lineWithTokenConsumed, updatedContext)
-                                    | false, true-> // empty line matching the catch-all
-                                        (incomingLineToParse, incomingContext)
-                                    | _, false->
-                                        (incomingLineToParse, incomingContext)
-
-                                ) (incomingLineBeingProcessed.LineWithoutLeadingSpaces,newacc)
-            
-            snd newContext
-            ) defaultProcessContext
-        compiledContext.Lines
-    
-
     let doStuff (opts:EasyAMProgramConfig) =
         let programDirectories = getDirectories opts
         let allFiles = System.IO.Directory.EnumerateFiles((fst opts.sourceDirectory.parameterValue), "*.amin", System.IO.SearchOption.AllDirectories)
         let fileList = allFiles |> Seq.toArray |> Array.map(fun x->System.IO.FileInfo(x)) |> Array.sortBy(fun x->x.FullName)
-        let incomingLines = loadInAllIncomingLines fileList
-        let structuredAnalysisModel = processIncomingLines incomingLines
-        System.Console.WriteLine (string structuredAnalysisModel.Length)
-        rawDumpIncomingModel opts structuredAnalysisModel
-        compiledDumpIncomingModelAmout opts structuredAnalysisModel
-        compiledDumpIncomingModelHtml opts structuredAnalysisModel
-        saveMasterIndex opts structuredAnalysisModel
-        saveMasterQuestionList opts structuredAnalysisModel
+        let listToProcess = loadInAllIncomingLines fileList
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let compilerResult = makeRawModel processedIncomingLines compilerReturn
+        printCompilerMessages compilerResult.CompilerMessages
+        //let structuredAnalysisModel = processIncomingLines incomingLines
+        //System.Console.WriteLine (string structuredAnalysisModel.Length)
+        //rawDumpIncomingModel opts structuredAnalysisModel
+        //compiledDumpIncomingModelAmout opts structuredAnalysisModel
+        //compiledDumpIncomingModelHtml opts structuredAnalysisModel
+        //saveMasterIndex opts structuredAnalysisModel
+        //saveMasterQuestionList opts structuredAnalysisModel
         ()
 
 

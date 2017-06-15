@@ -111,10 +111,10 @@
         let fileInfo2 = getFakeFileInfo()
         let testTextArray1:string [] = [||]
         let testTextArray2:string [] = [||]
-        let listToProcess = [(fileInfo1,testTextArray1);(fileInfo2,testTextArray2)]
+        let listToProcess = [|(fileInfo1,testTextArray1);(fileInfo2,testTextArray2)|]
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         processedIncomingLines.Length |> should equal 0
-        compilerReturn.CompilerMessages.Length |> should equal 0
+        compilerReturn.CompilerMessages.Length |> should equal 1
         compilerReturn.ModelItems.Length |> should equal 1
     [<Test>]
     let ``INITIAL PROCESSING 2: Two one-line files resolve correctly``() =
@@ -122,10 +122,10 @@
         let fileInfo2 = getFakeFileInfo()
         let testTextArray1:string [] = [|"Line 1 in file 1"|]
         let testTextArray2:string [] = [|"Line 1 in file 2"|]
-        let listToProcess = [(fileInfo1,testTextArray1);(fileInfo2,testTextArray2)]
+        let listToProcess = [|(fileInfo1,testTextArray1);(fileInfo2,testTextArray2)|]
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         processedIncomingLines.Length |> should equal 2
-        compilerReturn.CompilerMessages.Length |> should equal 0
+        compilerReturn.CompilerMessages.Length |> should equal 1
         compilerReturn.ModelItems.Length |> should equal 1
         processedIncomingLines.[0].LineText |> should equal "Line 1 in file 1"
         processedIncomingLines.[1].LineText |> should equal "Line 1 in file 2"
@@ -139,10 +139,10 @@
         let fileInfo2 = getFakeFileInfo()
         let testTextArray1:string [] = [|"";"test1\t    \t\t    dogs  I like cats    really!\t\ttrust me!";"";"\t    test2";"";"";"";"    \t\t    \ttest3";|]
         let testTextArray2:string [] = [|"";"test4\t    \t\t    cats  I like dogs    really!\t\ttrust me!";"";"\t    test5";"";"";"";"    \t\t    \ttest6";|]
-        let listToProcess = [(fileInfo1,testTextArray1);(fileInfo2,testTextArray2)]
+        let listToProcess = [|(fileInfo1,testTextArray1);(fileInfo2,testTextArray2)|]
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         processedIncomingLines.Length |> should equal 6
-        compilerReturn.CompilerMessages.Length |> should equal 0
+        compilerReturn.CompilerMessages.Length |> should equal 1
         compilerReturn.ModelItems.Length |> should equal 1
         processedIncomingLines.[5].IndentLevel |> should equal 5
     [<Test>]
@@ -153,10 +153,10 @@
         let testTextArray1:string [] = [|"";"test1\t    \t\t    dogs  I like cats    really!\t\ttrust me!";"";"\t    test2";"";"";"";"    \t\t    \ttest3";|]
         let testTextArray2:string [] = [||]
         let testTextArray3:string [] = [|"";"test4\t    \t\t    cats  I like dogs    really!\t\ttrust me!";"";"\t    test5";"";"";"";"    \t\t    \ttest6";|]
-        let listToProcess = [(fileInfo1,testTextArray1);(fileInfo2,testTextArray2);(fileInfo3,testTextArray3)]
+        let listToProcess = [|(fileInfo1,testTextArray1);(fileInfo2,testTextArray2);(fileInfo3,testTextArray3)|]
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         processedIncomingLines.Length |> should equal 6
-        compilerReturn.CompilerMessages.Length |> should equal 0
+        compilerReturn.CompilerMessages.Length |> should equal 1
         compilerReturn.ModelItems.Length |> should equal 1
         processedIncomingLines.[5].IndentLevel |> should equal 5
         processedIncomingLines.[4].FileCompilationNumber |> should equal 2
