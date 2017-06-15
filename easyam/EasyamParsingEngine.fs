@@ -347,6 +347,28 @@
         let completedAndUpdatedCompilerReturn=logCompilerMessage completedRunningStatus.CompilerReturn newCompilerMessage        
         completedRunningStatus.IncomingLinesConcatenated, completedAndUpdatedCompilerReturn
 
+    let addModelItem (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (incomingLine:IncomingLine) (desription:string) =
+        if desription.Trim().Length>0
+            then
+                // some kind of tags are set. Use defaults if missing
+                let newBucket=if location.Bucket=Buckets.None then Buckets.Behavior else location.Bucket
+                let newGenre= if location.Genre=Genres.None then Genres.Business else location.Genre
+                let newAbstractionLevel=if location.AbstractionLevel=AbstractionLevels.None then AbstractionLevels.Abstract else location.AbstractionLevel
+                let newTemporalIndicator=if location.TemporalIndicator=TemporalIndicators.None then TemporalIndicators.ToBe else location.TemporalIndicator
+                let newLocationPointer = {compilerStatus.CurrentLocation with Bucket=newBucket; Genre=newGenre; AbstractionLevel=newAbstractionLevel; TemporalIndicator=newTemporalIndicator}
+                let newModelItem =
+                    {
+                        Id=getNextModelItemNumber()
+                        Location=newLocationPointer
+                        Description=desription.Trim()
+                        Annotations= [||]
+                        SourceReferences=[|incomingLine|]
+                    }
+                let newLoc = {newLocationPointer with ParentId=newModelItem.Id}
+                let newModelItems = [|newModelItem|] |> Array.append compilerStatus.ModelItems
+                {compilerStatus with ModelItems=newModelItems; CurrentLocation=newLoc}
+            else compilerStatus
+
     let updateModelItem (compilerStatus:CompilerReturn) (updatedModelItem:ModelItem2) = 
         let splitItemsListFirstPart =fst (compilerStatus.ModelItems |> Array.partition(fun z->z.Id<updatedModelItem.Id))
         let previousVersionOfItem = compilerStatus.ModelItems |> Array.find(fun x->x.Id=updatedModelItem.Id)
@@ -391,26 +413,7 @@
                                         then
                                             addAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus 
                                         else
-                                            // some kind of tags are set
-                                            let newBucket=if currentLocation.Bucket=Buckets.None then Buckets.Behavior else currentLocation.Bucket
-                                            let newGenre= if currentLocation.Genre=Genres.None then Genres.Business else currentLocation.Genre
-                                            let newAbstractionLevel=if currentLocation.AbstractionLevel=AbstractionLevels.None then AbstractionLevels.Abstract else currentLocation.AbstractionLevel
-                                            let newTemporalIndicator=if currentLocation.TemporalIndicator=TemporalIndicators.None then TemporalIndicators.ToBe else currentLocation.TemporalIndicator
-                                            let newLocationPointer = {incomingCompilerStatus.CurrentLocation with Bucket=newBucket; Genre=newGenre; AbstractionLevel=newAbstractionLevel; TemporalIndicator=newTemporalIndicator}
-                                            let newModelItem =
-                                                {
-                                                    Id=getNextModelItemNumber()
-                                                    Location=newLocationPointer
-                                                    Description=incomingCommand.Value.Trim()
-                                                    Annotations= [||]
-                                                    SourceReferences=[|incomingLine|]
-                                                }
-                                            let newModelItems = [|newModelItem|] |> Array.append incomingCompilerStatus.ModelItems
-                                            if newModelItem.Description.Trim()<>""
-                                                then
-                                                    {incomingCompilerStatus with ModelItems=newModelItems; CurrentLocation={newLocationPointer with ParentId=newModelItem.Id}}
-                                                else
-                                                    incomingCompilerStatus
+                                            addModelItem incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine incomingCommand.Value
                                 newCompilerStatus
                             else
                                 let newLocation = {incomingCompilerStatus.CurrentLocation with ParentId=itemAlreadyExists.Value.Id}
@@ -471,21 +474,7 @@
                                 let updatedCompilerStatus = {incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocationPointer}
                                 let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
                                 let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
-                                                        if x.Trim()<>""
-                                                            then
-                                                                let newModelItem =
-                                                                    {
-                                                                        Id=getNextModelItemNumber()
-                                                                        Location=newLocationPointer
-                                                                        Description=x.Trim()
-                                                                        Annotations= [||]
-                                                                        SourceReferences=[|incomingLine|]
-                                                                    }
-
-                                                                let newModelItems = [|newModelItem|] |> Array.append accumulatorCompilerStatus.ModelItems
-                                                                {incomingCompilerStatus with ModelItems=newModelItems; CurrentLocation={newLocationPointer with ParentId=newModelItem.Id}}
-                                                            else
-                                                                accumulatorCompilerStatus
+                                                            addModelItem accumulatorCompilerStatus newLocationPointer incomingLine (x.Trim())
                                                         ) updatedCompilerStatus
                                 newCompilerStatus
                             |TOKEN_CATEGORY.ABSTRACTION_LEVEL->
@@ -523,7 +512,7 @@
                             |_->raise(new System.Exception("messed up"))
                     |_,_,_->incomingCompilerStatus
                 
-    
+
     let makeRawModel (incomingLines:IncomingLine []) (incomingCompilerStatus:CompilerReturn) =
         let initialModelLines = incomingLines |> Array.fold(fun (currentCompilerStatus:CompilerReturn) x->
                                         let modelItemsOnThisLine = x.Commands |> Array.fold(fun (currentLineCompilerStatus:CompilerReturn) y->
