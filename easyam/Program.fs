@@ -56,13 +56,6 @@
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let compilerResult = makeRawModel processedIncomingLines compilerReturn
         printCompilerMessages compilerResult.CompilerMessages
-        //let structuredAnalysisModel = processIncomingLines incomingLines
-        //System.Console.WriteLine (string structuredAnalysisModel.Length)
-        //rawDumpIncomingModel opts structuredAnalysisModel
-        //compiledDumpIncomingModelAmout opts structuredAnalysisModel
-        //compiledDumpIncomingModelHtml opts structuredAnalysisModel
-        //saveMasterIndex opts structuredAnalysisModel
-        //saveMasterQuestionList opts structuredAnalysisModel
         ()
 
 

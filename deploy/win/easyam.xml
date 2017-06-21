@@ -7,11 +7,6 @@
  Generates an infinite sequence of random numbers within the given range.
 </summary>
 </member>
-<member name="M:Utils.writeHtmlBeginAndHead(System.IO.StreamWriter,System.String,System.String,System.String,System.String)">
-<summary>
- writeHtmlBeginAndHead (sw:System.IO.StreamWriter) (title:string) (description:string) (author:string) (fileShortName:string)
-</summary>
-</member>
 <member name="T:EasyamParsingEngine.IncomingLine">
 <summary>
  INITIAL INCOMING FILE PROCESSING. TAKES A LIST OF STRINGS AND MAKES A LIST OF COMMANDS
