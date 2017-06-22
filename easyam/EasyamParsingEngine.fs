@@ -32,6 +32,7 @@
         |SCOPING
         |SHORTCUT
         |CONNECTIVE
+        |ATTRIBUTE
     [<NoComparison>]
     type EASYAM_TOKEN =
         {
@@ -81,6 +82,15 @@
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="ABSTRACT"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="REALIZED"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HDD"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYPOTHESES:"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYPOTHESES"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYPOTHESIS:"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYPOTHESIS"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYP:"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATIONS:"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATIONS"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATION"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATION:"};
 
             {Type=JOINER;               TargetType=SINGLE_TARGET;        Category=CONNECTIVE;           Token="PARENT"};
             {Type=JOINER;               TargetType=SINGLE_TARGET;        Category=CONNECTIVE;           Token="CHILD"};
@@ -89,7 +99,21 @@
             {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="AFFECTEDBY"};
             {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="USES"};
             {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="USEDBY"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="HASA"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ISOWNEDBYA"};
+//            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ABDUCTSTO"};
+//            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ABDUCTEDFROM"};
 
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="WHEN"};
+            // note the initial space below. ASA cannot appear in first column
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token=" ASA"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="INEEDTO"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="SOTHAT"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="CONTAINS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="INEEDTO"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="BECAUSE"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="WHENEVER"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="ITHASTOBETHAT"};
         ]
     let CommandTokens = EasyAMTokens |> List.map(fun x->x.Token)
 
@@ -111,7 +135,8 @@
                     match matchFound.Index with
                         |0->matchFound.Value
                         |1->incomingLine.Substring(0, matchFound.Value.Length+1)
-                        |_->raise(new System.Exception("Regex Matching is whack"))
+                        |_->
+                            raise(new System.Exception("Regex Matching is whack"))
                 let tokenInsideTokenAndValueMatchString = regexJustFindToken.Matches(tokenAndDetail)
                 match tokenInsideTokenAndValueMatchString.Count, stringMatchesFiltered.Length with                     
                     |0,0->Some("", "", stringMatchesFiltered.[0].Value)
@@ -251,13 +276,46 @@
         type LastCompilerOperations =
             | PointerReset
             | NewModelItem
+            | ReferenceExistingItem
             | LocationChange
             | NewJoin
+            | NewAttribute
+    [<NoComparison>]
+    type ModelAttributeTypes =
+        | Trigger
+        | Actor
+        | Goal
+        | BusinessContext
+        | Contains
+        | Because
+        | Whenever
+        | ItHasToBeThat
+    [<NoComparison>]
+    type ModelItem2Attribute =
+        {
+            id:int
+            ModelItemParentId:int
+            AttributeType:ModelAttributeTypes
+            Description:string
+            Annotations:(ANNOTATION_TOKEN_TYPE*string) []
+            SourceReferences:IncomingLine []
+        }
+    let defaultModelItem2Attribute =
+        {
+            id=(-1)
+            ModelItemParentId=(-1)
+            AttributeType=ModelAttributeTypes.Goal
+            Description=""
+            Annotations=[||]
+            SourceReferences=[||]
+        }
     [<NoComparison>]
     type ModelLocationPointer =
         {
             Namespace:string
             ParentId:int
+            AttributeType:ModelAttributeTypes option
+            AttributeId:int option
             InHDDMode:bool
             Bucket:Buckets
             Genre:Genres
@@ -269,6 +327,8 @@
         {
             Namespace = ""
             ParentId = -1
+            AttributeType=option.None
+            AttributeId = option.None
             InHDDMode=false
             Bucket=Buckets.None
             Genre=Genres.None
@@ -284,6 +344,8 @@
         |AffectedBy
         |Uses
         |UsedBy
+        |HasA
+        |IsOwnedByA
     let getReverseJoin (sourceJoin:ModelJoin) =
         match sourceJoin with 
             | Parent->Child
@@ -292,6 +354,8 @@
             | AffectedBy->Affects
             | Uses->UsedBy
             | UsedBy->Uses
+            | HasA->IsOwnedByA
+            | IsOwnedByA->HasA
     [<NoComparison>]
     type ModelRelation =
         {
@@ -306,6 +370,7 @@
             Id:int
             Location:ModelLocationPointer
             Description:string
+            Attributes:ModelItem2Attribute []
             Annotations:(ANNOTATION_TOKEN_TYPE*string) []
             SourceReferences:IncomingLine []
             Relations:ModelRelation []
@@ -315,6 +380,7 @@
             Id=(-1)
             Location=defaultModelLocationPointer
             Description=""
+            Attributes=[||]
             Annotations=[||]
             SourceReferences=[||]
             Relations=[||]
@@ -324,6 +390,7 @@
         |Nothing
         |SingleTarget
         |MultipleTargets
+        |MultipleAttributeTargets
     [<NoComparison>]
     type IndentLevelComparisons =
         | IdentIsSameAsPreviousIndent
@@ -439,6 +506,7 @@
                         Id=getNextModelItemNumber()
                         Location=newLocationPointer
                         Description=desription.Trim()
+                        Attributes=[||]
                         Annotations= [||]
                         SourceReferences=[|incomingLine|]
                         Relations=[||]
@@ -479,7 +547,29 @@
                 logCompilerMessageForASingleLine compilerStatus CompilerMessageType.Error ("source item id:" + string compilerStatus.CurrentLocation.ParentId + " does not currently exist in model when trying to make join") incomingLine
             |option.None, option.None->
                 logCompilerMessageForASingleLine compilerStatus CompilerMessageType.Info "programming error. Trying to create a join where neither item exists in the model" incomingLine
-            
+     
+    let oneItemCanConnectLikeThisToAnother (item1:ModelItem2) (item2:ModelItem2) (joinType:ModelJoin) =
+        // parent-child relationships work on everything as long as they're the same bucket
+        if (joinType=ModelJoin.Parent || joinType=ModelJoin.Child) && (item1.Location.Bucket=item2.Location.Bucket)
+            then true
+            else
+                match joinType, item1.Location.Bucket, item2.Location.Bucket with 
+                        |ModelJoin.Affects, Buckets.Supplemental, Buckets.Behavior->true
+                        |ModelJoin.AffectedBy, Buckets.Behavior, Buckets.Supplemental->true
+                        |ModelJoin.Affects,_,_ | ModelJoin.AffectedBy,_,_->false
+                        |ModelJoin.Uses, Buckets.Behavior, Buckets.Structure->true
+                        |ModelJoin.UsedBy, Buckets.Structure, Buckets.Behavior->true
+                        |ModelJoin.Uses,_,_ | ModelJoin.UsedBy,_,_->false
+                        |ModelJoin.HasA, Buckets.Structure, Buckets.Structure->true
+                        |ModelJoin.IsOwnedByA,Buckets.Structure, Buckets.Structure->true
+                        |ModelJoin.HasA,_,_ | ModelJoin.IsOwnedByA,_,_->false
+                        //TODO add in joins for HDD and Tasks
+                        |_,_,_->false
+    let itemsThatCanJoinToMe (compilerStatus:CompilerReturn) (item:ModelItem2) (joinType:ModelJoin) =
+        let itemArray=compilerStatus.ModelItems
+        itemArray |> Array.filter(fun x->
+            (oneItemCanConnectLikeThisToAnother item x joinType)
+            )
 
     let addAnnotation (parentId:int) (annotationType:ANNOTATION_TOKEN_TYPE) (annotationValue:string) (sourceLine:IncomingLine) (currentCompilerStatus:CompilerReturn) =
         if annotationValue="" then currentCompilerStatus
@@ -494,6 +584,25 @@
                         let newModelItem = {modelItemToChange.Value with Annotations=newAnnotations; SourceReferences=newSourceReferences}
                         let newCompilerStatus=updateModelItem currentCompilerStatus newModelItem
                         newCompilerStatus
+    let addModelAttribute(attributeType:ModelAttributeTypes) (attributeDescription:string) (sourceLine:IncomingLine) (currentCompilerStatus:CompilerReturn) =
+        if attributeDescription="" then currentCompilerStatus
+            else
+                let newModelAttribute=
+                    {
+                        id=getNextModelItemNumber()
+                        ModelItemParentId=currentCompilerStatus.CurrentLocation.ParentId
+                        AttributeType=attributeType
+                        Description=attributeDescription
+                        Annotations= [||]
+                        SourceReferences=[|sourceLine|]
+                    }
+                let targetModelItem=currentCompilerStatus.ModelItems|>Array.find(fun x->x.Id=currentCompilerStatus.CurrentLocation.ParentId)
+                let newTargetModelItemSourceReferences = [|sourceLine|] |> Array.append targetModelItem.SourceReferences
+                let newTargetModelItemAttributes = [|newModelAttribute|] |> Array.append targetModelItem.Attributes
+                let newCompilerState = {currentCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewAttribute}
+                let modifiedModelItem = {targetModelItem with SourceReferences=newTargetModelItemSourceReferences; Attributes=newTargetModelItemAttributes}
+                updateModelItem currentCompilerStatus modifiedModelItem
+
     let updateModelLocationPointer (originalCompilerStatus:CompilerReturn) (incomingLine:IncomingLine) (incomingCommand:Command):CompilerReturn =
         // context resets when the file changes
 
@@ -520,6 +629,7 @@
                         newCompilerStatus
                     |CompilerWaitingFor.MultipleTargets->
                         let itemAlreadyExists=incomingCompilerStatus.ModelItems |> Array.tryFind(fun z->z.Description=incomingCommand.Value.Trim())
+                        
                         let lastModelParent = incomingCompilerStatus.ModelItems |> Array.find(fun x->x.Id=incomingCompilerStatus.CurrentLocation.ParentId)
                         let targetForPossibleComments = if lastModelParent.Relations.Length>0
                                                         then
@@ -532,25 +642,49 @@
                                 // waiting on a join
                                 match incomingCompilerStatus.CompilerState.IndentLevelChange, itemAlreadyExists.IsSome with 
                                     | IndentLevelComparisons.IdentIsLessThanPreviousIndent, false->
-                                        // if the indent is less than before, and there's no match, we have a new item
+                                        // multiple targets, there's a join, the indent is less, and the item does not already exist
+                                        // new item
                                         addModelItem incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine (incomingCommand.Value.Trim())
                                     | IndentLevelComparisons.IdentIsLessThanPreviousIndent, true->
-                                        // if the indent is less than before, and there IS A match, we have a new badly-formatted join
-                                        let lastJoinType = if incomingCompilerStatus.CompilerState.LastJoinType.IsSome then incomingCompilerStatus.CompilerState.LastJoinType.Value else raise(new System.Exception("We have a join but no join type to use"))
-                                        joinModelItems incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine lastJoinType  (incomingCommand.Value)
+                                        // multiple targets, there's a join, the indent is less, and the item already exists
+                                        // We have a new parent
+                                        let newLocation = {incomingCompilerStatus.CurrentLocation with ParentId=itemAlreadyExists.Value.Id}
+                                        let newState = {incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.Nothing; LastJoinType=option.None; LastCompilerOperation=LastCompilerOperations.ReferenceExistingItem}
+                                        {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}
+
+
+                                        //let lastJoinType = if incomingCompilerStatus.CompilerState.LastJoinType.IsSome then incomingCompilerStatus.CompilerState.LastJoinType.Value else raise(new System.Exception("We have a join but no join type to use"))
+                                        //// if the parentId is able to join to this item in this way, join it. Otherwise reset the location so that we're not 
+                                        //// waiting on anything and instead have just identified a new item to talk about
+                                        //let currentParent = incomingCompilerStatus.ModelItems|>Array.find(fun x->x.Id=incomingCompilerStatus.CurrentLocation.ParentId)
+                                        //let thingsThatCanJoinLikeThisToTheCurrentParent = itemsThatCanJoinToMe incomingCompilerStatus currentParent incomingCompilerStatus.CompilerState.LastJoinType.Value
+                                        //let currentParentCanJoinToThisItem = thingsThatCanJoinLikeThisToTheCurrentParent |> Array.exists(fun x->x.Description=incomingCommand.Value.Trim())
+                                        //if currentParentCanJoinToThisItem
+                                        //    then joinModelItems incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine lastJoinType  (incomingCommand.Value)
+                                        //    else
+                                        //        let thisItem=thingsThatCanJoinLikeThisToTheCurrentParent |> Array.find(fun x->x.Description=incomingCommand.Value.Trim())
+                                        //        let newLocation = {incomingCompilerStatus.CurrentLocation with ParentId=thisItem.Id}
+                                        //        let newState = {incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.Nothing; LastJoinType=option.None; LastCompilerOperation=LastCompilerOperations.ReferenceExistingItem}
+                                        //        {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}
+
+                                                
                                     | IndentLevelComparisons.IdentIsMoreThanPreviousIndent, false->
-                                        // if the indent is more, and we can't find this text anywnhere in the model, it's a note
+                                        // multiple targets, there's a join, the indent is more, and the item does not already exist
+                                        // it's a note on the previous parent
                                         addAnnotation targetForPossibleComments.Id ANNOTATION_TOKEN_TYPE.Note (incomingCommand.Value.Trim()) incomingLine incomingCompilerStatus
                                     | IndentLevelComparisons.IdentIsMoreThanPreviousIndent, true->
-                                        // if the indent's more and we can find this text in the model, it's a badly formatted join
+                                        // multiple targets, there's a join, the indent is more, and the item already exists
+                                        // it's a badly formatted join
                                         let lastJoinType = if incomingCompilerStatus.CompilerState.LastJoinType.IsSome then incomingCompilerStatus.CompilerState.LastJoinType.Value else raise(new System.Exception("We have a join but no join type to use"))
                                         joinModelItems incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine lastJoinType  (incomingCommand.Value)
                                     | IndentLevelComparisons.IdentIsSameAsPreviousIndent, true->
-                                        // if the indent is the same and we can find this text in the model, it's just another join
+                                        // multiple targets, there's a join, the indent is the same, and the item does exist
+                                        // it's just another join
                                         let lastJoinType = if incomingCompilerStatus.CompilerState.LastJoinType.IsSome then incomingCompilerStatus.CompilerState.LastJoinType.Value else raise(new System.Exception("We have a join but no join type to use"))
                                         joinModelItems incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine lastJoinType  (incomingCommand.Value)
                                     | IndentLevelComparisons.IdentIsSameAsPreviousIndent, false->
-                                        // if the indent is the same and we can't find this text in the model, it's a badly-formatted note
+                                        // multiple targets, there's a join, the indent is the same, and the item does not exist
+                                        // it's a badly-formatted note
                                         addAnnotation targetForPossibleComments.Id ANNOTATION_TOKEN_TYPE.Note (incomingCommand.Value.Trim()) incomingLine incomingCompilerStatus
                             else
                                 // not waiting on a join, but waiting for multiple targets
@@ -567,13 +701,24 @@
                                         newCompilerStatus
                                     else
                                         let newLocation = {incomingCompilerStatus.CurrentLocation with ParentId=itemAlreadyExists.Value.Id}
-                                        {incomingCompilerStatus with CurrentLocation=newLocation}
+                                        let newState = {incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.Nothing; LastJoinType=option.None; LastCompilerOperation=LastCompilerOperations.ReferenceExistingItem}
+                                        {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}
+                    |CompilerWaitingFor.MultipleAttributeTargets->
+                        let newAttributeType = incomingCompilerStatus.CurrentLocation.AttributeType.Value
+                        let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                        let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                    addModelAttribute newAttributeType (x.Trim()) incomingLine accumulatorCompilerStatus
+                                                ) incomingCompilerStatus
+                        let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAttributeTargets}
+                        {newCompilerStatus with CompilerState=newCompilerState}
+                        
                     |_->
                         let newModelItem =
                             {
                                 Id=getNextModelItemNumber()
                                 Location=incomingCompilerStatus.CurrentLocation
                                 Description=incomingCommand.Value
+                                Attributes=[||]
                                 Annotations=[||]
                                 SourceReferences= [||]
                                 Relations=[||]
@@ -665,24 +810,44 @@
                                 let newLocation = {incomingCompilerStatus.CurrentLocation with InHDDMode=newInHDDMode; Bucket=newBucket; AbstractionLevel=newAbstractionLevel; Genre=newGenre; TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
                                 //{incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
                                 {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState={incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleTargets}}
+                            |TOKEN_CATEGORY.ATTRIBUTE->
+                                let newAttributeType = match token.Token with
+                                                        | "WHEN"->ModelAttributeTypes.Trigger
+                                                        | " ASA"->ModelAttributeTypes.Actor
+                                                        | "INEEDTO"->ModelAttributeTypes.Goal
+                                                        | "SOTHAT"->ModelAttributeTypes.BusinessContext
+                                                        | "BECAUSE"->ModelAttributeTypes.Because
+                                                        | "WHENEVER"->ModelAttributeTypes.Whenever
+                                                        | "ITHASTOBETHAT"->ModelAttributeTypes.ItHasToBeThat
+                                                        | "CONTAINS"->ModelAttributeTypes.Contains
+                                                        |_->raise(new System.Exception("We're supposed to have an attribute, but none are there"))
+                                let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                                let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                            addModelAttribute newAttributeType (x.Trim()) incomingLine accumulatorCompilerStatus
+                                                        ) incomingCompilerStatus
+                                let newCompilerLocation={newCompilerStatus.CurrentLocation with AttributeType = Some newAttributeType}
+                                let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAttributeTargets}
+                                {newCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation}
                             |_->raise(new System.Exception("messed up"))
                     |TOKEN_TARGET_TYPE.SINGLE_TARGET,TOKEN_TYPE.JOINER,_->
                         incomingCompilerStatus
                     |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.JOINER,_->
                         let joinType=match token.Token with 
-                            | "PARENT"->ModelJoin.Parent
-                            | "CHILD"->ModelJoin.Child
-                            | "CHILDREN"->ModelJoin.Child
-                            | "USES"->ModelJoin.Uses
-                            | "USEDBY"->ModelJoin.UsedBy
-                            | "AFFECTS"->ModelJoin.Affects
-                            | "AFFECTEDBY"->ModelJoin.AffectedBy
-                            |_->ModelJoin.Child
+                                        | "PARENT"->ModelJoin.Parent
+                                        | "CHILD"->ModelJoin.Child
+                                        | "CHILDREN"->ModelJoin.Child
+                                        | "USES"->ModelJoin.Uses
+                                        | "USEDBY"->ModelJoin.UsedBy
+                                        | "AFFECTS"->ModelJoin.Affects
+                                        | "AFFECTEDBY"->ModelJoin.AffectedBy
+                                        | "HASA"->ModelJoin.HasA
+                                        | "ISOWNEDBYA"->ModelJoin.IsOwnedByA
+                                        |_->ModelJoin.Child
                         let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
                         let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
                                                     joinModelItems accumulatorCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine joinType  (x.Trim())
                                                 ) incomingCompilerStatus
-                        {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewJoin; LastJoinType=Some joinType}}
+                        {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewJoin; LastJoinType=Some joinType; WaitingFor=CompilerWaitingFor.MultipleTargets}}
                     |_,_,_->incomingCompilerStatus
                 
 
