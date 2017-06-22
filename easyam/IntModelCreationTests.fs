@@ -226,4 +226,33 @@
         newCompilerStatus.ModelItems.[3].Attributes.[3].Description |> should equal "Warehouse worker"
         newCompilerStatus.ModelItems.[3].Attributes.[3].AttributeType |> should equal ModelAttributeTypes.Actor
 
+    [<Test>]
+    let ``INT MODEL CREATION: sameAs-line comment on attribute token goes back to parent``() =
+        let fileInfo1 = getFakeFileInfo()
+        let fileInfo2 = getFakeFileInfo()
+        let testText1 = [|"BEHAVIOR"; "    Receive Shipment"; "    Reconcile BOL"; "    Conduct spot inventory"|]
+        let testText2 = [|"BEHAVIOR"
+                        ; "    Conduct spot inventory //I love inventory"
+                        ; "        WHEN "
+                        ; "            The truck arrives at the gate // could be any kind of truck"
+                        ; "            An accountant calls on the phone"
+                        ; "            There's a break-in at the warehouse"
+                        ; "        ASA // the actor list isn't complete yet"
+                        ; "            Warehouse worker"
+                        ; "            Warehouse supervisor"
+                        ; "            Nightshift guard supervisor"
+                        ; "        INEEDTO "
+                        ; "            Conduct a formal spot inventory by hand using the older books"
+                        ; "        SOTHAT"
+                        ; "            The insurance company is notified in case of loss"
+                        ; "            Incoming shipments will adequately update the running inventory"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1);(fileInfo2,testText2)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
+        newCompilerStatus.ModelItems |> should haveLength 4
+        newCompilerStatus.ModelItems.[3].Annotations |> should haveLength 2
+        newCompilerStatus.ModelItems.[3].Attributes |> should haveLength 9
+        newCompilerStatus.ModelItems.[3].Attributes.[0].Annotations |> should haveLength 1
+
 

@@ -280,6 +280,8 @@
             | LocationChange
             | NewJoin
             | NewAttribute
+            | ReferenceExistingAttribute
+            | NewAnnotation
     [<NoComparison>]
     type ModelAttributeTypes =
         | Trigger
@@ -515,7 +517,13 @@
                 let newModelItems = [|newModelItem|] |> Array.append compilerStatus.ModelItems
                 {compilerStatus with ModelItems=newModelItems; CurrentLocation=newLoc;CompilerState={compilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewModelItem}}
             else compilerStatus
-
+    let replaceArrayItemInPlace (arr:'A []) (itemToReplace:'A) (funEquality:'A->'A->bool):'A [] =
+        let itemIndex=
+            let tempFind = arr |> Array.tryFindIndex(funEquality itemToReplace)
+            if tempFind.IsSome then tempFind.Value else raise(new System.ArgumentOutOfRangeException())
+        Array.set arr itemIndex itemToReplace
+        arr
+        
     let updateModelItem (compilerStatus:CompilerReturn) (updatedModelItem:ModelItem2) = 
         let splitItemsListFirstPart =fst (compilerStatus.ModelItems |> Array.partition(fun z->z.Id<updatedModelItem.Id))
         let previousVersionOfItem = compilerStatus.ModelItems |> Array.find(fun x->x.Id=updatedModelItem.Id)
@@ -582,8 +590,29 @@
                         let newAnnotations = [|newAnnotation|] |> Array.append modelItemToChange.Value.Annotations
                         let newSourceReferences = [|sourceLine|] |> Array.append modelItemToChange.Value.SourceReferences
                         let newModelItem = {modelItemToChange.Value with Annotations=newAnnotations; SourceReferences=newSourceReferences}
-                        let newCompilerStatus=updateModelItem currentCompilerStatus newModelItem
+                        let newCompilerState = {currentCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewAnnotation}
+                        let newCompilerStatus=updateModelItem {currentCompilerStatus with CompilerState=newCompilerState} newModelItem
                         newCompilerStatus
+    let addAttributeAnnotation (parentId:int) (attributeTargetId:int) (annotationType:ANNOTATION_TOKEN_TYPE) (annotationValue:string) (sourceLine:IncomingLine) (currentCompilerStatus:CompilerReturn) =
+        if annotationValue="" then currentCompilerStatus
+            else
+                let modelItemToChange = currentCompilerStatus.ModelItems |> Array.tryFind(fun x->x.Id=parentId)
+                if modelItemToChange.IsNone
+                    then currentCompilerStatus
+                    else                
+                        let attributeToChange = modelItemToChange.Value.Attributes|> Array.tryFind(fun x->x.id=attributeTargetId)
+                        if attributeToChange.IsNone then currentCompilerStatus
+                            else
+                                let newAnnotation = (annotationType,annotationValue)
+                                let newAnnotations = [|newAnnotation|] |> Array.append attributeToChange.Value.Annotations
+                                let newAttribute = {attributeToChange.Value with Annotations=newAnnotations}
+                                let newAttributes = replaceArrayItemInPlace modelItemToChange.Value.Attributes newAttribute (fun x y->x.id=y.id)
+                                let isLineAlreadyREferencedInModelItem = modelItemToChange.Value.SourceReferences|>Array.exists(fun x->x.SourceRawLineNumber=sourceLine.SourceRawLineNumber)
+                                let newModelItemSourceReferences=if isLineAlreadyREferencedInModelItem then modelItemToChange.Value.SourceReferences else  ([|sourceLine|] |> Array.append modelItemToChange.Value.SourceReferences)
+                                let newModelItem = {modelItemToChange.Value with SourceReferences=newModelItemSourceReferences; Attributes=newAttributes}
+                                let newCompilerState = {currentCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewAnnotation}
+                                let newCompilerLocation = {currentCompilerStatus.CurrentLocation with AttributeId = Some newAttribute.id; AttributeType = Some newAttribute.AttributeType}
+                                updateModelItem {currentCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation} newModelItem
     let addModelAttribute(attributeType:ModelAttributeTypes) (attributeDescription:string) (sourceLine:IncomingLine) (currentCompilerStatus:CompilerReturn) =
         if attributeDescription="" then currentCompilerStatus
             else
@@ -600,8 +629,9 @@
                 let newTargetModelItemSourceReferences = [|sourceLine|] |> Array.append targetModelItem.SourceReferences
                 let newTargetModelItemAttributes = [|newModelAttribute|] |> Array.append targetModelItem.Attributes
                 let newCompilerState = {currentCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewAttribute}
+                let newCompilerLocation ={currentCompilerStatus.CurrentLocation with AttributeId = Some newModelAttribute.id; AttributeType=Some newModelAttribute.AttributeType}
                 let modifiedModelItem = {targetModelItem with SourceReferences=newTargetModelItemSourceReferences; Attributes=newTargetModelItemAttributes}
-                updateModelItem currentCompilerStatus modifiedModelItem
+                updateModelItem {currentCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation} modifiedModelItem
 
     let updateModelLocationPointer (originalCompilerStatus:CompilerReturn) (incomingLine:IncomingLine) (incomingCommand:Command):CompilerReturn =
         // context resets when the file changes
@@ -735,9 +765,11 @@
                                 | "TODO " | "TODO: "|"TODO:"|"TO-DO"|"TO-DO: "|"TO-DO:"->ANNOTATION_TOKEN_TYPE.ToDo
                                 | "WORK: " | "WORK "|"WORK:"->ANNOTATION_TOKEN_TYPE.Work
                                 |_->ANNOTATION_TOKEN_TYPE.Note // ERROR ERROR
-                        let newCompilerStatus = addAnnotation incomingCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus 
+                        if incomingCompilerStatus.CompilerState.WaitingFor=CompilerWaitingFor.MultipleAttributeTargets && (incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewAttribute || incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.ReferenceExistingAttribute)
+                            then addAttributeAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AttributeId.Value newTempAnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus
+                            else addAnnotation incomingCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus 
                         //{newCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.Nothing}
-                        newCompilerStatus
+                        //newCompilerStatus
                     |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.RELATIVE_LOCATOR,TOKEN_CATEGORY.MISC->
                         let newTempAnnotationIndicator=
                             match token.Token with 
@@ -826,7 +858,7 @@
                                                             addModelAttribute newAttributeType (x.Trim()) incomingLine accumulatorCompilerStatus
                                                         ) incomingCompilerStatus
                                 let newCompilerLocation={newCompilerStatus.CurrentLocation with AttributeType = Some newAttributeType}
-                                let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAttributeTargets}
+                                let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAttributeTargets; LastCompilerOperation=LastCompilerOperations.LocationChange}
                                 {newCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation}
                             |_->raise(new System.Exception("messed up"))
                     |TOKEN_TARGET_TYPE.SINGLE_TARGET,TOKEN_TYPE.JOINER,_->
