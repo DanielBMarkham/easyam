@@ -1,13 +1,19 @@
 #EasyAM
 ##A Cucumber-like tool for Structured Analysis.
 
-How many times has an important business conversation happened without that information getting to the people who needed it?
+Analysis is the part of the project that you have to understand without telling you exactly what to do.
 
-Easyam allows you to enter in mostly unstructured text notes about what the business needs and why, along with open questions and to-do items, then have those notes compiled using easyam and associated tools into the rest of your DevOps pipeline.)
+If the project work were filling a hole, analysis is describing everything around the hole. It begins with observations and questions, proceeds through more questions, and ends up with a series of executable tests that exactly describe the hole to be filled.
+
+Unstructured analysis, the type any three-year-old can perform, consists of any questions that cross your mind until you know enough to accomplish what you want to.
+
+Structured analyais is tagging information and questions so that dozens of people of having hundreds of conversations can organize it all so that things aren't repeated, conflicting information is easily identified, and all relevant information (and only relevant information) is available to people when they need it.
+
+Just like cucumber lets you enter business needs in almost freeform text, easyam lets you interview, follow-up, and organize all business converssations in the same kind of "almost freeform text"
 
 The goal is OHIO, Only Handle Information Once, as close to business intent as possible, then deploy, mix and match that same information everywhere else it's used.
 
-It is a command-line system for accepting and storing all of your project information
+It is a command-line, text-based, source-controlled system for accepting and storing all of your project information
 
 So, for example, questions about a user story the team has for an upcoming sprint will be automatically associated with the business intent and conversations around that.
 
@@ -15,15 +21,20 @@ Release planning can now automatically include the consideration of bugs and fea
 
 Bug reports automatically go to the people with the most expertise in that area of the system.
 
-Static analysis tools can provide hints to which features to develop ahead of others -- the ones that address the most architectural risk and customer value.
+Static analysis tools provide hints to which features to develop ahead of others -- the ones that address the most architectural risk and customer value.
 
-Dashboards and Information Radiators can be created and automatically updated based on tool output.
+Done correctly, seven or eight 200-300 line structured analysis files contain the same information as 50-100 times that amount using traditional formats
 
 ##Usage
-"easyam" in a directory of your choice that includes Analysis information. In an empty directory it creates the target directories Behavior, Structure, Supplemental, and Meta directories.
 
-It will compile everything in that directory and subdirectories with the ".amin" extension. Consolidated files will be created with an ".amout" extension. 
+The easyam compiler *is* the code. The default executable takes a target directory and compiles all of the files in that directory ending in .amin
 
-Regular code tools can be used with these notes: git, CI/CD tools, etc.
+In the target directory it creates a set of files with the .amout format
 
-Note that the compilation process enforces rules on the notes. It is possible to "break" the analysis build. Good practices would be checking out notes (or creating a new note), adding/modifying, then compiling the results to see if any conflicts were created. Future versions may add realtime compile-as-you type capability.
+These files can be reused. The system eats its own output. That is, whatever the program puts out, it can also consume.
+
+All of these files representing conversations, work, and questions can be accessed, changed, and compiled directly alongside all of the other technology in the project, using tools like git, subversion, Maven, etc. Easyam should be part of every project's build pipeline.
+
+Note that the compilation process enforces rules on the notes. It is possible to "break" the analysis build. For example, nobody should be allowed to add a thousand items to any team's backlog.
+
+It is expected that dozens of new tools can use this code to input easyam output and create enterprise products: team/program backlogs, release plans, feature team groupings, prioritized backlogs based on business impact, bug reports prioritized by customer value, user story cards, PI planning cards, etc.

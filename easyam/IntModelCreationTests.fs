@@ -255,4 +255,93 @@
         newCompilerStatus.ModelItems.[3].Attributes |> should haveLength 9
         newCompilerStatus.ModelItems.[3].Attributes.[0].Annotations |> should haveLength 1
 
+    [<Test>]
+    let ``INT MODEL CREATION: simplest useful model``() =
+        let fileInfo1 = getFakeFileInfo()
+        let fileInfo2 = getFakeFileInfo()
+        let fileInfo3 = getFakeFileInfo()
+        let fileInfo4 = getFakeFileInfo()
+        let fileInfo5 = getFakeFileInfo()
+        let fileInfo6 = getFakeFileInfo()
+        let fileInfo7 = getFakeFileInfo()
+        let testText1 = [|
+                          "BEHAVIOR"
+                        ; "    Order goods"
+                        ; "    Receive Shipment"
+                        ; "    Reject shipment"
+                        ; "    Reject part of shipment"
+                        ; "    Reconcile BOL"
+                        ; "    Put away new shipment"
+                        ; "    Conduct spot inventory"
+                        ; "    Conduct regular inventory"
+                        ; "    Recieve order"
+                        ; "    Create shipment"
+                        ; "    Pick shipment"
+                        ; "    Ship goods"
+                        ; "    Review daily warehouse activity"
+                        ; "    MISC"
+                        ; "    ALL"
+                        |]
+        let testText2 = [|
+                          "STRUCTURE"
+                        ; "    Shipment"
+                        ; "    Order"
+                        ; "    Bill of Lading"
+                        ; "    Inventory Item"
+                        ; "    Employee"
+                        ; "    Employee Type"
+                        ; "    SKU"
+                        ; "    Customer"
+                        ; "    Invoice"
+                        ; "    Invoice Line"
+                        ; "    Invoice Line Item"
+                        ; "    Vendor"
+                        |]
+        let testText3 = [|
+                          "SUPPLEMENTALS"
+                        ; "    Always be responsive"
+                        ; "    Never make the user wait"
+                        ; "    Inventory Item"
+                        |]
+        let testText4 = [|
+                          "SUPPLEMENTALS"
+                        ; "    "
+                        ; "    "
+                        ; "    "
+                        |]
+        let testText5 = [|
+                          "BEHAVIOR"
+                        ; "    Conduct spot inventory //I love inventory"
+                        ; "        WHEN "
+                        ; "            The truck arrives at the gate // could be any kind of truck"
+                        ; "            An accountant calls on the phone"
+                        ; "            There's a break-in at the warehouse"
+                        ; "        ASA // the actor list isn't complete yet"
+                        ; "            Warehouse worker"
+                        ; "            Warehouse supervisor"
+                        ; "            Nightshift guard supervisor"
+                        ; "        INEEDTO "
+                        ; "            Conduct a formal spot inventory by hand using the older books"
+                        ; "        SOTHAT"
+                        ; "            The insurance company is notified in case of loss"
+                        ; "            Incoming shipments will adequately update the running inventory"
+                        |]
+        let testText6 = [|
+                          ""
+                        ; "    "
+                        ; "    "
+                        ; "    "
+                        |]
+        let testText7 = [|
+                          ""
+                        ; "    "
+                        ; "    "
+                        ; "    "
+                        |]
+        let listToProcess = [|(fileInfo1,testText1);(fileInfo2,testText2);(fileInfo3,testText3);(fileInfo4,testText4);(fileInfo5,testText5);(fileInfo6,testText6);(fileInfo7,testText7)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
+        true |> should equal true 
+
+
 
