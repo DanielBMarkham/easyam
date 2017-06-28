@@ -7,15 +7,20 @@
  Generates an infinite sequence of random numbers within the given range.
 </summary>
 </member>
-<member name="T:EasyamParsingEngine.IncomingLine">
+<member name="M:Utils.commandLinePrintWhileEnter(Types.ConfigBase,Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit})">
 <summary>
- INITIAL INCOMING FILE PROCESSING. TAKES A LIST OF STRINGS AND MAKES A LIST OF COMMANDS
-
+ Prints out the options for the command. Standard stuff.
 </summary>
 </member>
 <member name="M:EasyamParsingEngine.bulkFileLineProcessing(System.Tuple{System.IO.FileInfo,System.String[]}[])">
 <summary>
  Takes a list of files, cleans and concatenates the contents of each one
+
+</summary>
+</member>
+<member name="M:EasyamParsingEngine.initialProcessingOfIncomingFileLines(System.Int32,System.IO.FileInfo,System.Int32,System.Int32,System.String[])">
+<summary>
+ INITIAL INCOMING FILE PROCESSING. TAKES A LIST OF STRINGS AND MAKES A LIST OF COMMANDS
 
 </summary>
 </member>

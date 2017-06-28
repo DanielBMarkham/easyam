@@ -11,111 +11,6 @@
             !counter
     let getNextModelItemNumber()=ModelItemIntegerFactory()
 
-    [<NoComparison>]
-    type TOKEN_TYPE =
-        |RELATIVE_LOCATOR
-        |ABSOLUTE_LOCATOR
-        |JOINER
-    [<NoComparison>]
-    type TOKEN_TARGET_TYPE =
-        |SINGLE_TARGET
-        |MULTIPLE_TARGETS
-    [<NoComparison>]
-    type TOKEN_CATEGORY = 
-        |BUCKETS
-        |GENRE
-        |TEMPORAL
-        |ABSTRACTION_LEVEL
-        |TASKS
-        |MISC
-        |HDD
-        |SCOPING
-        |SHORTCUT
-        |CONNECTIVE
-        |ATTRIBUTE
-    [<NoComparison>]
-    type EASYAM_TOKEN =
-        {
-            Type:TOKEN_TYPE
-            TargetType:TOKEN_TARGET_TYPE
-            Category:TOKEN_CATEGORY
-            Token:string
-        }
-    type ANNOTATION_TOKEN_TYPE =
-        | None
-        | Note
-        | Question
-        | ToDo
-        | Work
-    let EasyAMTokens = 
-        [
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES"};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="NOTE:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="//"};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="Q:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="QUESTIONS:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="QUESTIONS"};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="QUESTION:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TODOS:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TODOS"};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="TODO:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TO-DOS:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TO-DOS"};
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="TO-DO:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS:"};
-            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS"}
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="WORK:"};
-
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="BEHAVIOR"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="STRUCTURE"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTALS:"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTALS"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTAL:"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTAL"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="BUSINESS"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="SYSTEM"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="META"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="WAS"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="AS-IS"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="TO-BE"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="ABSTRACT"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="REALIZED"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HDD"};
-//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYPOTHESES:"};
-//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYPOTHESES"};
-//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYPOTHESIS:"};
-//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYPOTHESIS"};
-//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYP:"};
-//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATIONS:"};
-//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATIONS"};
-//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATION"};
-//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATION:"};
-
-            {Type=JOINER;               TargetType=SINGLE_TARGET;        Category=CONNECTIVE;           Token="PARENT"};
-            {Type=JOINER;               TargetType=SINGLE_TARGET;        Category=CONNECTIVE;           Token="CHILD"};
-            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="CHILDREN"};
-            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="AFFECTS"};
-            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="AFFECTEDBY"};
-            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="USES"};
-            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="USEDBY"};
-            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="HASA"};
-            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ISOWNEDBYA"};
-//            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ABDUCTSTO"};
-//            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ABDUCTEDFROM"};
-
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="WHEN"};
-            // note the initial space below. ASA cannot appear in first column
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token=" ASA"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="INEEDTO"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="SOTHAT"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="CONTAINS"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="INEEDTO"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="BECAUSE"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="WHENEVER"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="ITHASTOBETHAT"};
-        ]
-    let CommandTokens = EasyAMTokens |> List.map(fun x->x.Token)
 
     ///
     /// TOKEN PROCESSING. TAKES A LINE AND MAKES A LIST OF COMMANDS AND VALUES
@@ -150,12 +45,6 @@
                         let retTextFollowingCurrentTokenAndValue=incomingLine.Substring(tokenAndDetail.Length)
                         Some(retTextFollowingCurrentTokenAndValue, retToken, retTextAfterToken)
                     |_,_->Option<string*string*string>.None
-    type Command =
-        {
-            CommandIndentLevel:int
-            Token:string
-            Value:string
-        }
     exception CommandParsingException of Command list
     let splitOutIncomingLineIntoCommandList (tokenList:string list) (incomingLine:string):Command list =
         if incomingLine="" 
@@ -178,20 +67,6 @@
     ///
     /// INITIAL INCOMING FILE PROCESSING. TAKES A LIST OF STRINGS AND MAKES A LIST OF COMMANDS
     ///
-    [<NoComparison>]
-    type IncomingLine =
-        {
-            FileCompilationNumber:int
-            File:System.IO.FileInfo
-            FileRawLineNumber:int
-            FileEmptyLinesStrippedLineNumber:int
-            SourceRawLineNumber:int
-            SourceEmptyLinesStrippedLineNumber:int
-            LineText:string
-            LineWithoutLeadingSpaces:string
-            IndentLevel:int
-            Commands:Command []
-        }
     let initialProcessingOfIncomingFileLines fileNumber fileInfo incomingRawLineCount incomingLineCountWithEmptyLinesDeletedCount (rawLines:string []) =
         let whiteSpaceRegex=new System.Text.RegularExpressions.Regex("^\s+")
         let initialMapBeforeProcessing = rawLines |> Array.mapi(fun i x->
@@ -242,210 +117,6 @@
             {x with Commands=commandsFoundInLineWithCommandLevels |> List.toArray}
             )
         finishedProduct
-    type CompilerMessageType =
-        | Info
-        | Warning
-        | Error
-    [<NoComparison>]
-    type CompilerMessage =
-            {
-                MessageType:CompilerMessageType
-                Message:string
-                SourceFile:string
-                SourceLineBegin:int
-                SourceLineEnd:int option
-                SourceLineColumnBegin:int option
-                SourceLineColumnEnd:int option
-            }
-    let printCompilerMessages (compilerMessages:CompilerMessage []) =
-        compilerMessages |> Array.iteri(fun i x->
-            let messagePrefix=match x.MessageType with
-                                    |CompilerMessageType.Info->"INFO: "
-                                    |CompilerMessageType.Warning->"WARN: "
-                                    |CompilerMessageType.Error->"ERROR: "
-            let formattedMessage=match x.SourceLineEnd,x.SourceLineColumnBegin,x.SourceLineColumnEnd with 
-                                    |option.None, option.None, option.None->
-                                        x.SourceFile + ":" + string x.SourceLineBegin + ": " + messagePrefix + x.Message
-                                    |Some endingLine, option.None, option.None->
-                                        x.SourceFile + ":" + string x.SourceLineBegin + "-" + string endingLine + ": " + messagePrefix + x.Message
-                                    |_,_,_->
-                                        x.SourceFile + ": " + messagePrefix + x.Message
-            System.Console.WriteLine(formattedMessage)
-            )
-    [<NoComparison>]
-        type LastCompilerOperations =
-            | PointerReset
-            | NewModelItem
-            | ReferenceExistingItem
-            | LocationChange
-            | NewJoin
-            | NewAttribute
-            | ReferenceExistingAttribute
-            | NewAnnotation
-    [<NoComparison>]
-    type ModelAttributeTypes =
-        | Trigger
-        | Actor
-        | Goal
-        | BusinessContext
-        | Contains
-        | Because
-        | Whenever
-        | ItHasToBeThat
-    [<NoComparison>]
-    type ModelItem2Attribute =
-        {
-            id:int
-            ModelItemParentId:int
-            AttributeType:ModelAttributeTypes
-            Description:string
-            Annotations:(ANNOTATION_TOKEN_TYPE*string) []
-            SourceReferences:IncomingLine []
-        }
-    let defaultModelItem2Attribute =
-        {
-            id=(-1)
-            ModelItemParentId=(-1)
-            AttributeType=ModelAttributeTypes.Goal
-            Description=""
-            Annotations=[||]
-            SourceReferences=[||]
-        }
-    [<NoComparison>]
-    type ModelLocationPointer =
-        {
-            Namespace:string
-            ParentId:int
-            AttributeType:ModelAttributeTypes option
-            AttributeId:int option
-            InHDDMode:bool
-            Bucket:Buckets
-            Genre:Genres
-            AbstractionLevel:AbstractionLevels
-            TemporalIndicator:TemporalIndicators
-            AnnotationIndicator:ANNOTATION_TOKEN_TYPE
-        }
-    let defaultModelLocationPointer =
-        {
-            Namespace = ""
-            ParentId = -1
-            AttributeType=option.None
-            AttributeId = option.None
-            InHDDMode=false
-            Bucket=Buckets.None
-            Genre=Genres.None
-            AbstractionLevel=AbstractionLevels.None
-            TemporalIndicator=TemporalIndicators.None
-            AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None
-        }
-    [<NoComparison>]
-    type ModelJoin =
-        |Parent
-        |Child
-        |Affects
-        |AffectedBy
-        |Uses
-        |UsedBy
-        |HasA
-        |IsOwnedByA
-    let getReverseJoin (sourceJoin:ModelJoin) =
-        match sourceJoin with 
-            | Parent->Child
-            | Child->Parent
-            | Affects->AffectedBy
-            | AffectedBy->Affects
-            | Uses->UsedBy
-            | UsedBy->Uses
-            | HasA->IsOwnedByA
-            | IsOwnedByA->HasA
-    [<NoComparison>]
-    type ModelRelation =
-        {
-            id:int
-            ModelJoinType:ModelJoin
-            TargetId:int
-            SourceReference:IncomingLine
-        }
-    [<NoComparison>]
-    type ModelItem2 =
-        {
-            Id:int
-            Location:ModelLocationPointer
-            Description:string
-            Attributes:ModelItem2Attribute []
-            Annotations:(ANNOTATION_TOKEN_TYPE*string) []
-            SourceReferences:IncomingLine []
-            Relations:ModelRelation []
-        }
-    let defaultModelItem2:ModelItem2 =
-        {
-            Id=(-1)
-            Location=defaultModelLocationPointer
-            Description=""
-            Attributes=[||]
-            Annotations=[||]
-            SourceReferences=[||]
-            Relations=[||]
-        }
-    [<NoComparison>]
-    type CompilerWaitingFor =
-        |Nothing
-        |SingleTarget
-        |MultipleTargets
-        |MultipleAttributeTargets
-    [<NoComparison>]
-    type IndentLevelComparisons =
-        | IdentIsSameAsPreviousIndent
-        | IdentIsLessThanPreviousIndent
-        | IdentIsMoreThanPreviousIndent
-    [<NoComparison>]
-    type CompilerState =
-        {
-            WaitingFor:CompilerWaitingFor
-            LastFileNameProcessed:string
-            TagValueList:(string*string) list
-            LastCompilerOperation:LastCompilerOperations
-            LastJoinType:ModelJoin option
-            CurrentIndentLevel:int
-            IndentLevelChange:IndentLevelComparisons
-        }
-    let defaultCompilerState=
-        {
-            WaitingFor=CompilerWaitingFor.Nothing
-            LastFileNameProcessed=""
-            TagValueList=[]
-            LastCompilerOperation=LastCompilerOperations.PointerReset
-            LastJoinType=option.None
-            CurrentIndentLevel=0
-            IndentLevelChange=IndentLevelComparisons.IdentIsSameAsPreviousIndent
-        }
-    [<NoComparison>]
-    type CompilerReturn = 
-        {
-            CompilerState:CompilerState
-            CurrentLocation:ModelLocationPointer
-            //CompilerWaitingForState:CompilerWaitingFor
-            CompilerMessages:CompilerMessage []
-            ModelItems:ModelItem2 []
-        }
-    let beginningCompilerStatus =
-        {
-            CompilerState=defaultCompilerState
-            CurrentLocation=defaultModelLocationPointer
-            //CompilerWaitingForState=CompilerWaitingFor.Nothing
-            CompilerMessages=[||]
-            ModelItems= [|defaultModelItem2|]
-        }
-    [<NoComparison>]
-    type IncomingFileProcessingStatus =
-        {
-            FileNumber:int
-            IncomingRawLineCount:int
-            IncomingLineCountWithEmptyLinesStripped:int
-            IncomingLinesConcatenated:IncomingLine []
-            CompilerReturn:CompilerReturn
-        }
-
     let logCompilerMessage (compilerStatus:CompilerReturn) (newMessage:CompilerMessage) =
         let newMessages = [|newMessage|] |> Array.append compilerStatus.CompilerMessages
         {compilerStatus with CompilerMessages=newMessages}
@@ -639,7 +310,7 @@
         let fileCheckedCompilerStatus=if incomingLine.File.FullName=originalCompilerStatus.CompilerState.LastFileNameProcessed
                                         then originalCompilerStatus
                                         //else {originalCompilerStatus with CompilerWaitingForState=Nothing; CompilerState={defaultCompilerState with LastFileNameProcessed=incomingLine.File.FullName}}
-                                        else {originalCompilerStatus with CompilerState={defaultCompilerState with LastFileNameProcessed=incomingLine.File.FullName; WaitingFor=CompilerWaitingFor.Nothing; CurrentIndentLevel=0}}
+                                        else {originalCompilerStatus with CompilerState={defaultCompilerState with LastFileNameProcessed=incomingLine.File.FullName; WaitingFor=CompilerWaitingFor.Nothing; CurrentIndentLevel=0}; CurrentLocation=defaultModelLocationPointer}
         let newIndentLevel=if incomingCommand.CommandIndentLevel<fileCheckedCompilerStatus.CompilerState.CurrentIndentLevel 
                                 then IndentLevelComparisons.IdentIsLessThanPreviousIndent
                             elif incomingCommand.CommandIndentLevel=fileCheckedCompilerStatus.CompilerState.CurrentIndentLevel
@@ -658,8 +329,7 @@
                         let newCompilerStatus = addAnnotation incomingCompilerStatus.CurrentLocation.ParentId ANNOTATION_TOKEN_TYPE.Note incomingCommand.Value incomingLine incomingCompilerStatus 
                         newCompilerStatus
                     |CompilerWaitingFor.MultipleTargets->
-                        let itemAlreadyExists=incomingCompilerStatus.ModelItems |> Array.tryFind(fun z->z.Description=incomingCommand.Value.Trim())
-                        
+                        let itemAlreadyExists=incomingCompilerStatus.ModelItems |> Array.tryFind(fun z->z.Description=incomingCommand.Value.Trim())                        
                         let lastModelParent = incomingCompilerStatus.ModelItems |> Array.find(fun x->x.Id=incomingCompilerStatus.CurrentLocation.ParentId)
                         let targetForPossibleComments = if lastModelParent.Relations.Length>0
                                                         then
@@ -700,8 +370,23 @@
                                                 
                                     | IndentLevelComparisons.IdentIsMoreThanPreviousIndent, false->
                                         // multiple targets, there's a join, the indent is more, and the item does not already exist
-                                        // it's a note on the previous parent
-                                        addAnnotation targetForPossibleComments.Id ANNOTATION_TOKEN_TYPE.Note (incomingCommand.Value.Trim()) incomingLine incomingCompilerStatus
+                                        // if there's a comma, check each item separately
+                                        // if it's not already in the model it's a note on the previous parent
+                                        if incomingCommand.Value.Contains(",")
+                                            then
+                                                let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                                                let lastJoinType = if incomingCompilerStatus.CompilerState.LastJoinType.IsSome then incomingCompilerStatus.CompilerState.LastJoinType.Value else raise(new System.Exception("We have a join but no join type to use"))
+                                                let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                                            let commaSplitItemAlreadyExists=incomingCompilerStatus.ModelItems |> Array.tryFind(fun z->z.Description=x.Trim())
+                                                                            if commaSplitItemAlreadyExists.IsSome
+                                                                                then
+                                                                                    joinModelItems accumulatorCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine lastJoinType  (x.Trim())
+                                                                                else
+                                                                                    addAnnotation targetForPossibleComments.Id ANNOTATION_TOKEN_TYPE.Note (incomingCommand.Value.Trim()) incomingLine incomingCompilerStatus
+                                                                        ) incomingCompilerStatus
+                                                newCompilerStatus
+                                            else
+                                                addAnnotation targetForPossibleComments.Id ANNOTATION_TOKEN_TYPE.Note (incomingCommand.Value.Trim()) incomingLine incomingCompilerStatus
                                     | IndentLevelComparisons.IdentIsMoreThanPreviousIndent, true->
                                         // multiple targets, there's a join, the indent is more, and the item already exists
                                         // it's a badly formatted join

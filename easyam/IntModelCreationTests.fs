@@ -3,7 +3,9 @@
     open FsUnit
     open EasyamParsingEngine
     open Types
+    open Utils
     open SAModel
+    open BasicModel1
 
     // Funky code. I need some way to pretend I have a real OS incoming file I'm processing
     let getFakeFileInfo() = 
@@ -255,34 +257,16 @@
         newCompilerStatus.ModelItems.[3].Attributes |> should haveLength 9
         newCompilerStatus.ModelItems.[3].Attributes.[0].Annotations |> should haveLength 1
 
-
-    let basicEnterpriseTestModel1 =
+    [<Test>]
+    let ``INT MODEL CREATION: notes at top of one file don't attach to previous file``()=
         let fileInfo1 = getFakeFileInfo()
         let fileInfo2 = getFakeFileInfo()
-        let fileInfo3 = getFakeFileInfo()
-        let fileInfo4 = getFakeFileInfo()
-        let fileInfo5 = getFakeFileInfo()
-        let fileInfo6 = getFakeFileInfo()
-        let fileInfo7 = getFakeFileInfo()
         let testText1 = [|
-                          ""
-                        ; "Here's the initial master use case list based on our conversation last Monday"
-                        ; ""
-                        ; ""
+                          "Here's the initial master use case list based on our conversation last Monday"
                         ; "BEHAVIOR"
-                        ; "    Order goods"
-                        ; "    Receive Shipment"
-                        ; "    Reject shipment"
-                        ; "    Reject part of shipment"
-                        ; "    Reconcile BOL"
-                        ; "    Put away new shipment"
-                        ; "    Conduct spot inventory"
-                        ; "    Conduct regular inventory"
-                        ; "    Recieve order"
-                        ; "    Create shipment"
-                        ; "    Pick shipment"
-                        ; "    Ship goods"
-                        ; "    Review daily warehouse activity"
+                        ; "    Pick Shipment"
+                        ; "    Ship Goods"
+                        ; "    Review Daily Warehouse Activity"
                         ; "    MISC"
                         ; "    ALL"
                         |]
@@ -294,7 +278,25 @@
                         ; "STRUCTURE"
                         ; "    Shipment"
                         ; "    Order"
-                        ; "    Bill of Lading"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1);(fileInfo2,testText2)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
+        newCompilerStatus.ModelItems |> should haveLength 8
+        newCompilerStatus.ModelItems.[5].Annotations |> should haveLength 0
+    [<Test>]
+    let ``INT MODEL CREATION: note starting with paren on new file isnt considered a new behavior item``()=
+        let fileInfo1 = getFakeFileInfo()
+        let fileInfo2 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "Here's the intial master domain model last also based on last Monday's conversation"
+                        ; ""
+                        ; ""
+                        ; "STRUCTURE"
+                        ; "    Shipment"
+                        ; "    Order"
+                        ; "    Bill Of Lading"
                         ; "    Inventory Item"
                         ; "    Employee"
                         ; "    Employee Type"
@@ -306,9 +308,9 @@
                         ; "    Vendor"
                         ; ""
                         ; ""
-                        ; "    Shipment HASA Bill of Lading"
+                        ; "    Shipment HASA Bill Of Lading"
                         ; "    Order HASA Shipment"
-                        ; "    Shipment HASA Bill of Lading"
+                        ; "    Shipment HASA Bill Of Lading"
                         ; "    Vendor HASA Shipment"
                         ; "    Vendor HASA Invoice"
                         ; "    Customer HASA Order"
@@ -319,104 +321,98 @@
                         ; "    SKU HASA Inventory Item"
                         ; "    Invoice Line Item HASA SKU"
                         |]
-        let testText3 = [|
+        let testText2 = [|
                           ""
                         ; "From the initial talk, the master domain model items used by the master user stories"
-                        ; "Note the only requirement at the BUSINESS ABSTRACT level is to include or exclude items based on how often they show up in conversation"
+                        ; "Note the only requirement at the _BIZ_ABST_ level is to include or exclude items based on how often they show up in conversation"
                         ; "(It's not a data model)"
                         ; ""
                         ; ""
                         ; "BEHAVIOR"
                         ; "    Order Goods USES Order, Vendor, Invoice, Shipment"
+                        ; "    Receive Order USES Order, Customer, Invoice, Shipment"
                         ; "    Receive Shipment USES Shipment, Order, Bill of Lading, Inventory Item, Employee, SKU, Vendor, Invoice, Invoice Line, Invoice Line Item"
                         ; "    Reject Shipment USES"
                         ; "        Order"
                         ; "        Shipment"
-                        ; "    Reject part of shipment USES Order, Shipment"
-                        ; "    Reconcile BOL USES Order, Shipment, Bill of Lading"
-                        ; "    Put away new shipment USES Inventory Item, SKU"
-                        ; "    Conduct spot inventory USES Inventory Item, SKU"
-                        ; "    Conduct regular inventory USES Inventory Item, SKU"
-                        ; "    Recieve order USES Vendor, Order, Shipment, Bill of Lading, Employee, Employee Type"
-                        ; "    Create shipment"
-                        ; "        USES"
-                        ; "            Employee"
-                        ; "            Employee Type"
-                        ; "            Customer"
-                        ; "            Order"
-                        ; "            Invoice"
-                        ; "            Shipment"
-                        ; "            Invoice Line Item"
-                        ; "    Pick shipment USES Employee, Order, Invoice, Shipment"
-                        ; "    Ship goods USES Customer, Order, Shipment"
-                        ; "    Review daily warehouse activity USES Inventory Item"
-                        ; "    "
-                        ; "    "
                         |]
-        let testText4 = [|
+        let listToProcess = [|(fileInfo1,testText1);(fileInfo2,testText2)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
+        getMasterUserStories newCompilerStatus.ModelItems |> should haveLength 4
+
+    [<Test>]
+    let ``INT MODEL CREATION: multiples on new line after a join are counted right``()=
+        let fileInfo1 = getFakeFileInfo()
+        let fileInfo2 = getFakeFileInfo()
+        let testText1 = [|
                           ""
-                        ; "Here's our initial master supplemental list"
-                        ; ""
-                        ; ""
-                        ; "SUPPLEMENTALS"
-                        ; "    Always respond in a way that's easy for the user to understand"
-                        ; "    Never make the user wait"
-                        ; "    Never confuse the user"
-                        ; "    Always provide a way for the team to know how users start using the product"
-                        ; "    Always provide a way for the team to know how users are using the product"
-                        ; "    Never annoy the user in any fashion if they're trying to provide negative feedback"
-                        ; "    Always try to cheer the user up"
-                        |]
-        let testText5 = [|
-                          ""
-                        ; "From our first talk, here's how the supps map to the MUS    "
-                        ; "SUPPLEMENTALS"
-                        ; "    Always respond in a way that's easy for the user to understand"
-                        ; "        AFFECTS"
-                        ; "            "
-                        ; "    Never make the user wait"
-                        ; "    Never confuse the user"
-                        ; "    Always provide a way for the team to know how users start using the product"
-                        ; "    Always provide a way for the team to know how users are using the product"
-                        ; "    Never annoy the user in any fashion if they're trying to provide negative feedback"
-                        ; "    Always try to cheer the user up"
-                        ; "    "
-                        ; "    "
-                        ; "    "
-                        |]
-        let testText6 = [|
-                          ""
-                        ; ""
+                        ; "Here's the initial master use case list based on our conversation last Monday"
                         ; ""
                         ; ""
                         ; "BEHAVIOR"
-                        ; "    Conduct spot inventory //I love inventory"
-                        ; "        WHEN "
-                        ; "            The truck arrives at the gate // could be any kind of truck"
-                        ; "            An accountant calls on the phone"
-                        ; "            There's a break-in at the warehouse"
-                        ; "        ASA // the actor list isn't complete yet"
-                        ; "            Warehouse worker"
-                        ; "            Warehouse supervisor"
-                        ; "            Nightshift guard supervisor"
-                        ; "        INEEDTO "
-                        ; "            Conduct a formal spot inventory by hand using the older books"
-                        ; "        SOTHAT"
-                        ; "            The insurance company is notified in case of loss"
-                        ; "            Incoming shipments will adequately update the running inventory"
+                        ; "    Order Goods"
+                        ; "    Receive Order"
+                        ; "    Receive Shipment"
+                        ; "    Reject Shipment"
+                        ; "    Reject Part Of Shipment"
+                        ; "    Reconcile BOL"
+                        ; "    Put Away New Shipment"
+                        ; "    Conduct Spot Inventory"
+                        ; "    Conduct Regular Inventory"
+                        ; "    Recieve Order"
+                        ; "    Create Shipment"
+                        ; "    Pick Shipment"
+                        ; "    Ship Goods"
+                        ; "    Review Daily Warehouse Activity"
+                        ; "    MISC"
+                        ; "    ALL"
                         |]
-        let testText7 = [|
-                            ""
+        let testText2 = [|
+                          ""
+                        ;  ""
+                        ;  ""
+                        ; "From our first talk, here's how the supps map to the MUS    "
+                        ;  ""
+                        ;  ""
+                        ; "SUPPLEMENTALS"
+                        ; "    Always respond in a way that's easy for the user to understand"
+                        ; "        AFFECTS"
+                        ; "            ALL"
+                        ; "    Never make the user wait"
+                        ; "        AFFECTS"
+                        ; "            ALL"
+                        ; "    Never confuse the user"
+                        ; "        AFFECTS"
+                        ; "            ALL"
+                        ; "    Always keep track of the path users take to arrive on-site"
+                        ; "        AFFECTS"
+                        ; "            Order Goods, MISC"
+                        ; "    Continuously inform the team about everything the users do"
+                        ; "        AFFECTS"
+                        ; "            ALL"
+                        ; "    Make it as easy as possible for the user to provide negative feedback"
+                        ; "        AFFECTS"
+                        ; "            Reject Shipment, Reject Part Of Shipment"
+                        ; "    Always do the best we can to cheer the user up during any interaction"
+                        ; "        AFFECTS"
+                        ; "            ALL"
                         ; "    "
                         ; "    "
                         ; "    "
                         |]
-        [|(fileInfo1,testText1);(fileInfo2,testText2);(fileInfo3,testText3);(fileInfo4,testText4);(fileInfo5,testText5);(fileInfo6,testText6);(fileInfo7,testText7)|]
-    [<Test>]
-    let ``INT MODEL CREATION: simplest useful model``() =
-        let listToProcess = basicEnterpriseTestModel1
+        let listToProcess = [|(fileInfo1,testText1);(fileInfo2,testText2)|]
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
+        getNotes (getMasterSupplementals newCompilerStatus.ModelItems).[3] |> should haveLength 0
+        getNotes (getMasterSupplementals newCompilerStatus.ModelItems).[5] |> should haveLength 0
+
+    [<Test>]
+    let ``INT MODEL CREATION: simplest useful model``() =
+        let listToProcess = basicModel1
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
+        saveModelGuide (System.AppDomain.CurrentDomain.BaseDirectory + "test.html") newCompilerStatus
         true |> should equal true 
 
 

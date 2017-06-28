@@ -79,6 +79,7 @@
     <Compile Include="InitialProcessingOfIncomingFileLinesTest.fs" />
     <Compile Include="MiscSingleWordCommandTests.fs" />
     <Compile Include="BasicModelCreationTests.fs" />
+    <Compile Include="BasicModel1.fs" />
     <Compile Include="IntModelCreationTests.fs" />
     <Compile Include="BasicModelCheckTests.fs" />
     <Compile Include="Program.fs" />

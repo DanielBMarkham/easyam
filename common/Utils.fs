@@ -6,8 +6,8 @@
     open System.Net
 
 
-
-
+    
+    /// Prints out the options for the command. Standard stuff.
     let commandLinePrintWhileEnter (opts:ConfigBase) fnPrintMe =
                 // Entering program command line report
             let nowString = string System.DateTime.Now
@@ -163,7 +163,120 @@
             let itemCount = (a |> List.filter(fun y->f x y)).Length
             if itemCount>1 then List.append acc [x] else acc
             ) []
-
+    let wl (sw:System.IO.TextWriter) (level:int) (content:string) = 
+        let prefix = new System.String(' ', level*2)
+        sw.WriteLine(prefix+content)
+    let writeJoinDetails (sw:System.IO.TextWriter) (detailList:(string*string []) list) =
+        wl sw 4 "<table class='joinDetails')>"
+        detailList |> List.iter(fun x->
+            wl sw 5 "<tr>"
+            wl sw 5 ("<td>" + (fst x) + "</td>")
+            wl sw 5 "<td></td>"
+            wl sw 5 "</tr>"
+            let joinList = (snd x)
+            joinList |> Array.iter(fun y->
+                wl sw 5 "<tr>"
+                wl sw 5 "<td></td>"
+                wl sw 5 ("<td>" + y + "</td>")
+                wl sw 5 "</tr>"
+                )
+        )
+        wl sw 4 "</table>"
+    let writeItemJoins (sw:System.IO.TextWriter) (modelItems:ModelItem2 []) (x:ModelItem2)  = 
+        let getModelItemDescForId (id:int) = 
+            (modelItems|> Array.map(fun y->modelItems|>Array.tryFind(fun z->z.Id=id))).[0].Value.Description
+        let ig = match x.Location.Bucket with
+                    | Buckets.Behavior->
+                        let isAffectedBy = (getAffectedBy x) 
+                        let affectedByEx = 
+                            if ((getALL_MUS modelItems).IsNone)
+                                then
+                                    let ret=isAffectedBy|>Array.map(fun z->getModelItemDescForId z.TargetId)
+                                    ret
+                                else
+                                    let allIsAffectedBy = getAffectedBy (getALL_MUS modelItems).Value
+                                    let temp=(allIsAffectedBy |> Array.append isAffectedBy)
+                                    let ret=temp|>Array.map(fun z->getModelItemDescForId z.TargetId)
+                                    ret
+                        let usesEntities = (getUses x)
+                        let usesEntitiesEx = usesEntities|>Array.map(fun z->getModelItemDescForId z.TargetId)
+                        writeJoinDetails sw [("AFFECTEDBY: ", affectedByEx); ("USES: ",usesEntitiesEx)]
+                    | Buckets.Structure->
+                        let isUsedBy= (getUsedBy x)
+                        let isUsedByEx=isUsedBy|>Array.map(fun z->getModelItemDescForId z.TargetId)
+                        writeJoinDetails sw [("ISUSEDBY: ", isUsedByEx)]
+                    | Buckets.Supplemental->
+                        let affects= (getAffects x)
+                        let affectsEx=affects|>Array.map(fun z->getModelItemDescForId z.TargetId)
+                        writeJoinDetails sw [("AFFECTS: ", affectsEx)]
+                    | Buckets.None->()
+                    | Buckets.Unknown->()
+        ()
+    let writeMasterItemDetail (sw:System.IO.TextWriter) (modelItems:ModelItem2 []) (x:ModelItem2) = 
+        wl sw 3 ("<div class='master-item'>")
+        wl sw 4 ("<h2>" + x.Description + "</h2>")
+        x.Annotations |> Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Note) |> Array.iter(fun z->
+            wl sw 4 ("<p class='notes'>" + (snd z) + "</p>")
+            )
+        let questions = getQuestions x //x.Annotations|> Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Question)
+        let questionSummary = if questions.Length>0 then (string questions.Length + " open question(s)") else ""
+        let todos = getToDos x //x.Annotations|> Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.ToDo)
+        let todoSummary = if todos.Length>0 then (string todos.Length + " open to-do item(s)") else ""
+        let annotationSummary= match questionSummary.Length, todoSummary.Length with
+                                                                    |0,0->""
+                                                                    |0,_->"This has " + todoSummary
+                                                                    |_,0->"This has " + questionSummary
+                                                                    |_,_->"This has " + todoSummary + " and " + questionSummary
+        if annotationSummary.Length>0 then (wl sw 4 ("<p class='annotation-summary'>" + annotationSummary + "</p>")) else ()
+        if x.Relations.Length>0
+            then
+                wl sw 4 ("<h3>Cross-References</h3>")
+                writeItemJoins sw modelItems x
+            else ()
+        wl sw 3 ("</div>")
+    let writeMinimalHtmlHead (sw:System.IO.TextWriter) (title:string) (styleSheets:string list) =
+        wl sw 0 "<!DOCTYPE html>"
+        wl sw 0 "<html lang='en'>"
+        wl sw 1 "<head>"
+        wl sw 2 "<meta charset='utf-8'>"
+        wl sw 2 "<meta http-equiv='X-UA-Compatible' content='IE=edge'>"
+        wl sw 2 "<meta name='viewport' content='width=device-width, initial-scale=1'>"
+        wl sw 2 "<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->"
+        //wl sw 2 "<link rel='icon' href='images/rotating-star.gif' type='image/gif' >"
+        //wl sw 2 "<link rel='canonical' href='http://danielbmarkham.com' />"
+        wl sw 2 ("<title>" + title + "</title>")
+        styleSheets |> List.iter(fun x->
+            wl sw 2 ("<link href='" + x + "' rel='stylesheet'>")
+            )
+        //wl sw 2 "<link href='css/bootstrap.min.css' rel='stylesheet'>"
+        //wl sw 2 "<link rel='stylesheet' href='font-awesome/css/font-awesome.min.css'>"
+        //wl sw 2 "<link rel='stylesheet' href='css/bootstrap-social.css'>"
+        //wl sw 2 "<link rel='stylesheet' href='css/main.css'>"
+        wl sw 1 "</head>"
+    // Temp function to test saving that given a compiler return, saves a test html file
+    let saveModelGuide (fileName:string) (compilerStatus:CompilerReturn) =
+        let modeltems = compilerStatus.ModelItems
+        let sw = System.IO.File.CreateText(fileName)
+        writeMinimalHtmlHead sw "Analysis Model Masters" ["model-master.css"]
+        wl sw 1 "<body>"
+        wl sw 2 "<div id='content'>"
+        wl sw 3 "<h1>Master User Stories</h1>"
+        getMasterUserStories compilerStatus.ModelItems |> Array.iteri(fun i x->
+            writeMasterItemDetail sw compilerStatus.ModelItems x
+            )
+        wl sw 3 "<h1>Master Domain Model</h1>"
+        getMasterDomainEntities compilerStatus.ModelItems |> Array.iteri(fun i x->
+            writeMasterItemDetail sw compilerStatus.ModelItems x
+            )
+        wl sw 3 "<h1>Master Supplemental List</h1>"
+        getMasterSupplementals compilerStatus.ModelItems |> Array.filter(fun x->x.Location.Bucket=Buckets.Supplemental) |> Array.iteri(fun i x->
+            writeMasterItemDetail sw compilerStatus.ModelItems x
+            )
+        wl sw 2 "</div>"
+        wl sw 1 "</body>"
+        sw.Flush()
+        sw.Close()
+        ()
 
 //    let drawEntityBox (sw:System.IO.StreamWriter) (box:SVGEntityBox) (svgConfig:SVGSetup) =
 //        sw.WriteLine ("<rect x=\"" + box.xPos.ToString() + "\" y=\"" + box.yPos.ToString() + "\" height=\"" + box.height.ToString() + "\" width=\"" + box.width.ToString() + "\" style=\"stroke:" + svgConfig.EntityBorderColor + "; fill: " + svgConfig.EntityFillColor  + "; fill-opacity: " + svgConfig.EntityFillOpacity  + "\"/>")

@@ -7,5 +7,10 @@
  Generates an infinite sequence of random numbers within the given range.
 </summary>
 </member>
+<member name="M:Utils.commandLinePrintWhileEnter(Types.ConfigBase,Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit})">
+<summary>
+ Prints out the options for the command. Standard stuff.
+</summary>
+</member>
 </members>
 </doc>

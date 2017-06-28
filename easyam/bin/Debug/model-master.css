@@ -1,0 +1,39 @@
+﻿body
+    {
+    background-color:lightgray;
+    text-align:center;
+    margin:auto;
+}
+#content {
+    background-color: white;
+    width: 960px;
+    text-align: left;
+    display:inline-block;
+    padding:1em;
+}
+h1 {
+    page-break-before:always;
+    text-align:center;
+}
+p.notes {
+    text-indent:each-line; 
+    text-indent: 12px;
+    font-style:italic;
+}
+p.annotation-summary {
+    padding-left: 12px;
+}
+.joinDetails {
+    padding-left: 12px;
+}
+.master-item {
+    border: black solid 1px;
+    padding: 1em;
+    margin-bottom: 2em;
+}
+h2 {
+
+}
+h3 {
+
+}

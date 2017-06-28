@@ -119,8 +119,374 @@
 //            ExpectedExperimentSuspenseTime=""
 //        }
 
+    [<NoComparison>]
+    type TOKEN_TYPE =
+        |RELATIVE_LOCATOR
+        |ABSOLUTE_LOCATOR
+        |JOINER
+    [<NoComparison>]
+    type TOKEN_TARGET_TYPE =
+        |SINGLE_TARGET
+        |MULTIPLE_TARGETS
+    [<NoComparison>]
+    type TOKEN_CATEGORY = 
+        |BUCKETS
+        |GENRE
+        |TEMPORAL
+        |ABSTRACTION_LEVEL
+        |TASKS
+        |MISC
+        |HDD
+        |SCOPING
+        |SHORTCUT
+        |CONNECTIVE
+        |ATTRIBUTE
+    [<NoComparison>]
+    type EASYAM_TOKEN =
+        {
+            Type:TOKEN_TYPE
+            TargetType:TOKEN_TARGET_TYPE
+            Category:TOKEN_CATEGORY
+            Token:string
+        }
+    type ANNOTATION_TOKEN_TYPE =
+        | None
+        | Note
+        | Question
+        | ToDo
+        | Work
+    let EasyAMTokens = 
+        [
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="NOTE:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="//"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="Q:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="QUESTIONS:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="QUESTIONS"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="QUESTION:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TODOS:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TODOS"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="TODO:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TO-DOS:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="TO-DOS"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="TO-DO:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS"}
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="WORK:"};
+
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="BEHAVIOR"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="STRUCTURE"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTALS:"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTALS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTAL:"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTAL"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="BUSINESS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="SYSTEM"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="META"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="WAS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="AS-IS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="TO-BE"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="ABSTRACT"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="REALIZED"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HDD"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYPOTHESES:"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYPOTHESES"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYPOTHESIS:"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYPOTHESIS"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HYP:"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATIONS:"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATIONS"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATION"};
+//            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATION:"};
+
+            {Type=JOINER;               TargetType=SINGLE_TARGET;        Category=CONNECTIVE;           Token="PARENT"};
+            {Type=JOINER;               TargetType=SINGLE_TARGET;        Category=CONNECTIVE;           Token="CHILD"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="CHILDREN"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="AFFECTS"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="AFFECTEDBY"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="USES"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="USEDBY"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="HASA"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ISOWNEDBYA"};
+//            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ABDUCTSTO"};
+//            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ABDUCTEDFROM"};
+
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="WHEN"};
+            // note the initial space below. ASA cannot appear in first column
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token=" ASA"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="INEEDTO"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="SOTHAT"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="CONTAINS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="INEEDTO"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="BECAUSE"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="WHENEVER"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="ITHASTOBETHAT"};
+        ]
+    let CommandTokens = EasyAMTokens |> List.map(fun x->x.Token)
+
+    type Command =
+        {
+            CommandIndentLevel:int
+            Token:string
+            Value:string
+        }
+    [<NoComparison>]
+    type IncomingLine =
+        {
+            FileCompilationNumber:int
+            File:System.IO.FileInfo
+            FileRawLineNumber:int
+            FileEmptyLinesStrippedLineNumber:int
+            SourceRawLineNumber:int
+            SourceEmptyLinesStrippedLineNumber:int
+            LineText:string
+            LineWithoutLeadingSpaces:string
+            IndentLevel:int
+            Commands:Command []
+        }
 
 
+
+
+
+
+
+    type CompilerMessageType =
+        | Info
+        | Warning
+        | Error
+    [<NoComparison>]
+    type CompilerMessage =
+            {
+                MessageType:CompilerMessageType
+                Message:string
+                SourceFile:string
+                SourceLineBegin:int
+                SourceLineEnd:int option
+                SourceLineColumnBegin:int option
+                SourceLineColumnEnd:int option
+            }
+    let printCompilerMessages (compilerMessages:CompilerMessage []) =
+        compilerMessages |> Array.iteri(fun i x->
+            let messagePrefix=match x.MessageType with
+                                    |CompilerMessageType.Info->"INFO: "
+                                    |CompilerMessageType.Warning->"WARN: "
+                                    |CompilerMessageType.Error->"ERROR: "
+            let formattedMessage=match x.SourceLineEnd,x.SourceLineColumnBegin,x.SourceLineColumnEnd with 
+                                    |option.None, option.None, option.None->
+                                        x.SourceFile + ":" + string x.SourceLineBegin + ": " + messagePrefix + x.Message
+                                    |Some endingLine, option.None, option.None->
+                                        x.SourceFile + ":" + string x.SourceLineBegin + "-" + string endingLine + ": " + messagePrefix + x.Message
+                                    |_,_,_->
+                                        x.SourceFile + ": " + messagePrefix + x.Message
+            System.Console.WriteLine(formattedMessage)
+            )
+    [<NoComparison>]
+        type LastCompilerOperations =
+            | PointerReset
+            | NewModelItem
+            | ReferenceExistingItem
+            | LocationChange
+            | NewJoin
+            | NewAttribute
+            | ReferenceExistingAttribute
+            | NewAnnotation
+    [<NoComparison>]
+    type ModelAttributeTypes =
+        | Trigger
+        | Actor
+        | Goal
+        | BusinessContext
+        | Contains
+        | Because
+        | Whenever
+        | ItHasToBeThat
+    [<NoComparison>]
+    type ModelItem2Attribute =
+        {
+            id:int
+            ModelItemParentId:int
+            AttributeType:ModelAttributeTypes
+            Description:string
+            Annotations:(ANNOTATION_TOKEN_TYPE*string) []
+            SourceReferences:IncomingLine []
+        }
+    let defaultModelItem2Attribute =
+        {
+            id=(-1)
+            ModelItemParentId=(-1)
+            AttributeType=ModelAttributeTypes.Goal
+            Description=""
+            Annotations=[||]
+            SourceReferences=[||]
+        }
+    [<NoComparison>]
+    type ModelLocationPointer =
+        {
+            Namespace:string
+            ParentId:int
+            AttributeType:ModelAttributeTypes option
+            AttributeId:int option
+            InHDDMode:bool
+            Bucket:Buckets
+            Genre:Genres
+            AbstractionLevel:AbstractionLevels
+            TemporalIndicator:TemporalIndicators
+            AnnotationIndicator:ANNOTATION_TOKEN_TYPE
+        }
+    let defaultModelLocationPointer =
+        {
+            Namespace = ""
+            ParentId = -1
+            AttributeType=option.None
+            AttributeId = option.None
+            InHDDMode=false
+            Bucket=Buckets.None
+            Genre=Genres.None
+            AbstractionLevel=AbstractionLevels.None
+            TemporalIndicator=TemporalIndicators.None
+            AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None
+        }
+    [<NoComparison>]
+    type ModelJoin =
+        |Parent
+        |Child
+        |Affects
+        |AffectedBy
+        |Uses
+        |UsedBy
+        |HasA
+        |IsOwnedByA
+    let getReverseJoin (sourceJoin:ModelJoin) =
+        match sourceJoin with 
+            | Parent->Child
+            | Child->Parent
+            | Affects->AffectedBy
+            | AffectedBy->Affects
+            | Uses->UsedBy
+            | UsedBy->Uses
+            | HasA->IsOwnedByA
+            | IsOwnedByA->HasA
+    [<NoComparison>]
+    type ModelRelation =
+        {
+            id:int
+            ModelJoinType:ModelJoin
+            TargetId:int
+            SourceReference:IncomingLine
+        }
+    [<NoComparison>]
+    type ModelItem2 =
+        {
+            Id:int
+            Location:ModelLocationPointer
+            Description:string
+            Attributes:ModelItem2Attribute []
+            Annotations:(ANNOTATION_TOKEN_TYPE*string) []
+            SourceReferences:IncomingLine []
+            Relations:ModelRelation []
+        }
+    let defaultModelItem2:ModelItem2 =
+        {
+            Id=(-1)
+            Location=defaultModelLocationPointer
+            Description=""
+            Attributes=[||]
+            Annotations=[||]
+            SourceReferences=[||]
+            Relations=[||]
+        }
+    [<NoComparison>]
+    type CompilerWaitingFor =
+        |Nothing
+        |SingleTarget
+        |MultipleTargets
+        |MultipleAttributeTargets
+    [<NoComparison>]
+    type IndentLevelComparisons =
+        | IdentIsSameAsPreviousIndent
+        | IdentIsLessThanPreviousIndent
+        | IdentIsMoreThanPreviousIndent
+    [<NoComparison>]
+    type CompilerState =
+        {
+            WaitingFor:CompilerWaitingFor
+            LastFileNameProcessed:string
+            TagValueList:(string*string) list
+            LastCompilerOperation:LastCompilerOperations
+            LastJoinType:ModelJoin option
+            CurrentIndentLevel:int
+            IndentLevelChange:IndentLevelComparisons
+        }
+    let defaultCompilerState=
+        {
+            WaitingFor=CompilerWaitingFor.Nothing
+            LastFileNameProcessed=""
+            TagValueList=[]
+            LastCompilerOperation=LastCompilerOperations.PointerReset
+            LastJoinType=option.None
+            CurrentIndentLevel=0
+            IndentLevelChange=IndentLevelComparisons.IdentIsSameAsPreviousIndent
+        }
+    [<NoComparison>]
+    type CompilerReturn = 
+        {
+            CompilerState:CompilerState
+            CurrentLocation:ModelLocationPointer
+            //CompilerWaitingForState:CompilerWaitingFor
+            CompilerMessages:CompilerMessage []
+            ModelItems:ModelItem2 []
+        }
+    let beginningCompilerStatus =
+        {
+            CompilerState=defaultCompilerState
+            CurrentLocation=defaultModelLocationPointer
+            //CompilerWaitingForState=CompilerWaitingFor.Nothing
+            CompilerMessages=[||]
+            ModelItems= [|defaultModelItem2|]
+        }
+    [<NoComparison>]
+    type IncomingFileProcessingStatus =
+        {
+            FileNumber:int
+            IncomingRawLineCount:int
+            IncomingLineCountWithEmptyLinesStripped:int
+            IncomingLinesConcatenated:IncomingLine []
+            CompilerReturn:CompilerReturn
+        }
+    // helpers
+    let getTopLevelItems (modelItems:ModelItem2 []) =
+        modelItems |> Array.filter(fun x->x.Location.AbstractionLevel=AbstractionLevels.Abstract && x.Location.Genre=Genres.Business && x.Location.TemporalIndicator=TemporalIndicators.ToBe)
+    let getMasterUserStories (modelItems:ModelItem2 []) = 
+        (getTopLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Behavior)
+    let getALL_MUS (modelItems:ModelItem2 []) = 
+        let allItem = getMasterUserStories modelItems |> Array.tryFind(fun x->x.Description="ALL")
+        allItem
+    let getMasterDomainEntities (modelItems:ModelItem2 []) = 
+        (getTopLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Structure)
+    let getMasterSupplementals (modelItems:ModelItem2 []) = 
+        (getTopLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Supplemental)
+    let getNotes (modelItem:ModelItem2) =
+        modelItem.Annotations |> Array.filter(fun x->(fst x)=ANNOTATION_TOKEN_TYPE.Note)
+    let getQuestions (modelItem:ModelItem2) =
+        modelItem.Annotations |> Array.filter(fun x->(fst x)=ANNOTATION_TOKEN_TYPE.Question)
+    let getToDos (modelItem:ModelItem2) =
+        modelItem.Annotations |> Array.filter(fun x->(fst x)=ANNOTATION_TOKEN_TYPE.ToDo)
+    let getWorks (modelItem:ModelItem2) =
+        modelItem.Annotations |> Array.filter(fun x->(fst x)=ANNOTATION_TOKEN_TYPE.Work)
+    let getAffectedBy (modelItem:ModelItem2) =
+        modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.AffectedBy)
+    let getAffects (modelItem:ModelItem2) =
+        modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.Affects)
+    let getUses (modelItem:ModelItem2) =
+        modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.Uses)
+    let getUsedBy (modelItem:ModelItem2) =
+        modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.UsedBy)
+    let getHasA (modelItem:ModelItem2) =
+        modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.HasA)
+    let getIsOwnedByA (modelItem:ModelItem2) =
+        modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.IsOwnedByA)
 
 //// MIXED TYPES
 //    type SVGEntityBox =
