@@ -12,7 +12,6 @@
     padding:1em;
 }
 h1 {
-    page-break-before:always;
     text-align:center;
 }
 p.notes {
@@ -36,4 +35,15 @@ h2 {
 }
 h3 {
 
+}
+@media print {
+    #content {
+        display:initial;
+    }
+    .master-item {
+        break-inside:avoid;
+    }
+    h1 {
+        break-before:always;
+    }
 }

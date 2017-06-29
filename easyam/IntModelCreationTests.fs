@@ -408,6 +408,137 @@
         getNotes (getMasterSupplementals newCompilerStatus.ModelItems).[5] |> should haveLength 0
 
     [<Test>]
+    let ``INT MODEL CREATION: dupe attributes are ignored``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "Here's the intial master domain model last also based on last Monday's conversation"
+                        ; ""
+                        ; ""
+                        ; "STRUCTURE"
+                        ; "    Shipment"
+                        ; "    Order"
+                        ; "    Bill Of Lading"
+                        ; ""
+                        ; ""
+                        ; "    Shipment CONTAINS Trucking Company"
+                        ; "    Shipment CONTAINS Driver"
+                        ; "    Shipment CONTAINS Trailer"
+                        ; "    Shipment CONTAINS Weight"
+                        ; "    Shipment CONTAINS Trucking Company"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
+        newCompilerStatus.ModelItems |> should haveLength 4
+        newCompilerStatus.ModelItems.[1].Attributes |> should haveLength 4
+
+    [<Test>]
+    let ``INT MODEL CREATION: dupe relations are ignored``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "Here's the intial master domain model last also based on last Monday's conversation"
+                        ; ""
+                        ; ""
+                        ; "STRUCTURE"
+                        ; "    Shipment"
+                        ; "    Order"
+                        ; "    Bill Of Lading"
+                        ; "    Inventory Item"
+                        ; "    Employee"
+                        ; "    Employee Type"
+                        ; "    SKU"
+                        ; "    Customer"
+                        ; "    Invoice"
+                        ; "    Invoice Line"
+                        ; "    Invoice Line Item"
+                        ; "    Vendor"
+                        ; ""
+                        ; ""
+                        ; "    Shipment HASA Bill Of Lading"
+                        ; "    Order HASA Shipment"
+                        ; "    Shipment HASA Bill Of Lading"
+                        ; "    Vendor HASA Shipment"
+                        ; "    Vendor HASA Invoice"
+                        ; "    Customer HASA Order"
+                        ; "    Vendor HASA Order"
+                        ; "    Customer HASA Invoice"
+                        ; "    Invoice HASA Invoice Line"
+                        ; "    Invoice HASA Invoice Line Item"
+                        ; "    SKU HASA Inventory Item"
+                        ; "    Invoice Line Item HASA SKU"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
+        newCompilerStatus.ModelItems |> should haveLength 13
+        newCompilerStatus.ModelItems.[1].Relations |> should haveLength 3
+
+    [<Test>]
+    let ``INT MODEL CREATION: Question that moves indent outward re-adjusts the target for follow-on items``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; ""
+                        ; "BEHAVIOR"
+                        ; "    Order Goods"
+                        ; "    // Order Goods was specifically requested by the guy in the plaid sweater"
+                        ; "    // It seems to be very important for some reason"
+                        ; "        WHEN The inventory count for an item falls below its re-order point"
+                        ; "        ASA Warehouse Worker"
+                        ; "        INEEDTO Place an order with our suppliers to replenish needed items"
+                        ; "        SOTHAT we don't run out of things and are able to fulfill our orders from our customers"
+                        ; "    Receive Order"
+                        ; "        WHEN I'm out of something I realize I need"
+                        ; "        ASA Customer"
+                        ; "        INEEDTO Place an order for new stuff"
+                        ; "        SOTHAT I can be happy owning things I think I need"
+                        ; "    Conduct Spot Inventory //I love inventory"
+                        ; "        WHEN "
+                        ; "            A truck arrives at the gate // could be any kind of truck"
+                        ; "            An accountant calls on the phone"
+                        ; "            There's a break-in at the warehouse"
+                        ; "        ASA // the actor list isn't complete yet"
+                        ; "            Warehouse Worker"
+                        ; "            Warehouse Supervisor"
+                        ; "            Nightshift Guard Supervisor"
+                        ; "        INEEDTO "
+                        ; "            Conduct a formal spot inventory by hand using the older books"
+                        ; "        SOTHAT"
+                        ; "            The insurance company is notified in case of loss"
+                        ; "            Incoming shipments will adequately update the running inventory"
+                        ; "                Q: Is there such a thing as a 'walking inventory'"
+                        ; "        Q: Do we differentiate between goods and services?"
+                        ; "    Conduct Regular Inventory"
+                        ; "        WHEN "
+                        ; "            The first of the month rolls around"
+                        ; "        ASA"
+                        ; "            Warehouse Supervisor"
+                        ; "        INEEDTO "
+                        ; "            Conduct a formal inventory using an audited procedure"
+                        ; "        SOTHAT"
+                        ; "            Our accounting system stays coherent"
+                        ; "            We know what to order"
+                        ; "    Receive Order "
+                        ; "        WHEN "
+                        ; "            One of our customers decides they want something from us"
+                        ; "        ASA"
+                        ; "            Warehouse Worker"
+                        ; "        INEEDTO "
+                        ; "            Receive an order over the telephone"
+                        ; "        SOTHAT"
+                        ; "            Customers can get what they want"
+                        ; "            Customers will like us and want to call us again"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
+        newCompilerStatus.ModelItems |> should haveLength 5
+        newCompilerStatus.ModelItems.[3].Attributes|> should haveLength 9
+
+
+    [<Test>]
     let ``INT MODEL CREATION: simplest useful model``() =
         let listToProcess = basicModel1
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess

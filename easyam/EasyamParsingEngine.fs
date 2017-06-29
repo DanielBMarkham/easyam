@@ -210,16 +210,22 @@
         let reverseJoin = getReverseJoin joinType
         match possibleSource, possibleTarget with
             |Some sourceItem, Some targetItem->
-                // add a join to both model items. Be sure to include the source reference
-                let newSourceItemJoinRelation={id=getNextModelItemNumber(); ModelJoinType=joinType; TargetId=targetItem.Id; SourceReference=incomingLine}
-                let newTargetItemJoinRelation={id=getNextModelItemNumber(); ModelJoinType=reverseJoin; TargetId=sourceItem.Id; SourceReference=incomingLine}
-                let newSourceItemJoinRelations=[|newSourceItemJoinRelation|] |> Array.append sourceItem.Relations
-                let newTargetItemJoinRelations=[|newTargetItemJoinRelation|] |> Array.append targetItem.Relations
-                let newSourceItem={sourceItem with Relations=newSourceItemJoinRelations}
-                let newTargetItem={targetItem with Relations=newTargetItemJoinRelations}
-                let compilerStatusWithNewSourcce = updateModelItem compilerStatus newSourceItem
-                let compilerStatusWithNewSourceAndTarget = updateModelItem compilerStatusWithNewSourcce newTargetItem
-                compilerStatusWithNewSourceAndTarget
+                // if the target is already in the relations list, log and bail out
+                let targetAlreadyExists = sourceItem.Relations|>Array.exists(fun z->z.TargetId=targetItem.Id)
+                if targetAlreadyExists
+                    then
+                        logCompilerMessageForASingleLine compilerStatus CompilerMessageType.Warning ("target item " + description + " already exists once as a join. There is a duplicate entry") incomingLine
+                    else
+                        // add a join to both model items. Be sure to include the source reference
+                        let newSourceItemJoinRelation={id=getNextModelItemNumber(); ModelJoinType=joinType; TargetId=targetItem.Id; SourceReference=incomingLine}
+                        let newTargetItemJoinRelation={id=getNextModelItemNumber(); ModelJoinType=reverseJoin; TargetId=sourceItem.Id; SourceReference=incomingLine}
+                        let newSourceItemJoinRelations=[|newSourceItemJoinRelation|] |> Array.append sourceItem.Relations
+                        let newTargetItemJoinRelations=[|newTargetItemJoinRelation|] |> Array.append targetItem.Relations
+                        let newSourceItem={sourceItem with Relations=newSourceItemJoinRelations}
+                        let newTargetItem={targetItem with Relations=newTargetItemJoinRelations}
+                        let compilerStatusWithNewSourcce = updateModelItem compilerStatus newSourceItem
+                        let compilerStatusWithNewSourceAndTarget = updateModelItem compilerStatusWithNewSourcce newTargetItem
+                        compilerStatusWithNewSourceAndTarget
             |Some sourceItem, option.None->
                 logCompilerMessageForASingleLine compilerStatus CompilerMessageType.Error ("target item " + description + " does not currently exist in model when trying to make join") incomingLine
             |option.None, Some targetItem->
@@ -261,7 +267,9 @@
                         let newAnnotations = [|newAnnotation|] |> Array.append modelItemToChange.Value.Annotations
                         let newSourceReferences = [|sourceLine|] |> Array.append modelItemToChange.Value.SourceReferences
                         let newModelItem = {modelItemToChange.Value with Annotations=newAnnotations; SourceReferences=newSourceReferences}
-                        let newCompilerState = {currentCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewAnnotation}
+                        // the indent does not go up for notes
+                        let newIndent = if currentCompilerStatus.CompilerState.CurrentIndentLevel>0 then currentCompilerStatus.CompilerState.CurrentIndentLevel-1 else 0
+                        let newCompilerState = {currentCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewAnnotation; CurrentIndentLevel=newIndent}
                         let newCompilerStatus=updateModelItem {currentCompilerStatus with CompilerState=newCompilerState} newModelItem
                         newCompilerStatus
     let addAttributeAnnotation (parentId:int) (attributeTargetId:int) (annotationType:ANNOTATION_TOKEN_TYPE) (annotationValue:string) (sourceLine:IncomingLine) (currentCompilerStatus:CompilerReturn) =
@@ -297,14 +305,18 @@
                         SourceReferences=[|sourceLine|]
                     }
                 let targetModelItem=currentCompilerStatus.ModelItems|>Array.find(fun x->x.Id=currentCompilerStatus.CurrentLocation.ParentId)
-                let newTargetModelItemSourceReferences = [|sourceLine|] |> Array.append targetModelItem.SourceReferences
-                let newTargetModelItemAttributes = [|newModelAttribute|] |> Array.append targetModelItem.Attributes
-                let newCompilerState = {currentCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewAttribute}
-                let newCompilerLocation ={currentCompilerStatus.CurrentLocation with AttributeId = Some newModelAttribute.id; AttributeType=Some newModelAttribute.AttributeType}
-                let modifiedModelItem = {targetModelItem with SourceReferences=newTargetModelItemSourceReferences; Attributes=newTargetModelItemAttributes}
-                updateModelItem {currentCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation} modifiedModelItem
+                // if the attribute already exists then bail, otherwise add
+                if targetModelItem.Attributes|>Array.exists(fun x->x.Description=attributeDescription&&x.AttributeType=attributeType)
+                    then currentCompilerStatus
+                    else
+                        let newTargetModelItemSourceReferences = [|sourceLine|] |> Array.append targetModelItem.SourceReferences
+                        let newTargetModelItemAttributes = [|newModelAttribute|] |> Array.append targetModelItem.Attributes
+                        let newCompilerState = {currentCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewAttribute}
+                        let newCompilerLocation ={currentCompilerStatus.CurrentLocation with AttributeId = Some newModelAttribute.id; AttributeType=Some newModelAttribute.AttributeType}
+                        let modifiedModelItem = {targetModelItem with SourceReferences=newTargetModelItemSourceReferences; Attributes=newTargetModelItemAttributes}
+                        updateModelItem {currentCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation} modifiedModelItem
 
-    let updateModelLocationPointer (originalCompilerStatus:CompilerReturn) (incomingLine:IncomingLine) (incomingCommand:Command):CompilerReturn =
+    let rec updateModelLocationPointer (originalCompilerStatus:CompilerReturn) (incomingLine:IncomingLine) (incomingCommand:Command):CompilerReturn =
         // context resets when the file changes
 
         let fileCheckedCompilerStatus=if incomingLine.File.FullName=originalCompilerStatus.CompilerState.LastFileNameProcessed
@@ -350,24 +362,7 @@
                                         // We have a new parent
                                         let newLocation = {incomingCompilerStatus.CurrentLocation with ParentId=itemAlreadyExists.Value.Id}
                                         let newState = {incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.Nothing; LastJoinType=option.None; LastCompilerOperation=LastCompilerOperations.ReferenceExistingItem}
-                                        {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}
-
-
-                                        //let lastJoinType = if incomingCompilerStatus.CompilerState.LastJoinType.IsSome then incomingCompilerStatus.CompilerState.LastJoinType.Value else raise(new System.Exception("We have a join but no join type to use"))
-                                        //// if the parentId is able to join to this item in this way, join it. Otherwise reset the location so that we're not 
-                                        //// waiting on anything and instead have just identified a new item to talk about
-                                        //let currentParent = incomingCompilerStatus.ModelItems|>Array.find(fun x->x.Id=incomingCompilerStatus.CurrentLocation.ParentId)
-                                        //let thingsThatCanJoinLikeThisToTheCurrentParent = itemsThatCanJoinToMe incomingCompilerStatus currentParent incomingCompilerStatus.CompilerState.LastJoinType.Value
-                                        //let currentParentCanJoinToThisItem = thingsThatCanJoinLikeThisToTheCurrentParent |> Array.exists(fun x->x.Description=incomingCommand.Value.Trim())
-                                        //if currentParentCanJoinToThisItem
-                                        //    then joinModelItems incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine lastJoinType  (incomingCommand.Value)
-                                        //    else
-                                        //        let thisItem=thingsThatCanJoinLikeThisToTheCurrentParent |> Array.find(fun x->x.Description=incomingCommand.Value.Trim())
-                                        //        let newLocation = {incomingCompilerStatus.CurrentLocation with ParentId=thisItem.Id}
-                                        //        let newState = {incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.Nothing; LastJoinType=option.None; LastCompilerOperation=LastCompilerOperations.ReferenceExistingItem}
-                                        //        {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}
-
-                                                
+                                        {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}                                                
                                     | IndentLevelComparisons.IdentIsMoreThanPreviousIndent, false->
                                         // multiple targets, there's a join, the indent is more, and the item does not already exist
                                         // if there's a comma, check each item separately
@@ -419,13 +414,23 @@
                                         let newState = {incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.Nothing; LastJoinType=option.None; LastCompilerOperation=LastCompilerOperations.ReferenceExistingItem}
                                         {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}
                     |CompilerWaitingFor.MultipleAttributeTargets->
-                        let newAttributeType = incomingCompilerStatus.CurrentLocation.AttributeType.Value
-                        let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
-                        let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
-                                                    addModelAttribute newAttributeType (x.Trim()) incomingLine accumulatorCompilerStatus
-                                                ) incomingCompilerStatus
-                        let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAttributeTargets}
-                        {newCompilerStatus with CompilerState=newCompilerState}
+                        if (newIndentLevel=IdentIsLessThanPreviousIndent) && incomingCompilerStatus.CompilerState.LastCompilerOperation<>LastCompilerOperations.NewAnnotation
+                            then
+                                // if we're not further idented, we pop back up to the parent, not waiting on atts
+                                // reset the pointer to the location without attributes and wait on multiple stuff
+                                let newCompilerState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; LastCompilerOperation=LastCompilerOperations.PointerReset; WaitingFor=CompilerWaitingFor.MultipleTargets}
+                                let newCompilerLocation={incomingCompilerStatus.CurrentLocation with AttributeType=option.None; AttributeId=option.None; ParentId=(-1)}
+                                let newCompilerStatus={incomingCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation}
+                                updateModelLocationPointer newCompilerStatus incomingLine incomingCommand 
+                            else
+                                // if we're further idented, we're continuing the previous att list
+                                let newAttributeType = incomingCompilerStatus.CurrentLocation.AttributeType.Value
+                                let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                                let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                            addModelAttribute newAttributeType (x.Trim()) incomingLine accumulatorCompilerStatus
+                                                        ) incomingCompilerStatus
+                                let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAttributeTargets}
+                                {newCompilerStatus with CompilerState=newCompilerState}
                         
                     |_->
                         let newModelItem =
@@ -450,11 +455,17 @@
                                 | "TODO " | "TODO: "|"TODO:"|"TO-DO"|"TO-DO: "|"TO-DO:"->ANNOTATION_TOKEN_TYPE.ToDo
                                 | "WORK: " | "WORK "|"WORK:"->ANNOTATION_TOKEN_TYPE.Work
                                 |_->ANNOTATION_TOKEN_TYPE.Note // ERROR ERROR
-                        if incomingCompilerStatus.CompilerState.WaitingFor=CompilerWaitingFor.MultipleAttributeTargets && (incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewAttribute || incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.ReferenceExistingAttribute)
-                            then addAttributeAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AttributeId.Value newTempAnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus
-                            else addAnnotation incomingCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus 
-                        //{newCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.Nothing}
-                        //newCompilerStatus
+                        if (incomingCommand.CommandIndentLevel<originalCompilerStatus.CompilerState.CurrentIndentLevel)
+                            then
+                                // ident has popped up. Whatever we were referencing, we are now referencing the item
+                                let newLocation={incomingCompilerStatus.CurrentLocation with AttributeId=option.None; AttributeType=option.None;}
+                                let newState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; WaitingFor=CompilerWaitingFor.MultipleTargets}
+                                let adjustedCompilerStatus={incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}
+                                addAnnotation adjustedCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine adjustedCompilerStatus
+                            else
+                                if incomingCompilerStatus.CompilerState.WaitingFor=CompilerWaitingFor.MultipleAttributeTargets && (incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewAttribute || incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.ReferenceExistingAttribute)
+                                    then addAttributeAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AttributeId.Value newTempAnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus
+                                    else addAnnotation incomingCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus 
                     |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.RELATIVE_LOCATOR,TOKEN_CATEGORY.MISC->
                         let newTempAnnotationIndicator=
                             match token.Token with 

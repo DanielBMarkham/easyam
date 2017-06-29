@@ -167,21 +167,52 @@
         let prefix = new System.String(' ', level*2)
         sw.WriteLine(prefix+content)
     let writeJoinDetails (sw:System.IO.TextWriter) (detailList:(string*string []) list) =
-        wl sw 4 "<table class='joinDetails')>"
-        detailList |> List.iter(fun x->
-            wl sw 5 "<tr>"
-            wl sw 5 ("<td>" + (fst x) + "</td>")
-            wl sw 5 "<td></td>"
-            wl sw 5 "</tr>"
-            let joinList = (snd x)
-            joinList |> Array.iter(fun y->
-                wl sw 5 "<tr>"
-                wl sw 5 "<td></td>"
-                wl sw 5 ("<td>" + y + "</td>")
-                wl sw 5 "</tr>"
-                )
-        )
-        wl sw 4 "</table>"
+        if detailList.Length=0 then () else
+            wl sw 4 "<table class='joinDetails')>"
+            detailList |> List.iter(fun x->
+                let joinList = (snd x)
+                if joinList.Length=0 then () else
+                    let firstItem = joinList.[0]
+                    wl sw 5 "<tr>"
+                    wl sw 5 ("<td>" + (fst x) + "</td>")
+                    wl sw 5 ("<td>" + firstItem + "</td>")
+                    wl sw 5 "</tr>"
+                    joinList |> Array.iteri(fun i y->
+                        if i=0 then () else
+                            wl sw 5 "<tr>"
+                            wl sw 5 "<td></td>"
+                            wl sw 5 ("<td>" + y + "</td>")
+                            wl sw 5 "</tr>"
+                        )
+            )
+            wl sw 4 "</table>"
+    let writeItemAttributes (sw:System.IO.TextWriter) (modelItems:ModelItem2 []) (x:ModelItem2)  = 
+        match x.Location.Bucket with
+                | Buckets.Behavior->
+                    let triggers=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Trigger)
+                    let actors=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Actor)
+                    let verbnouns=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Goal)
+                    let contexts=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.BusinessContext)
+                    let arr =[|("WHEN: ", triggers);("ASA: ", actors);("INEEDTO: ", verbnouns);("SOTHAT: ", contexts)|]
+                    let arrFiltered = arr |> Array.filter(fun y->(fst y).Length>0)
+                    let arrFilteredDesc = arrFiltered |> Array.map(fun y->(fst y),(snd y) |>Array.map(fun z->z.Description)) |> Array.toList
+                    writeJoinDetails sw arrFilteredDesc
+                | Buckets.Structure->
+                    let contains=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Contains)
+                    let arr=[|"CONTAINS: ", contains|]
+                    let arrFiltered = arr |> Array.filter(fun y->(fst y).Length>0)
+                    let arrFilteredDesc = arrFiltered |> Array.map(fun y->(fst y),(snd y) |>Array.map(fun z->z.Description)) |> Array.toList
+                    writeJoinDetails sw arrFilteredDesc
+                | Buckets.Supplemental->
+                    let becauses=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Because)
+                    let whenevers=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Whenever)
+                    let ithastobethats=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.ItHasToBeThat)
+                    let arr=[|("BECAUSE: ", becauses); ("WHENEVER: ", whenevers); ("ITHASTOBETHAT: ", ithastobethats)|]
+                    let arrFiltered = arr |> Array.filter(fun y->(fst y).Length>0)
+                    let arrFilteredDesc = arrFiltered |> Array.map(fun y->(fst y),(snd y) |>Array.map(fun z->z.Description)) |> Array.toList
+                    writeJoinDetails sw arrFilteredDesc
+                | Buckets.None->()
+                | Buckets.Unknown->()
     let writeItemJoins (sw:System.IO.TextWriter) (modelItems:ModelItem2 []) (x:ModelItem2)  = 
         let getModelItemDescForId (id:int) = 
             (modelItems|> Array.map(fun y->modelItems|>Array.tryFind(fun z->z.Id=id))).[0].Value.Description
@@ -204,7 +235,9 @@
                     | Buckets.Structure->
                         let isUsedBy= (getUsedBy x)
                         let isUsedByEx=isUsedBy|>Array.map(fun z->getModelItemDescForId z.TargetId)
-                        writeJoinDetails sw [("ISUSEDBY: ", isUsedByEx)]
+                        let hasA = (getHasA x)
+                        let hasAEx = hasA |>Array.map(fun z->getModelItemDescForId z.TargetId)
+                        writeJoinDetails sw [("USEDBY: ", isUsedByEx); ("HASA: ", hasAEx)]
                     | Buckets.Supplemental->
                         let affects= (getAffects x)
                         let affectsEx=affects|>Array.map(fun z->getModelItemDescForId z.TargetId)
@@ -215,6 +248,7 @@
     let writeMasterItemDetail (sw:System.IO.TextWriter) (modelItems:ModelItem2 []) (x:ModelItem2) = 
         wl sw 3 ("<div class='master-item'>")
         wl sw 4 ("<h2>" + x.Description + "</h2>")
+        writeItemAttributes sw modelItems x
         x.Annotations |> Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Note) |> Array.iter(fun z->
             wl sw 4 ("<p class='notes'>" + (snd z) + "</p>")
             )

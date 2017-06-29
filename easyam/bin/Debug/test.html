@@ -13,18 +13,30 @@
       <h1>Master User Stories</h1>
       <div class='master-item'>
         <h2>Order Goods</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>WHEN: </td>
+          <td>The inventory count for an item falls below its re-order point</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Warehouse Worker</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Place an order with our suppliers to replenish needed items</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>we don't run out of things and are able to fulfill our orders from our customers</td>
+          </tr>
+        </table>
         <p class='notes'>Order Goods was specifically requested by the guy in the plaid sweater</p>
         <p class='notes'>It seems to be very important for some reason</p>
-        <p class='notes'>the actor list isn't complete yet</p>
-        <p class='annotation-summary'>This has 1 open question(s)</p>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always keep track of the path users take to arrive on-site</td>
           </tr>
           <tr>
@@ -49,10 +61,6 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Order</td>
           </tr>
           <tr>
@@ -71,14 +79,28 @@
       </div>
       <div class='master-item'>
         <h2>Receive Order</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>WHEN: </td>
+          <td>I'm out of something I realize I need</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Customer</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Place an order for new stuff</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>I can be happy owning things I think I need</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always respond in a way that's easy for the user to understand</td>
           </tr>
           <tr>
@@ -99,7 +121,7 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
+          <td>Vendor</td>
           </tr>
           <tr>
           <td></td>
@@ -107,28 +129,46 @@
           </tr>
           <tr>
           <td></td>
-          <td>Customer</td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Invoice</td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Shipment</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Employee</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Employee Type</td>
           </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Receive Shipment</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>WHEN: </td>
+          <td>A truck arrives at the loading dock</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Warehouse Worker</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Unload the truck</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>We can get new trucks in</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>We can have stuff to ship to other people</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always respond in a way that's easy for the user to understand</td>
           </tr>
           <tr>
@@ -149,10 +189,6 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Shipment</td>
           </tr>
           <tr>
@@ -191,14 +227,28 @@
       </div>
       <div class='master-item'>
         <h2>Reject Shipment</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>WHEN: </td>
+          <td>We are recieving a shipment and most of the goods are unsatisfactory</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Warehouse Worker</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Reject the shipment</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>We can get the goods we need from another vendor</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Make it as easy as possible for the user to provide negative feedback</td>
           </tr>
           <tr>
@@ -223,28 +273,42 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Order</td>
           </tr>
           <tr>
           <td></td>
           <td>Shipment</td>
           </tr>
+          <tr>
+          <td></td>
+          <td>Vendor</td>
+          </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Reject Part Of Shipment</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>WHEN: </td>
+          <td>We are recieving a shipment and a few of the items are unsatisfactory</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Warehouse Worker</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Reject parts of the shipment that are unsatisfactory</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>We can restock needed goods as soon as possible</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Make it as easy as possible for the user to provide negative feedback</td>
           </tr>
           <tr>
@@ -269,10 +333,6 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Order</td>
           </tr>
           <tr>
@@ -283,14 +343,28 @@
       </div>
       <div class='master-item'>
         <h2>Reconcile BOL</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>WHEN: </td>
+          <td>A truck arrives at the guard shack</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Guard</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Reconcile the BOL with the paperwork</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>Warehouse workers will know a vetted truck is waiting to unload</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always respond in a way that's easy for the user to understand</td>
           </tr>
           <tr>
@@ -311,10 +385,6 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Order</td>
           </tr>
           <tr>
@@ -325,14 +395,29 @@
       </div>
       <div class='master-item'>
         <h2>Put Away New Shipment</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>WHEN: </td>
+          <td>A shipment has been received approved and recorded</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Warehouse Worker</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Put Away New Shipment</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>The loading area is freed up to accept new shipments</td>
+          </tr>
+        </table>
+        <p class='notes'>no commas allowed here</p>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always respond in a way that's easy for the user to understand</td>
           </tr>
           <tr>
@@ -353,10 +438,6 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Inventory Item</td>
           </tr>
           <tr>
@@ -367,14 +448,51 @@
       </div>
       <div class='master-item'>
         <h2>Conduct Spot Inventory</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>WHEN: </td>
+          <td>A truck arrives at the gate</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>An accountant calls on the phone</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>There's a break-in at the warehouse</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Warehouse Worker</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Warehouse Supervisor</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Nightshift Guard Supervisor</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Conduct a formal spot inventory by hand using the older books</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>The insurance company is notified in case of loss</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Incoming shipments will adequately update the running inventory</td>
+          </tr>
+        </table>
+        <p class='notes'>I love inventory</p>
+        <p class='notes'>the actor list isn't complete yet</p>
+        <p class='annotation-summary'>This has 1 open question(s)</p>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always respond in a way that's easy for the user to understand</td>
           </tr>
           <tr>
@@ -395,10 +513,6 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Inventory Item</td>
           </tr>
           <tr>
@@ -409,14 +523,32 @@
       </div>
       <div class='master-item'>
         <h2>Conduct Regular Inventory</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>WHEN: </td>
+          <td>The first of the month rolls around</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Warehouse Supervisor</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Conduct a formal inventory using an audited procedure</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>Our accounting system stays coherent</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>We know what to order</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always respond in a way that's easy for the user to understand</td>
           </tr>
           <tr>
@@ -437,10 +569,6 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Inventory Item</td>
           </tr>
           <tr>
@@ -450,69 +578,33 @@
         </table>
       </div>
       <div class='master-item'>
-        <h2>Recieve Order</h2>
-        <h3>Cross-References</h3>
+        <h2>Create Shipment</h2>
         <table class='joinDetails')>
           <tr>
-          <td>AFFECTEDBY: </td>
-          <td></td>
+          <td>WHEN: </td>
+          <td>An order has been picked and put in the staging area</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Warehouse Worker</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Create a shipment to the customer</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>The items customers want will arrive on-time for them</td>
           </tr>
           <tr>
           <td></td>
-          <td>Always respond in a way that's easy for the user to understand</td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Never make the user wait</td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Never confuse the user</td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Continuously inform the team about everything the users do</td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Always do the best we can to cheer the user up during any interaction</td>
-          </tr>
-          <tr>
-          <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Vendor</td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Order</td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Shipment</td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Employee</td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Employee Type</td>
+          <td>The staging area is freed up to process shipments for customers</td>
           </tr>
         </table>
-      </div>
-      <div class='master-item'>
-        <h2>Create Shipment</h2>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always respond in a way that's easy for the user to understand</td>
           </tr>
           <tr>
@@ -533,10 +625,6 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Employee</td>
           </tr>
           <tr>
@@ -567,14 +655,28 @@
       </div>
       <div class='master-item'>
         <h2>Pick Shipment</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>WHEN: </td>
+          <td>An order has been received and we have enough goods</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Warehouse Worker</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Pick items from the warehouse to send to the customer</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>We can put the items customers want on a truck and send it to them</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always respond in a way that's easy for the user to understand</td>
           </tr>
           <tr>
@@ -595,10 +697,6 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Employee</td>
           </tr>
           <tr>
@@ -617,14 +715,28 @@
       </div>
       <div class='master-item'>
         <h2>Ship Goods</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>WHEN: </td>
+          <td>An order has been picked and the shipment created</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Guard</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Approve the outgoing items and shipment</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>The customer receives goods they want</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always respond in a way that's easy for the user to understand</td>
           </tr>
           <tr>
@@ -645,10 +757,6 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Customer</td>
           </tr>
           <tr>
@@ -663,14 +771,28 @@
       </div>
       <div class='master-item'>
         <h2>Review Daily Warehouse Activity</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>WHEN: </td>
+          <td>The end of the working day occurs</td>
+          </tr>
+          <tr>
+          <td>ASA: </td>
+          <td>Warehouse Manager</td>
+          </tr>
+          <tr>
+          <td>INEEDTO: </td>
+          <td>Review all the activity in the warehouse</td>
+          </tr>
+          <tr>
+          <td>SOTHAT: </td>
+          <td>The business is operating as it should</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always respond in a way that's easy for the user to understand</td>
           </tr>
           <tr>
@@ -691,24 +813,18 @@
           </tr>
           <tr>
           <td>USES: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Inventory Item</td>
           </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>MISC</h2>
+        <table class='joinDetails')>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always keep track of the path users take to arrive on-site</td>
           </tr>
           <tr>
@@ -731,22 +847,16 @@
           <td></td>
           <td>Always do the best we can to cheer the user up during any interaction</td>
           </tr>
-          <tr>
-          <td>USES: </td>
-          <td></td>
-          </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>ALL</h2>
+        <table class='joinDetails')>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Always respond in a way that's easy for the user to understand</td>
           </tr>
           <tr>
@@ -784,24 +894,30 @@
           <tr>
           <td></td>
           <td>Always do the best we can to cheer the user up during any interaction</td>
-          </tr>
-          <tr>
-          <td>USES: </td>
-          <td></td>
           </tr>
         </table>
       </div>
       <h1>Master Domain Model</h1>
       <div class='master-item'>
         <h2>Shipment</h2>
-        <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
-          <td>ISUSEDBY: </td>
-          <td></td>
+          <td>CONTAINS: </td>
+          <td>Shipment Number</td>
           </tr>
           <tr>
           <td></td>
+          <td>Shipment Date</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Expected Arrival Date</td>
+          </tr>
+        </table>
+        <h3>Cross-References</h3>
+        <table class='joinDetails')>
+          <tr>
+          <td>USEDBY: </td>
           <td>Order Goods</td>
           </tr>
           <tr>
@@ -826,10 +942,6 @@
           </tr>
           <tr>
           <td></td>
-          <td>Recieve Order</td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Create Shipment</td>
           </tr>
           <tr>
@@ -839,19 +951,37 @@
           <tr>
           <td></td>
           <td>Ship Goods</td>
+          </tr>
+          <tr>
+          <td>HASA: </td>
+          <td>Bill Of Lading</td>
           </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Order</h2>
-        <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
-          <td>ISUSEDBY: </td>
-          <td></td>
+          <td>CONTAINS: </td>
+          <td>Order Number</td>
           </tr>
           <tr>
           <td></td>
+          <td>Order Date</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Customer Number</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Total Amount</td>
+          </tr>
+        </table>
+        <h3>Cross-References</h3>
+        <table class='joinDetails')>
+          <tr>
+          <td>USEDBY: </td>
           <td>Order Goods</td>
           </tr>
           <tr>
@@ -876,10 +1006,6 @@
           </tr>
           <tr>
           <td></td>
-          <td>Recieve Order</td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Create Shipment</td>
           </tr>
           <tr>
@@ -890,28 +1016,44 @@
           <td></td>
           <td>Ship Goods</td>
           </tr>
+          <tr>
+          <td>HASA: </td>
+          <td>Shipment</td>
+          </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Bill Of Lading</h2>
-        <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
-          <td>ISUSEDBY: </td>
-          <td></td>
+          <td>CONTAINS: </td>
+          <td>Pallet List</td>
           </tr>
+        </table>
+        <h3>Cross-References</h3>
+        <table class='joinDetails')>
         </table>
       </div>
       <div class='master-item'>
         <h2>Inventory Item</h2>
-        <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
-          <td>ISUSEDBY: </td>
-          <td></td>
+          <td>CONTAINS: </td>
+          <td>Inventory Item Description</td>
           </tr>
           <tr>
           <td></td>
+          <td>Inventory Short Code</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Inventory Long Code</td>
+          </tr>
+        </table>
+        <h3>Cross-References</h3>
+        <table class='joinDetails')>
+          <tr>
+          <td>USEDBY: </td>
           <td>Receive Shipment</td>
           </tr>
           <tr>
@@ -934,19 +1076,33 @@
       </div>
       <div class='master-item'>
         <h2>Employee</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>CONTAINS: </td>
+          <td>First Name</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Last Name</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Social Security Number</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Hire Date</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
-          <td>ISUSEDBY: </td>
-          <td></td>
+          <td>USEDBY: </td>
+          <td>Receive Order</td>
           </tr>
           <tr>
           <td></td>
           <td>Receive Shipment</td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Recieve Order</td>
           </tr>
           <tr>
           <td></td>
@@ -960,15 +1116,21 @@
       </div>
       <div class='master-item'>
         <h2>Employee Type</h2>
-        <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
-          <td>ISUSEDBY: </td>
-          <td></td>
+          <td>CONTAINS: </td>
+          <td>Role Name</td>
           </tr>
           <tr>
           <td></td>
-          <td>Recieve Order</td>
+          <td>Salary Level</td>
+          </tr>
+        </table>
+        <h3>Cross-References</h3>
+        <table class='joinDetails')>
+          <tr>
+          <td>USEDBY: </td>
+          <td>Receive Order</td>
           </tr>
           <tr>
           <td></td>
@@ -978,14 +1140,20 @@
       </div>
       <div class='master-item'>
         <h2>SKU</h2>
-        <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
-          <td>ISUSEDBY: </td>
-          <td></td>
+          <td>CONTAINS: </td>
+          <td>Item Number</td>
           </tr>
           <tr>
           <td></td>
+          <td>Quantity</td>
+          </tr>
+        </table>
+        <h3>Cross-References</h3>
+        <table class='joinDetails')>
+          <tr>
+          <td>USEDBY: </td>
           <td>Receive Shipment</td>
           </tr>
           <tr>
@@ -1000,45 +1168,65 @@
           <td></td>
           <td>Conduct Regular Inventory</td>
           </tr>
+          <tr>
+          <td>HASA: </td>
+          <td>Inventory Item</td>
+          </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Customer</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>CONTAINS: </td>
+          <td>Customer Number</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Address</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
-          <td>ISUSEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Receive Order</td>
-          </tr>
-          <tr>
-          <td></td>
+          <td>USEDBY: </td>
           <td>Create Shipment</td>
           </tr>
           <tr>
           <td></td>
           <td>Ship Goods</td>
           </tr>
+          <tr>
+          <td>HASA: </td>
+          <td>Order</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Invoice</td>
+          </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Invoice</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>CONTAINS: </td>
+          <td>Invoice Number</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Invoice Date</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Invoice Total Amount</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
-          <td>ISUSEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
+          <td>USEDBY: </td>
           <td>Order Goods</td>
-          </tr>
-          <tr>
-          <td></td>
-          <td>Receive Order</td>
           </tr>
           <tr>
           <td></td>
@@ -1052,51 +1240,85 @@
           <td></td>
           <td>Pick Shipment</td>
           </tr>
+          <tr>
+          <td>HASA: </td>
+          <td>Invoice Line</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Invoice Line Item</td>
+          </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Invoice Line</h2>
-        <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
-          <td>ISUSEDBY: </td>
-          <td></td>
+          <td>CONTAINS: </td>
+          <td>Line Number</td>
           </tr>
           <tr>
           <td></td>
+          <td>Line Total</td>
+          </tr>
+        </table>
+        <h3>Cross-References</h3>
+        <table class='joinDetails')>
+          <tr>
+          <td>USEDBY: </td>
           <td>Receive Shipment</td>
           </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Invoice Line Item</h2>
+        <table class='joinDetails')>
+          <tr>
+          <td>CONTAINS: </td>
+          <td>Long Description</td>
+          </tr>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
-          <td>ISUSEDBY: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
+          <td>USEDBY: </td>
           <td>Receive Shipment</td>
           </tr>
           <tr>
           <td></td>
           <td>Create Shipment</td>
           </tr>
+          <tr>
+          <td>HASA: </td>
+          <td>SKU</td>
+          </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Vendor</h2>
-        <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
-          <td>ISUSEDBY: </td>
-          <td></td>
+          <td>CONTAINS: </td>
+          <td>Vendor Number</td>
           </tr>
           <tr>
           <td></td>
+          <td>Address</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Last Order Date</td>
+          </tr>
+        </table>
+        <h3>Cross-References</h3>
+        <table class='joinDetails')>
+          <tr>
+          <td>USEDBY: </td>
           <td>Order Goods</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Receive Order</td>
           </tr>
           <tr>
           <td></td>
@@ -1104,63 +1326,67 @@
           </tr>
           <tr>
           <td></td>
-          <td>Recieve Order</td>
+          <td>Reject Shipment</td>
+          </tr>
+          <tr>
+          <td>HASA: </td>
+          <td>Shipment</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Invoice</td>
+          </tr>
+          <tr>
+          <td></td>
+          <td>Order</td>
           </tr>
         </table>
       </div>
       <h1>Master Supplemental List</h1>
       <div class='master-item'>
         <h2>Always respond in a way that's easy for the user to understand</h2>
+        <table class='joinDetails')>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTS: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>ALL</td>
           </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Never make the user wait</h2>
+        <table class='joinDetails')>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTS: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>ALL</td>
           </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Never confuse the user</h2>
+        <table class='joinDetails')>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTS: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>ALL</td>
           </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Always keep track of the path users take to arrive on-site</h2>
+        <table class='joinDetails')>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTS: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Order Goods</td>
           </tr>
           <tr>
@@ -1171,28 +1397,24 @@
       </div>
       <div class='master-item'>
         <h2>Continuously inform the team about everything the users do</h2>
+        <table class='joinDetails')>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTS: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>ALL</td>
           </tr>
         </table>
       </div>
       <div class='master-item'>
         <h2>Make it as easy as possible for the user to provide negative feedback</h2>
+        <table class='joinDetails')>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTS: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>Reject Shipment</td>
           </tr>
           <tr>
@@ -1203,14 +1425,12 @@
       </div>
       <div class='master-item'>
         <h2>Always do the best we can to cheer the user up during any interaction</h2>
+        <table class='joinDetails')>
+        </table>
         <h3>Cross-References</h3>
         <table class='joinDetails')>
           <tr>
           <td>AFFECTS: </td>
-          <td></td>
-          </tr>
-          <tr>
-          <td></td>
           <td>ALL</td>
           </tr>
         </table>
