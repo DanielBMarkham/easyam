@@ -292,7 +292,12 @@
         annotationTokenType |> should equal ANNOTATION_TOKEN_TYPE.ToDo
     [<Test>]
     let ``BASIC MODEL CREATION: Multiple master items each with annotations``() =
-        let testText = [|"BUSINESS SUPPLEMENTAL ABSTRACT TO-BE"; "  Be nice to customers"; "      Q: What's a customer?"; "    Don't fear the reaper"; "    WORK: Ate a reaper last night"|]
+        let testText = [|
+                              "BUSINESS SUPPLEMENTAL ABSTRACT TO-BE"
+                            ; "  Be nice to customers"
+                            ; "      Q: What's a customer?"
+                            ; "  Don't fear the reaper"
+                            ; "  WORK: Ate a reaper last night"|]
         let compilationScenario = setupCompilationScenario 0 0 0 testText
         let newCompilerStatus=makeRawModel compilationScenario beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 3

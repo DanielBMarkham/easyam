@@ -31,7 +31,19 @@ p.annotation-summary {
     margin-bottom: 2em;
 }
 h2 {
-
+    width:100%;
+    height:1.5em;
+    display:table;
+}
+.item-title {
+    text-align: left;
+    display: inherit;
+    margin-top: -1.5em;
+}
+.item-number {
+    width: 100%;
+    text-align: right;
+    display: inherit;
 }
 h3 {
 
@@ -39,11 +51,18 @@ h3 {
 @media print {
     #content {
         display:initial;
+        float:none;
     }
     .master-item {
         break-inside:avoid;
     }
     h1 {
+        break-after:avoid;
+    }
+    .bucket-div {
+        float:none;
+        display:initial;
         break-before:always;
+        break-inside:avoid;
     }
 }

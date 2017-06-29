@@ -31,7 +31,18 @@
 
     [<Test>]
     let ``INT MODEL CREATION: Mentioning same item later in same file does not add new item``() =
-        let testText = [|"BUSINESS STRUCTURE ABSTRACT TO-BE"; "  Customer"; "      //People who give us money"; "  Account"; "      //Where we keep track of things"; "META BEHAVIOR REALIZED TO-BE"; "    Go do things"; "        Do some more things"; ""; "BUSINESS STRUCTURE ABSTRACT TO-BE"; "  Customer"|]
+        let testText = [|
+                          "BUSINESS STRUCTURE ABSTRACT TO-BE"
+                        ; "  Customer"
+                        ; "      //People who give us money"
+                        ; "  Account"
+                        ; "      //Where we keep track of things"
+                        ; "META BEHAVIOR REALIZED TO-BE"
+                        ; "    Go do things"
+                        ; "    Do some more things"
+                        ; ""
+                        ; "BUSINESS STRUCTURE ABSTRACT TO-BE"
+                        ; "  Customer"|]
         let compilationScenario = setupCompilationScenario 0 0 0 testText
         let newCompilerStatus=makeRawModel compilationScenario beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 5
@@ -537,6 +548,78 @@
         newCompilerStatus.ModelItems |> should haveLength 5
         newCompilerStatus.ModelItems.[3].Attributes|> should haveLength 9
 
+    [<Test>]
+    let ``INT MODEL CREATION: multiple indented annotations under a new item``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "Here's the intial master domain model last also based on last Monday's conversation"
+                        ; ""
+                        ; ""
+                        ; "STRUCTURE"
+                        ; "    Shipment"
+                        ; "        QUESTIONS: "
+                        ; "            Does this involve real ships?"
+                        ; "            Do we get free mints?"
+                        ; "            Are the ships full of mints?"
+                        ; "    Order"
+                        ; "    Bill Of Lading"
+                        ; "    Inventory Item"
+                        ; "    Employee"
+                        ; "    Employee Type"
+                        ; "    SKU"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
+        newCompilerStatus.ModelItems |> should haveLength 8
+        newCompilerStatus.ModelItems.[1].Annotations|> should haveLength 3
+    [<Test>]
+    let ``INT MODEL CREATION: joins after multiple annotations pops up to right level``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "Here's the intial master domain model last also based on last Monday's conversation"
+                        ; ""
+                        ; ""
+                        ; "STRUCTURE"
+                        ; "    Shipment"
+                        ; "    Order"
+                        ; "    Bill Of Lading"
+                        ; "    Inventory Item"
+                        ; "    Employee"
+                        ; "    Employee Type"
+                        ; "    SKU"
+                        ; "    Customer"
+                        ; "    Invoice"
+                        ; "    Invoice Line"
+                        ; "    Invoice Line Item"
+                        ; "    Vendor"
+                        ; "        TODO:"
+                        ; "            Meet one of the vendors"
+                        ; "            Sit in on a vendor call"
+                        ; ""
+                        ; ""
+                        ; "    Shipment HASA Bill Of Lading"
+                        ; "    Order HASA Shipment"
+                        ; "    Shipment HASA Bill Of Lading"
+                        ; "    Vendor HASA Shipment"
+                        ; "    Vendor HASA Invoice"
+                        ; "    Customer HASA Order"
+                        ; "    Vendor HASA Order"
+                        ; "    Customer HASA Invoice"
+                        ; "    Invoice HASA Invoice Line"
+                        ; "    Invoice HASA Invoice Line Item"
+                        ; "    SKU HASA Inventory Item"
+                        ; "    Invoice Line Item HASA SKU"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
+        newCompilerStatus.ModelItems |> should haveLength 13
+        newCompilerStatus.ModelItems.[12].Annotations|> should haveLength 2
+        ( fst newCompilerStatus.ModelItems.[12].Annotations.[0]) |> should equal ANNOTATION_TOKEN_TYPE.ToDo
+        ( fst newCompilerStatus.ModelItems.[12].Annotations.[1]) |> should equal ANNOTATION_TOKEN_TYPE.ToDo
 
     [<Test>]
     let ``INT MODEL CREATION: simplest useful model``() =

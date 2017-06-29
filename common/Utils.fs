@@ -168,24 +168,24 @@
         sw.WriteLine(prefix+content)
     let writeJoinDetails (sw:System.IO.TextWriter) (detailList:(string*string []) list) =
         if detailList.Length=0 then () else
-            wl sw 4 "<table class='joinDetails')>"
+            wl sw 5 "<table class='joinDetails')>"
             detailList |> List.iter(fun x->
                 let joinList = (snd x)
                 if joinList.Length=0 then () else
                     let firstItem = joinList.[0]
-                    wl sw 5 "<tr>"
-                    wl sw 5 ("<td>" + (fst x) + "</td>")
-                    wl sw 5 ("<td>" + firstItem + "</td>")
-                    wl sw 5 "</tr>"
+                    wl sw 6 "<tr>"
+                    wl sw 6 ("<td>" + (fst x) + "</td>")
+                    wl sw 6 ("<td>" + firstItem + "</td>")
+                    wl sw 6 "</tr>"
                     joinList |> Array.iteri(fun i y->
                         if i=0 then () else
-                            wl sw 5 "<tr>"
-                            wl sw 5 "<td></td>"
-                            wl sw 5 ("<td>" + y + "</td>")
-                            wl sw 5 "</tr>"
+                            wl sw 6 "<tr>"
+                            wl sw 6 "<td></td>"
+                            wl sw 6 ("<td>" + y + "</td>")
+                            wl sw 6 "</tr>"
                         )
             )
-            wl sw 4 "</table>"
+            wl sw 5 "</table>"
     let writeItemAttributes (sw:System.IO.TextWriter) (modelItems:ModelItem2 []) (x:ModelItem2)  = 
         match x.Location.Bucket with
                 | Buckets.Behavior->
@@ -208,7 +208,7 @@
                     let whenevers=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Whenever)
                     let ithastobethats=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.ItHasToBeThat)
                     let arr=[|("BECAUSE: ", becauses); ("WHENEVER: ", whenevers); ("ITHASTOBETHAT: ", ithastobethats)|]
-                    let arrFiltered = arr |> Array.filter(fun y->(fst y).Length>0)
+                    let arrFiltered = arr |> Array.filter(fun y->(snd y).Length>0)
                     let arrFilteredDesc = arrFiltered |> Array.map(fun y->(fst y),(snd y) |>Array.map(fun z->z.Description)) |> Array.toList
                     writeJoinDetails sw arrFilteredDesc
                 | Buckets.None->()
@@ -246,11 +246,14 @@
                     | Buckets.Unknown->()
         ()
     let writeMasterItemDetail (sw:System.IO.TextWriter) (modelItems:ModelItem2 []) (x:ModelItem2) = 
-        wl sw 3 ("<div class='master-item'>")
-        wl sw 4 ("<h2>" + x.Description + "</h2>")
+        wl sw 5 ("<div class='master-item'>")
+        let itemAlphaPrefix = match x.Location.Bucket with |Buckets.Structure->"MDE" |Buckets.Supplemental->"MSU" |Buckets.Behavior->"MUS" |_->"XXX"
+        let itemNumber= "  (" + itemAlphaPrefix+(string x.Id) + ") "
+        //wl sw 5 ("<h2>" + x.Description + "</h2>")
+        wl sw 5 ("<h2><span class='item-title'>" + x.Description + "</span><span class='item-number'>" + itemNumber + "</span></h2>")
         writeItemAttributes sw modelItems x
         x.Annotations |> Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Note) |> Array.iter(fun z->
-            wl sw 4 ("<p class='notes'>" + (snd z) + "</p>")
+            wl sw 5 ("<p class='notes'>" + (snd z) + "</p>")
             )
         let questions = getQuestions x //x.Annotations|> Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Question)
         let questionSummary = if questions.Length>0 then (string questions.Length + " open question(s)") else ""
@@ -264,10 +267,10 @@
         if annotationSummary.Length>0 then (wl sw 4 ("<p class='annotation-summary'>" + annotationSummary + "</p>")) else ()
         if x.Relations.Length>0
             then
-                wl sw 4 ("<h3>Cross-References</h3>")
+                wl sw 5 ("<h3>Cross-References</h3>")
                 writeItemJoins sw modelItems x
             else ()
-        wl sw 3 ("</div>")
+        wl sw 4 ("</div>")
     let writeMinimalHtmlHead (sw:System.IO.TextWriter) (title:string) (styleSheets:string list) =
         wl sw 0 "<!DOCTYPE html>"
         wl sw 0 "<html lang='en'>"
@@ -294,18 +297,24 @@
         writeMinimalHtmlHead sw "Analysis Model Masters" ["model-master.css"]
         wl sw 1 "<body>"
         wl sw 2 "<div id='content'>"
-        wl sw 3 "<h1>Master User Stories</h1>"
+        wl sw 3 "<div class='bucket-div'>"
+        wl sw 4 "<h1>Master User Stories</h1>"
         getMasterUserStories compilerStatus.ModelItems |> Array.iteri(fun i x->
             writeMasterItemDetail sw compilerStatus.ModelItems x
             )
-        wl sw 3 "<h1>Master Domain Model</h1>"
+        wl sw 3 "</div'>"
+        wl sw 3 "<div class='bucket-div'>"
+        wl sw 4 "<h1>Master Domain Model</h1>"
         getMasterDomainEntities compilerStatus.ModelItems |> Array.iteri(fun i x->
             writeMasterItemDetail sw compilerStatus.ModelItems x
             )
-        wl sw 3 "<h1>Master Supplemental List</h1>"
+        wl sw 3 "</div'>"
+        wl sw 3 "<div class='bucket-div'>"
+        wl sw 4 "<h1>Master Supplemental List</h1>"
         getMasterSupplementals compilerStatus.ModelItems |> Array.filter(fun x->x.Location.Bucket=Buckets.Supplemental) |> Array.iteri(fun i x->
             writeMasterItemDetail sw compilerStatus.ModelItems x
             )
+        wl sw 3 "</div'>"
         wl sw 2 "</div>"
         wl sw 1 "</body>"
         sw.Flush()
