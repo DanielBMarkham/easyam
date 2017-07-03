@@ -125,7 +125,8 @@
             {
                 MessageType=messageType
                 Message=messageDesc
-                SourceFile=sourceLine.File.FullName
+                SourceFileShort=sourceLine.File.Name
+                SourceFileLong=sourceLine.File.FullName
                 SourceLineBegin=sourceLine.FileRawLineNumber
                 SourceLineEnd=option.None
                 SourceLineColumnBegin=option.None
@@ -156,7 +157,8 @@
             {
                 MessageType=CompilerMessageType.Info
                 Message=newMessage
-                SourceFile=firstSourceFileName
+                SourceFileShort=firstSourceFileName
+                SourceFileLong=firstSourceFileName
                 SourceLineBegin=1
                 SourceLineEnd=option.None
                 SourceLineColumnBegin=option.None

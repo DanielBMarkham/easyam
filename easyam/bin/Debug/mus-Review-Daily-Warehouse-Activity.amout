@@ -1,0 +1,26 @@
+//                              MASTER USE CASE                                
+//                      REVIEW DAILY WAREHOUSE ACTIVITY                        
+//                   Model Generation: 07/03/2017 14:48:15                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Review Daily Warehouse Activity
+    WHEN: 
+      The end of the working day occurs
+    ASA: 
+      Warehouse Manager
+    INEEDTO: 
+      Review all the activity in the warehouse
+    SOTHAT: 
+      The business is operating as it should
+
+
+    AFFECTEDBY: 
+      Always respond in a way that's easy for the user to understand
+      Never make the user wait
+      Never confuse the user
+      Continuously inform the team about everything the users do
+      Always do the best we can to cheer the user up during any interaction
+
+    USES: 
+      Inventory Item

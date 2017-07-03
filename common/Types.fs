@@ -69,6 +69,23 @@
                     this
                 else
                     this.GetLeft desiredLength
+        /// adds the number of spaces to the beginning of the string
+        member this.AddSpaces (numSpaces) =
+            let prefix = new System.String(' ', numSpaces)
+            prefix+this
+        /// Centers text using spaces given a certain line length
+        member this.PadBoth (len:int) =
+            let leftPadCount = len/2 + this.Length/2
+            this.PadLeft(leftPadCount).PadRight(len)
+        member this.ToSafeFileName() =
+            let temp=this.ToCharArray() |> Array.map(fun x->
+                let badChar=System.IO.Path.GetInvalidFileNameChars()|>Seq.exists(fun y->y=x)
+                if badChar || x=' ' then '-' else x
+            )
+             new System.String(temp)
+    type System.Text.StringBuilder with
+        member x.wl (stringToWrite:string) =
+            x.Append(stringToWrite + System.Environment.NewLine) |> ignore
 
     type System.Collections.Generic.Dictionary<'A, 'B> with
         member x.stringValueOrEmptyForKey n = 

@@ -2,6 +2,16 @@
 <doc>
 <assembly><name>svgit</name></assembly>
 <members>
+<member name="M:Types.String.PadBoth(System.String,System.Int32)">
+<summary>
+ Centers text using spaces given a certain line length
+</summary>
+</member>
+<member name="M:Types.String.AddSpaces(System.String,System.Int32)">
+<summary>
+ adds the number of spaces to the beginning of the string
+</summary>
+</member>
 <member name="M:Types.Random.GetValues(System.Random,System.Int32,System.Int32)">
 <summary>
  Generates an infinite sequence of random numbers within the given range.

@@ -261,7 +261,8 @@
             {
                 MessageType:CompilerMessageType
                 Message:string
-                SourceFile:string
+                SourceFileShort:string
+                SourceFileLong:string
                 SourceLineBegin:int
                 SourceLineEnd:int option
                 SourceLineColumnBegin:int option
@@ -275,11 +276,11 @@
                                     |CompilerMessageType.Error->"ERROR: "
             let formattedMessage=match x.SourceLineEnd,x.SourceLineColumnBegin,x.SourceLineColumnEnd with 
                                     |option.None, option.None, option.None->
-                                        x.SourceFile + ":" + string x.SourceLineBegin + ": " + messagePrefix + x.Message
+                                        x.SourceFileShort + ":" + string x.SourceLineBegin + ": " + messagePrefix + x.Message
                                     |Some endingLine, option.None, option.None->
-                                        x.SourceFile + ":" + string x.SourceLineBegin + "-" + string endingLine + ": " + messagePrefix + x.Message
+                                        x.SourceFileShort + ":" + string x.SourceLineBegin + "-" + string endingLine + ": " + messagePrefix + x.Message
                                     |_,_,_->
-                                        x.SourceFile + ": " + messagePrefix + x.Message
+                                        x.SourceFileShort + ": " + messagePrefix + x.Message
             System.Console.WriteLine(formattedMessage)
             )
     [<NoComparison>]
@@ -488,6 +489,13 @@
         modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.HasA)
     let getIsOwnedByA (modelItem:ModelItem2) =
         modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.IsOwnedByA)
+
+    let getTotalAnnotationCount (items:ModelItem2 []) (annotationType:ANNOTATION_TOKEN_TYPE) = 
+        items|>Array.sumBy(fun x->x.Annotations|>Array.filter(fun y->(fst y)=annotationType)|>Array.length)
+    let getTotalNoteCount (items:ModelItem2 []) = getTotalAnnotationCount items ANNOTATION_TOKEN_TYPE.Note
+    let getTotalToDoCount (items:ModelItem2 []) = getTotalAnnotationCount items ANNOTATION_TOKEN_TYPE.ToDo
+    let getTotalWorkCount (items:ModelItem2 []) = getTotalAnnotationCount items ANNOTATION_TOKEN_TYPE.Work
+    let getTotalQuestionCount (items:ModelItem2 []) = getTotalAnnotationCount items ANNOTATION_TOKEN_TYPE.Question
 
 //// MIXED TYPES
 //    type SVGEntityBox =

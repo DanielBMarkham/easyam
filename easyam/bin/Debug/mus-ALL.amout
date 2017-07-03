@@ -1,0 +1,21 @@
+//                              MASTER USE CASE                                
+//                                    ALL                                      
+//                   Model Generation: 07/03/2017 14:48:15                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  ALL
+
+
+    AFFECTEDBY: 
+      Always respond in a way that's easy for the user to understand
+      Never make the user wait
+      Never confuse the user
+      Continuously inform the team about everything the users do
+      Always do the best we can to cheer the user up during any interaction
+      Always respond in a way that's easy for the user to understand
+      Never make the user wait
+      Never confuse the user
+      Continuously inform the team about everything the users do
+      Always do the best we can to cheer the user up during any interaction
+

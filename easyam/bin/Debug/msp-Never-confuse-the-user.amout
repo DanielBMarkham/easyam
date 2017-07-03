@@ -1,0 +1,17 @@
+//                            MASTER SUPPLEMENTALS                             
+//                           NEVER CONFUSE THE USER                            
+//                   Model Generation: 07/03/2017 14:48:16                     
+//                                                                             
+
+BUSINESS SUPPLEMENTAL ABSTRACT TO-BE
+  Never confuse the user
+    BECAUSE: 
+      We deal in complicated logistics concepts
+    WHENEVER: 
+      We explain what we're doing to the user
+    ITHASTOBETHAT: 
+      The average 6-year-old barely paying attention to the transaction can understand what's going on
+
+
+    AFFECTS: 
+      ALL

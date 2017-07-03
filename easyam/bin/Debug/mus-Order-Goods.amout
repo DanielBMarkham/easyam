@@ -1,0 +1,33 @@
+//                              MASTER USE CASE                                
+//                                ORDER GOODS                                  
+//                   Model Generation: 07/03/2017 14:48:15                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Order Goods
+    WHEN: 
+      The inventory count for an item falls below its re-order point
+    ASA: 
+      Warehouse Worker
+    INEEDTO: 
+      Place an order with our suppliers to replenish needed items
+    SOTHAT: 
+      we don't run out of things and are able to fulfill our orders from our customers
+
+    NOTES: 
+      Order Goods was specifically requested by the guy in the plaid sweater
+      It seems to be very important for some reason
+
+    AFFECTEDBY: 
+      Always keep track of the path users take to arrive on-site
+      Always respond in a way that's easy for the user to understand
+      Never make the user wait
+      Never confuse the user
+      Continuously inform the team about everything the users do
+      Always do the best we can to cheer the user up during any interaction
+
+    USES: 
+      Order
+      Vendor
+      Invoice
+      Shipment

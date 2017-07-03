@@ -1,0 +1,19 @@
+//                            MASTER SUPPLEMENTALS                             
+//         ALWAYS KEEP TRACK OF THE PATH USERS TAKE TO ARRIVE ON-SITE          
+//                   Model Generation: 07/03/2017 14:48:16                     
+//                                                                             
+
+BUSINESS SUPPLEMENTAL ABSTRACT TO-BE
+  Always keep track of the path users take to arrive on-site
+    BECAUSE: 
+      It's important for us to understand why people choose our business
+    WHENEVER: 
+      Somebody comes by to make a transaction
+      even people we know
+    ITHASTOBETHAT: 
+      We understand the journey people take to use us
+
+
+    AFFECTS: 
+      Order Goods
+      MISC

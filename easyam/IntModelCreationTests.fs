@@ -627,6 +627,7 @@
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
         saveModelGuide (System.AppDomain.CurrentDomain.BaseDirectory + "test.html") newCompilerStatus
+        saveCanonicalModel System.AppDomain.CurrentDomain.BaseDirectory newCompilerStatus
         true |> should equal true 
 
 
