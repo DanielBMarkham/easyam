@@ -1,0 +1,21 @@
+//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                                   VENDOR                                    
+//                   Model Generation: 07/06/2017 04:34:34                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Vendor
+//                       MASTER DOMAIN MODEL - ENTITES                         
+    CONTAINS: 
+      Vendor Number
+      Address
+      Last Order Date
+
+    To-DO: 
+      Meet some vendors
+      Listen to stories about vendors
+
+    HASA: 
+      Shipment
+      Invoice
+      Order

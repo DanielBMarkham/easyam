@@ -1,0 +1,15 @@
+//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                                  EMPLOYEE                                   
+//                   Model Generation: 07/06/2017 04:34:34                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Employee
+//                       MASTER DOMAIN MODEL - ENTITES                         
+    CONTAINS: 
+      First Name
+      Last Name
+      Social Security Number
+      Hire Date
+
+

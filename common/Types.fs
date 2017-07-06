@@ -35,10 +35,6 @@
                             acc.Replace(x,characterToUse)
                             ) sb
             newString.ToString()
-        member x.CovertIntoOSSafeFileName =
-            let getRidOfSystemInvalidCharacters =  x.ReplaceAny (System.IO.Path.GetInvalidFileNameChars()) '_'
-            let addHyphensAndToLower = x.ToLower().Replace(' ', '-')
-            addHyphensAndToLower
         member x.CountOccurences (token:string) = 
             let mts = x.Split([|token|], System.StringSplitOptions.None)
             if mts = null then 0 else mts.Length
@@ -78,7 +74,7 @@
             let leftPadCount = len/2 + this.Length/2
             this.PadLeft(leftPadCount).PadRight(len)
         member this.ToSafeFileName() =
-            let temp=this.ToCharArray() |> Array.map(fun x->
+            let temp=this.ToLower().ToCharArray() |> Array.map(fun x->
                 let badChar=System.IO.Path.GetInvalidFileNameChars()|>Seq.exists(fun y->y=x)
                 if badChar || x=' ' then '-' else x
             )

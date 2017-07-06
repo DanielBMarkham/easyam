@@ -1,0 +1,15 @@
+//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                                    SKU                                      
+//                   Model Generation: 07/06/2017 04:34:34                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  SKU
+//                       MASTER DOMAIN MODEL - ENTITES                         
+    CONTAINS: 
+      Item Number
+      Quantity
+
+
+    HASA: 
+      Inventory Item

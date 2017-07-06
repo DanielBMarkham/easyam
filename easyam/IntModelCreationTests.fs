@@ -615,18 +615,200 @@
                         |]
         let listToProcess = [|(fileInfo1,testText1)|]
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
-        let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
         newCompilerStatus.ModelItems |> should haveLength 13
         newCompilerStatus.ModelItems.[12].Annotations|> should haveLength 2
         ( fst newCompilerStatus.ModelItems.[12].Annotations.[0]) |> should equal ANNOTATION_TOKEN_TYPE.ToDo
         ( fst newCompilerStatus.ModelItems.[12].Annotations.[1]) |> should equal ANNOTATION_TOKEN_TYPE.ToDo
 
     [<Test>]
+    let ``INT MODEL CREATION: Simple shortcut works``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "This is a file"
+                        ; ""
+                        ; "PROGRAM BACKLOG"
+                        ; "  Make peace with the universe"
+                        ; "  Be one with nature"
+                        ; ""
+                        ; ""
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 3
+        newCompilerStatus.ModelItems.[1].Location.Bucket |> should equal Buckets.Behavior
+        newCompilerStatus.ModelItems.[1].Location.AbstractionLevel |> should equal AbstractionLevels.Realized
+        newCompilerStatus.ModelItems.[1].Location.Genre |> should equal Genres.Business
+        newCompilerStatus.ModelItems.[1].Location.TemporalIndicator |> should equal TemporalIndicators.ToBe
+
+    [<Test>]
+    let ``INT MODEL CREATION: Shortcut in the middle of a file works``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "This is a file"
+                        ; ""
+                        ; "MASTER DOMAIN MODEL"
+                        ; "  universe"
+                        ; "  nature"
+                        ; ""
+                        ; ""
+                        ; ""
+                        ; "PROJECT SUPPLEMENTAL MODEL"
+                        ; "  Spread happiness"
+                        ; "  Admire things"
+                        ; ""
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 5
+        newCompilerStatus.ModelItems.[1].Location.Bucket |> should equal Buckets.Structure
+        newCompilerStatus.ModelItems.[1].Location.AbstractionLevel |> should equal AbstractionLevels.Abstract
+        newCompilerStatus.ModelItems.[1].Location.Genre |> should equal Genres.Business
+        newCompilerStatus.ModelItems.[1].Location.TemporalIndicator |> should equal TemporalIndicators.ToBe
+        newCompilerStatus.ModelItems.[2].Location.Bucket |> should equal Buckets.Structure
+        newCompilerStatus.ModelItems.[2].Location.AbstractionLevel |> should equal AbstractionLevels.Abstract
+        newCompilerStatus.ModelItems.[2].Location.Genre |> should equal Genres.Business
+        newCompilerStatus.ModelItems.[2].Location.TemporalIndicator |> should equal TemporalIndicators.ToBe
+        newCompilerStatus.ModelItems.[3].Location.Bucket |> should equal Buckets.Supplemental
+        newCompilerStatus.ModelItems.[3].Location.AbstractionLevel |> should equal AbstractionLevels.Realized
+        newCompilerStatus.ModelItems.[3].Location.Genre |> should equal Genres.Business
+        newCompilerStatus.ModelItems.[3].Location.TemporalIndicator |> should equal TemporalIndicators.ToBe
+    [<Test>]
+    let ``INT MODEL CREATION: Shortcut with items in same line works``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "MASTER DOMAIN MODEL: Universe, Nature"
+                        ; ""
+                        ; "PROJECT SUPPLEMENTAL MODEL: Spread happiness, Admire things"
+                        ; ""
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 5
+        newCompilerStatus.ModelItems.[1].Location.Bucket |> should equal Buckets.Structure
+        newCompilerStatus.ModelItems.[1].Location.AbstractionLevel |> should equal AbstractionLevels.Abstract
+        newCompilerStatus.ModelItems.[1].Location.Genre |> should equal Genres.Business
+        newCompilerStatus.ModelItems.[1].Location.TemporalIndicator |> should equal TemporalIndicators.ToBe
+        newCompilerStatus.ModelItems.[2].Location.Bucket |> should equal Buckets.Structure
+        newCompilerStatus.ModelItems.[2].Location.AbstractionLevel |> should equal AbstractionLevels.Abstract
+        newCompilerStatus.ModelItems.[2].Location.Genre |> should equal Genres.Business
+        newCompilerStatus.ModelItems.[2].Location.TemporalIndicator |> should equal TemporalIndicators.ToBe
+        newCompilerStatus.ModelItems.[3].Location.Bucket |> should equal Buckets.Supplemental
+        newCompilerStatus.ModelItems.[3].Location.AbstractionLevel |> should equal AbstractionLevels.Realized
+        newCompilerStatus.ModelItems.[3].Location.Genre |> should equal Genres.Business
+        newCompilerStatus.ModelItems.[3].Location.TemporalIndicator |> should equal TemporalIndicators.ToBe
+    [<Test>]
+    let ``INT MODEL CREATION: Two shortcuts with item list all on same line``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "MASTER DOMAIN MODEL: Universe, Nature PROJECT SUPPLEMENTAL MODEL: Spread happiness, Admire things"
+                        ; ""
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 5
+        newCompilerStatus.ModelItems.[1].Location.Bucket |> should equal Buckets.Structure
+        newCompilerStatus.ModelItems.[1].Location.AbstractionLevel |> should equal AbstractionLevels.Abstract
+        newCompilerStatus.ModelItems.[1].Location.Genre |> should equal Genres.Business
+        newCompilerStatus.ModelItems.[1].Location.TemporalIndicator |> should equal TemporalIndicators.ToBe
+        newCompilerStatus.ModelItems.[2].Location.Bucket |> should equal Buckets.Structure
+        newCompilerStatus.ModelItems.[2].Location.AbstractionLevel |> should equal AbstractionLevels.Abstract
+        newCompilerStatus.ModelItems.[2].Location.Genre |> should equal Genres.Business
+        newCompilerStatus.ModelItems.[2].Location.TemporalIndicator |> should equal TemporalIndicators.ToBe
+        newCompilerStatus.ModelItems.[3].Location.Bucket |> should equal Buckets.Supplemental
+        newCompilerStatus.ModelItems.[3].Location.AbstractionLevel |> should equal AbstractionLevels.Realized
+        newCompilerStatus.ModelItems.[3].Location.Genre |> should equal Genres.Business
+        newCompilerStatus.ModelItems.[3].Location.TemporalIndicator |> should equal TemporalIndicators.ToBe
+
+    // NOTE: The following kind of compound statement not supported (haven't figured syntax out yet)
+    // "MASTER DOMAIN MODEL: Universe CONTAINS Stars, Nature CONTAINS Animals"
+
+    [<Test>]
+    let ``INT MODEL CREATION: Namespace simple``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "STRUCTURE"
+                        ; "  Dog"
+                        ; "  Cat"
+                        ; "NAMESPACE Zoo"
+                        ; "  Elephant"
+                        ; "  Giraffe"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 5
+        newCompilerStatus.ModelItems.[2].Location.Namespace |> should equal ""
+        newCompilerStatus.ModelItems.[3].Location.Namespace |> should equal "Zoo"
+        newCompilerStatus.ModelItems.[3].Location.Bucket |> should equal Buckets.Structure
+        newCompilerStatus.ModelItems.[3].Location.Genre |> should equal Genres.Business
+        newCompilerStatus.ModelItems.[3].Location.AbstractionLevel |> should equal AbstractionLevels.Abstract
+        newCompilerStatus.ModelItems.[3].Location.TemporalIndicator |> should equal TemporalIndicators.ToBe
+    [<Test>]
+    let ``INT MODEL CREATION: Namespace two in same file work``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          "NAMESPACE Tiger Team"
+                        ; "STRUCTURE"
+                        ; "  Dog"
+                        ; "  Cat"
+                        ; "NAMESPACE Zookeepers"
+                        ; "  Elephant"
+                        ; "  Giraffe"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 5
+        newCompilerStatus.ModelItems.[2].Location.Namespace |> should equal "Tiger Team"
+        newCompilerStatus.ModelItems.[3].Location.Namespace |> should equal "Zookeepers"
+    [<Test>]
+    let ``INT MODEL CREATION: Namespace embedded in complex line works``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "MASTER BACKLOG Check Balance, Reconcile Account, Get Cash NAMESPACE Tiger Team PROJECT BACKLOG Do Stuff, Do Other Things"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 6
+        newCompilerStatus.ModelItems.[0].Location.Namespace |> should equal ""
+        newCompilerStatus.ModelItems.[4].Location.Namespace |> should equal "Tiger Team"
+    [<Test>]
+    let ``INT MODEL CREATION: Team backlog basic``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "MASTER BACKLOG Check Balance, Reconcile Account, Get Cash"
+                        ; "NAMESPACE Tiger Team"
+                        ; "PROJECT BACKLOG Check Balance using ATM PARENT Check Balance"
+                        ; "  Reconcilce Account On Paper PARENT Reconcile Account"
+                        ; "  Get Cash From ATM PARENT Get Cash"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 7
+        newCompilerStatus.ModelItems.[0].Location.Namespace |> should equal ""
+        newCompilerStatus.ModelItems.[6].Location.Namespace |> should equal "Tiger Team"
+
+    [<Test>]
     let ``INT MODEL CREATION: simplest useful model``() =
         let listToProcess = basicModel1
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
-        let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
-        saveModelGuide (System.AppDomain.CurrentDomain.BaseDirectory + "test.html") newCompilerStatus
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        saveMasterQuestionList (System.AppDomain.CurrentDomain.BaseDirectory) "mql.html" newCompilerStatus
+        saveModelGuide (System.AppDomain.CurrentDomain.BaseDirectory + "master-cards.html") newCompilerStatus
         saveCanonicalModel System.AppDomain.CurrentDomain.BaseDirectory newCompilerStatus
         true |> should equal true 
 

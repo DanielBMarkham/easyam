@@ -1,22 +1,11 @@
 //                               EASYAM REPORT                                 
-//                   Model Generation: 07/03/2017 14:48:15                     
+//                   Model Generation: 07/06/2017 04:34:34                     
 //                                                                             
 //    Compiler Messages
 //    -----------------
-//  zokiucy1.0pi_tester.bsx:29: Warning: target item Bill Of Lading already exists once as a join. There is a duplicate entry
-//  vhywihnx.3x2_tester.bsx:10: Error: target item Bill of Lading does not currently exist in model when trying to make join
-//  vhywihnx.3x2_tester.bsx:11: Error: target item Bill of Lading does not currently exist in model when trying to make join
-//  vhywihnx.3x2_tester.bsx:11: Warning: target item Vendor already exists once as a join. There is a duplicate entry
-//  vhywihnx.3x2_tester.bsx:12: Error: target item  does not currently exist in model when trying to make join
-//  vhywihnx.3x2_tester.bsx:17: Error: target item Bill of Lading does not currently exist in model when trying to make join
-//  vhywihnx.3x2_tester.bsx:22: Error: target item  does not currently exist in model when trying to make join
-//  esnaqbxd.lqb_tester.bsx:9: Error: target item  does not currently exist in model when trying to make join
-//  esnaqbxd.lqb_tester.bsx:12: Error: target item  does not currently exist in model when trying to make join
-//  esnaqbxd.lqb_tester.bsx:15: Error: target item  does not currently exist in model when trying to make join
-//  esnaqbxd.lqb_tester.bsx:18: Error: target item  does not currently exist in model when trying to make join
-//  esnaqbxd.lqb_tester.bsx:21: Error: target item  does not currently exist in model when trying to make join
-//  esnaqbxd.lqb_tester.bsx:24: Error: target item  does not currently exist in model when trying to make join
-//  esnaqbxd.lqb_tester.bsx:27: Error: target item  does not currently exist in model when trying to make join
+//  s4mcts1k.55f_tester.bsx:1: Info: file loading completed with 7 files processed along with 255 lines of code reviewed
+//  2wmppego.vsv_tester.bsx:29: Warning: target item Bill Of Lading already exists once as a join. There is a duplicate entry. Previous join exists on 2wmppego.vsv_tester.bsx(1) line 27.
+//  k3pemswv.pbo_tester.bsx:11: Warning: target item Vendor already exists once as a join. There is a duplicate entry. Previous join exists on k3pemswv.pbo_tester.bsx(2) line 11.
 //                                                                             
 //    Model Summary
 //    -------------

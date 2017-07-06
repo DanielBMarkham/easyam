@@ -1,0 +1,14 @@
+//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                               INVENTORY ITEM                                
+//                   Model Generation: 07/06/2017 04:34:34                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Inventory Item
+//                       MASTER DOMAIN MODEL - ENTITES                         
+    CONTAINS: 
+      Inventory Item Description
+      Inventory Short Code
+      Inventory Long Code
+
+

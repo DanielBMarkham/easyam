@@ -1,0 +1,17 @@
+//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                                  INVOICE                                    
+//                   Model Generation: 07/06/2017 04:34:34                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Invoice
+//                       MASTER DOMAIN MODEL - ENTITES                         
+    CONTAINS: 
+      Invoice Number
+      Invoice Date
+      Invoice Total Amount
+
+
+    HASA: 
+      Invoice Line
+      Invoice Line Item

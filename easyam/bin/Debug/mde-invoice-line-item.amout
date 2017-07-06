@@ -1,0 +1,14 @@
+//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                             INVOICE LINE ITEM                               
+//                   Model Generation: 07/06/2017 04:34:34                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Invoice Line Item
+//                       MASTER DOMAIN MODEL - ENTITES                         
+    CONTAINS: 
+      Long Description
+
+
+    HASA: 
+      SKU

@@ -1,0 +1,13 @@
+//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                               EMPLOYEE TYPE                                 
+//                   Model Generation: 07/06/2017 04:34:34                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Employee Type
+//                       MASTER DOMAIN MODEL - ENTITES                         
+    CONTAINS: 
+      Role Name
+      Salary Level
+
+

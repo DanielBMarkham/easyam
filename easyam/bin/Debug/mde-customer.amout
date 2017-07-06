@@ -1,0 +1,16 @@
+//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                                  CUSTOMER                                   
+//                   Model Generation: 07/06/2017 04:34:34                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Customer
+//                       MASTER DOMAIN MODEL - ENTITES                         
+    CONTAINS: 
+      Customer Number
+      Address
+
+
+    HASA: 
+      Order
+      Invoice

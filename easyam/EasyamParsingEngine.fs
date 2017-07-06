@@ -15,36 +15,43 @@
     ///
     /// TOKEN PROCESSING. TAKES A LINE AND MAKES A LIST OF COMMANDS AND VALUES
     ///
-    let findInitialTextKeywordAndRemainingTextOnALine (tokenList:string list) (incomingLine:string):(string*string*string) option =
-        let tokensInARegexORStatement = tokenList |> String.concat "|"
-        let regexJustFindToken = new System.Text.RegularExpressions.Regex(tokensInARegexORStatement)
-        let regexParseTokenOutOfString = "(?:(?!" + tokensInARegexORStatement + "\b).)*"
-        let tokenRegex = new System.Text.RegularExpressions.Regex(regexParseTokenOutOfString)
-        let stringMatches = tokenRegex.Matches(incomingLine).toSeq |> Seq.toList
-        let stringMatchesFiltered = stringMatches|> List.filter(fun x->x.Value.Length>0)
-        match stringMatchesFiltered.Length with
-            |0-> Some("","","")
-            |_-> 
-                let matchFound = stringMatchesFiltered.Item(0)
-                let tokenAndDetail = 
-                    match matchFound.Index with
-                        |0->matchFound.Value
-                        |1->incomingLine.Substring(0, matchFound.Value.Length+1)
-                        |_->
-                            raise(new System.Exception("Regex Matching is whack"))
-                let tokenInsideTokenAndValueMatchString = regexJustFindToken.Matches(tokenAndDetail)
-                match tokenInsideTokenAndValueMatchString.Count, stringMatchesFiltered.Length with                     
-                    |0,0->Some("", "", stringMatchesFiltered.[0].Value)
-                    |0,_->
-                        let retTextAfterToken=tokenAndDetail.Trim()
-                        let retTextFollowingCurrentTokenAndValue=incomingLine.Substring(tokenAndDetail.Length)
-                        Some(retTextFollowingCurrentTokenAndValue, "", retTextAfterToken)
-                    |1,_->
-                        let retTextAfterToken=tokenAndDetail.Substring(tokenInsideTokenAndValueMatchString.[0].Length+tokenInsideTokenAndValueMatchString.[0].Index).Trim()
-                        let retToken=tokenInsideTokenAndValueMatchString.[0].Value
-                        let retTextFollowingCurrentTokenAndValue=incomingLine.Substring(tokenAndDetail.Length)
-                        Some(retTextFollowingCurrentTokenAndValue, retToken, retTextAfterToken)
-                    |_,_->Option<string*string*string>.None
+    let rec findInitialTextKeywordAndRemainingTextOnALine (tokenList:string list) (incomingLine:string):(string*string*string) option =
+        let sourceStringFindAToken = tokenList |> String.concat "|" 
+        let sourceStringFindTextUpToNextToken = tokenList |> List.map(fun x->"\b " + x + "")|> String.concat "|" 
+        let regexFindAToken = new System.Text.RegularExpressions.Regex(sourceStringFindAToken)
+        let regexFindTextUpToNextToken = new System.Text.RegularExpressions.Regex(sourceStringFindTextUpToNextToken)
+        
+        let tokensFound = regexFindAToken.Matches(incomingLine).toArray |> Array.filter(fun x->x.Length>0)
+        let textUpUntilNextToken = regexFindTextUpToNextToken.Matches(incomingLine).toArray |> Array.filter(fun x->x.Length>0)
+        let tokensWereFound = tokensFound.Length>0
+        let textFoundUpUntilNextToken = textUpUntilNextToken.Length>0
+
+        if tokensWereFound=false then Some("","", incomingLine.Trim())
+        else
+            // we have tokens
+            if tokensFound.[0].Index>0
+                then // there's text before the token. Any text before a token starts is just text
+                    let textBeforeToken = incomingLine.Substring(0, tokensFound.[0].Index-1)
+                    let tokenAndStuffFollowing= incomingLine.Substring(tokensFound.[0].Index)
+                    if textBeforeToken.Trim().Length=0
+                        then
+                            findInitialTextKeywordAndRemainingTextOnALine tokenList tokenAndStuffFollowing
+                        else
+                            Some(tokenAndStuffFollowing.Trim(), "", textBeforeToken.Trim())
+                else // it's just the token at the start and some stuff after that
+                    let tokenText=tokensFound.[0]
+                    let remainingLine=if tokenText.Length<incomingLine.Length then incomingLine.Substring(tokenText.Length) else ""
+                    let tokensRemaining=regexFindAToken.Matches(remainingLine).toArray
+                    let theresMoreTokensOnThisLine = tokensRemaining.Length>0
+
+                    if theresMoreTokensOnThisLine
+                        then // it's the token and everything up until the next token
+                            let nextTokenStartsAtIndex = tokensRemaining.[0].Index
+                            let textUpUntilNextToken:string = remainingLine.Substring(0, nextTokenStartsAtIndex)
+                            let nextTokenAndTextAfterIt:string = remainingLine.Substring(nextTokenStartsAtIndex)
+                            Some(nextTokenAndTextAfterIt.Trim(), tokenText.Value.Trim(), textUpUntilNextToken.Trim())
+                        else // it's just the token and anything after it
+                            Some("", tokenText.Value.Trim(), remainingLine.Trim())
     exception CommandParsingException of Command list
     let splitOutIncomingLineIntoCommandList (tokenList:string list) (incomingLine:string):Command list =
         if incomingLine="" 
@@ -216,7 +223,9 @@
                 let targetAlreadyExists = sourceItem.Relations|>Array.exists(fun z->z.TargetId=targetItem.Id)
                 if targetAlreadyExists
                     then
-                        logCompilerMessageForASingleLine compilerStatus CompilerMessageType.Warning ("target item " + description + " already exists once as a join. There is a duplicate entry") incomingLine
+                        let alreadyExistEntry=sourceItem.Relations|>Array.find(fun z->z.TargetId=targetItem.Id)
+                        let reference="Previous join exists on " + (alreadyExistEntry.SourceReference.File.Name + "(" + string alreadyExistEntry.SourceReference.FileCompilationNumber + ") line " + string alreadyExistEntry.SourceReference.FileRawLineNumber + ".")
+                        logCompilerMessageForASingleLine compilerStatus CompilerMessageType.Warning ("target item " + description + " already exists once as a join. There is a duplicate entry. " + reference) incomingLine
                     else
                         // add a join to both model items. Be sure to include the source reference
                         let newSourceItemJoinRelation={id=getNextModelItemNumber(); ModelJoinType=joinType; TargetId=targetItem.Id; SourceReference=incomingLine}
@@ -432,6 +441,7 @@
                                 let newAttributeType = incomingCompilerStatus.CurrentLocation.AttributeType.Value
                                 let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
                                 let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                            if x.Length=0 then accumulatorCompilerStatus else
                                                             addModelAttribute newAttributeType (x.Trim()) incomingLine accumulatorCompilerStatus
                                                         ) incomingCompilerStatus
                                 let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAttributeTargets}
@@ -450,6 +460,7 @@
                                 //let newAttributeType = incomingCompilerStatus.CurrentLocation.AnnotationIndicator
                                 let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
                                 let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                            if x.Length=0 then accumulatorCompilerStatus else
                                                             addAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AnnotationIndicator (x.Trim()) incomingLine incomingCompilerStatus
                                                         ) incomingCompilerStatus
                                 let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAnnotationTargets}
@@ -470,6 +481,32 @@
                         {incomingCompilerStatus with ModelItems=newModelItemList}
             |Some token->
                 match token.TargetType,token.Type,token.Category with 
+                    |TOKEN_TARGET_TYPE.SINGLE_TARGET,TOKEN_TYPE.ABSOLUTE_LOCATOR,TOKEN_CATEGORY.SHORTCUT->
+                        let oldBucket = incomingCompilerStatus.CurrentLocation.Bucket
+                        let oldGenre =incomingCompilerStatus.CurrentLocation.Genre
+                        let oldTemporal=incomingCompilerStatus.CurrentLocation.TemporalIndicator
+                        let oldAbstraction=incomingCompilerStatus.CurrentLocation.AbstractionLevel
+                        let newBucket, newGenre, newTemporal, newAbstraction =
+                            match token.Token with 
+                                | "PROGRAM BACKLOG"|"PROGRAM BACKLOG:"->Buckets.Behavior, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Realized
+                                | "PRODUCT BACKLOG" | "PROJECT BACKLOG"|"PRODUCT BACKLOG:" | "PROJECT BACKLOG:"->Buckets.Behavior, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Realized
+                                | "SPRINT BACKLOG"|"SPRINT BACKLOG:"->Buckets.Behavior, Genres.System, TemporalIndicators.ToBe, AbstractionLevels.Abstract
+                                | "MASTER BACKLOG"|"MASTER BACKLOG:"->Buckets.Behavior, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Abstract
+                                | "MASTER DOMAIN MODEL"|"MASTER DOMAIN MODEL:"->Buckets.Structure, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Abstract
+                                | "PROJECT DOMAIN MODEL" | "PRODUCT DOMAIN MODEL"|"PROJECT DOMAIN MODEL:" | "PRODUCT DOMAIN MODEL:"->Buckets.Structure, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Realized
+                                | "MASTER SUPPLEMENTAL MODEL"|"MASTER SUPPLEMENTAL MODEL:"->Buckets.Supplemental, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Abstract
+                                | "PRODUCT SUPPLEMENTAL MODEL" | "PROJECT SUPPLEMENTAL MODEL"|"PRODUCT SUPPLEMENTAL MODEL:" | "PROJECT SUPPLEMENTAL MODEL:"->Buckets.Supplemental, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Realized
+                                |_->oldBucket,oldGenre,oldTemporal,oldAbstraction // ERROR ERROR
+                        let newLocation = {incomingCompilerStatus.CurrentLocation with AbstractionLevel=newAbstraction; Bucket=newBucket; Genre=newGenre; TemporalIndicator=newTemporal}
+                        let newState = {incomingCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.LocationChange; WaitingFor=CompilerWaitingFor.MultipleTargets}
+                        let updatedCompilerStatus={incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}
+                        let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                        let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                    if x.Length=0 then accumulatorCompilerStatus else
+                                                    addModelItem accumulatorCompilerStatus newLocation incomingLine (x.Trim())
+                                                ) updatedCompilerStatus
+                        newCompilerStatus
+
                     |TOKEN_TARGET_TYPE.SINGLE_TARGET,TOKEN_TYPE.RELATIVE_LOCATOR,TOKEN_CATEGORY.MISC->
                         let newTempAnnotationIndicator=
                             match token.Token with 
@@ -503,12 +540,18 @@
                         // run through everything split on this line by a comma and add
                         let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
                         let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                if x.Length=0 then accumulatorCompilerStatus else
                                                 let newAccumulatorCompilerStatus=addAnnotation accumulatorCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator (x.Trim()) incomingLine accumulatorCompilerStatus 
                                                 newAccumulatorCompilerStatus
                                                 ) incomingCompilerStatus
                         let newLocation = {newCompilerStatus.CurrentLocation with AnnotationIndicator=newTempAnnotationIndicator}
                         //{newCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
                         {newCompilerStatus with CurrentLocation=newLocation; CompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAnnotationTargets}}
+                    |_,_,NAMESPACE->
+                        let newNamespace=incomingCommand.Value
+                        let newLocationPointer = {incomingCompilerStatus.CurrentLocation with Namespace=newNamespace}
+                        let updatedCompilerStatus = {incomingCompilerStatus with CurrentLocation=newLocationPointer; CompilerState={incomingCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.LocationChange}}
+                        updatedCompilerStatus
                     |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.ABSOLUTE_LOCATOR,_->
                         match token.Category with 
                             |TOKEN_CATEGORY.BUCKETS->
@@ -525,6 +568,7 @@
                                 let updatedCompilerStatus = {incomingCompilerStatus with CurrentLocation=newLocationPointer; CompilerState={incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleTargets}}
                                 let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
                                 let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                            if x.Length=0 then accumulatorCompilerStatus else
                                                             addModelItem accumulatorCompilerStatus newLocationPointer incomingLine (x.Trim())
                                                         ) updatedCompilerStatus
                                 newCompilerStatus
@@ -577,15 +621,14 @@
                                                         |_->raise(new System.Exception("We're supposed to have an attribute, but none are there"))
                                 let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
                                 let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                            if x.Length=0 then accumulatorCompilerStatus else
                                                             addModelAttribute newAttributeType (x.Trim()) incomingLine accumulatorCompilerStatus
                                                         ) incomingCompilerStatus
                                 let newCompilerLocation={newCompilerStatus.CurrentLocation with AttributeType = Some newAttributeType}
                                 let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAttributeTargets; LastCompilerOperation=LastCompilerOperations.LocationChange}
                                 {newCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation}
                             |_->raise(new System.Exception("messed up"))
-                    |TOKEN_TARGET_TYPE.SINGLE_TARGET,TOKEN_TYPE.JOINER,_->
-                        incomingCompilerStatus
-                    |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.JOINER,_->
+                    |_,TOKEN_TYPE.JOINER,_->
                         let joinType=match token.Token with 
                                         | "PARENT"->ModelJoin.Parent
                                         | "CHILD"->ModelJoin.Child
@@ -599,6 +642,7 @@
                                         |_->ModelJoin.Child
                         let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
                         let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                    if x.Length=0 then accumulatorCompilerStatus else
                                                     joinModelItems accumulatorCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine joinType  (x.Trim())
                                                 ) incomingCompilerStatus
                         {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewJoin; LastJoinType=Some joinType; WaitingFor=CompilerWaitingFor.MultipleTargets}}

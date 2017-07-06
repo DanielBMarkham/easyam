@@ -55,6 +55,9 @@
         let listToProcess = loadInAllIncomingLines fileList
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let compilerResult = makeRawModel processedIncomingLines compilerReturn
+        saveMasterQuestionList (System.AppDomain.CurrentDomain.BaseDirectory) "mql.html" compilerResult
+        saveModelGuide (System.AppDomain.CurrentDomain.BaseDirectory + "master-cards.html") compilerResult
+        saveCanonicalModel System.AppDomain.CurrentDomain.BaseDirectory compilerResult
         printCompilerMessages compilerResult.CompilerMessages
         ()
 

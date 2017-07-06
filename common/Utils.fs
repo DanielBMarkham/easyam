@@ -542,92 +542,127 @@
         let MdeFileName = System.IO.Path.Combine([|directoryPath;"mde.amout"|])
         writeMasterDomainEntitiesAmoutFormat MdeFileName compilerStatus
 
+        let writeDetailHeader (sb:System.Text.StringBuilder) (title:string) (itemDescription:string) = 
+            sb.wl (centerCommentText title)
+            sb.wl (centerCommentText (itemDescription.ToUpper()))
+            sb.wl (centerCommentText ("Model Generation: " + string DateTime.Now))
+            sb.wl (centerCommentText "")
+            sb.wl ("")
+            sb.wl ("BUSINESS BEHAVIOR ABSTRACT TO-BE")
+            sb.wl ("  " + itemDescription)
+        let writeDetailAnnotations (sb:System.Text.StringBuilder) (x:ModelItem2) =
+            let notes=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Note)
+            let questions=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Question)
+            let todo=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.ToDo)
+            let work=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Work)
+            writeAllItemAnnotationDetailForMasterPage sb [|("NOTES: ", notes);("QUESTIONS: ", questions);("To-DO: ", todo);("WORK: ", work)|]
+            sb.wl ("")
         // Detail Pages
         let MUS=getMasterUserStories compilerStatus.ModelItems
         MUS|>Array.iteri(fun i x->
             let sb= new System.Text.StringBuilder(65535)
             let musTempFileName= "mus-" + (x.Description.ToSafeFileName() + ".amout")
             let musDetailFileName=System.IO.Path.Combine([|directoryPath;musTempFileName|]) 
-            sb.wl (centerCommentText "MASTER USE CASE")
-            sb.wl (centerCommentText (x.Description.ToUpper()))
-            sb.wl (centerCommentText ("Model Generation: " + string DateTime.Now))
-            sb.wl (centerCommentText "")
-            sb.wl ("")
-            sb.wl ("BUSINESS BEHAVIOR ABSTRACT TO-BE")
-            sb.wl ("  " + x.Description)
+            writeDetailHeader sb "MASTER USE CASE" x.Description
             let triggers=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Trigger)
             let actors=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Actor)
             let goals=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Goal)
             let contexts=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.BusinessContext)
             writeAllItemAttributeDetailsForMasterPage sb [|("WHEN: ",triggers);("ASA: ",actors);("INEEDTO: ",goals);("SOTHAT: ",contexts)|] true
             sb.wl ("")
-            let notes=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Note)
-            let questions=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Question)
-            let todo=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.ToDo)
-            let work=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Work)
-            writeAllItemAnnotationDetailForMasterPage sb [|("NOTES: ", notes);("QUESTIONS: ", questions);("To-DO: ", todo);("WORK: ", work)|]
-            sb.wl ("")
+            writeDetailAnnotations sb x 
             writeItemRelations sb compilerStatus.ModelItems x
 
 
             System.IO.File.WriteAllText(musDetailFileName, string sb)        
             )
 
-
         let MDE=getMasterDomainEntities compilerStatus.ModelItems
-        MUS|>Array.iteri(fun i x->
+        MDE|>Array.iteri(fun i x->
             let sb= new System.Text.StringBuilder(65535)
             let mdeTempFileName= "mde-" + (x.Description.ToSafeFileName() + ".amout")
             let mdeDetailFileName=System.IO.Path.Combine([|directoryPath;mdeTempFileName|]) 
+            writeDetailHeader sb "MASTER DOMAIN MODEL - ENTITIES" x.Description
             sb.wl (centerCommentText "MASTER DOMAIN MODEL - ENTITES")
-            sb.wl (centerCommentText (x.Description.ToUpper()))
-            sb.wl (centerCommentText ("Model Generation: " + string DateTime.Now))
-            sb.wl (centerCommentText "")
-            sb.wl ("")
-            sb.wl ("BUSINESS STRUCTURE ABSTRACT TO-BE")
-            sb.wl ("  " + x.Description)
             let contains=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Contains)
             writeAllItemAttributeDetailsForMasterPage sb [|("CONTAINS: ",contains)|] true
             sb.wl ("")
-            let notes=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Note)
-            let questions=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Question)
-            let todo=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.ToDo)
-            let work=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Work)
-            writeAllItemAnnotationDetailForMasterPage sb [|("NOTES: ", notes);("QUESTIONS: ", questions);("To-DO: ", todo);("WORK: ", work)|]
-            sb.wl ("")
+            writeDetailAnnotations sb x 
             writeItemRelations sb compilerStatus.ModelItems x
             System.IO.File.WriteAllText(mdeDetailFileName, string sb)        
             )
-
 
         let MSP=getMasterSupplementals compilerStatus.ModelItems
         MSP|>Array.iteri(fun i x->
             let sb= new System.Text.StringBuilder(65535)
             let mspTempFileName= "msp-" + (x.Description.ToSafeFileName() + ".amout")
             let mspDetailFileName=System.IO.Path.Combine([|directoryPath;mspTempFileName|]) 
-            sb.wl (centerCommentText "MASTER SUPPLEMENTALS")
-            sb.wl (centerCommentText (x.Description.ToUpper()))
-            sb.wl (centerCommentText ("Model Generation: " + string DateTime.Now))
-            sb.wl (centerCommentText "")
-            sb.wl ("")
-            sb.wl ("BUSINESS SUPPLEMENTAL ABSTRACT TO-BE")
-            sb.wl ("  " + x.Description)
+            writeDetailHeader sb "MASTER SUPPLEMENTALS" x.Description
             let because=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Because)
             let whenever=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Whenever)
             let ithastobethat=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.ItHasToBeThat)
             writeAllItemAttributeDetailsForMasterPage sb [|("BECAUSE: ",because);("WHENEVER: ",whenever);("ITHASTOBETHAT: ",ithastobethat)|] true
             sb.wl ("")
-            let notes=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Note)
-            let questions=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Question)
-            let todo=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.ToDo)
-            let work=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Work)
-            writeAllItemAnnotationDetailForMasterPage sb [|("NOTES: ", notes);("QUESTIONS: ", questions);("To-DO: ", todo);("WORK: ", work)|]
-            sb.wl ("")
+            writeDetailAnnotations sb x 
             writeItemRelations sb compilerStatus.ModelItems x
             System.IO.File.WriteAllText(mspDetailFileName, string sb)        
             )
+    let getQuestionsAndSubQuestionsForAnItem (modelItems:ModelItem2 []) (x:ModelItem2) =
+        let itemQuestions = (getQuestions x) |> Array.map(fun y->(x.Description,(snd y)))
+        let itemAttributes=x.Attributes|>Array.map(fun y->(x.Description, y))
+        let itemAttributeAnnotationQuestions= itemAttributes|> Array.map(fun z->
+            let annotationQuestions=(snd z).Annotations|>Array.filter(fun a->(fst a)=ANNOTATION_TOKEN_TYPE.Question) |> Array.map(fun a->(snd a))
+            (fst z), (snd z).Description, annotationQuestions)
+        let itemQuestionsPrep = itemQuestions|>Array.map(fun y->(fst y), "", [|(snd y)|])
+        let ret = itemAttributeAnnotationQuestions |> Array.append itemQuestionsPrep |>Array.filter(fun (a,b,c)->c.Length>0)
+        ret
+    let writeOutQuestionsForAnItemHtmlTableFormat (sw:System.IO.StreamWriter) (modelItems:ModelItem2 []) (compilerStatus:CompilerReturn) = 
+        wl sw 4 "<table>"
+        modelItems |>Array.iteri(fun i y->
+            let quests=getQuestionsAndSubQuestionsForAnItem compilerStatus.ModelItems y
+            quests|>Array.iteri(fun j z->
+                let itemDesc, attribDesc, attribQuestions = z 
+                if attribQuestions.Length=0 then () else
+                    attribQuestions|>Array.iter(fun a->
+                        wl sw 5 "<tr>"
+                        wl sw 6 ("<td>" + itemDesc + "</td>")
+                        wl sw 6 ("<td>" + attribDesc + "</td>")
+                        wl sw 6 ("<td>" + a + "</td>")
+                        wl sw 5 "</tr>"
+                        )
+                )
+            )
+        wl sw 4 "</table>"
 
+    let saveMasterQuestionList (directoryPath:string) (fileName:string) (compilerStatus:CompilerReturn) =
+        let fileName=System.IO.Path.Combine([|directoryPath;fileName|]) 
+        let sw = System.IO.File.CreateText(fileName)
+        writeMinimalHtmlHead sw "Master Question List" ["mql.css"]
+        wl sw 1 "<body>"
+        wl sw 2 "<div id='content'>"
+        wl sw 4 "<h1>Master Question List</h1>"
+        wl sw 3 "<div class='bucket-div'>"
+        wl sw 4 "<h2>Master User Stories</h2>"
+        let MUS = getMasterUserStories compilerStatus.ModelItems
+        writeOutQuestionsForAnItemHtmlTableFormat sw MUS compilerStatus
+        wl sw 3 "</div>"
 
+        wl sw 3 "<div class='bucket-div'>"
+        wl sw 4 "<h2>Master Supplementals</h2>"
+        let MSP=getMasterSupplementals compilerStatus.ModelItems
+        writeOutQuestionsForAnItemHtmlTableFormat sw MSP compilerStatus
+        wl sw 3 "</div>"
+
+        wl sw 3 "<div class='bucket-div'>"
+        wl sw 4 "<h2>Master Domain Model</h2>"
+        let MDE=getMasterDomainEntities compilerStatus.ModelItems
+        writeOutQuestionsForAnItemHtmlTableFormat sw MDE compilerStatus
+        wl sw 3 "</div>"
+
+        wl sw 2 "</div>"
+        sw.Flush()
+        sw.Close()
+        
         ()
 
 //    let drawEntityBox (sw:System.IO.StreamWriter) (box:SVGEntityBox) (svgConfig:SVGSetup) =

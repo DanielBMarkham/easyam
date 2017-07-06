@@ -1,0 +1,13 @@
+//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                                INVOICE LINE                                 
+//                   Model Generation: 07/06/2017 04:34:34                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Invoice Line
+//                       MASTER DOMAIN MODEL - ENTITES                         
+    CONTAINS: 
+      Line Number
+      Line Total
+
+

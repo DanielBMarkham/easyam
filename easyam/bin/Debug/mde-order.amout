@@ -1,0 +1,17 @@
+//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                                   ORDER                                     
+//                   Model Generation: 07/06/2017 04:34:34                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Order
+//                       MASTER DOMAIN MODEL - ENTITES                         
+    CONTAINS: 
+      Order Number
+      Order Date
+      Customer Number
+      Total Amount
+
+
+    HASA: 
+      Shipment

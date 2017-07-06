@@ -1,0 +1,20 @@
+//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                                  SHIPMENT                                   
+//                   Model Generation: 07/06/2017 04:34:34                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Shipment
+//                       MASTER DOMAIN MODEL - ENTITES                         
+    CONTAINS: 
+      Shipment Number
+      Shipment Date
+      Expected Arrival Date
+
+    QUESTIONS: 
+      Does this involve real ships?
+      Do we get free mints?
+      Are the ships full of mints?
+
+    HASA: 
+      Bill Of Lading

@@ -1,9 +1,9 @@
 //                            MASTER SUPPLEMENTALS                             
 //                           NEVER CONFUSE THE USER                            
-//                   Model Generation: 07/03/2017 14:48:16                     
+//                   Model Generation: 07/06/2017 04:34:34                     
 //                                                                             
 
-BUSINESS SUPPLEMENTAL ABSTRACT TO-BE
+BUSINESS BEHAVIOR ABSTRACT TO-BE
   Never confuse the user
     BECAUSE: 
       We deal in complicated logistics concepts
