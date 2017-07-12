@@ -1,8 +1,102 @@
 //                           MASTER DOMAIN ENTITIES                            
-//                   Model Generation: 07/12/2017 16:16:32                     
+//                   Model Generation: 07/12/2017 16:53:47                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE
+  Bill Of Lading
+    CONTAINS: 
+      Pallet List
+
+
+  Customer
+    CONTAINS: 
+      Customer Number
+      Address
+    HASA:
+      Order
+      Invoice
+
+
+  Order
+    CONTAINS: 
+      Order Number
+      Order Date
+      Customer Number
+      Total Amount
+    HASA:
+      Shipment
+
+
+  Invoice
+    CONTAINS: 
+      Invoice Number
+      Invoice Date
+      Invoice Total Amount
+    HASA:
+      Invoice Line
+      Invoice Line Item
+
+
+  Employee Type
+    CONTAINS: 
+      Role Name
+      Salary Level
+
+
+  Employee
+    CONTAINS: 
+      First Name
+      Last Name
+      Social Security Number
+      Hire Date
+
+
+  Inventory Item
+    CONTAINS: 
+      Inventory Item Description
+      Inventory Short Code
+      Inventory Long Code
+
+
+  Invoice Line Item
+    CONTAINS: 
+      Long Description
+    HASA:
+      SKU
+
+
+  SKU
+    CONTAINS: 
+      Item Number
+      Quantity
+    HASA:
+      Inventory Item
+
+
+  Invoice Line
+    CONTAINS: 
+      Line Number
+      Line Total
+
+
+  Invoice
+    CONTAINS: 
+      Invoice Number
+      Invoice Date
+      Invoice Total Amount
+    HASA:
+      Invoice Line
+      Invoice Line Item
+
+
+  Order
+    CONTAINS: 
+      Order Number
+      Order Date
+      Customer Number
+      Total Amount
+
+
   Shipment
     CONTAINS: 
       Shipment Number
@@ -16,40 +110,16 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Are the ships full of mints?
 
 
-  Order
+  Shipment
     CONTAINS: 
-      Order Number
-      Order Date
-      Customer Number
-      Total Amount
+      Shipment Number
+      Shipment Date
+      Expected Arrival Date
     HASA:
-      Shipment
-
-
-  Bill Of Lading
-    CONTAINS: 
-      Pallet List
-
-
-  Inventory Item
-    CONTAINS: 
-      Inventory Item Description
-      Inventory Short Code
-      Inventory Long Code
-
-
-  Employee
-    CONTAINS: 
-      First Name
-      Last Name
-      Social Security Number
-      Hire Date
-
-
-  Employee Type
-    CONTAINS: 
-      Role Name
-      Salary Level
+      Bill Of Lading
+    QUESTIONS: 
+      Do we get free mints?
+      Are the ships full of mints?
 
 
   SKU
@@ -58,38 +128,6 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Quantity
     HASA:
       Inventory Item
-
-
-  Customer
-    CONTAINS: 
-      Customer Number
-      Address
-    HASA:
-      Order
-      Invoice
-
-
-  Invoice
-    CONTAINS: 
-      Invoice Number
-      Invoice Date
-      Invoice Total Amount
-    HASA:
-      Invoice Line
-      Invoice Line Item
-
-
-  Invoice Line
-    CONTAINS: 
-      Line Number
-      Line Total
-
-
-  Invoice Line Item
-    CONTAINS: 
-      Long Description
-    HASA:
-      SKU
 
 
   Vendor
@@ -101,8 +139,5 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Shipment
       Invoice
       Order
-    TO-DO: 
-      Meet some vendors
-      Listen to stories about vendors
 
 

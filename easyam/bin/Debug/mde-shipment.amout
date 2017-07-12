@@ -1,6 +1,6 @@
 //                        MASTER DOMAIN MODEL - ENTITY                         
 //                                  SHIPMENT                                   
-//                   Model Generation: 07/12/2017 16:16:33                     
+//                   Model Generation: 07/12/2017 16:53:47                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE: Shipment
@@ -8,9 +8,10 @@ BUSINESS STRUCTURE ABSTRACT TO-BE: Shipment
       Shipment Number
       Shipment Date
       Expected Arrival Date
+        QUESTIONS: 
+          Does this involve real ships?
 
     QUESTIONS: 
-      Does this involve real ships?
       Do we get free mints?
       Are the ships full of mints?
 

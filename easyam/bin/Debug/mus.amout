@@ -1,8 +1,110 @@
 //                              MASTER USE CASES                               
-//                   Model Generation: 07/12/2017 16:16:32                     
+//                   Model Generation: 07/12/2017 16:53:47                     
 //                                                                             
 
 BUSINESS BEHAVIOR ABSTRACT TO-BE
+  ALL
+
+
+  Order Goods
+    WHEN: 
+      The inventory count for an item falls below its re-order point
+      I'm out of something I realize I need
+    ASA: 
+      Warehouse Worker
+      Customer
+    INEEDTO: 
+      Place an order with our suppliers to replenish needed items
+      Place an order for new stuff
+    SOTHAT: 
+      we don't run out of things and are able to fulfill our orders from our customers
+      Receive Order
+      I can be happy owning things I think I need
+    NOTES: 
+      It seems to be very important for some reason
+
+
+  MISC
+    NOTES: 
+      ALL
+
+
+  Reject Shipment
+    WHEN: 
+      We are recieving a shipment and most of the goods are unsatisfactory
+    ASA: 
+      Warehouse Worker
+    INEEDTO: 
+      Reject the shipment
+    SOTHAT: 
+      We can get the goods we need from another vendor
+
+
+  Reject Part Of Shipment
+    WHEN: 
+      We are recieving a shipment and a few of the items are unsatisfactory
+    ASA: 
+      Warehouse Worker
+    INEEDTO: 
+      Reject parts of the shipment that are unsatisfactory
+    SOTHAT: 
+      We can restock needed goods as soon as possible
+
+
+  ALL
+
+
+  Conduct Regular Inventory
+    WHEN: 
+      The first of the month rolls around
+    ASA: 
+      Warehouse Supervisor
+    INEEDTO: 
+      Conduct a formal inventory using an audited procedure
+    SOTHAT: 
+      Our accounting system stays coherent
+      We know what to order
+
+
+  Conduct Spot Inventory
+    WHEN: 
+      A truck arrives at the gate
+      An accountant calls on the phone
+      There's a break-in at the warehouse
+    ASA: 
+      Warehouse Worker
+      Warehouse Supervisor
+      Nightshift Guard Supervisor
+    INEEDTO: 
+      Conduct a formal spot inventory by hand using the older books
+    SOTHAT: 
+      The insurance company is notified in case of loss
+      Incoming shipments will adequately update the running inventory
+    NOTES: 
+      I love inventory
+      the actor list isn't complete yet
+      I love inventory
+      the actor list isn't complete yet
+    QUESTIONS: 
+      Do we differentiate between goods and services?
+      Do we differentiate between goods and services?
+
+
+  Create Shipment
+    WHEN: 
+      An order has been picked and put in the staging area
+    ASA: 
+      Warehouse Worker
+    INEEDTO: 
+      Create a shipment to the customer
+    SOTHAT: 
+      The items customers want will arrive on-time for them
+      The staging area is freed up to process shipments for customers
+
+
+  MISC
+
+
   Order Goods
     WHEN: 
       The inventory count for an item falls below its re-order point
@@ -13,8 +115,31 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
     SOTHAT: 
       we don't run out of things and are able to fulfill our orders from our customers
     NOTES: 
-      Order Goods was specifically requested by the guy in the plaid sweater
       It seems to be very important for some reason
+
+
+  Pick Shipment
+    WHEN: 
+      An order has been received and we have enough goods
+    ASA: 
+      Warehouse Worker
+    INEEDTO: 
+      Pick items from the warehouse to send to the customer
+    SOTHAT: 
+      We can put the items customers want on a truck and send it to them
+
+
+  Put Away New Shipment
+    WHEN: 
+      A shipment has been received approved and recorded
+    ASA: 
+      Warehouse Worker
+    INEEDTO: 
+      Put Away New Shipment
+    SOTHAT: 
+      The loading area is freed up to accept new shipments
+    NOTES: 
+      no commas allowed here
 
 
   Receive Order
@@ -40,15 +165,15 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
       We can have stuff to ship to other people
 
 
-  Reject Shipment
+  Reconcile BOL
     WHEN: 
-      We are recieving a shipment and most of the goods are unsatisfactory
+      A truck arrives at the guard shack
     ASA: 
-      Warehouse Worker
+      Guard
     INEEDTO: 
-      Reject the shipment
+      Reconcile the BOL with the paperwork
     SOTHAT: 
-      We can get the goods we need from another vendor
+      Warehouse workers will know a vetted truck is waiting to unload
 
 
   Reject Part Of Shipment
@@ -62,95 +187,15 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
       We can restock needed goods as soon as possible
 
 
-  Reconcile BOL
+  Reject Shipment
     WHEN: 
-      A truck arrives at the guard shack
-    ASA: 
-      Guard
-    INEEDTO: 
-      Reconcile the BOL with the paperwork
-    SOTHAT: 
-      Warehouse workers will know a vetted truck is waiting to unload
-
-
-  Put Away New Shipment
-    WHEN: 
-      A shipment has been received approved and recorded
+      We are recieving a shipment and most of the goods are unsatisfactory
     ASA: 
       Warehouse Worker
     INEEDTO: 
-      Put Away New Shipment
+      Reject the shipment
     SOTHAT: 
-      The loading area is freed up to accept new shipments
-    NOTES: 
-      no commas allowed here
-
-
-  Conduct Spot Inventory
-    WHEN: 
-      A truck arrives at the gate
-      An accountant calls on the phone
-      There's a break-in at the warehouse
-    ASA: 
-      Warehouse Worker
-      Warehouse Supervisor
-      Nightshift Guard Supervisor
-    INEEDTO: 
-      Conduct a formal spot inventory by hand using the older books
-    SOTHAT: 
-      The insurance company is notified in case of loss
-      Incoming shipments will adequately update the running inventory
-    NOTES: 
-      I love inventory
-      the actor list isn't complete yet
-    QUESTIONS: 
-      Do we differentiate between goods and services?
-
-
-  Conduct Regular Inventory
-    WHEN: 
-      The first of the month rolls around
-    ASA: 
-      Warehouse Supervisor
-    INEEDTO: 
-      Conduct a formal inventory using an audited procedure
-    SOTHAT: 
-      Our accounting system stays coherent
-      We know what to order
-
-
-  Create Shipment
-    WHEN: 
-      An order has been picked and put in the staging area
-    ASA: 
-      Warehouse Worker
-    INEEDTO: 
-      Create a shipment to the customer
-    SOTHAT: 
-      The items customers want will arrive on-time for them
-      The staging area is freed up to process shipments for customers
-
-
-  Pick Shipment
-    WHEN: 
-      An order has been received and we have enough goods
-    ASA: 
-      Warehouse Worker
-    INEEDTO: 
-      Pick items from the warehouse to send to the customer
-    SOTHAT: 
-      We can put the items customers want on a truck and send it to them
-
-
-  Ship Goods
-    WHEN: 
-      An order has been picked and the shipment created
-    ASA: 
-      Guard
-    INEEDTO: 
-      Approve the outgoing items and shipment
-    SOTHAT: 
-      The customer receives goods they want
+      We can get the goods we need from another vendor
 
 
   Review Daily Warehouse Activity
@@ -164,9 +209,14 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
       The business is operating as it should
 
 
-  MISC
-
-
-  ALL
+  Ship Goods
+    WHEN: 
+      An order has been picked and the shipment created
+    ASA: 
+      Guard
+    INEEDTO: 
+      Approve the outgoing items and shipment
+    SOTHAT: 
+      The customer receives goods they want
 
 

@@ -905,4 +905,27 @@
 
 
 
-
+    [<Test>]
+    let ``ROUNDTRIP: annotate in middle of def``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "BUSINESS STRUCTURE ABSTRACT TO-BE: Vendor"
+                        ; "    CONTAINS: "
+                        ; "      Vendor Number"
+                        ; "      Address"
+                        ; "      Last Order Date"
+                        ; ""
+                        ; "    TODO: "
+                        ; "      Meet some vendors"
+                        ; "      Listen to stories about vendors"
+                        ; ""
+                        ; "    HASA: "
+                        ; "      Shipment"
+                        ; "      Invoice"
+                        ; "      Order"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 5

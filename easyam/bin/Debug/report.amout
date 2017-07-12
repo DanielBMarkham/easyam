@@ -1,24 +1,30 @@
 //                               EASYAM REPORT                                 
-//                   Model Generation: 07/12/2017 16:16:32                     
+//                   Model Generation: 07/12/2017 16:53:46                     
 //                                                                             
 //    Compiler Messages
 //    -----------------
-//  fq0p1oom.nn5_tester.bsx:: Info: file loading completed with 7 files processed along with 255 lines of code reviewed
-//  4plplhsy.ekz_tester.bsx:Some(29): Warning: target item Bill Of Lading already exists once as a join. There is a duplicate entry. Previous join exists on 4plplhsy.ekz_tester.bsx(1) line 27.
-//  i0bgwbqq.ige_tester.bsx:Some(11): Warning: target item Vendor already exists once as a join. There is a duplicate entry. Previous join exists on i0bgwbqq.ige_tester.bsx(2) line 11.
+//  mde-bill-of-lading.amin:: Info: file loading completed with 38 files processed along with 895 lines of code reviewed
+//  mde.amin:Some(101): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mde-vendor.amin(11) line 17.
+//  mde.amin:Some(102): Warning: target item Invoice already exists once as a join. There is a duplicate entry. Previous join exists on mde-vendor.amin(11) line 18.
+//  mde.amin:Some(103): Warning: target item Order already exists once as a join. There is a duplicate entry. Previous join exists on mde-vendor.amin(11) line 19.
+//  mus-all.amin:Some(15): Warning: target item Always respond in a way that's easy for the user to understand already exists once as a join. There is a duplicate entry. Previous join exists on mus-all.amin(21) line 10.
+//  mus-all.amin:Some(16): Warning: target item Never make the user wait already exists once as a join. There is a duplicate entry. Previous join exists on mus-all.amin(21) line 11.
+//  mus-all.amin:Some(17): Warning: target item Never confuse the user already exists once as a join. There is a duplicate entry. Previous join exists on mus-all.amin(21) line 12.
+//  mus-all.amin:Some(18): Warning: target item Continuously inform the team about everything the users do already exists once as a join. There is a duplicate entry. Previous join exists on mus-all.amin(21) line 13.
+//  mus-all.amin:Some(19): Warning: target item Always do the best we can to cheer the user up during any interaction already exists once as a join. There is a duplicate entry. Previous join exists on mus-all.amin(21) line 14.
 //                                                                             
 //    Model Summary
 //    -------------
-//    Total Master User Stories: 15
-//    Total open questions: 1
-//    Total notes: 5
+//    Total Master User Stories: 20
+//    Total open questions: 2
+//    Total notes: 8
 //    Total to-do items: 0
 //    Total work items: 0
 //
-//    Total Master Domain Entities: 12
-//    Total open questions: 3
+//    Total Master Domain Entities: 16
+//    Total open questions: 5
 //    Total notes: 0
-//    Total to-do items: 2
+//    Total to-do items: 0
 //    Total work items: 0
 //
 //    Total Master Supplementals: 7

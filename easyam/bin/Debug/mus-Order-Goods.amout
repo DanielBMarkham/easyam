@@ -1,6 +1,6 @@
 //                             MASTER USER STORY                               
 //                                ORDER GOODS                                  
-//                   Model Generation: 07/12/2017 16:16:32                     
+//                   Model Generation: 07/12/2017 16:53:47                     
 //                                                                             
 
 MASTER USER STORY: Order Goods
@@ -12,9 +12,10 @@ MASTER USER STORY: Order Goods
       Place an order with our suppliers to replenish needed items
     SOTHAT: 
       we don't run out of things and are able to fulfill our orders from our customers
+        NOTES: 
+          Order Goods was specifically requested by the guy in the plaid sweater
 
     NOTES: 
-      Order Goods was specifically requested by the guy in the plaid sweater
       It seems to be very important for some reason
 
     AFFECTEDBY: 
@@ -24,6 +25,11 @@ MASTER USER STORY: Order Goods
       Never confuse the user
       Continuously inform the team about everything the users do
       Always do the best we can to cheer the user up during any interaction
+      ALL
+      Always respond in a way that's easy for the user to understand
+      Continuously inform the team about everything the users do
+      Never confuse the user
+      Never make the user wait
 
     USES: 
       Order

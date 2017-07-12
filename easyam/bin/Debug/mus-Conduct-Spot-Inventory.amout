@@ -1,13 +1,13 @@
 //                             MASTER USER STORY                               
 //                           CONDUCT SPOT INVENTORY                            
-//                   Model Generation: 07/12/2017 16:16:33                     
+//                   Model Generation: 07/12/2017 16:53:47                     
 //                                                                             
 
 MASTER USER STORY: Conduct Spot Inventory
     WHEN: 
       A truck arrives at the gate
         NOTES: 
-           could be any kind of truck
+          could be any kind of truck
       An accountant calls on the phone
       There's a break-in at the warehouse
     ASA: 
@@ -25,7 +25,10 @@ MASTER USER STORY: Conduct Spot Inventory
     NOTES: 
       I love inventory
       the actor list isn't complete yet
+      I love inventory
+      the actor list isn't complete yet
     QUESTIONS: 
+      Do we differentiate between goods and services?
       Do we differentiate between goods and services?
 
     AFFECTEDBY: 
@@ -34,6 +37,11 @@ MASTER USER STORY: Conduct Spot Inventory
       Never confuse the user
       Continuously inform the team about everything the users do
       Always do the best we can to cheer the user up during any interaction
+      ALL
+      Always respond in a way that's easy for the user to understand
+      Continuously inform the team about everything the users do
+      Never confuse the user
+      Never make the user wait
 
     USES: 
       Inventory Item

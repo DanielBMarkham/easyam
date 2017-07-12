@@ -594,7 +594,7 @@
                             then
                                 // ident has popped up. Whatever we were referencing, we are now referencing the item
                                 let newLocation={incomingCompilerStatus.CurrentLocation with AttributeId=option.None; AttributeType=option.None;}
-                                let newState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; WaitingFor=CompilerWaitingFor.MultipleTargets}
+                                let newState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; WaitingFor=CompilerWaitingFor.MultipleAnnotationTargets; LastCompilerOperation=LastCompilerOperations.LocationChange}
                                 let adjustedCompilerStatus={incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}
                                 addAnnotation adjustedCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine adjustedCompilerStatus
                             else

@@ -1,6 +1,6 @@
 //                            MASTER SUPPLEMENTAL                              
 //         CONTINUOUSLY INFORM THE TEAM ABOUT EVERYTHING THE USERS DO          
-//                   Model Generation: 07/12/2017 16:16:33                     
+//                   Model Generation: 07/12/2017 16:53:47                     
 //                                                                             
 
 BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Continuously inform the team about everything the users do
@@ -14,3 +14,18 @@ BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Continuously inform the team about everyth
 
     AFFECTS: 
       ALL
+      ALL
+      Conduct Regular Inventory
+      Conduct Spot Inventory
+      Create Shipment
+      MISC
+      Order Goods
+      Pick Shipment
+      Put Away New Shipment
+      Receive Order
+      Receive Shipment
+      Reconcile BOL
+      Reject Part Of Shipment
+      Reject Shipment
+      Review Daily Warehouse Activity
+      Ship Goods

@@ -1,6 +1,6 @@
 //                             MASTER USER STORY                               
 //                                    ALL                                      
-//                   Model Generation: 07/12/2017 16:16:33                     
+//                   Model Generation: 07/12/2017 16:53:47                     
 //                                                                             
 
 MASTER USER STORY: ALL
@@ -12,9 +12,9 @@ MASTER USER STORY: ALL
       Never confuse the user
       Continuously inform the team about everything the users do
       Always do the best we can to cheer the user up during any interaction
+      ALL
       Always respond in a way that's easy for the user to understand
-      Never make the user wait
-      Never confuse the user
       Continuously inform the team about everything the users do
-      Always do the best we can to cheer the user up during any interaction
+      Never confuse the user
+      Never make the user wait
 

@@ -1,6 +1,6 @@
 //                            MASTER SUPPLEMENTAL                              
 //   ALWAYS DO THE BEST WE CAN TO CHEER THE USER UP DURING ANY INTERACTION     
-//                   Model Generation: 07/12/2017 16:16:33                     
+//                   Model Generation: 07/12/2017 16:53:47                     
 //                                                                             
 
 BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Always do the best we can to cheer the user up during any interaction
@@ -10,9 +10,25 @@ BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Always do the best we can to cheer the use
       We chat with our user friends
     ITHASTOBETHAT: 
       We make a special effort to cheer them up
+        NOTES: 
+          Note no commas
 
     NOTES: 
       Note no commas
 
     AFFECTS: 
       ALL
+      Conduct Regular Inventory
+      Conduct Spot Inventory
+      Create Shipment
+      MISC
+      Order Goods
+      Pick Shipment
+      Put Away New Shipment
+      Receive Order
+      Receive Shipment
+      Reconcile BOL
+      Reject Part Of Shipment
+      Reject Shipment
+      Review Daily Warehouse Activity
+      Ship Goods
