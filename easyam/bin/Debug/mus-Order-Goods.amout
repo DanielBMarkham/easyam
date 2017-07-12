@@ -1,10 +1,9 @@
-//                              MASTER USE CASE                                
+//                             MASTER USER STORY                               
 //                                ORDER GOODS                                  
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:32                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Order Goods
+MASTER USER STORY: Order Goods
     WHEN: 
       The inventory count for an item falls below its re-order point
     ASA: 

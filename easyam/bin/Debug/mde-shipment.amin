@@ -1,0 +1,18 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                  SHIPMENT                                   
+//                   Model Generation: 07/12/2017 13:03:13                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Shipment
+    CONTAINS: 
+      Shipment Number
+      Shipment Date
+      Expected Arrival Date
+
+    QUESTIONS: 
+      Does this involve real ships?
+      Do we get free mints?
+      Are the ships full of mints?
+
+    HASA: 
+      Bill Of Lading

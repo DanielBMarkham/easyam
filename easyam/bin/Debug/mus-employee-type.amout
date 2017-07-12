@@ -1,0 +1,17 @@
+//                             MASTER USER STORY                               
+//                               EMPLOYEE TYPE                                 
+//                   Model Generation: 07/12/2017 15:25:28                     
+//                                                                             
+
+MASTER USER STORY: Employee Type
+
+
+    AFFECTEDBY: 
+      ALL
+      ALL
+      ALL
+      ALL
+      ALL
+
+    USES: 
+      Employee Type

@@ -1,11 +1,9 @@
-//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                        MASTER DOMAIN MODEL - ENTITY                         
 //                                   ORDER                                     
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:33                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Order
-//                       MASTER DOMAIN MODEL - ENTITES                         
+BUSINESS STRUCTURE ABSTRACT TO-BE: Order
     CONTAINS: 
       Order Number
       Order Date

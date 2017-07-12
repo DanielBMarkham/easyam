@@ -1,0 +1,19 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                   VENDOR                                    
+//                   Model Generation: 07/12/2017 13:03:13                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Vendor
+    CONTAINS: 
+      Vendor Number
+      Address
+      Last Order Date
+
+    TODO: 
+      Meet some vendors
+      Listen to stories about vendors
+
+    HASA: 
+      Shipment
+      Invoice
+      Order

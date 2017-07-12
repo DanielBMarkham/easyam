@@ -1,10 +1,9 @@
-//                              MASTER USE CASE                                
+//                             MASTER USER STORY                               
 //                          REJECT PART OF SHIPMENT                            
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:33                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Reject Part Of Shipment
+MASTER USER STORY: Reject Part Of Shipment
     WHEN: 
       We are recieving a shipment and a few of the items are unsatisfactory
     ASA: 

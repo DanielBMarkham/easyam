@@ -1,17 +1,15 @@
-//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                        MASTER DOMAIN MODEL - ENTITY                         
 //                                   VENDOR                                    
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:33                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Vendor
-//                       MASTER DOMAIN MODEL - ENTITES                         
+BUSINESS STRUCTURE ABSTRACT TO-BE: Vendor
     CONTAINS: 
       Vendor Number
       Address
       Last Order Date
 
-    To-DO: 
+    TODO: 
       Meet some vendors
       Listen to stories about vendors
 

@@ -1,5 +1,5 @@
 //                           MASTER DOMAIN ENTITIES                            
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:32                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE
@@ -101,7 +101,7 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Shipment
       Invoice
       Order
-    To-DO: 
+    TO-DO: 
       Meet some vendors
       Listen to stories about vendors
 

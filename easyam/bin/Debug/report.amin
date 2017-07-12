@@ -1,0 +1,30 @@
+//                               EASYAM REPORT                                 
+//                   Model Generation: 07/12/2017 13:03:13                     
+//                                                                             
+//    Compiler Messages
+//    -----------------
+//  knsgqenb.phv_tester.bsx:: Info: file loading completed with 7 files processed along with 255 lines of code reviewed
+//  u3ciasgv.dmm_tester.bsx:Some(29): Warning: target item Bill Of Lading already exists once as a join. There is a duplicate entry. Previous join exists on u3ciasgv.dmm_tester.bsx(1) line 27.
+//  ulyt2q2l.xhx_tester.bsx:Some(11): Warning: target item Vendor already exists once as a join. There is a duplicate entry. Previous join exists on ulyt2q2l.xhx_tester.bsx(2) line 11.
+//                                                                             
+//    Model Summary
+//    -------------
+//    Total Master User Stories: 15
+//    Total open questions: 1
+//    Total notes: 5
+//    Total to-do items: 0
+//    Total work items: 0
+//
+//    Total Master Domain Entities: 12
+//    Total open questions: 3
+//    Total notes: 0
+//    Total to-do items: 2
+//    Total work items: 0
+//
+//    Total Master Supplementals: 7
+//    Total open questions: 0
+//    Total notes: 1
+//    Total to-do items: 0
+//    Total work items: 0
+//
+//

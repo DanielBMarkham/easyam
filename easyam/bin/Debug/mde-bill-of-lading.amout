@@ -1,11 +1,9 @@
-//                       MASTER DOMAIN MODEL - ENTITIES                        
+//                        MASTER DOMAIN MODEL - ENTITY                         
 //                               BILL OF LADING                                
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:33                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Bill Of Lading
-//                       MASTER DOMAIN MODEL - ENTITES                         
+BUSINESS STRUCTURE ABSTRACT TO-BE: Bill Of Lading
     CONTAINS: 
       Pallet List
 

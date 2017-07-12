@@ -6,21 +6,45 @@
     open FParsec
     open EasyamParsingEngine
 
-
-    let defaultBaseOptions = createNewBaseOptions "easyAM" "Compile the Analysis Model." [|"Takes tagged statements created with Structural Analysis, cross-checks and compiles."|] defaultVerbosity
+    let programHelp = [|
+                        "Takes tagged statements created with Structural Analysis tags."
+                        ;"Cross-checks model and outputs in various formats,"
+                        ;"including a canonical format that's organized by tag and"
+                        ;"can be used for future input."
+                        ;""
+                        ;"Example: A simple backlog for an ATM could be created like this:"
+                        ;"BEHAVIOR: Deposit Funds, Withdraw Cash, Check Balance,  Transfer Funds"
+                        ;"SUPPLEMENTAL: ADA compliant, Touch-sceen enabled, Record images of all users, Provide a full audit trail"
+                        ;""
+                        ;"SPRINT BACKLOG"
+                        ;"  Withdraw Cash Using one click PARENT Withdraw Cash"
+                        ;"  ASA Account-holder"
+                        ;"  INEEDTO withdraw cash using one click"
+                        ;"  SOTHAT I can be on my way quickly"
+                        ;""
+                        ;"The program will process all files in the source directory ending in .amim"
+                        ;"It will produce a canonical (organized) output in the output directory in .amout format"
+                        ;""
+                        ;"Optional parameters are /S:<source directory> /D:<destination directory> /N:<namespace filter for output>"
+                        |]
+    let defaultBaseOptions = createNewBaseOptions "easyam" "Command-line analysis model compiler" programHelp defaultVerbosity
     let defaulSourceDirectory = createNewConfigEntry "S" "Source Directory (Optional)" [|"/S:<path> -> path to the directory having the source files."|] (System.AppDomain.CurrentDomain.BaseDirectory, Some(System.IO.DirectoryInfo(System.AppDomain.CurrentDomain.BaseDirectory)))
     let defaultDestinationDirectory = createNewConfigEntry "D" "Destination Directory (Optional)" [|"/D:<path> -> path to the directory where compiled files will be deployed."|] (System.AppDomain.CurrentDomain.BaseDirectory, Some(System.IO.DirectoryInfo(System.AppDomain.CurrentDomain.BaseDirectory)))
+    let defaultNamespace = createNewConfigEntry "N" "Namespace (Optional)" [|"/N:<namespace> -> namespace filter to show in output."; "Example: a team's sprint stories may have a namespace of BadgerTeam: Sprint 3"|] ""
     
 
     let loadConfigFromCommandLine (args:string []):EasyAMProgramConfig =
+        if args.Length>0 && (args.[0]="?"||args.[0]="/?"||args.[0]="-?"||args.[0]="--?"||args.[0]="help"||args.[0]="/help"||args.[0]="-help"||args.[0]="--help") then raise (UserNeedsHelp args.[0]) else
         let newVerbosity =ConfigEntry<_>.populateValueFromCommandLine(defaultVerbosity, args)
         let newSourceDirectory = ConfigEntry<_>.populateValueFromCommandLine(defaulSourceDirectory, args)
         let newDestinationDirectory = ConfigEntry<_>.populateValueFromCommandLine(defaultDestinationDirectory, args)
+        let newNamespace = ConfigEntry<_>.populateValueFromCommandLine(defaultNamespace, args)
         let newConfigBase = {defaultBaseOptions with verbose=newVerbosity}
         { 
             configBase = newConfigBase
             sourceDirectory=newSourceDirectory
             destinationDirectory=newDestinationDirectory
+            nameSpace=newNamespace
         }
     let getDirectories (opts:EasyAMProgramConfig) = 
         // set up any folders needed by the tool
@@ -65,7 +89,7 @@
     [<EntryPoint>]
     let main argv = 
         try
-            let opts = loadConfigFromCommandLine argv //
+            let opts = loadConfigFromCommandLine argv
             commandLinePrintWhileEnter opts.configBase (opts.printThis)
             let outputDirectories = doStuff opts
             commandLinePrintWhileExit opts.configBase

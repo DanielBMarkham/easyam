@@ -1,0 +1,17 @@
+//                             MASTER USER STORY                               
+//                                  SHIPMENT                                   
+//                   Model Generation: 07/12/2017 15:25:28                     
+//                                                                             
+
+MASTER USER STORY: Shipment
+
+
+    AFFECTEDBY: 
+      ALL
+      ALL
+      ALL
+      ALL
+      ALL
+
+    USES: 
+      Shipment

@@ -1,10 +1,9 @@
-//                              MASTER USE CASE                                
+//                             MASTER USER STORY                               
 //                              RECEIVE SHIPMENT                               
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:32                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Receive Shipment
+MASTER USER STORY: Receive Shipment
     WHEN: 
       A truck arrives at the loading dock
     ASA: 

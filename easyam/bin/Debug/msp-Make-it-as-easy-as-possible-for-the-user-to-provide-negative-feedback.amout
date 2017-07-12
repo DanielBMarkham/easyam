@@ -1,10 +1,9 @@
-//                            MASTER SUPPLEMENTALS                             
+//                            MASTER SUPPLEMENTAL                              
 //   MAKE IT AS EASY AS POSSIBLE FOR THE USER TO PROVIDE NEGATIVE FEEDBACK     
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:33                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Make it as easy as possible for the user to provide negative feedback
+BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Make it as easy as possible for the user to provide negative feedback
     BECAUSE: 
       People very rarely give any negative feedback
     WHENEVER: 

@@ -72,10 +72,9 @@
         let testText = [|"This is a fun day to go to the beach //May need to buy an umbrella Q: What's a beach?"|]
         let ret = setupCompilationScenario 0 0 0 testText
         ret |> should haveLength 1
-        ret.[0].Commands.Length |> should equal 3
+        ret.[0].Commands.Length |> should equal 2
         ret.[0].Commands.[0].CommandIndentLevel |> should equal 0
         ret.[0].Commands.[1].CommandIndentLevel |> should equal 1
-        ret.[0].Commands.[2].CommandIndentLevel |> should equal 2
 
     // Begin testing the creation of the model
     [<Test>]

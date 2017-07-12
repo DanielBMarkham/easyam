@@ -1,0 +1,15 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                             MEET SOME VENDORS                               
+//                   Model Generation: 07/12/2017 13:03:25                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Meet some vendors
+
+    NOTES: 
+      Listen to stories about vendors
+      Listen to stories about vendors
+
+    HASA: 
+      Shipment
+      Invoice
+      Order

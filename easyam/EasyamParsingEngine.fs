@@ -16,42 +16,46 @@
     /// TOKEN PROCESSING. TAKES A LINE AND MAKES A LIST OF COMMANDS AND VALUES
     ///
     let rec findInitialTextKeywordAndRemainingTextOnALine (tokenList:string list) (incomingLine:string):(string*string*string) option =
-        let sourceStringFindAToken = tokenList |> String.concat "|" 
-        let sourceStringFindTextUpToNextToken = tokenList |> List.map(fun x->"\b " + x + "")|> String.concat "|" 
-        let regexFindAToken = new System.Text.RegularExpressions.Regex(sourceStringFindAToken)
-        let regexFindTextUpToNextToken = new System.Text.RegularExpressions.Regex(sourceStringFindTextUpToNextToken)
+        // There's one oddball exception: if you have // at the beginning, the rest is a comment and there's nothing left
+        if incomingLine.Length>1 && (incomingLine.GetLeft 2)="//"
+            then Some("", "//", incomingLine.Substring(2))
+            else
+                let sourceStringFindAToken = tokenList |> String.concat "|" 
+                let sourceStringFindTextUpToNextToken = tokenList |> List.map(fun x->"\b " + x + "")|> String.concat "|" 
+                let regexFindAToken = new System.Text.RegularExpressions.Regex(sourceStringFindAToken)
+                let regexFindTextUpToNextToken = new System.Text.RegularExpressions.Regex(sourceStringFindTextUpToNextToken)
         
-        let tokensFound = regexFindAToken.Matches(incomingLine).toArray |> Array.filter(fun x->x.Length>0)
-        let textUpUntilNextToken = regexFindTextUpToNextToken.Matches(incomingLine).toArray |> Array.filter(fun x->x.Length>0)
-        let tokensWereFound = tokensFound.Length>0
-        let textFoundUpUntilNextToken = textUpUntilNextToken.Length>0
+                let tokensFound = regexFindAToken.Matches(incomingLine).toArray |> Array.filter(fun x->x.Length>0)
+                let textUpUntilNextToken = regexFindTextUpToNextToken.Matches(incomingLine).toArray |> Array.filter(fun x->x.Length>0)
+                let tokensWereFound = tokensFound.Length>0
+                let textFoundUpUntilNextToken = textUpUntilNextToken.Length>0
 
-        if tokensWereFound=false then Some("","", incomingLine.Trim())
-        else
-            // we have tokens
-            if tokensFound.[0].Index>0
-                then // there's text before the token. Any text before a token starts is just text
-                    let textBeforeToken = incomingLine.Substring(0, tokensFound.[0].Index-1)
-                    let tokenAndStuffFollowing= incomingLine.Substring(tokensFound.[0].Index)
-                    if textBeforeToken.Trim().Length=0
-                        then
-                            findInitialTextKeywordAndRemainingTextOnALine tokenList tokenAndStuffFollowing
-                        else
-                            Some(tokenAndStuffFollowing.Trim(), "", textBeforeToken.Trim())
-                else // it's just the token at the start and some stuff after that
-                    let tokenText=tokensFound.[0]
-                    let remainingLine=if tokenText.Length<incomingLine.Length then incomingLine.Substring(tokenText.Length) else ""
-                    let tokensRemaining=regexFindAToken.Matches(remainingLine).toArray
-                    let theresMoreTokensOnThisLine = tokensRemaining.Length>0
+                if tokensWereFound=false then Some("","", incomingLine.Trim())
+                else
+                    // we have tokens
+                    if tokensFound.[0].Index>0
+                        then // there's text before the token. Any text before a token starts is just text
+                            let textBeforeToken = incomingLine.Substring(0, tokensFound.[0].Index-1)
+                            let tokenAndStuffFollowing= incomingLine.Substring(tokensFound.[0].Index)
+                            if textBeforeToken.Trim().Length=0
+                                then
+                                    findInitialTextKeywordAndRemainingTextOnALine tokenList tokenAndStuffFollowing
+                                else
+                                    Some(tokenAndStuffFollowing.Trim(), "", textBeforeToken.Trim())
+                        else // it's just the token at the start and some stuff after that
+                            let tokenText=tokensFound.[0]
+                            let remainingLine=if tokenText.Length<incomingLine.Length then incomingLine.Substring(tokenText.Length) else ""
+                            let tokensRemaining=regexFindAToken.Matches(remainingLine).toArray
+                            let theresMoreTokensOnThisLine = tokensRemaining.Length>0
 
-                    if theresMoreTokensOnThisLine
-                        then // it's the token and everything up until the next token
-                            let nextTokenStartsAtIndex = tokensRemaining.[0].Index
-                            let textUpUntilNextToken:string = remainingLine.Substring(0, nextTokenStartsAtIndex)
-                            let nextTokenAndTextAfterIt:string = remainingLine.Substring(nextTokenStartsAtIndex)
-                            Some(nextTokenAndTextAfterIt.Trim(), tokenText.Value.Trim(), textUpUntilNextToken.Trim())
-                        else // it's just the token and anything after it
-                            Some("", tokenText.Value.Trim(), remainingLine.Trim())
+                            if theresMoreTokensOnThisLine
+                                then // it's the token and everything up until the next token
+                                    let nextTokenStartsAtIndex = tokensRemaining.[0].Index
+                                    let textUpUntilNextToken:string = remainingLine.Substring(0, nextTokenStartsAtIndex)
+                                    let nextTokenAndTextAfterIt:string = remainingLine.Substring(nextTokenStartsAtIndex)
+                                    Some(nextTokenAndTextAfterIt.Trim(), tokenText.Value.Trim(), textUpUntilNextToken.Trim())
+                                else // it's just the token and anything after it
+                                    Some("", tokenText.Value.Trim(), remainingLine.Trim())
     exception CommandParsingException of Command list
     let splitOutIncomingLineIntoCommandList (tokenList:string list) (incomingLine:string):Command list =
         if incomingLine="" 
@@ -98,7 +102,7 @@
                             let leadingWhiteSpace = whiteSpaceMatches.[0].Value
                             let tabCount = leadingWhiteSpace.CountOccurences("\t")-1
                             let spaceCount = leadingWhiteSpace.CountOccurences(" ")-1
-                            ((tabCount + (spaceCount/4)),incomingLineBeingProcessed.LineText.Substring(leadingWhiteSpace.Length))
+                            ((tabCount + (spaceCount/2)),incomingLineBeingProcessed.LineText.Substring(leadingWhiteSpace.Length))
                         else (0,incomingLineBeingProcessed.LineText)
                 {
                     incomingLineBeingProcessed with
@@ -134,7 +138,7 @@
                 Message=messageDesc
                 SourceFileShort=sourceLine.File.Name
                 SourceFileLong=sourceLine.File.FullName
-                SourceLineBegin=sourceLine.FileRawLineNumber
+                SourceLineBegin=Some sourceLine.FileRawLineNumber
                 SourceLineEnd=option.None
                 SourceLineColumnBegin=option.None
                 SourceLineColumnEnd=option.None
@@ -166,7 +170,7 @@
                 Message=newMessage
                 SourceFileShort=firstSourceFileName
                 SourceFileLong=firstSourceFileName
-                SourceLineBegin=1
+                SourceLineBegin=option.None
                 SourceLineEnd=option.None
                 SourceLineColumnBegin=option.None
                 SourceLineColumnEnd=option.None
@@ -211,7 +215,21 @@
         let newModelItems =  splitItemsListSecondPart |> Array.append [|updatedModelItem|] |> Array.append splitItemsListFirstPart
         {compilerStatus with ModelItems=newModelItems}
 
-    let joinModelItems (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (incomingLine:IncomingLine) (joinType:ModelJoin) (description:string) =
+    let makeATargetOfAJoinIfYouCan (compilerStatus:CompilerReturn) (incomingLine:IncomingLine) (joinType:ModelJoin) (description:string) =
+        let itemAlreadyExists=compilerStatus.ModelItems|>Array.exists(fun x->x.Description=description)
+        if itemAlreadyExists then compilerStatus else
+        let newBucket = match joinType with
+                        |ModelJoin.AffectedBy->Buckets.Supplemental
+                        |ModelJoin.Affects->Buckets.Behavior
+                        |ModelJoin.Child->compilerStatus.CurrentLocation.Bucket
+                        |ModelJoin.Parent->compilerStatus.CurrentLocation.Bucket
+                        |ModelJoin.HasA->Buckets.Structure
+                        |ModelJoin.IsOwnedByA->Buckets.Structure
+                        |ModelJoin.Uses->Buckets.Behavior
+                        |ModelJoin.UsedBy->Buckets.Structure
+        let newLocationForTarget={compilerStatus.CurrentLocation with Bucket=newBucket}
+        addModelItem compilerStatus newLocationForTarget incomingLine description
+    let rec joinModelItems (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (incomingLine:IncomingLine) (joinType:ModelJoin) (description:string) =
         // find the model item that is the target of this join and update both the current and target item
         // if the target does not exist, register a compiler error (but keep processing)
         let possibleSource=compilerStatus.ModelItems |> Array.tryFind(fun x->x.Id=compilerStatus.CurrentLocation.ParentId && x.Id<>(-1))
@@ -225,7 +243,9 @@
                     then
                         let alreadyExistEntry=sourceItem.Relations|>Array.find(fun z->z.TargetId=targetItem.Id)
                         let reference="Previous join exists on " + (alreadyExistEntry.SourceReference.File.Name + "(" + string alreadyExistEntry.SourceReference.FileCompilationNumber + ") line " + string alreadyExistEntry.SourceReference.FileRawLineNumber + ".")
-                        logCompilerMessageForASingleLine compilerStatus CompilerMessageType.Warning ("target item " + description + " already exists once as a join. There is a duplicate entry. " + reference) incomingLine
+                        let ret=logCompilerMessageForASingleLine compilerStatus CompilerMessageType.Warning ("target item " + description + " already exists once as a join. There is a duplicate entry. " + reference) incomingLine
+                        let newLocation = {compilerStatus.CurrentLocation with LastJoinTargetId=Some targetItem.Id}
+                        {ret with CurrentLocation=newLocation}
                     else
                         // add a join to both model items. Be sure to include the source reference
                         let newSourceItemJoinRelation={id=getNextModelItemNumber(); ModelJoinType=joinType; TargetId=targetItem.Id; SourceReference=incomingLine}
@@ -235,10 +255,11 @@
                         let newSourceItem={sourceItem with Relations=newSourceItemJoinRelations}
                         let newTargetItem={targetItem with Relations=newTargetItemJoinRelations}
                         let compilerStatusWithNewSourcce = updateModelItem compilerStatus newSourceItem
-                        let compilerStatusWithNewSourceAndTarget = updateModelItem compilerStatusWithNewSourcce newTargetItem
-                        compilerStatusWithNewSourceAndTarget
+                        let compilerStatusWithNewSourceAndTarget = updateModelItem compilerStatusWithNewSourcce newTargetItem                        
+                        let newLocation = {compilerStatus.CurrentLocation with LastJoinTargetId=Some targetItem.Id}
+                        {compilerStatusWithNewSourceAndTarget with CurrentLocation=newLocation}
             |Some sourceItem, option.None->
-                logCompilerMessageForASingleLine compilerStatus CompilerMessageType.Error ("target item " + description + " does not currently exist in model when trying to make join") incomingLine
+                logCompilerMessageForASingleLine compilerStatus CompilerMessageType.Warning ("target item " + description + " does not currently exist in model when trying to make join. Skipping.") incomingLine
             |option.None, Some targetItem->
                 logCompilerMessageForASingleLine compilerStatus CompilerMessageType.Error ("source item id:" + string compilerStatus.CurrentLocation.ParentId + " does not currently exist in model when trying to make join") incomingLine
             |option.None, option.None->
@@ -274,7 +295,7 @@
                 if modelItemToChange.IsNone
                     then currentCompilerStatus
                     else
-                        let newAnnotation = (annotationType,annotationValue)
+                        let newAnnotation = (annotationType,annotationValue.Trim())
                         let newAnnotations = [|newAnnotation|] |> Array.append modelItemToChange.Value.Annotations
                         let newSourceReferences = [|sourceLine|] |> Array.append modelItemToChange.Value.SourceReferences
                         let newModelItem = {modelItemToChange.Value with Annotations=newAnnotations; SourceReferences=newSourceReferences}
@@ -363,7 +384,7 @@
                                                             incomingCompilerStatus.ModelItems |> Array.find(fun x->x.Id=lastJoinedTarget)
                                                         else
                                                             incomingCompilerStatus.ModelItems |> Array.find(fun x->x.Id=incomingCompilerStatus.CurrentLocation.ParentId)
-                        if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewJoin
+                        if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewJoin || incomingCompilerStatus.CompilerState.WaitingFor=CompilerWaitingFor.MultipleJoinTargets
                             then
                                 // waiting on a join
                                 match incomingCompilerStatus.CompilerState.IndentLevelChange, itemAlreadyExists.IsSome with 
@@ -395,7 +416,10 @@
                                                                         ) incomingCompilerStatus
                                                 newCompilerStatus
                                             else
-                                                addAnnotation targetForPossibleComments.Id ANNOTATION_TOKEN_TYPE.Note (incomingCommand.Value.Trim()) incomingLine incomingCompilerStatus
+                                                let lastJoinType = if incomingCompilerStatus.CompilerState.LastJoinType.IsSome then incomingCompilerStatus.CompilerState.LastJoinType.Value else raise(new System.Exception("We have a join but no join type to use"))
+                                                let updatedCompilerStatus=addModelItem incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine incomingCommand.Value
+                                                joinModelItems updatedCompilerStatus updatedCompilerStatus.CurrentLocation incomingLine lastJoinType  (incomingCommand.Value)
+                                                //addAnnotation targetForPossibleComments.Id ANNOTATION_TOKEN_TYPE.Note (incomingCommand.Value.Trim()) incomingLine incomingCompilerStatus
                                     | IndentLevelComparisons.IdentIsMoreThanPreviousIndent, true->
                                         // multiple targets, there's a join, the indent is more, and the item already exists
                                         // it's a badly formatted join
@@ -408,8 +432,17 @@
                                         joinModelItems incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine lastJoinType  (incomingCommand.Value)
                                     | IndentLevelComparisons.IdentIsSameAsPreviousIndent, false->
                                         // multiple targets, there's a join, the indent is the same, and the item does not exist
+
+                                        // NO NO NO. We can't do that. Instead we need to add items whenever we find them
                                         // it's a badly-formatted note
-                                        addAnnotation targetForPossibleComments.Id ANNOTATION_TOKEN_TYPE.Note (incomingCommand.Value.Trim()) incomingLine incomingCompilerStatus
+                                        //addAnnotation targetForPossibleComments.Id ANNOTATION_TOKEN_TYPE.Note (incomingCommand.Value.Trim()) incomingLine incomingCompilerStatus
+
+                                        let lastJoinType = if incomingCompilerStatus.CompilerState.LastJoinType.IsSome then incomingCompilerStatus.CompilerState.LastJoinType.Value else raise(new System.Exception("We have a join but no join type to use"))
+                                        let updatedCompilerStatus=addModelItem incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine incomingCommand.Value
+                                        let ret=joinModelItems updatedCompilerStatus updatedCompilerStatus.CurrentLocation incomingLine lastJoinType  (incomingCommand.Value)
+                                        // since we're adding as we go, our mode is now waiting on new join items
+                                        let newState={ret.CompilerState with WaitingFor=CompilerWaitingFor.MultipleJoinTargets}
+                                        {ret with CompilerState=newState}
                             else
                                 // not waiting on a join, but waiting for multiple targets
                                 if itemAlreadyExists.IsNone
@@ -449,23 +482,64 @@
                     |CompilerWaitingFor.MultipleAnnotationTargets->
                         if (newIndentLevel=IdentIsLessThanPreviousIndent) 
                             then
-                                // if we're not further idented, we pop back up to the parent, not waiting on atts
-                                // reset the pointer to the location without annotations and wait on multiple stuff
-                                let newCompilerState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; LastCompilerOperation=LastCompilerOperations.PointerReset; WaitingFor=CompilerWaitingFor.MultipleTargets}
-                                let newCompilerLocation={incomingCompilerStatus.CurrentLocation with ParentId=(-1); AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None}
-                                let newCompilerStatus={incomingCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation}
-                                updateModelLocationPointer newCompilerStatus incomingLine incomingCommand 
+                                // what's the next level up?
+                                if incomingCompilerStatus.CurrentLocation.AttributeId.IsSome && incomingCompilerStatus.CurrentLocation.AttributeType.IsSome
+                                    then
+                                        // if the last annotation was on an attribute, then we pop back to the attribute
+                                        let newCompilerState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; LastCompilerOperation=LastCompilerOperations.PointerReset; WaitingFor=CompilerWaitingFor.MultipleAttributeTargets}
+                                        let newCompilerLocation={incomingCompilerStatus.CurrentLocation with AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None}
+                                        let newCompilerStatus={incomingCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation}
+                                        updateModelLocationPointer newCompilerStatus incomingLine incomingCommand 
+                                    else
+                                        // we assume the next level up is the parent pop back up to the parent, not waiting on atts
+                                        // reset the pointer to the location without annotations and wait on multiple stuff
+                                        let newCompilerState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; LastCompilerOperation=LastCompilerOperations.PointerReset; WaitingFor=CompilerWaitingFor.MultipleTargets}
+                                        let newCompilerLocation={incomingCompilerStatus.CurrentLocation with ParentId=(-1); AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None}
+                                        let newCompilerStatus={incomingCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation}
+                                        updateModelLocationPointer newCompilerStatus incomingLine incomingCommand 
                             else
                                 // if we're further idented, we're continuing the previous annotation list
-                                //let newAttributeType = incomingCompilerStatus.CurrentLocation.AnnotationIndicator
+                                // if the last operation was a new attribute, then we're annotating on that attribute
+                                if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewAttribute
+                                    then
+                                        let itemParentId=incomingCompilerStatus.CurrentLocation.ParentId
+                                        let attributeTargetId=incomingCompilerStatus.CurrentLocation.AttributeId.Value
+                                        let attributeType=incomingCompilerStatus.CurrentLocation.AttributeType.Value
+                                        let annotationTokenType=incomingCompilerStatus.CurrentLocation.AnnotationIndicator
+                                        let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                                        let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                                    if x.Length=0 then accumulatorCompilerStatus else
+                                                                    addAttributeAnnotation itemParentId attributeTargetId annotationTokenType x incomingLine  accumulatorCompilerStatus
+                                                                ) incomingCompilerStatus
+                                        let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAnnotationTargets}
+                                        {newCompilerStatus with CompilerState=newCompilerState}
+                                    else
+                                        let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                                        let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                                    if x.Length=0 then accumulatorCompilerStatus else
+                                                                    addAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AnnotationIndicator (x.Trim()) incomingLine incomingCompilerStatus
+                                                                ) incomingCompilerStatus
+                                        let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAnnotationTargets}
+                                        {newCompilerStatus with CompilerState=newCompilerState}
+                    |CompilerWaitingFor.MultipleJoinTargets->
+                        if incomingCompilerStatus.CompilerState.IndentLevelChange=IdentIsLessThanPreviousIndent
+                            then
+                                // first we're no longer waiting on a join
+                                let newState={incomingCompilerStatus.CompilerState with LastJoinType=option.None; WaitingFor=CompilerWaitingFor.MultipleTargets; LastCompilerOperation=LastCompilerOperations.LocationChange}
+                                let newLoc={incomingCompilerStatus.CurrentLocation with LastJoinTargetId=option.None}
+                                let newStat={incomingCompilerStatus with CurrentLocation=newLoc; CompilerState=newState}
+                                updateModelLocationPointer newStat incomingLine incomingCommand
+                            else
                                 let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                                let joinType=incomingCompilerStatus.CompilerState.LastJoinType.Value
                                 let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
                                                             if x.Length=0 then accumulatorCompilerStatus else
-                                                            addAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AnnotationIndicator (x.Trim()) incomingLine incomingCompilerStatus
+                                                            let modCompilerStatus=makeATargetOfAJoinIfYouCan accumulatorCompilerStatus incomingLine joinType (x.Trim())
+                                                            joinModelItems modCompilerStatus modCompilerStatus.CurrentLocation incomingLine joinType  (x.Trim())
                                                         ) incomingCompilerStatus
-                                let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAnnotationTargets}
-                                {newCompilerStatus with CompilerState=newCompilerState}
-                        
+                                //let newLoc={newCompilerStatus.CurrentLocation witLastJoinTargetIdId=Some newCompilerStatus.CurrentLocation.ParentId}
+                                {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewJoin; LastJoinType=Some joinType; WaitingFor=CompilerWaitingFor.MultipleJoinTargets}}
+
                     |_->
                         let newModelItem =
                             {
@@ -491,7 +565,7 @@
                                 | "PROGRAM BACKLOG"|"PROGRAM BACKLOG:"->Buckets.Behavior, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Realized
                                 | "PRODUCT BACKLOG" | "PROJECT BACKLOG"|"PRODUCT BACKLOG:" | "PROJECT BACKLOG:"->Buckets.Behavior, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Realized
                                 | "SPRINT BACKLOG"|"SPRINT BACKLOG:"->Buckets.Behavior, Genres.System, TemporalIndicators.ToBe, AbstractionLevels.Abstract
-                                | "MASTER BACKLOG"|"MASTER BACKLOG:"->Buckets.Behavior, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Abstract
+                                | "MASTER BACKLOG"|"MASTER BACKLOG:"|"MASTER USER STORY"|"MASTER USER STORY:"|"MASTER USER STORIES"|"MASTER USER STORIES:"->Buckets.Behavior, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Abstract
                                 | "MASTER DOMAIN MODEL"|"MASTER DOMAIN MODEL:"->Buckets.Structure, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Abstract
                                 | "PROJECT DOMAIN MODEL" | "PRODUCT DOMAIN MODEL"|"PROJECT DOMAIN MODEL:" | "PRODUCT DOMAIN MODEL:"->Buckets.Structure, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Realized
                                 | "MASTER SUPPLEMENTAL MODEL"|"MASTER SUPPLEMENTAL MODEL:"->Buckets.Supplemental, Genres.Business, TemporalIndicators.ToBe, AbstractionLevels.Abstract
@@ -505,7 +579,8 @@
                                                     if x.Length=0 then accumulatorCompilerStatus else
                                                     addModelItem accumulatorCompilerStatus newLocation incomingLine (x.Trim())
                                                 ) updatedCompilerStatus
-                        newCompilerStatus
+                        let newIndentLevelWithCommasConsidered=newCompilerStatus.CompilerState.CurrentIndentLevel + splitByComma.Length
+                        {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with CurrentIndentLevel=newIndentLevelWithCommasConsidered}}
 
                     |TOKEN_TARGET_TYPE.SINGLE_TARGET,TOKEN_TYPE.RELATIVE_LOCATOR,TOKEN_CATEGORY.MISC->
                         let newTempAnnotationIndicator=
@@ -523,12 +598,21 @@
                                 let adjustedCompilerStatus={incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}
                                 addAnnotation adjustedCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine adjustedCompilerStatus
                             else
+                                // the indent has popped down. We're referencing whatever item we just referred to
                                 if incomingCompilerStatus.CompilerState.WaitingFor=CompilerWaitingFor.MultipleAttributeTargets && (incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewAttribute || incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.ReferenceExistingAttribute)
-                                    then addAttributeAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AttributeId.Value newTempAnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus
+                                    then
+                                        // it was an attribute
+                                        addAttributeAnnotation incomingCompilerStatus.CurrentLocation.ParentId incomingCompilerStatus.CurrentLocation.AttributeId.Value newTempAnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus
                                     else
-                                        let newState=if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewModelItem then {incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAnnotationTargets} else incomingCompilerStatus.CompilerState
-                                        let newLocation=if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewModelItem then {incomingCompilerStatus.CurrentLocation with AnnotationIndicator=newTempAnnotationIndicator} else incomingCompilerStatus.CurrentLocation
-                                        addAnnotation incomingCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine {incomingCompilerStatus with CompilerState=newState; CurrentLocation=newLocation} 
+                                        // it wasn't an attribute. Was it a new model item?
+                                        if incomingCompilerStatus.CompilerState.LastCompilerOperation = LastCompilerOperations.NewJoin
+                                            then
+                                                let joinParentId=incomingCompilerStatus.CurrentLocation.LastJoinTargetId.Value
+                                                addAnnotation joinParentId newTempAnnotationIndicator incomingCommand.Value incomingLine incomingCompilerStatus  
+                                            else
+                                                let newState=if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewModelItem then {incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAnnotationTargets} else incomingCompilerStatus.CompilerState
+                                                let newLocation=if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewModelItem then {incomingCompilerStatus.CurrentLocation with AnnotationIndicator=newTempAnnotationIndicator} else incomingCompilerStatus.CurrentLocation
+                                                addAnnotation incomingCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine {incomingCompilerStatus with CompilerState=newState; CurrentLocation=newLocation} 
                     |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.RELATIVE_LOCATOR,TOKEN_CATEGORY.MISC->
                         let newTempAnnotationIndicator=
                             match token.Token with 
@@ -538,14 +622,14 @@
                                 | "WORKS"|"WORKS: " | "WORKS "|"WORKS:"->ANNOTATION_TOKEN_TYPE.Work
                                 |_->ANNOTATION_TOKEN_TYPE.Note // ERROR ERROR
                         // run through everything split on this line by a comma and add
-                        let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                        let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None) |> Array.filter(fun x->x.Length<>0)
                         let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
                                                 if x.Length=0 then accumulatorCompilerStatus else
                                                 let newAccumulatorCompilerStatus=addAnnotation accumulatorCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator (x.Trim()) incomingLine accumulatorCompilerStatus 
                                                 newAccumulatorCompilerStatus
                                                 ) incomingCompilerStatus
                         let newLocation = {newCompilerStatus.CurrentLocation with AnnotationIndicator=newTempAnnotationIndicator}
-                        //{newCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
+                        let newIndentLevelWithCommasConsidered=newCompilerStatus.CompilerState.CurrentIndentLevel + splitByComma.Length
                         {newCompilerStatus with CurrentLocation=newLocation; CompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAnnotationTargets}}
                     |_,_,NAMESPACE->
                         let newNamespace=incomingCommand.Value
@@ -556,9 +640,9 @@
                         match token.Category with 
                             |TOKEN_CATEGORY.BUCKETS->
                                 let newBucket = match token.Token with 
-                                                | "BEHAVIOR" | "BEHAVIOR " | "BEHAVIORS" |"BEHAVIORS "->Buckets.Behavior
-                                                | "STRUCTURE" | "STRUCTURE " | "STRUCTURES" | "STRUCTURES " ->Buckets.Structure
-                                                | "SUPPLEMENTAL" | "SUPPLEMENTAL "|"SUPPLEMENTALS" |"SUPPLEMENTALS " |_->Buckets.Supplemental
+                                                | "BEHAVIOR" | "BEHAVIOR:" | "BEHAVIORS" |"BEHAVIORS:"->Buckets.Behavior
+                                                | "STRUCTURE" | "STRUCTURE:" | "STRUCTURES" | "STRUCTURES:" ->Buckets.Structure
+                                                | "SUPPLEMENTAL" | "SUPPLEMENTAL:"|"SUPPLEMENTALS" |"SUPPLEMENTALS:" |_->Buckets.Supplemental
                                 let newParentId=if incomingCompilerStatus.CurrentLocation.Bucket<>Buckets.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
                                 let currentLocation = incomingCompilerStatus.CurrentLocation
                                 let newGenre= if currentLocation.Genre=Genres.None then Genres.Business else currentLocation.Genre
@@ -571,33 +655,52 @@
                                                             if x.Length=0 then accumulatorCompilerStatus else
                                                             addModelItem accumulatorCompilerStatus newLocationPointer incomingLine (x.Trim())
                                                         ) updatedCompilerStatus
-                                newCompilerStatus
+                                let newIndentLevelWithCommasConsidered=newCompilerStatus.CompilerState.CurrentIndentLevel + splitByComma.Length
+                                {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with CurrentIndentLevel=newIndentLevelWithCommasConsidered}}
                             |TOKEN_CATEGORY.ABSTRACTION_LEVEL->
                                 let newAbstractionLevel = match token.Token with 
-                                                            | "ABSTRACT" | "ABSTRACT "->AbstractionLevels.Abstract
-                                                            | "REALIZED" | "REALIZED "|_->AbstractionLevels.Realized
+                                                            | "ABSTRACT" | "ABSTRACT:"->AbstractionLevels.Abstract
+                                                            | "REALIZED" | "REALIZED:"|_->AbstractionLevels.Realized
                                 let newParentId=if incomingCompilerStatus.CurrentLocation.AbstractionLevel<>AbstractionLevels.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
                                 let newLocation = {incomingCompilerStatus.CurrentLocation with AbstractionLevel=newAbstractionLevel; ParentId=newParentId}
-                                //{incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
-                                {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState={incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleTargets}}
+                                let updatedCompilerStatus={incomingCompilerStatus with CurrentLocation=newLocation; CompilerState={incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleTargets}}
+                                let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                                let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                            if x.Length=0 then accumulatorCompilerStatus else
+                                                            addModelItem accumulatorCompilerStatus newLocation incomingLine (x.Trim())
+                                                        ) updatedCompilerStatus
+                                let newIndentLevelWithCommasConsidered=newCompilerStatus.CompilerState.CurrentIndentLevel + splitByComma.Length
+                                {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with CurrentIndentLevel=newIndentLevelWithCommasConsidered}}
                             |TOKEN_CATEGORY.GENRE->
                                 let newGenre = match token.Token with 
-                                                | "SYSTEM" | "SYSTEM "->Genres.System
-                                                | "META" | "META "->Genres.Meta
-                                                | "BUSINESS" | "BUSINESS "|_->Genres.Business
+                                                | "SYSTEM" | "SYSTEM:"->Genres.System
+                                                | "META" | "META:"->Genres.Meta
+                                                | "BUSINESS" | "BUSINESS:"|_->Genres.Business
                                 let newParentId=if incomingCompilerStatus.CurrentLocation.Genre<>Genres.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
                                 let newLocation = {incomingCompilerStatus.CurrentLocation with Genre=newGenre; ParentId=newParentId}
-                                //{incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
-                                {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState={incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleTargets}}
+                                let updatedCompilerStatus = {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState={incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleTargets}}
+                                let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                                let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                            if x.Length=0 then accumulatorCompilerStatus else
+                                                            addModelItem accumulatorCompilerStatus newLocation incomingLine (x.Trim())
+                                                        ) updatedCompilerStatus
+                                let newIndentLevelWithCommasConsidered=newCompilerStatus.CompilerState.CurrentIndentLevel + splitByComma.Length
+                                {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with CurrentIndentLevel=newIndentLevelWithCommasConsidered}}
                             |TOKEN_CATEGORY.TEMPORAL->
                                 let newTemporalIndicator = match token.Token with 
-                                                            | "WAS" | "WAS "->TemporalIndicators.Was
-                                                            | "TO-BE" | "TO-BE "->TemporalIndicators.ToBe
-                                                            | "AS-IS" | "AS-IS "|_->TemporalIndicators.AsIs
+                                                            | "WAS" | "WAS:"->TemporalIndicators.Was
+                                                            | "TO-BE" | "TO-BE:"->TemporalIndicators.ToBe
+                                                            | "AS-IS" | "AS-IS:"|_->TemporalIndicators.AsIs
                                 let newParentId=if incomingCompilerStatus.CurrentLocation.TemporalIndicator<>TemporalIndicators.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
                                 let newLocation = {incomingCompilerStatus.CurrentLocation with TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
-                                //{incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
-                                {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState={incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleTargets}}
+                                let updatedCompilerStatus = {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState={incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleTargets}}
+                                let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
+                                let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
+                                                            if x.Length=0 then accumulatorCompilerStatus else
+                                                            addModelItem accumulatorCompilerStatus newLocation incomingLine (x.Trim())
+                                                        ) updatedCompilerStatus
+                                let newIndentLevelWithCommasConsidered=newCompilerStatus.CompilerState.CurrentIndentLevel + splitByComma.Length
+                                {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with CurrentIndentLevel=newIndentLevelWithCommasConsidered}}
                             |TOKEN_CATEGORY.HDD->
                                 let newBucket=Buckets.None
                                 let newAbstractionLevel=AbstractionLevels.None
@@ -610,14 +713,14 @@
                                 {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState={incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleTargets}}
                             |TOKEN_CATEGORY.ATTRIBUTE->
                                 let newAttributeType = match token.Token with
-                                                        | "WHEN"->ModelAttributeTypes.Trigger
-                                                        | " ASA"->ModelAttributeTypes.Actor
-                                                        | "INEEDTO"->ModelAttributeTypes.Goal
-                                                        | "SOTHAT"->ModelAttributeTypes.BusinessContext
-                                                        | "BECAUSE"->ModelAttributeTypes.Because
-                                                        | "WHENEVER"->ModelAttributeTypes.Whenever
-                                                        | "ITHASTOBETHAT"->ModelAttributeTypes.ItHasToBeThat
-                                                        | "CONTAINS"->ModelAttributeTypes.Contains
+                                                        | "WHEN"|"WHEN:"->ModelAttributeTypes.Trigger
+                                                        | "ASA"|"ASA:"->ModelAttributeTypes.Actor
+                                                        | "INEEDTO"|"INEEDTO:"->ModelAttributeTypes.Goal
+                                                        | "SOTHAT"|"SOTHAT:"->ModelAttributeTypes.BusinessContext
+                                                        | "BECAUSE"|"BECAUSE:"->ModelAttributeTypes.Because
+                                                        | "WHENEVER"|"WHENEVER:"->ModelAttributeTypes.Whenever
+                                                        | "ITHASTOBETHAT"|"ITHASTOBETHAT:"->ModelAttributeTypes.ItHasToBeThat
+                                                        | "CONTAINS"|"CONTAINS:"->ModelAttributeTypes.Contains
                                                         |_->raise(new System.Exception("We're supposed to have an attribute, but none are there"))
                                 let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
                                 let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
@@ -625,27 +728,30 @@
                                                             addModelAttribute newAttributeType (x.Trim()) incomingLine accumulatorCompilerStatus
                                                         ) incomingCompilerStatus
                                 let newCompilerLocation={newCompilerStatus.CurrentLocation with AttributeType = Some newAttributeType}
-                                let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAttributeTargets; LastCompilerOperation=LastCompilerOperations.LocationChange}
+                                let newIndentLevelWithCommasConsidered=newCompilerStatus.CompilerState.CurrentIndentLevel + splitByComma.Length
+                                let newCompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAttributeTargets; LastCompilerOperation=LastCompilerOperations.LocationChange; CurrentIndentLevel=newIndentLevelWithCommasConsidered}
                                 {newCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation}
                             |_->raise(new System.Exception("messed up"))
                     |_,TOKEN_TYPE.JOINER,_->
                         let joinType=match token.Token with 
-                                        | "PARENT"->ModelJoin.Parent
-                                        | "CHILD"->ModelJoin.Child
-                                        | "CHILDREN"->ModelJoin.Child
-                                        | "USES"->ModelJoin.Uses
-                                        | "USEDBY"->ModelJoin.UsedBy
-                                        | "AFFECTS"->ModelJoin.Affects
-                                        | "AFFECTEDBY"->ModelJoin.AffectedBy
-                                        | "HASA"->ModelJoin.HasA
-                                        | "ISOWNEDBYA"->ModelJoin.IsOwnedByA
+                                        | "PARENT"|"PARENT:"->ModelJoin.Parent
+                                        | "CHILD"|"CHILD:"->ModelJoin.Child
+                                        | "CHILDREN"|"CHILDREN:"->ModelJoin.Child
+                                        | "USES"|"USES:"->ModelJoin.Uses
+                                        | "USEDBY"|"USEDBY:"->ModelJoin.UsedBy
+                                        | "AFFECTS"|"AFFECTS:"->ModelJoin.Affects
+                                        | "AFFECTEDBY"|"AFFECTEDBY:"->ModelJoin.AffectedBy
+                                        | "HASA"|"HASA:"->ModelJoin.HasA
+                                        | "ISOWNEDBYA"|"ISOWNEDBYA:"->ModelJoin.IsOwnedByA
                                         |_->ModelJoin.Child
                         let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None)
                         let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
                                                     if x.Length=0 then accumulatorCompilerStatus else
                                                     joinModelItems accumulatorCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine joinType  (x.Trim())
                                                 ) incomingCompilerStatus
-                        {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewJoin; LastJoinType=Some joinType; WaitingFor=CompilerWaitingFor.MultipleTargets}}
+                        let newLoc={newCompilerStatus.CurrentLocation with LastJoinTargetId=Some newCompilerStatus.CurrentLocation.ParentId; AttributeId=option.None; AttributeType=option.None}
+                        let newIndentLevelWithCommasConsidered=newCompilerStatus.CompilerState.CurrentIndentLevel + splitByComma.Length
+                        {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewJoin; LastJoinType=Some joinType; WaitingFor=CompilerWaitingFor.MultipleJoinTargets; CurrentIndentLevel=newIndentLevelWithCommasConsidered}; CurrentLocation=newLoc}
                     |_,_,_->incomingCompilerStatus
                 
 

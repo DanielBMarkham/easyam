@@ -1,10 +1,9 @@
-//                            MASTER SUPPLEMENTALS                             
+//                            MASTER SUPPLEMENTAL                              
 //         ALWAYS KEEP TRACK OF THE PATH USERS TAKE TO ARRIVE ON-SITE          
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:33                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Always keep track of the path users take to arrive on-site
+BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Always keep track of the path users take to arrive on-site
     BECAUSE: 
       It's important for us to understand why people choose our business
     WHENEVER: 

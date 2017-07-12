@@ -1,14 +1,13 @@
-//                              MASTER USE CASE                                
+//                             MASTER USER STORY                               
 //                           CONDUCT SPOT INVENTORY                            
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:33                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Conduct Spot Inventory
+MASTER USER STORY: Conduct Spot Inventory
     WHEN: 
       A truck arrives at the gate
         NOTES: 
-          could be any kind of truck
+           could be any kind of truck
       An accountant calls on the phone
       There's a break-in at the warehouse
     ASA: 

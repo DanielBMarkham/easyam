@@ -1,0 +1,17 @@
+//                             MASTER USER STORY                               
+//                                  EMPLOYEE                                   
+//                   Model Generation: 07/12/2017 15:25:28                     
+//                                                                             
+
+MASTER USER STORY: Employee
+
+
+    AFFECTEDBY: 
+      ALL
+      ALL
+      ALL
+      ALL
+      ALL
+
+    USES: 
+      Employee

@@ -1,0 +1,15 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                   ORDER                                     
+//                   Model Generation: 07/12/2017 13:03:13                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Order
+    CONTAINS: 
+      Order Number
+      Order Date
+      Customer Number
+      Total Amount
+
+
+    HASA: 
+      Shipment

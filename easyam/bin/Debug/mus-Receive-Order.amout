@@ -1,10 +1,9 @@
-//                              MASTER USE CASE                                
+//                             MASTER USER STORY                               
 //                               RECEIVE ORDER                                 
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:32                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Receive Order
+MASTER USER STORY: Receive Order
     WHEN: 
       I'm out of something I realize I need
     ASA: 

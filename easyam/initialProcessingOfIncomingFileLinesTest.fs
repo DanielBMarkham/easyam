@@ -74,19 +74,19 @@
         ret.[1].IndentLevel |> should equal 1
     [<Test>]
     let ``INITIAL PROCESSING: Using spaces as an indent works``() =
-        let testText = [|"";"test1";"";"\ttest2";"";"";"";"    test3";|]
+        let testText = [|"";"test1";"";"\ttest2";"";"";"";"  test3";|]
         let ret = setupCompilationScenario 0 0 0 testText
         ret.[2].IndentLevel |> should equal 1
     [<Test>]
     let ``INITIAL PROCESSING: Mixed spaces and tabs work together``() =
         let testText = [|"";"test1";"";"\t    test2";"";"";"";"    \t\ttest3";|]
         let ret = setupCompilationScenario 0 0 0 testText
-        ret.[1].IndentLevel |> should equal 2
+        ret.[1].IndentLevel |> should equal 3
     [<Test>]
     let ``INITIAL PROCESSING: Mixed spaces and tabs work together adv``() =
         let testText = [|"";"test1";"";"\t    test2";"";"";"";"    \t\t    \ttest3";|]
         let ret = setupCompilationScenario 0 0 0 testText
-        ret.[2].IndentLevel |> should equal 5
+        ret.[2].IndentLevel |> should equal 7
     [<Test>]
     let ``INITIAL PROCESSING: Spaces in the middle of the line do not cause indents``() =
         let testText = [|"";"test1    dogs!";"";"\t    test2";"";"";"";"    \t\t    \ttest3";|]
@@ -144,7 +144,7 @@
         processedIncomingLines.Length |> should equal 6
         compilerReturn.CompilerMessages.Length |> should equal 1
         compilerReturn.ModelItems.Length |> should equal 1
-        processedIncomingLines.[5].IndentLevel |> should equal 5
+        processedIncomingLines.[5].IndentLevel |> should equal 7
     [<Test>]
     let ``INITIAL PROCESSING 2: Empty file in middle of list doesn't crash it``() =
         let fileInfo1 = getFakeFileInfo()
@@ -158,7 +158,7 @@
         processedIncomingLines.Length |> should equal 6
         compilerReturn.CompilerMessages.Length |> should equal 1
         compilerReturn.ModelItems.Length |> should equal 1
-        processedIncomingLines.[5].IndentLevel |> should equal 5
+        processedIncomingLines.[5].IndentLevel |> should equal 7
         processedIncomingLines.[4].FileCompilationNumber |> should equal 2
 
 

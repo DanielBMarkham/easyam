@@ -1,0 +1,28 @@
+//                             MASTER USER STORY                               
+//                              REJECT SHIPMENT                                
+//                   Model Generation: 07/12/2017 13:03:13                     
+//                                                                             
+
+MASTER USER STORY: Reject Shipment
+    WHEN: 
+      We are recieving a shipment and most of the goods are unsatisfactory
+    ASA: 
+      Warehouse Worker
+    INEEDTO: 
+      Reject the shipment
+    SOTHAT: 
+      We can get the goods we need from another vendor
+
+
+    AFFECTEDBY: 
+      Make it as easy as possible for the user to provide negative feedback
+      Always respond in a way that's easy for the user to understand
+      Never make the user wait
+      Never confuse the user
+      Continuously inform the team about everything the users do
+      Always do the best we can to cheer the user up during any interaction
+
+    USES: 
+      Order
+      Shipment
+      Vendor

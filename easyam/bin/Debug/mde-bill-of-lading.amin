@@ -1,0 +1,10 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                               BILL OF LADING                                
+//                   Model Generation: 07/12/2017 13:03:13                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Bill Of Lading
+    CONTAINS: 
+      Pallet List
+
+

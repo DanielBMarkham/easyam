@@ -82,7 +82,6 @@ C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\nunit.fram
 C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.fsproj.easyam.exe.config
 C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.exe
 C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.pdb
-C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\obj\Debug\easyam.fsprojResolveAssemblyReference.cache
 C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\System.ValueTuple.dll
 C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\System.ValueTuple.xml
 C:\Users\Daniel_Main\Dropbox\source\git-repos\easyam\easyam\bin\Debug\NUnit3.TestAdapter.dll

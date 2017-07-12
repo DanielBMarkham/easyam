@@ -261,6 +261,7 @@
             configBase:ConfigBase
             sourceDirectory:ConfigEntry<DirectoryParm>
             destinationDirectory:ConfigEntry<DirectoryParm>
+            nameSpace:ConfigEntry<string>
         }
         member this.printThis() =
             printfn "EasyAMConfig Parameters Provided"
@@ -269,7 +270,7 @@
             printfn "sourceDirectoryExists: %b" (snd this.sourceDirectory.parameterValue).IsSome
             this.destinationDirectory.printVal
             printfn "destinationDirectoryExists: %b" (snd this.destinationDirectory.parameterValue).IsSome
-
+            this.nameSpace.printVal
 
     let directoryExists (dir:ConfigEntry<DirectoryParm>) = (snd (dir.parameterValue)).IsSome
     let fileExists (dir:ConfigEntry<FileParm>) = (snd (dir.parameterValue)).IsSome

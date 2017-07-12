@@ -1,10 +1,9 @@
-//                              MASTER USE CASE                                
+//                             MASTER USER STORY                               
 //                               RECONCILE BOL                                 
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:33                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Reconcile BOL
+MASTER USER STORY: Reconcile BOL
     WHEN: 
       A truck arrives at the guard shack
     ASA: 

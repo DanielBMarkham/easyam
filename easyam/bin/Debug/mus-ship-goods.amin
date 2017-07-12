@@ -1,0 +1,27 @@
+//                             MASTER USER STORY                               
+//                                 SHIP GOODS                                  
+//                   Model Generation: 07/12/2017 13:03:13                     
+//                                                                             
+
+MASTER USER STORY: Ship Goods
+    WHEN: 
+      An order has been picked and the shipment created
+    ASA: 
+      Guard
+    INEEDTO: 
+      Approve the outgoing items and shipment
+    SOTHAT: 
+      The customer receives goods they want
+
+
+    AFFECTEDBY: 
+      Always respond in a way that's easy for the user to understand
+      Never make the user wait
+      Never confuse the user
+      Continuously inform the team about everything the users do
+      Always do the best we can to cheer the user up during any interaction
+
+    USES: 
+      Customer
+      Order
+      Shipment

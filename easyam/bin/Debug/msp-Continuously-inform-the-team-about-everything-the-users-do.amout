@@ -1,10 +1,9 @@
-//                            MASTER SUPPLEMENTALS                             
+//                            MASTER SUPPLEMENTAL                              
 //         CONTINUOUSLY INFORM THE TEAM ABOUT EVERYTHING THE USERS DO          
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:33                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Continuously inform the team about everything the users do
+BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Continuously inform the team about everything the users do
     BECAUSE: 
       The team isn't as close to the users as they need to be
     WHENEVER: 

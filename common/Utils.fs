@@ -411,7 +411,7 @@
             let questions=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Question)
             let todo=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.ToDo)
             let work=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Work)
-            writeAllItemAnnotationDetailForMasterPage sb [|("NOTES: ", notes);("QUESTIONS: ", questions);("To-DO: ", todo);("WORK: ", work)|]
+            writeAllItemAnnotationDetailForMasterPage sb [|("NOTES: ", notes);("QUESTIONS: ", questions);("TO-DO: ", todo);("WORK: ", work)|]
 
             sb.wl ("")
             sb.wl ("")
@@ -437,7 +437,7 @@
             let questions=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Question)
             let todo=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.ToDo)
             let work=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Work)
-            writeAllItemAnnotationDetailForMasterPage sb [|("NOTES: ", notes);("QUESTIONS: ", questions);("To-DO: ", todo);("WORK: ", work)|]
+            writeAllItemAnnotationDetailForMasterPage sb [|("NOTES: ", notes);("QUESTIONS: ", questions);("TO-DO: ", todo);("WORK: ", work)|]
 
             sb.wl ("")
             sb.wl ("")
@@ -471,7 +471,7 @@
             let questions=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Question)
             let todo=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.ToDo)
             let work=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Work)
-            writeAllItemAnnotationDetailForMasterPage sb [|("NOTES: ", notes);("QUESTIONS: ", questions);("To-DO: ", todo);("WORK: ", work)|]
+            writeAllItemAnnotationDetailForMasterPage sb [|("NOTES: ", notes);("QUESTIONS: ", questions);("TO-DO: ", todo);("WORK: ", work)|]
 
             sb.wl ("")
             sb.wl ("")
@@ -548,14 +548,12 @@
             sb.wl (centerCommentText ("Model Generation: " + string DateTime.Now))
             sb.wl (centerCommentText "")
             sb.wl ("")
-            sb.wl ("BUSINESS BEHAVIOR ABSTRACT TO-BE")
-            sb.wl ("  " + itemDescription)
         let writeDetailAnnotations (sb:System.Text.StringBuilder) (x:ModelItem2) =
             let notes=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Note)
             let questions=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Question)
             let todo=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.ToDo)
             let work=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Work)
-            writeAllItemAnnotationDetailForMasterPage sb [|("NOTES: ", notes);("QUESTIONS: ", questions);("To-DO: ", todo);("WORK: ", work)|]
+            writeAllItemAnnotationDetailForMasterPage sb [|("NOTES: ", notes);("QUESTIONS: ", questions);("TODO: ", todo);("WORK: ", work)|]
             sb.wl ("")
         // Detail Pages
         let MUS=getMasterUserStories compilerStatus.ModelItems
@@ -563,7 +561,8 @@
             let sb= new System.Text.StringBuilder(65535)
             let musTempFileName= "mus-" + (x.Description.ToSafeFileName() + ".amout")
             let musDetailFileName=System.IO.Path.Combine([|directoryPath;musTempFileName|]) 
-            writeDetailHeader sb "MASTER USE CASE" x.Description
+            writeDetailHeader sb "MASTER USER STORY " x.Description
+            sb.wl ("MASTER USER STORY: " + x.Description)
             let triggers=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Trigger)
             let actors=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Actor)
             let goals=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Goal)
@@ -582,8 +581,8 @@
             let sb= new System.Text.StringBuilder(65535)
             let mdeTempFileName= "mde-" + (x.Description.ToSafeFileName() + ".amout")
             let mdeDetailFileName=System.IO.Path.Combine([|directoryPath;mdeTempFileName|]) 
-            writeDetailHeader sb "MASTER DOMAIN MODEL - ENTITIES" x.Description
-            sb.wl (centerCommentText "MASTER DOMAIN MODEL - ENTITES")
+            writeDetailHeader sb "MASTER DOMAIN MODEL - ENTITY" x.Description
+            sb.wl("BUSINESS STRUCTURE ABSTRACT TO-BE: " + x.Description)
             let contains=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Contains)
             writeAllItemAttributeDetailsForMasterPage sb [|("CONTAINS: ",contains)|] true
             sb.wl ("")
@@ -597,7 +596,8 @@
             let sb= new System.Text.StringBuilder(65535)
             let mspTempFileName= "msp-" + (x.Description.ToSafeFileName() + ".amout")
             let mspDetailFileName=System.IO.Path.Combine([|directoryPath;mspTempFileName|]) 
-            writeDetailHeader sb "MASTER SUPPLEMENTALS" x.Description
+            writeDetailHeader sb "MASTER SUPPLEMENTAL " x.Description
+            sb.wl("BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: " + x.Description)
             let because=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Because)
             let whenever=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.Whenever)
             let ithastobethat=x.Attributes|>Array.filter(fun y->y.AttributeType=ModelAttributeTypes.ItHasToBeThat)

@@ -186,6 +186,10 @@
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="SPRINT BACKLOG"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="MASTER BACKLOG:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="MASTER BACKLOG"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="MASTER USER STORY:"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="MASTER USER STORY"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="MASTER USER STORIES:"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="MASTER USER STORIES"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="MASTER DOMAIN MODEL:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="MASTER DOMAIN MODEL"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="PROJECT DOMAIN MODEL:"};
@@ -199,20 +203,31 @@
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="PRODUCT SUPPLEMENTAL MODEL:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="PRODUCT SUPPLEMENTAL MODEL"};
 
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="BEHAVIOR:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="BEHAVIOR"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="STRUCTURE:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="STRUCTURE"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTALS:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTALS"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTAL:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="SUPPLEMENTAL"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="BUSINESS:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="BUSINESS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="SYSTEM:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="SYSTEM"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="META:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=GENRE;                Token="META"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="WAS:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="WAS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="AS-IS:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="AS-IS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="TO-BE:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TEMPORAL;             Token="TO-BE"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="ABSTRACT:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="ABSTRACT"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="REALIZED:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ABSTRACTION_LEVEL;    Token="REALIZED"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HDD:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="HDD"};
 
             {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=NAMESPACE;            Token="NAMESPACE:"};
@@ -228,27 +243,47 @@
 //            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATION"};
 //            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=HDD;                  Token="OBSERVATION:"};
 
+            {Type=JOINER;               TargetType=SINGLE_TARGET;        Category=CONNECTIVE;           Token="PARENT:"};
             {Type=JOINER;               TargetType=SINGLE_TARGET;        Category=CONNECTIVE;           Token="PARENT"};
+            {Type=JOINER;               TargetType=SINGLE_TARGET;        Category=CONNECTIVE;           Token="CHILD:"};
             {Type=JOINER;               TargetType=SINGLE_TARGET;        Category=CONNECTIVE;           Token="CHILD"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="CHILDREN:"};
             {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="CHILDREN"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="AFFECTS:"};
             {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="AFFECTS"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="AFFECTEDBY:"};
             {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="AFFECTEDBY"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="USES:"};
             {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="USES"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="USEDBY:"};
             {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="USEDBY"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="HASA:"};
             {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="HASA"};
+            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ISOWNEDBYA:"};
             {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ISOWNEDBYA"};
+//            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ABDUCTSTO:"};
 //            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ABDUCTSTO"};
+//            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ABDUCTEDFROM:"};
 //            {Type=JOINER;               TargetType=MULTIPLE_TARGETS;     Category=CONNECTIVE;           Token="ABDUCTEDFROM"};
 
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="WHENEVER:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="WHENEVER"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="WHEN:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="WHEN"};
             // note the initial space below. ASA cannot appear in first column
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token=" ASA"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="ASA:"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="ASA"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="INEEDTO:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="INEEDTO"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="SOTHAT:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="SOTHAT"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="CONTAINS:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="CONTAINS"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="INEEDTO:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="INEEDTO"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="BECAUSE:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="BECAUSE"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="ITHASTOBETHAT:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="ITHASTOBETHAT"};
 
         ]
@@ -292,24 +327,35 @@
                 Message:string
                 SourceFileShort:string
                 SourceFileLong:string
-                SourceLineBegin:int
+                SourceLineBegin:int option
                 SourceLineEnd:int option
                 SourceLineColumnBegin:int option
                 SourceLineColumnEnd:int option
             }
+    let prependToDelimitedList (prependString:string) (currentString:string) (newStringItem:string) =
+        let prepend = if currentString.Length=0 || (currentString.GetRight 1) = prependString
+                        then ""
+                        else prependString.ToString()
+        if newStringItem.Length=0 then currentString else
+            (currentString + prepend + newStringItem)
     let printCompilerMessages (compilerMessages:CompilerMessage []) =
         compilerMessages |> Array.iteri(fun i x->
             let messagePrefix=match x.MessageType with
-                                    |CompilerMessageType.Info->"INFO: "
-                                    |CompilerMessageType.Warning->"WARN: "
-                                    |CompilerMessageType.Error->"ERROR: "
-            let formattedMessage=match x.SourceLineEnd,x.SourceLineColumnBegin,x.SourceLineColumnEnd with 
-                                    |option.None, option.None, option.None->
-                                        x.SourceFileShort + ":" + string x.SourceLineBegin + ": " + messagePrefix + x.Message
-                                    |Some endingLine, option.None, option.None->
-                                        x.SourceFileShort + ":" + string x.SourceLineBegin + "-" + string endingLine + ": " + messagePrefix + x.Message
-                                    |_,_,_->
-                                        x.SourceFileShort + ": " + messagePrefix + x.Message
+                                    |CompilerMessageType.Info->"INFO"
+                                    |CompilerMessageType.Warning->"WARN"
+                                    |CompilerMessageType.Error->"ERROR"
+            let formattedMessage=match x.SourceLineBegin,x.SourceLineEnd,x.SourceLineColumnBegin,x.SourceLineColumnEnd with 
+                                    |option.None, option.None, option.None, option.None->
+                                        let part1 = (prependToDelimitedList ": " messagePrefix x.SourceFileShort)
+                                        let part3 = (prependToDelimitedList ": " part1 x.Message )
+                                        part3
+                                    |Some beginningLine, option.None, option.None, option.None->
+                                        x.SourceFileShort + ":" + string beginningLine + ": " + messagePrefix + ":" + x.Message
+                                    |Some beginningLine, endingLine, option.None, option.None->
+                                        x.SourceFileShort + ":" + string beginningLine + "-" + string endingLine + ": " + messagePrefix + ":" + x.Message
+                                    |_,_,_,_->
+                                        let part1=prependToDelimitedList ": " x.SourceFileShort messagePrefix
+                                        part1 + x.Message
             System.Console.WriteLine(formattedMessage)
             )
     [<NoComparison>]
@@ -358,6 +404,7 @@
             ParentId:int
             AttributeType:ModelAttributeTypes option
             AttributeId:int option
+            LastJoinTargetId:int option
             InHDDMode:bool
             Bucket:Buckets
             Genre:Genres
@@ -371,6 +418,7 @@
             ParentId = -1
             AttributeType=option.None
             AttributeId = option.None
+            LastJoinTargetId= option.None
             InHDDMode=false
             Bucket=Buckets.None
             Genre=Genres.None
@@ -434,6 +482,7 @@
         |MultipleTargets
         |MultipleAttributeTargets
         |MultipleAnnotationTargets
+        |MultipleJoinTargets
     [<NoComparison>]
     type IndentLevelComparisons =
         | IdentIsSameAsPreviousIndent

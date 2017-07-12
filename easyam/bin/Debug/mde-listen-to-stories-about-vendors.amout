@@ -1,0 +1,35 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                      LISTEN TO STORIES ABOUT VENDORS                        
+//                   Model Generation: 07/12/2017 13:03:25                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Listen to stories about vendors
+    CONTAINS: 
+      Shipment Number
+      Shipment Date
+      Expected Arrival Date
+      Order
+      Order Number
+      Order Date
+      Customer Number
+      Total Amount
+      Shipment
+      SKU
+      Item Number
+      Quantity
+      Meet some vendors
+
+    NOTES: 
+      Shipment
+      Listen to stories about vendors
+    QUESTIONS: 
+      Does this involve real ships?
+      Do we get free mints?
+      Are the ships full of mints?
+      Does this involve real ships?
+      Do we get free mints?
+      Are the ships full of mints?
+
+    HASA: 
+      Bill Of Lading
+      Inventory Item

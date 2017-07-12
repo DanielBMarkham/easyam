@@ -1,0 +1,12 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                               INVENTORY ITEM                                
+//                   Model Generation: 07/12/2017 13:03:13                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Inventory Item
+    CONTAINS: 
+      Inventory Item Description
+      Inventory Short Code
+      Inventory Long Code
+
+

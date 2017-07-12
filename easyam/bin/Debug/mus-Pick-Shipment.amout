@@ -1,10 +1,9 @@
-//                              MASTER USE CASE                                
+//                             MASTER USER STORY                               
 //                               PICK SHIPMENT                                 
-//                   Model Generation: 07/06/2017 04:34:34                     
+//                   Model Generation: 07/12/2017 16:16:33                     
 //                                                                             
 
-BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Pick Shipment
+MASTER USER STORY: Pick Shipment
     WHEN: 
       An order has been received and we have enough goods
     ASA: 

@@ -171,7 +171,7 @@
         let fileInfo1 = getFakeFileInfo()
         let fileInfo2 = getFakeFileInfo()
         let testText1 = [|"SUPPLEMENTAL"; "    Be good"; "    Be fast"; "    Be cheap"|]
-        let testText2 = [|"BEHAVIOR"; "    Solve world hunger AFFECTEDBY "; "        Be fast"; "        Be cheap"; "            (By cheap we don't mean shabby)"|]
+        let testText2 = [|"BEHAVIOR"; "    Solve world hunger AFFECTEDBY "; "        Be fast"; "        Be cheap"; "            //(By cheap we don't mean shabby)"|]
         let listToProcess = [|(fileInfo1,testText1);(fileInfo2,testText2)|]
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
@@ -350,7 +350,8 @@
         let listToProcess = [|(fileInfo1,testText1);(fileInfo2,testText2)|]
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
-        getMasterUserStories newCompilerStatus.ModelItems |> should haveLength 4
+        let mus=getMasterUserStories newCompilerStatus.ModelItems 
+        mus |> should haveLength 4
 
     [<Test>]
     let ``INT MODEL CREATION: multiples on new line after a join are counted right``()=
@@ -811,6 +812,97 @@
         saveModelGuide (System.AppDomain.CurrentDomain.BaseDirectory + "master-cards.html") newCompilerStatus
         saveCanonicalModel System.AppDomain.CurrentDomain.BaseDirectory newCompilerStatus
         true |> should equal true 
+
+    //
+    // Begin testing model round-tripping, last bit of int model work to test
+    [<Test>]
+    let ``ROUNDTRIP: Mult forward lookups work``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+
+                        ; "//                        MASTER DOMAIN MODEL - ENTITY                         "
+                        ; "//                                  CUSTOMER                                   "
+                        ; "//                   Model Generation: 07/12/2017 07:27:16                     "
+                        ; "//                                                                             "
+                        ; ""
+                        ; "BUSINESS STRUCTURE ABSTRACT TO-BE: Customer"
+                        ; "    CONTAINS: "
+                        ; "      Customer Number"
+                        ; "      Address"
+                        ; ""
+                        ; ""
+                        ; "    HASA: "
+                        ; "      Order"
+                        ; "      Invoice"                        ; ""
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 4
+        newCompilerStatus.ModelItems.[1].Description |> should equal "Customer"
+        newCompilerStatus.ModelItems.[1].Attributes |> should haveLength 2
+        newCompilerStatus.ModelItems.[2].Description |> should equal "Order"
+        newCompilerStatus.ModelItems.[3].Description |> should equal "Invoice"
+
+    [<Test>]
+    let ``ROUNDTRIP: Sample complete dumped MUS``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "//                             MASTER USER STORY                               "
+                        ; "//                           CONDUCT SPOT INVENTORY                            "
+                        ; "//                   Model Generation: 07/12/2017 13:03:13                     "
+                        ; "//                                                                             "
+                        ; ""
+                        ; "MASTER USER STORY: Conduct Spot Inventory"
+                        ; "    WHEN: "
+                        ; "      A truck arrives at the gate"
+                        ; "        NOTES: "
+                        ; "           could be any kind of truck"
+                        ; "      An accountant calls on the phone"
+                        ; "      There's a break-in at the warehouse"
+                        ; "    ASA: "
+                        ; "      Warehouse Worker"
+                        ; "      Warehouse Supervisor"
+                        ; "      Nightshift Guard Supervisor"
+                        ; "    INEEDTO: "
+                        ; "      Conduct a formal spot inventory by hand using the older books"
+                        ; "    SOTHAT: "
+                        ; "      The insurance company is notified in case of loss"
+                        ; "      Incoming shipments will adequately update the running inventory"
+                        ; "        QUESTIONS: "
+                        ; "          Is there such a thing as a 'walking inventory'"
+                        ; ""
+                        ; "    NOTES: "
+                        ; "      I love inventory"
+                        ; "      the actor list isn't complete yet"
+                        ; "    QUESTIONS: "
+                        ; "      Do we differentiate between goods and services?"
+                        ; ""
+                        ; "    AFFECTEDBY: "
+                        ; "      Always respond in a way that's easy for the user to understand"
+                        ; "      Never make the user wait"
+                        ; "        QUESTIONS: Do they really mean never?"
+                        ; "        NOTES: Never is a long time"
+                        ; "      Never confuse the user"
+                        ; "      Continuously inform the team about everything the users do"
+                        ; "      Always do the best we can to cheer the user up during any interaction"
+                        ; ""
+                        ; "    USES: "
+                        ; "      Inventory Item"
+                        ; "      SKU"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 9
+        newCompilerStatus.ModelItems.[1].Description |> should equal "Conduct Spot Inventory"
+        newCompilerStatus.ModelItems.[1].Attributes |> should haveLength 9
+        newCompilerStatus.ModelItems.[1].Attributes.[8].Annotations |> should haveLength 1
+        (fst newCompilerStatus.ModelItems.[1].Attributes.[8].Annotations.[0]) |> should equal ANNOTATION_TOKEN_TYPE.Question
+        (snd newCompilerStatus.ModelItems.[1].Attributes.[8].Annotations.[0]) |> should equal "Is there such a thing as a 'walking inventory'"
+
 
 
 

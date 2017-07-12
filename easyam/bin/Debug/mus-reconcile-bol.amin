@@ -1,0 +1,27 @@
+//                             MASTER USER STORY                               
+//                               RECONCILE BOL                                 
+//                   Model Generation: 07/12/2017 13:03:13                     
+//                                                                             
+
+MASTER USER STORY: Reconcile BOL
+    WHEN: 
+      A truck arrives at the guard shack
+    ASA: 
+      Guard
+    INEEDTO: 
+      Reconcile the BOL with the paperwork
+    SOTHAT: 
+      Warehouse workers will know a vetted truck is waiting to unload
+
+
+    AFFECTEDBY: 
+      Always respond in a way that's easy for the user to understand
+      Never make the user wait
+      Never confuse the user
+      Continuously inform the team about everything the users do
+      Always do the best we can to cheer the user up during any interaction
+
+    USES: 
+      Order
+      Shipment
+      Bill Of Lading

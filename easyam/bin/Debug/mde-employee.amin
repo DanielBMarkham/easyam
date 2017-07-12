@@ -1,0 +1,13 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                  EMPLOYEE                                   
+//                   Model Generation: 07/12/2017 13:03:13                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Employee
+    CONTAINS: 
+      First Name
+      Last Name
+      Social Security Number
+      Hire Date
+
+
