@@ -1,9 +1,9 @@
 //                               EASYAM REPORT                                 
-//                   Model Generation: 07/12/2017 17:10:51                     
+//                   Model Generation: 07/12/2017 18:44:25                     
 //                                                                             
 //    Compiler Messages
 //    -----------------
-//  mde-bill-of-lading.amin:: Info: file loading completed with 38 files processed along with 895 lines of code reviewed
+//  mde-bill-of-lading.amin:: Info: file loading completed with 38 files processed along with 890 lines of code reviewed
 //  mde-invoice.amin:Some(14): Error: source item id:-1 does not currently exist in model when trying to make join
 //  mde-invoice.amin:Some(15): Error: source item id:-1 does not currently exist in model when trying to make join
 //  mde-shipment.amin:Some(18): Error: source item id:-1 does not currently exist in model when trying to make join
@@ -16,11 +16,6 @@
 //  mus-all.amin:Some(12): Error: source item id:-1 does not currently exist in model when trying to make join
 //  mus-all.amin:Some(13): Error: source item id:-1 does not currently exist in model when trying to make join
 //  mus-all.amin:Some(14): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-all.amin:Some(15): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-all.amin:Some(16): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-all.amin:Some(17): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-all.amin:Some(18): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-all.amin:Some(19): Error: source item id:-1 does not currently exist in model when trying to make join
 //  mus-misc.amin:Some(10): Error: source item id:-1 does not currently exist in model when trying to make join
 //  mus-misc.amin:Some(11): Error: source item id:-1 does not currently exist in model when trying to make join
 //  mus-misc.amin:Some(12): Error: source item id:-1 does not currently exist in model when trying to make join

@@ -225,10 +225,16 @@
                                     let ret=isAffectedBy|>Array.map(fun z->getModelItemDescForId z.TargetId)
                                     ret
                                 else
-                                    let allIsAffectedBy = getAffectedBy (getALL_MUS modelItems).Value
-                                    let temp=(allIsAffectedBy |> Array.append isAffectedBy)
-                                    let ret=temp|>Array.map(fun z->getModelItemDescForId z.TargetId)
-                                    ret
+                                    if x.Description<>"ALL"
+                                        then
+                                            let allIsAffectedBy = getAffectedBy (getALL_MUS modelItems).Value
+                                            let temp=(allIsAffectedBy |> Array.append isAffectedBy)
+                                            let ret=temp|>Array.map(fun z->getModelItemDescForId z.TargetId)
+                                            ret
+                                        else
+                                            let allIsAffectedBy = getAffectedBy (getALL_MUS modelItems).Value
+                                            let ret=allIsAffectedBy|>Array.map(fun z->getModelItemDescForId z.TargetId)
+                                            ret
                         let usesEntities = (getUses x)
                         let usesEntitiesEx = usesEntities|>Array.map(fun z->getModelItemDescForId z.TargetId)
                         writeJoinDetails sw [("AFFECTEDBY: ", affectedByEx); ("USES: ",usesEntitiesEx)]
@@ -490,7 +496,7 @@
                                     ret
                                 else
                                     let allIsAffectedBy = getAffectedBy (getALL_MUS modelItems).Value
-                                    let temp=(allIsAffectedBy |> Array.append isAffectedBy)
+                                    let temp=if x.Description.Trim()<>"ALL" then (allIsAffectedBy |> Array.append isAffectedBy) else allIsAffectedBy
                                     let ret=temp|>Array.map(fun z->getModelItemDescForId z.TargetId)
                                     ret
                         if affectedByEx.Length=0 then () else

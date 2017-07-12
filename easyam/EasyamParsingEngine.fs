@@ -179,7 +179,7 @@
         completedRunningStatus.IncomingLinesConcatenated, completedAndUpdatedCompilerReturn
 
     let itemWithThisNameAlreadyExistsAtThisLocation (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (desription:string) =
-        let itemsWithThisNameAlreadyInTheModel = compilerStatus.ModelItems|>Array.filter(fun x->x.Description=desription)
+        let itemsWithThisNameAlreadyInTheModel = compilerStatus.ModelItems|>Array.filter(fun x->x.Description.Trim()=desription.Trim())
         if itemsWithThisNameAlreadyInTheModel.Length=0 then false
         else
             let itemsFurtherMatchedUpByLocation = itemsWithThisNameAlreadyInTheModel |> Array.filter(fun x->
@@ -246,7 +246,7 @@
         // find the model item that is the target of this join and update both the current and target item
         // if the target does not exist, register a compiler error (but keep processing)
         let possibleSource=compilerStatus.ModelItems |> Array.tryFind(fun x->x.Id=compilerStatus.CurrentLocation.ParentId && x.Id<>(-1))
-        let possibleTarget=compilerStatus.ModelItems |> Array.tryFind(fun x->x.Description=description && x.Id<>(-1))
+        let possibleTarget=compilerStatus.ModelItems |> Array.tryFind(fun x->x.Description.Trim()=description.Trim() && x.Id<>(-1))
         let reverseJoin = getReverseJoin joinType
         match possibleSource, possibleTarget with
             |Some sourceItem, Some targetItem->
