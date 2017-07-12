@@ -1,5 +1,5 @@
 //                              MASTER USE CASES                               
-//                   Model Generation: 07/12/2017 16:53:47                     
+//                   Model Generation: 07/12/2017 17:10:52                     
 //                                                                             
 
 BUSINESS BEHAVIOR ABSTRACT TO-BE
@@ -51,9 +51,6 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
       We can restock needed goods as soon as possible
 
 
-  ALL
-
-
   Conduct Regular Inventory
     WHEN: 
       The first of the month rolls around
@@ -100,22 +97,6 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
     SOTHAT: 
       The items customers want will arrive on-time for them
       The staging area is freed up to process shipments for customers
-
-
-  MISC
-
-
-  Order Goods
-    WHEN: 
-      The inventory count for an item falls below its re-order point
-    ASA: 
-      Warehouse Worker
-    INEEDTO: 
-      Place an order with our suppliers to replenish needed items
-    SOTHAT: 
-      we don't run out of things and are able to fulfill our orders from our customers
-    NOTES: 
-      It seems to be very important for some reason
 
 
   Pick Shipment
@@ -174,28 +155,6 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
       Reconcile the BOL with the paperwork
     SOTHAT: 
       Warehouse workers will know a vetted truck is waiting to unload
-
-
-  Reject Part Of Shipment
-    WHEN: 
-      We are recieving a shipment and a few of the items are unsatisfactory
-    ASA: 
-      Warehouse Worker
-    INEEDTO: 
-      Reject parts of the shipment that are unsatisfactory
-    SOTHAT: 
-      We can restock needed goods as soon as possible
-
-
-  Reject Shipment
-    WHEN: 
-      We are recieving a shipment and most of the goods are unsatisfactory
-    ASA: 
-      Warehouse Worker
-    INEEDTO: 
-      Reject the shipment
-    SOTHAT: 
-      We can get the goods we need from another vendor
 
 
   Review Daily Warehouse Activity

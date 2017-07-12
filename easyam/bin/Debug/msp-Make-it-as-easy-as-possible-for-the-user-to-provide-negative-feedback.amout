@@ -1,6 +1,6 @@
 //                            MASTER SUPPLEMENTAL                              
 //   MAKE IT AS EASY AS POSSIBLE FOR THE USER TO PROVIDE NEGATIVE FEEDBACK     
-//                   Model Generation: 07/12/2017 16:53:47                     
+//                   Model Generation: 07/12/2017 17:10:52                     
 //                                                                             
 
 BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Make it as easy as possible for the user to provide negative feedback
@@ -12,6 +12,3 @@ BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Make it as easy as possible for the user t
       WE do everything we can to help and encourage them to tell us what went wrong
 
 
-    AFFECTS: 
-      Reject Part Of Shipment
-      Reject Shipment

@@ -1,6 +1,6 @@
 //                             MASTER USER STORY                               
 //                          REJECT PART OF SHIPMENT                            
-//                   Model Generation: 07/12/2017 16:53:47                     
+//                   Model Generation: 07/12/2017 17:10:52                     
 //                                                                             
 
 MASTER USER STORY: Reject Part Of Shipment
@@ -15,18 +15,10 @@ MASTER USER STORY: Reject Part Of Shipment
 
 
     AFFECTEDBY: 
-      Make it as easy as possible for the user to provide negative feedback
-      Always respond in a way that's easy for the user to understand
-      Never make the user wait
-      Never confuse the user
-      Continuously inform the team about everything the users do
-      Always do the best we can to cheer the user up during any interaction
+      Reject Part Of Shipment
       ALL
       Always respond in a way that's easy for the user to understand
       Continuously inform the team about everything the users do
       Never confuse the user
       Never make the user wait
 
-    USES: 
-      Order
-      Shipment

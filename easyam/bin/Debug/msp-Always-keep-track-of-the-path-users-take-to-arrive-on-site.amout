@@ -1,6 +1,6 @@
 //                            MASTER SUPPLEMENTAL                              
 //         ALWAYS KEEP TRACK OF THE PATH USERS TAKE TO ARRIVE ON-SITE          
-//                   Model Generation: 07/12/2017 16:53:47                     
+//                   Model Generation: 07/12/2017 17:10:52                     
 //                                                                             
 
 BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Always keep track of the path users take to arrive on-site
@@ -13,6 +13,3 @@ BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Always keep track of the path users take t
       We understand the journey people take to use us
 
 
-    AFFECTS: 
-      MISC
-      Order Goods

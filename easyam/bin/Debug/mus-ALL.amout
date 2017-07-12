@@ -1,17 +1,17 @@
 //                             MASTER USER STORY                               
 //                                    ALL                                      
-//                   Model Generation: 07/12/2017 16:53:47                     
+//                   Model Generation: 07/12/2017 17:10:52                     
 //                                                                             
 
 MASTER USER STORY: ALL
 
 
     AFFECTEDBY: 
+      ALL
       Always respond in a way that's easy for the user to understand
-      Never make the user wait
-      Never confuse the user
       Continuously inform the team about everything the users do
-      Always do the best we can to cheer the user up during any interaction
+      Never confuse the user
+      Never make the user wait
       ALL
       Always respond in a way that's easy for the user to understand
       Continuously inform the team about everything the users do

@@ -178,28 +178,41 @@
         let completedAndUpdatedCompilerReturn=logCompilerMessage completedRunningStatus.CompilerReturn newCompilerMessage        
         completedRunningStatus.IncomingLinesConcatenated, completedAndUpdatedCompilerReturn
 
+    let itemWithThisNameAlreadyExistsAtThisLocation (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (desription:string) =
+        let itemsWithThisNameAlreadyInTheModel = compilerStatus.ModelItems|>Array.filter(fun x->x.Description=desription)
+        if itemsWithThisNameAlreadyInTheModel.Length=0 then false
+        else
+            let itemsFurtherMatchedUpByLocation = itemsWithThisNameAlreadyInTheModel |> Array.filter(fun x->
+                let xLoc = x.Location
+                (xLoc.AbstractionLevel=location.AbstractionLevel && xLoc.Bucket=location.Bucket && xLoc.Genre=location.Genre && xLoc.TemporalIndicator=location.TemporalIndicator && xLoc.Namespace=location.Namespace)
+                )
+            itemsFurtherMatchedUpByLocation.Length>0
     let addModelItem (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (incomingLine:IncomingLine) (desription:string) =
         if desription.Trim().Length>0
             then
-                // some kind of tags are set. Use defaults if missing
-                let newBucket=if location.Bucket=Buckets.None then Buckets.Behavior else location.Bucket
-                let newGenre= if location.Genre=Genres.None then Genres.Business else location.Genre
-                let newAbstractionLevel=if location.AbstractionLevel=AbstractionLevels.None then AbstractionLevels.Abstract else location.AbstractionLevel
-                let newTemporalIndicator=if location.TemporalIndicator=TemporalIndicators.None then TemporalIndicators.ToBe else location.TemporalIndicator
-                let newLocationPointer = {compilerStatus.CurrentLocation with Bucket=newBucket; Genre=newGenre; AbstractionLevel=newAbstractionLevel; TemporalIndicator=newTemporalIndicator}
-                let newModelItem =
-                    {
-                        Id=getNextModelItemNumber()
-                        Location=newLocationPointer
-                        Description=desription.Trim()
-                        Attributes=[||]
-                        Annotations= [||]
-                        SourceReferences=[|incomingLine|]
-                        Relations=[||]
-                    }
-                let newLoc = {newLocationPointer with ParentId=newModelItem.Id}
-                let newModelItems = [|newModelItem|] |> Array.append compilerStatus.ModelItems
-                {compilerStatus with ModelItems=newModelItems; CurrentLocation=newLoc;CompilerState={compilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewModelItem}}
+                if itemWithThisNameAlreadyExistsAtThisLocation compilerStatus location desription
+                    then
+                        compilerStatus
+                    else
+                        // some kind of tags are set. Use defaults if missing
+                        let newBucket=if location.Bucket=Buckets.None then Buckets.Behavior else location.Bucket
+                        let newGenre= if location.Genre=Genres.None then Genres.Business else location.Genre
+                        let newAbstractionLevel=if location.AbstractionLevel=AbstractionLevels.None then AbstractionLevels.Abstract else location.AbstractionLevel
+                        let newTemporalIndicator=if location.TemporalIndicator=TemporalIndicators.None then TemporalIndicators.ToBe else location.TemporalIndicator
+                        let newLocationPointer = {compilerStatus.CurrentLocation with Bucket=newBucket; Genre=newGenre; AbstractionLevel=newAbstractionLevel; TemporalIndicator=newTemporalIndicator}
+                        let newModelItem =
+                            {
+                                Id=getNextModelItemNumber()
+                                Location=newLocationPointer
+                                Description=desription.Trim()
+                                Attributes=[||]
+                                Annotations= [||]
+                                SourceReferences=[|incomingLine|]
+                                Relations=[||]
+                            }
+                        let newLoc = {newLocationPointer with ParentId=newModelItem.Id}
+                        let newModelItems = [|newModelItem|] |> Array.append compilerStatus.ModelItems
+                        {compilerStatus with ModelItems=newModelItems; CurrentLocation=newLoc;CompilerState={compilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewModelItem}}
             else compilerStatus
     let replaceArrayItemInPlace (arr:'A []) (itemToReplace:'A) (funEquality:'A->'A->bool):'A [] =
         let itemIndex=

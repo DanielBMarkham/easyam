@@ -1,6 +1,6 @@
 //                            MASTER SUPPLEMENTAL                              
 //                           NEVER CONFUSE THE USER                            
-//                   Model Generation: 07/12/2017 16:53:47                     
+//                   Model Generation: 07/12/2017 17:10:52                     
 //                                                                             
 
 BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Never confuse the user
@@ -14,18 +14,13 @@ BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Never confuse the user
 
     AFFECTS: 
       ALL
-      ALL
       Conduct Regular Inventory
       Conduct Spot Inventory
       Create Shipment
-      MISC
-      Order Goods
       Pick Shipment
       Put Away New Shipment
       Receive Order
       Receive Shipment
       Reconcile BOL
-      Reject Part Of Shipment
-      Reject Shipment
       Review Daily Warehouse Activity
       Ship Goods

@@ -1,6 +1,6 @@
 //                        MASTER DOMAIN MODEL - ENTITY                         
 //                                   ORDER                                     
-//                   Model Generation: 07/12/2017 16:53:47                     
+//                   Model Generation: 07/12/2017 17:10:52                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE: Order
@@ -11,3 +11,5 @@ BUSINESS STRUCTURE ABSTRACT TO-BE: Order
       Total Amount
 
 
+    HASA: 
+      Shipment

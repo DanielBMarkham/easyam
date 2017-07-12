@@ -1,38 +1,33 @@
 //                             MASTER USER STORY                               
 //                                ORDER GOODS                                  
-//                   Model Generation: 07/12/2017 16:53:47                     
+//                   Model Generation: 07/12/2017 17:10:52                     
 //                                                                             
 
 MASTER USER STORY: Order Goods
     WHEN: 
       The inventory count for an item falls below its re-order point
+      I'm out of something I realize I need
     ASA: 
       Warehouse Worker
+      Customer
     INEEDTO: 
       Place an order with our suppliers to replenish needed items
+      Place an order for new stuff
     SOTHAT: 
       we don't run out of things and are able to fulfill our orders from our customers
         NOTES: 
           Order Goods was specifically requested by the guy in the plaid sweater
+      Receive Order
+      I can be happy owning things I think I need
 
     NOTES: 
       It seems to be very important for some reason
 
     AFFECTEDBY: 
-      Always keep track of the path users take to arrive on-site
-      Always respond in a way that's easy for the user to understand
-      Never make the user wait
-      Never confuse the user
-      Continuously inform the team about everything the users do
-      Always do the best we can to cheer the user up during any interaction
+      Order Goods
       ALL
       Always respond in a way that's easy for the user to understand
       Continuously inform the team about everything the users do
       Never confuse the user
       Never make the user wait
 
-    USES: 
-      Order
-      Vendor
-      Invoice
-      Shipment
