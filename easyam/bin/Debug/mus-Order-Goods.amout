@@ -1,6 +1,6 @@
 //                             MASTER USER STORY                               
 //                                ORDER GOODS                                  
-//                   Model Generation: 07/12/2017 18:44:26                     
+//                   Model Generation: 07/19/2017 05:55:37                     
 //                                                                             
 
 MASTER USER STORY: Order Goods
@@ -24,8 +24,8 @@ MASTER USER STORY: Order Goods
       It seems to be very important for some reason
 
     AFFECTEDBY: 
-      Order Goods
-      ALL
+      Always keep track of the path users take to arrive on-site
+      Always do the best we can to cheer the user up during any interaction
       Always respond in a way that's easy for the user to understand
       Continuously inform the team about everything the users do
       Never confuse the user

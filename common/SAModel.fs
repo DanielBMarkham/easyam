@@ -124,10 +124,23 @@
         |RELATIVE_LOCATOR
         |ABSOLUTE_LOCATOR
         |JOINER
+         static member ToList() =
+            [RELATIVE_LOCATOR;ABSOLUTE_LOCATOR;JOINER]
+         override self.ToString() =
+          match self with
+            | RELATIVE_LOCATOR->"Relative Locator"
+            | ABSOLUTE_LOCATOR->"Absolute Locator"
+            | JOINER->"Joiner"
     [<NoComparison>]
     type TOKEN_TARGET_TYPE =
         |SINGLE_TARGET
         |MULTIPLE_TARGETS
+         static member ToList() =
+            [SINGLE_TARGET;MULTIPLE_TARGETS]
+         override self.ToString() =
+          match self with
+            | SINGLE_TARGET->"Single Target"
+            | MULTIPLE_TARGETS->"Multiple Targets"
     [<NoComparison>]
     type TOKEN_CATEGORY = 
         |BUCKETS
@@ -156,6 +169,15 @@
         | Question
         | ToDo
         | Work
+         static member ToList() =
+            [None;Note;Question;ToDo;Work]
+         override self.ToString() =
+          match self with
+            | None->"None"
+            | Note->"Note"
+            | Question->"Question"
+            | ToDo->"ToDo"
+            | Work->"Work"
     let EasyAMTokens = 
         [
             {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES:"};
@@ -202,6 +224,14 @@
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="PROJECT SUPPLEMENTAL MODEL"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="PRODUCT SUPPLEMENTAL MODEL:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="PRODUCT SUPPLEMENTAL MODEL"};
+
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="US:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="USER STORY:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="USER STORIES:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="ENT:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="ENTITY:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="ENTITIES:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="SUPPL:"};
 
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="BEHAVIOR:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=BUCKETS;              Token="BEHAVIOR"};
@@ -295,6 +325,8 @@
             Token:string
             Value:string
         }
+         override self.ToString() =
+            "Indent: " + self.CommandIndentLevel.ToString() + " Token: " + self.Token + " Value: " + self.Value
     [<NoComparison>]
     type IncomingLine =
         {
@@ -313,13 +345,17 @@
 
 
 
-
-
-
     type CompilerMessageType =
         | Info
         | Warning
         | Error
+         static member ToList() =
+            [Info;Warning;Error]
+         override self.ToString() =
+          match self with
+            | Info->"Info"
+            | Warning->"Warning"
+            | Error->"Error"
     [<NoComparison>]
     type CompilerMessage =
             {
@@ -359,15 +395,27 @@
             System.Console.WriteLine(formattedMessage)
             )
     [<NoComparison>]
-        type LastCompilerOperations =
-            | PointerReset
-            | NewModelItem
-            | ReferenceExistingItem
-            | LocationChange
-            | NewJoin
-            | NewAttribute
-            | ReferenceExistingAttribute
-            | NewAnnotation
+    type LastCompilerOperations =
+        | PointerReset
+        | NewModelItem
+        | ReferenceExistingItem
+        | LocationChange
+        | NewJoin
+        | NewAttribute
+        | ReferenceExistingAttribute
+        | NewAnnotation
+         static member ToList() =
+            [PointerReset;NewModelItem;ReferenceExistingItem;LocationChange;NewJoin;NewAttribute;ReferenceExistingAttribute;NewAnnotation]
+         override self.ToString() =
+          match self with
+            | PointerReset->"PointerReset"
+            | NewModelItem->"NewModelItem"
+            | ReferenceExistingItem->"ReferenceExistingItem"
+            | LocationChange->"LocationChange"
+            | NewJoin->"NewJoin"
+            | NewAttribute->"NewAttribute"
+            | ReferenceExistingAttribute->"ReferenceExistingAttribute"
+            | NewAnnotation->"NewAnnotation"
     [<NoComparison>]
     type ModelAttributeTypes =
         | Trigger
@@ -378,6 +426,18 @@
         | Because
         | Whenever
         | ItHasToBeThat
+         static member ToList() =
+            [Trigger;Actor;Goal;BusinessContext;Contains;Because;Whenever;ItHasToBeThat]
+         override self.ToString() =
+          match self with
+            | Trigger->"PointerReset"
+            | Actor->"NewModelItem"
+            | Goal->"ReferenceExistingItem"
+            | BusinessContext->"LocationChange"
+            | Contains->"NewJoin"
+            | Because->"NewAttribute"
+            | Whenever->"ReferenceExistingAttribute"
+            | ItHasToBeThat->"NewAnnotation"
     [<NoComparison>]
     type ModelItem2Attribute =
         {
@@ -436,6 +496,18 @@
         |UsedBy
         |HasA
         |IsOwnedByA
+         static member ToList() =
+            [Parent;Child;Affects;AffectedBy;Uses;UsedBy;HasA;IsOwnedByA]
+         override self.ToString() =
+          match self with
+            | Parent->"Parent"
+            | Child->"Child "
+            | Affects->"Affects"
+            | AffectedBy->"AffectedBy"
+            | Uses->"Uses"
+            | UsedBy->"IsUsedBy"
+            | HasA->"HasA"
+            | IsOwnedByA->"IsOwnedByA"
     let getReverseJoin (sourceJoin:ModelJoin) =
         match sourceJoin with 
             | Parent->Child
@@ -483,11 +555,28 @@
         |MultipleAttributeTargets
         |MultipleAnnotationTargets
         |MultipleJoinTargets
+         static member ToList() =
+            [Nothing;SingleTarget;MultipleTargets;MultipleAttributeTargets;MultipleAnnotationTargets;MultipleJoinTargets]
+         override self.ToString() =
+          match self with
+            | Nothing->"Nothing"
+            | SingleTarget->"SingleTarget"
+            | MultipleTargets->"MultipleTargets"
+            | MultipleAttributeTargets->"MultipleAttributeTargets"
+            | MultipleAnnotationTargets->"MultipleAnnotationTargets"
+            | MultipleJoinTargets->"MultipleJoinTargets"
     [<NoComparison>]
     type IndentLevelComparisons =
-        | IdentIsSameAsPreviousIndent
-        | IdentIsLessThanPreviousIndent
-        | IdentIsMoreThanPreviousIndent
+        | IndentIsSameAsPreviousIndent
+        | IndentIsLessThanPreviousIndent
+        | IndentIsMoreThanPreviousIndent
+         static member ToList() =
+            [IndentIsSameAsPreviousIndent; IndentIsLessThanPreviousIndent; IndentIsMoreThanPreviousIndent]
+         override self.ToString() =
+          match self with
+            | IndentIsSameAsPreviousIndent->"IndentIsSameAsPreviousIndent"
+            | IndentIsLessThanPreviousIndent->"IndentIsLessThanPreviousIndent"
+            | IndentIsMoreThanPreviousIndent->"IndentIsMoreThanPreviousIndent"
     [<NoComparison>]
     type CompilerState =
         {
@@ -507,7 +596,7 @@
             LastCompilerOperation=LastCompilerOperations.PointerReset
             LastJoinType=option.None
             CurrentIndentLevel=0
-            IndentLevelChange=IndentLevelComparisons.IdentIsSameAsPreviousIndent
+            IndentLevelChange=IndentLevelComparisons.IndentIsSameAsPreviousIndent
         }
     [<NoComparison>]
     type CompilerReturn = 

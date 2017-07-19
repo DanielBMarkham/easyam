@@ -1,6 +1,6 @@
 //                             MASTER USER STORY                               
 //                         CONDUCT REGULAR INVENTORY                           
-//                   Model Generation: 07/12/2017 18:44:26                     
+//                   Model Generation: 07/19/2017 05:55:37                     
 //                                                                             
 
 MASTER USER STORY: Conduct Regular Inventory
@@ -21,12 +21,9 @@ MASTER USER STORY: Conduct Regular Inventory
       Never confuse the user
       Continuously inform the team about everything the users do
       Always do the best we can to cheer the user up during any interaction
-      ALL
+      Always do the best we can to cheer the user up during any interaction
       Always respond in a way that's easy for the user to understand
       Continuously inform the team about everything the users do
       Never confuse the user
       Never make the user wait
 
-    USES: 
-      Inventory Item
-      SKU

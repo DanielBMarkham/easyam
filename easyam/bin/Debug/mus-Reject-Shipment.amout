@@ -1,6 +1,6 @@
 //                             MASTER USER STORY                               
 //                              REJECT SHIPMENT                                
-//                   Model Generation: 07/12/2017 18:44:26                     
+//                   Model Generation: 07/19/2017 05:55:37                     
 //                                                                             
 
 MASTER USER STORY: Reject Shipment
@@ -15,8 +15,8 @@ MASTER USER STORY: Reject Shipment
 
 
     AFFECTEDBY: 
-      Reject Shipment
-      ALL
+      Make it as easy as possible for the user to provide negative feedback
+      Always do the best we can to cheer the user up during any interaction
       Always respond in a way that's easy for the user to understand
       Continuously inform the team about everything the users do
       Never confuse the user

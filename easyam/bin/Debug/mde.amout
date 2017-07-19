@@ -1,5 +1,5 @@
 //                           MASTER DOMAIN ENTITIES                            
-//                   Model Generation: 07/12/2017 18:44:26                     
+//                   Model Generation: 07/19/2017 05:55:37                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE
@@ -14,7 +14,6 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Address
     HASA:
       Order
-      Invoice
 
 
   Order
@@ -24,7 +23,11 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Customer Number
       Total Amount
     HASA:
+      Invoice
+      Invoice Line
+      Invoice Line Item
       Shipment
+      Bill Of Lading
 
 
   Invoice
@@ -32,9 +35,6 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Invoice Number
       Invoice Date
       Invoice Total Amount
-    HASA:
-      Invoice Line
-      Invoice Line Item
 
 
   Employee Type
@@ -63,6 +63,7 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Long Description
     HASA:
       SKU
+      Inventory Item
 
 
   SKU
@@ -70,7 +71,9 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Item Number
       Quantity
     HASA:
-      Inventory Item
+      Shipment
+      Invoice
+      Order
 
 
   Invoice Line
@@ -84,9 +87,9 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Shipment Number
       Shipment Date
       Expected Arrival Date
-    HASA:
-      Bill Of Lading
     QUESTIONS: 
+      Do we get free mints?
+      Are the ships full of mints?
       Does this involve real ships?
       Do we get free mints?
       Are the ships full of mints?
@@ -101,5 +104,9 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Shipment
       Invoice
       Order
+      Bill Of Lading
+      Invoice Line
+      Invoice Line Item
+      SKU
 
 

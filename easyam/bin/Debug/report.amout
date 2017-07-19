@@ -1,54 +1,40 @@
 //                               EASYAM REPORT                                 
-//                   Model Generation: 07/12/2017 18:44:25                     
+//                   Model Generation: 07/19/2017 05:55:37                     
 //                                                                             
 //    Compiler Messages
 //    -----------------
 //  mde-bill-of-lading.amin:: Info: file loading completed with 38 files processed along with 890 lines of code reviewed
-//  mde-invoice.amin:Some(14): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mde-invoice.amin:Some(15): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mde-shipment.amin:Some(18): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mde-sku.amin:Some(13): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mde.amin:Some(101): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mde-vendor.amin(11) line 17.
-//  mde.amin:Some(102): Warning: target item Invoice already exists once as a join. There is a duplicate entry. Previous join exists on mde-vendor.amin(11) line 18.
-//  mde.amin:Some(103): Warning: target item Order already exists once as a join. There is a duplicate entry. Previous join exists on mde-vendor.amin(11) line 19.
-//  mus-all.amin:Some(10): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-all.amin:Some(11): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-all.amin:Some(12): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-all.amin:Some(13): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-all.amin:Some(14): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-misc.amin:Some(10): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-misc.amin:Some(11): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-misc.amin:Some(12): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-misc.amin:Some(13): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-misc.amin:Some(14): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-misc.amin:Some(15): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-order-goods.amin:Some(21): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-order-goods.amin:Some(22): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-order-goods.amin:Some(23): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-order-goods.amin:Some(24): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-order-goods.amin:Some(25): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-order-goods.amin:Some(26): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-order-goods.amin:Some(29): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-order-goods.amin:Some(30): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-order-goods.amin:Some(31): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-order-goods.amin:Some(32): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-part-of-shipment.amin:Some(18): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-part-of-shipment.amin:Some(19): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-part-of-shipment.amin:Some(20): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-part-of-shipment.amin:Some(21): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-part-of-shipment.amin:Some(22): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-part-of-shipment.amin:Some(23): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-part-of-shipment.amin:Some(26): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-part-of-shipment.amin:Some(27): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-shipment.amin:Some(18): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-shipment.amin:Some(19): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-shipment.amin:Some(20): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-shipment.amin:Some(21): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-shipment.amin:Some(22): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-shipment.amin:Some(23): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-shipment.amin:Some(26): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-shipment.amin:Some(27): Error: source item id:-1 does not currently exist in model when trying to make join
-//  mus-reject-shipment.amin:Some(28): Error: source item id:-1 does not currently exist in model when trying to make join
+//  mde.amin:Some(26): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mde-vendor.amin(11) line 17.
+//  mde.amin:Some(60): Warning: target item Inventory Item already exists once as a join. There is a duplicate entry. Previous join exists on mde-sku.amin(10) line 13.
+//  mde.amin:Some(69): Warning: target item Invoice already exists once as a join. There is a duplicate entry. Previous join exists on mde-customer.amin(1) line 14.
+//  mus-conduct-spot-inventory.amin:Some(39): Warning: target item Inventory Item already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 26.
+//  mus-conduct-spot-inventory.amin:Some(40): Warning: target item SKU already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 27.
+//  mus-pick-shipment.amin:Some(25): Warning: target item Employee already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 26.
+//  mus-pick-shipment.amin:Some(26): Warning: target item Order already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 29.
+//  mus-pick-shipment.amin:Some(27): Warning: target item Invoice already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 30.
+//  mus-pick-shipment.amin:Some(28): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 31.
+//  mus-put-away-new-shipment.amin:Some(27): Warning: target item Inventory Item already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 26.
+//  mus-put-away-new-shipment.amin:Some(28): Warning: target item SKU already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 27.
+//  mus-receive-order.amin:Some(26): Warning: target item Order already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 29.
+//  mus-receive-order.amin:Some(27): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 31.
+//  mus-receive-order.amin:Some(29): Warning: target item Employee already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 26.
+//  mus-receive-order.amin:Some(30): Warning: target item Employee Type already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 27.
+//  mus-receive-shipment.amin:Some(26): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 31.
+//  mus-receive-shipment.amin:Some(27): Warning: target item Order already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 29.
+//  mus-receive-shipment.amin:Some(28): Warning: target item Bill Of Lading already exists once as a join. There is a duplicate entry. Previous join exists on mus-receive-order.amin(29) line 28.
+//  mus-receive-shipment.amin:Some(29): Warning: target item Inventory Item already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 26.
+//  mus-receive-shipment.amin:Some(30): Warning: target item Employee already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 26.
+//  mus-receive-shipment.amin:Some(31): Warning: target item SKU already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 27.
+//  mus-receive-shipment.amin:Some(32): Warning: target item Vendor already exists once as a join. There is a duplicate entry. Previous join exists on mus-receive-order.amin(29) line 25.
+//  mus-receive-shipment.amin:Some(33): Warning: target item Invoice already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 30.
+//  mus-receive-shipment.amin:Some(35): Warning: target item Invoice Line Item already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 32.
+//  mus-reconcile-bol.amin:Some(25): Warning: target item Order already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 29.
+//  mus-reconcile-bol.amin:Some(26): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 31.
+//  mus-reconcile-bol.amin:Some(27): Warning: target item Bill Of Lading already exists once as a join. There is a duplicate entry. Previous join exists on mus-receive-order.amin(29) line 28.
+//  mus-review-daily-warehouse-activity.amin:Some(25): Warning: target item Inventory Item already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 26.
+//  mus-ship-goods.amin:Some(25): Warning: target item Customer already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 28.
+//  mus-ship-goods.amin:Some(26): Warning: target item Order already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 29.
+//  mus-ship-goods.amin:Some(27): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 31.
 //                                                                             
 //    Model Summary
 //    -------------
@@ -59,7 +45,7 @@
 //    Total work items: 0
 //
 //    Total Master Domain Entities: 12
-//    Total open questions: 3
+//    Total open questions: 5
 //    Total notes: 0
 //    Total to-do items: 0
 //    Total work items: 0

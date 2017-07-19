@@ -1,6 +1,6 @@
 //                        MASTER DOMAIN MODEL - ENTITY                         
 //                                   VENDOR                                    
-//                   Model Generation: 07/12/2017 18:44:26                     
+//                   Model Generation: 07/19/2017 05:55:38                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE: Vendor
@@ -14,3 +14,7 @@ BUSINESS STRUCTURE ABSTRACT TO-BE: Vendor
       Shipment
       Invoice
       Order
+      Bill Of Lading
+      Invoice Line
+      Invoice Line Item
+      SKU

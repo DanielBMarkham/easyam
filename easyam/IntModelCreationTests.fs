@@ -929,3 +929,72 @@
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
         newCompilerStatus.ModelItems |> should haveLength 5
+
+
+     // Forgot to test some abbreviations
+    [<Test>]
+    let ``ABBREV: User Story Abbreviation 1``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "MASTER BACKLOG: Do things, Do other things"
+                        ; ""
+                        ; "BUSINESS STRUCTURE REALIZED AS-IS"
+                        ; "  Car"
+                        ; "  Wheel"
+                        ; "  Window"
+                        ; ""
+                        ; "  US: Do more things, Do more things better"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 8
+        newCompilerStatus.ModelItems.[1].Location.AbstractionLevel |> should equal AbstractionLevels.Abstract
+        newCompilerStatus.ModelItems.[1].Location.Bucket |> should equal Buckets.Behavior
+        newCompilerStatus.ModelItems.[3].Location.Bucket |> should equal Buckets.Structure
+        newCompilerStatus.ModelItems.[3].Location.TemporalIndicator |> should equal TemporalIndicators.AsIs
+        newCompilerStatus.ModelItems.[6].Location.Bucket |> should equal Buckets.Behavior
+        newCompilerStatus.ModelItems.[6].Location.TemporalIndicator |> should equal TemporalIndicators.AsIs
+        newCompilerStatus.ModelItems.[6].Location.AbstractionLevel |> should equal AbstractionLevels.Realized
+
+    [<Test>]
+    let ``INT MODEL: Quick list works``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "MASTER DOMAIN MODEL"
+                        ; ""
+                        ; "  Car"
+                        ; "  Wheel"
+                        ; "  Invoice Line Item"
+                        ; "  Window"
+                        ; "  Invoice"
+                        ; ""
+                        ; "  US: Do more things, Do more things better"
+                        |]
+        let fileInfo2 = getFakeFileInfo()
+        let testText2 = [|
+                          ""
+                        ; "BUSINESS STRUCTURE ABSTRACT TO-BE: Invoice"
+                        ; "    CONTAINS: "
+                        ; "      Invoice Number"
+                        ; "      Invoice Date"
+                        ; "      Invoice Total Amount"
+                        ; ""
+                        ; ""
+                        ; "    HASA: "
+                        ; "      Invoice Line"
+                        ; "      Invoice Line Item"
+                        ; ""
+                        |]
+        let listToProcess = [|(fileInfo1,testText1);(fileInfo2, testText2)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 9
+        newCompilerStatus.ModelItems.[5].Description |> should equal "Invoice"
+        newCompilerStatus.ModelItems.[5].Relations |> should haveLength 2
+        let firstRelation=newCompilerStatus.ModelItems|>Array.find(fun x->x.Id=newCompilerStatus.ModelItems.[5].Relations.[0].TargetId)
+        let secondRelation=newCompilerStatus.ModelItems|>Array.find(fun x->x.Id=newCompilerStatus.ModelItems.[5].Relations.[1].TargetId)
+        firstRelation.Description |> should equal "Invoice Line"
+        secondRelation.Description |> should equal "Invoice Line Item"
