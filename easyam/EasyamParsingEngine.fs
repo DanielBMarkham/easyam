@@ -327,18 +327,23 @@
                 if modelItemToChange.IsNone
                     then currentCompilerStatus
                     else
-                        let newAnnotation = (annotationType,annotationValue.Trim())
-                        let newAnnotations = [|newAnnotation|] |> Array.append modelItemToChange.Value.Annotations
-                        let newSourceReferences = [|sourceLine|] |> Array.append modelItemToChange.Value.SourceReferences
-                        let newModelItem = {modelItemToChange.Value with Annotations=newAnnotations; SourceReferences=newSourceReferences}
-                        // the indent does not go up for notes ON THE SAME LINE AS COMMANDS
-                        let newIndent = 
-                            if annotationType=ANNOTATION_TOKEN_TYPE.Note && sourceLine.Commands.Length>1 then
-                                if currentCompilerStatus.CompilerState.CurrentIndentLevel>0 then currentCompilerStatus.CompilerState.CurrentIndentLevel-1 else 0
-                            else currentCompilerStatus.CompilerState.CurrentIndentLevel
-                        let newCompilerState = {currentCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewAnnotation; CurrentIndentLevel=newIndent}
-                        let newCompilerStatus=updateModelItem {currentCompilerStatus with CompilerState=newCompilerState} newModelItem
-                        newCompilerStatus
+                        let annotationAlreadyExists=modelItemToChange.Value.Annotations |> Array.exists(fun z->((fst z)=annotationType) && ( (snd z)=annotationValue.Trim()))
+                        if annotationAlreadyExists 
+                            then currentCompilerStatus 
+                            else
+                                let newAnnotation = (annotationType,annotationValue.Trim())
+                                let newAnnotations = [|newAnnotation|] |> Array.append modelItemToChange.Value.Annotations
+                                let newSourceReferences = [|sourceLine|] |> Array.append modelItemToChange.Value.SourceReferences
+                                let newModelItem = {modelItemToChange.Value with Annotations=newAnnotations; SourceReferences=newSourceReferences}
+                                // the indent does not go up for notes ON THE SAME LINE AS COMMANDS
+                                let newIndent = 
+                                    if annotationType=ANNOTATION_TOKEN_TYPE.Note && sourceLine.Commands.Length>1 then
+                                        if currentCompilerStatus.CompilerState.CurrentIndentLevel>0 then currentCompilerStatus.CompilerState.CurrentIndentLevel-1 else 0
+                                    else currentCompilerStatus.CompilerState.CurrentIndentLevel
+                                let newCompilerState = {currentCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewAnnotation; CurrentIndentLevel=newIndent}
+                                let newLoc = {currentCompilerStatus.CurrentLocation with AttributeId=option.None; AttributeType=option.None}
+                                let newCompilerStatus=updateModelItem {currentCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newLoc} newModelItem
+                                newCompilerStatus
     let addAttributeAnnotation (parentId:int) (attributeTargetId:int) (annotationType:ANNOTATION_TOKEN_TYPE) (annotationValue:string) (sourceLine:IncomingLine) (currentCompilerStatus:CompilerReturn) =
         if annotationValue="" then currentCompilerStatus
             else
@@ -529,11 +534,32 @@
                                 // what's the next level up?
                                 if incomingCompilerStatus.CurrentLocation.AttributeId.IsSome && incomingCompilerStatus.CurrentLocation.AttributeType.IsSome
                                     then
-                                        // if the last annotation was on an attribute, then we pop back to the attribute
-                                        let newCompilerState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; LastCompilerOperation=LastCompilerOperations.PointerReset; WaitingFor=CompilerWaitingFor.MultipleAttributeTargets}
-                                        let newCompilerLocation={incomingCompilerStatus.CurrentLocation with AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None}
-                                        let newCompilerStatus={incomingCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation}
-                                        updateModelLocationPointer newCompilerStatus incomingLine incomingCommand 
+                                        // if the last annotation was on an attribute, then we pop back to the attribute, depending on levels jumped
+                                        let levelsJumped = originalCompilerStatus.CompilerState.CurrentIndentLevel-incomingCompilerStatus.CompilerState.CurrentIndentLevel
+                                        let welastAnnotatedAnAttribute = incomingCompilerStatus.CurrentLocation.AttributeId.IsSome
+                                        if levelsJumped = 1 && welastAnnotatedAnAttribute
+                                            then
+                                                // it's popped one level back up to the attribute
+                                                let newCompilerState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; LastCompilerOperation=LastCompilerOperations.PointerReset; WaitingFor=CompilerWaitingFor.MultipleAttributeTargets}
+                                                let newCompilerLocation={incomingCompilerStatus.CurrentLocation with AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None}
+                                                let newCompilerStatus={incomingCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation}
+                                                updateModelLocationPointer newCompilerStatus incomingLine incomingCommand 
+                                            elif welastAnnotatedAnAttribute&& levelsJumped=2 then
+                                                // it's popped two levels back up to the item
+                                                //let newCompilerState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; LastCompilerOperation=LastCompilerOperations.PointerReset; WaitingFor=CompilerWaitingFor.MultipleTargets}
+                                                //let newCompilerLocation={incomingCompilerStatus.CurrentLocation with ParentId=(-1); AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None}
+                                                let newCompilerState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; LastCompilerOperation=LastCompilerOperations.PointerReset; WaitingFor=CompilerWaitingFor.MultipleAttributeTargets}
+                                                let newCompilerLocation={incomingCompilerStatus.CurrentLocation with AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None}
+                                                let newCompilerStatus={incomingCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation}
+                                                updateModelLocationPointer newCompilerStatus incomingLine incomingCommand 
+                                            else
+                                                let newCompilerState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; LastCompilerOperation=LastCompilerOperations.PointerReset; WaitingFor=CompilerWaitingFor.MultipleTargets}
+                                                let newCompilerLocation={incomingCompilerStatus.CurrentLocation with ParentId=(-1); AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None}
+                                                //let newCompilerState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; LastCompilerOperation=LastCompilerOperations.PointerReset; WaitingFor=CompilerWaitingFor.MultipleAttributeTargets}
+                                                //let newCompilerLocation={incomingCompilerStatus.CurrentLocation with AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None}
+                                                let newCompilerStatus={incomingCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation}
+                                                updateModelLocationPointer newCompilerStatus incomingLine incomingCommand 
+
                                     else
                                         // we assume the next level up is the parent pop back up to the parent, not waiting on atts
                                         // reset the pointer to the location without annotations and wait on multiple stuff
@@ -544,7 +570,7 @@
                             else
                                 // if we're further idented, we're continuing the previous annotation list
                                 // if the last operation was a new attribute, then we're annotating on that attribute
-                                if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewAttribute
+                                if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewAttribute || (incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.LocationChange && incomingCompilerStatus.CurrentLocation.AttributeId.IsSome)
                                     then
                                         let itemParentId=incomingCompilerStatus.CurrentLocation.ParentId
                                         let attributeTargetId=incomingCompilerStatus.CurrentLocation.AttributeId.Value
@@ -691,7 +717,9 @@
                                             else
                                                 let newState=if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewModelItem then {incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAnnotationTargets} else incomingCompilerStatus.CompilerState
                                                 let newLocation=if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewModelItem then {incomingCompilerStatus.CurrentLocation with AnnotationIndicator=newTempAnnotationIndicator} else incomingCompilerStatus.CurrentLocation
-                                                addAnnotation incomingCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine {incomingCompilerStatus with CompilerState=newState; CurrentLocation=newLocation} 
+                                                // We're doing a "reach-around" and annotating the root item, so we need to reset the location back to the attribute list
+                                                let tempCompStat=addAnnotation incomingCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator incomingCommand.Value incomingLine {incomingCompilerStatus with CompilerState=newState; CurrentLocation=newLocation} 
+                                                {tempCompStat with CurrentLocation={tempCompStat.CurrentLocation with AttributeType=originalCompilerStatus.CurrentLocation.AttributeType }}
                     |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.RELATIVE_LOCATOR,TOKEN_CATEGORY.MISC->
                         let newTempAnnotationIndicator=
                             match token.Token with 
@@ -702,14 +730,21 @@
                                 |_->ANNOTATION_TOKEN_TYPE.Note // ERROR ERROR
                         // run through everything split on this line by a comma and add
                         let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None) |> Array.filter(fun x->x.Length<>0)
+                        let newAttributeType,newAttributeId =
+                            if incomingCompilerStatus.CompilerState.IndentLevelChange=IndentLevelComparisons.IndentIsLessThanPreviousIndent
+                                then
+                                    option.None,option.None
+                                else
+                                    incomingCompilerStatus.CurrentLocation.AttributeType,incomingCompilerStatus.CurrentLocation.AttributeId
+                        let newLoc={incomingCompilerStatus.CurrentLocation with AttributeType=newAttributeType; AttributeId=newAttributeId}
                         let newCompilerStatus = splitByComma |> Array.fold(fun (accumulatorCompilerStatus:CompilerReturn) x->
                                                 if x.Length=0 then accumulatorCompilerStatus else
                                                 let newAccumulatorCompilerStatus=addAnnotation accumulatorCompilerStatus.CurrentLocation.ParentId newTempAnnotationIndicator (x.Trim()) incomingLine accumulatorCompilerStatus 
                                                 newAccumulatorCompilerStatus
-                                                ) incomingCompilerStatus
+                                                ) {incomingCompilerStatus with CurrentLocation=newLoc}
                         let newLocation = {newCompilerStatus.CurrentLocation with AnnotationIndicator=newTempAnnotationIndicator}
                         let newIndentLevelWithCommasConsidered=newCompilerStatus.CompilerState.CurrentIndentLevel + splitByComma.Length
-                        {newCompilerStatus with CurrentLocation=newLocation; CompilerState={newCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleAnnotationTargets}}
+                        {newCompilerStatus with CurrentLocation=newLocation; CompilerState={newCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.LocationChange; WaitingFor=CompilerWaitingFor.MultipleAnnotationTargets}}
                     |_,_,NAMESPACE->
                         let newNamespace=incomingCommand.Value
                         let newLocationPointer = {incomingCompilerStatus.CurrentLocation with Namespace=newNamespace}

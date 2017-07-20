@@ -1,53 +1,24 @@
 //                               EASYAM REPORT                                 
-//                   Model Generation: 07/19/2017 05:55:37                     
+//                   Model Generation: 07/19/2017 20:04:32                     
 //                                                                             
 //    Compiler Messages
 //    -----------------
-//  mde-bill-of-lading.amin:: Info: file loading completed with 38 files processed along with 890 lines of code reviewed
-//  mde.amin:Some(26): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mde-vendor.amin(11) line 17.
-//  mde.amin:Some(60): Warning: target item Inventory Item already exists once as a join. There is a duplicate entry. Previous join exists on mde-sku.amin(10) line 13.
-//  mde.amin:Some(69): Warning: target item Invoice already exists once as a join. There is a duplicate entry. Previous join exists on mde-customer.amin(1) line 14.
-//  mus-conduct-spot-inventory.amin:Some(39): Warning: target item Inventory Item already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 26.
-//  mus-conduct-spot-inventory.amin:Some(40): Warning: target item SKU already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 27.
-//  mus-pick-shipment.amin:Some(25): Warning: target item Employee already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 26.
-//  mus-pick-shipment.amin:Some(26): Warning: target item Order already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 29.
-//  mus-pick-shipment.amin:Some(27): Warning: target item Invoice already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 30.
-//  mus-pick-shipment.amin:Some(28): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 31.
-//  mus-put-away-new-shipment.amin:Some(27): Warning: target item Inventory Item already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 26.
-//  mus-put-away-new-shipment.amin:Some(28): Warning: target item SKU already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 27.
-//  mus-receive-order.amin:Some(26): Warning: target item Order already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 29.
-//  mus-receive-order.amin:Some(27): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 31.
-//  mus-receive-order.amin:Some(29): Warning: target item Employee already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 26.
-//  mus-receive-order.amin:Some(30): Warning: target item Employee Type already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 27.
-//  mus-receive-shipment.amin:Some(26): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 31.
-//  mus-receive-shipment.amin:Some(27): Warning: target item Order already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 29.
-//  mus-receive-shipment.amin:Some(28): Warning: target item Bill Of Lading already exists once as a join. There is a duplicate entry. Previous join exists on mus-receive-order.amin(29) line 28.
-//  mus-receive-shipment.amin:Some(29): Warning: target item Inventory Item already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 26.
-//  mus-receive-shipment.amin:Some(30): Warning: target item Employee already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 26.
-//  mus-receive-shipment.amin:Some(31): Warning: target item SKU already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 27.
-//  mus-receive-shipment.amin:Some(32): Warning: target item Vendor already exists once as a join. There is a duplicate entry. Previous join exists on mus-receive-order.amin(29) line 25.
-//  mus-receive-shipment.amin:Some(33): Warning: target item Invoice already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 30.
-//  mus-receive-shipment.amin:Some(35): Warning: target item Invoice Line Item already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 32.
-//  mus-reconcile-bol.amin:Some(25): Warning: target item Order already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 29.
-//  mus-reconcile-bol.amin:Some(26): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 31.
-//  mus-reconcile-bol.amin:Some(27): Warning: target item Bill Of Lading already exists once as a join. There is a duplicate entry. Previous join exists on mus-receive-order.amin(29) line 28.
-//  mus-review-daily-warehouse-activity.amin:Some(25): Warning: target item Inventory Item already exists once as a join. There is a duplicate entry. Previous join exists on mus-conduct-regular-inventory.amin(22) line 26.
-//  mus-ship-goods.amin:Some(25): Warning: target item Customer already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 28.
-//  mus-ship-goods.amin:Some(26): Warning: target item Order already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 29.
-//  mus-ship-goods.amin:Some(27): Warning: target item Shipment already exists once as a join. There is a duplicate entry. Previous join exists on mus-create-shipment.amin(24) line 31.
+//  nlj3b31u.dvg_tester.bsx:: Info: file loading completed with 7 files processed along with 255 lines of code reviewed
+//  z150xwew.o4t_tester.bsx:Some(29): Warning: target item Bill Of Lading already exists once as a join. There is a duplicate entry. Previous join exists on z150xwew.o4t_tester.bsx(1) line 27.
+//  1udab314.tc1_tester.bsx:Some(11): Warning: target item Vendor already exists once as a join. There is a duplicate entry. Previous join exists on 1udab314.tc1_tester.bsx(2) line 11.
 //                                                                             
 //    Model Summary
 //    -------------
 //    Total Master User Stories: 15
-//    Total open questions: 2
-//    Total notes: 7
+//    Total open questions: 1
+//    Total notes: 5
 //    Total to-do items: 0
 //    Total work items: 0
 //
 //    Total Master Domain Entities: 12
-//    Total open questions: 5
+//    Total open questions: 3
 //    Total notes: 0
-//    Total to-do items: 0
+//    Total to-do items: 2
 //    Total work items: 0
 //
 //    Total Master Supplementals: 7

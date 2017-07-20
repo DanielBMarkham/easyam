@@ -1,18 +1,16 @@
 //                             MASTER USER STORY                               
 //                                    MISC                                     
-//                   Model Generation: 07/19/2017 05:55:37                     
+//                   Model Generation: 07/19/2017 20:04:32                     
 //                                                                             
 
 MASTER USER STORY: MISC
 
-    NOTES: 
-      ALL
 
     AFFECTEDBY: 
-      Order Goods
-      Always do the best we can to cheer the user up during any interaction
+      Always keep track of the path users take to arrive on-site
       Always respond in a way that's easy for the user to understand
-      Continuously inform the team about everything the users do
-      Never confuse the user
       Never make the user wait
+      Never confuse the user
+      Continuously inform the team about everything the users do
+      Always do the best we can to cheer the user up during any interaction
 

@@ -998,3 +998,73 @@
         let secondRelation=newCompilerStatus.ModelItems|>Array.find(fun x->x.Id=newCompilerStatus.ModelItems.[5].Relations.[1].TargetId)
         firstRelation.Description |> should equal "Invoice Line"
         secondRelation.Description |> should equal "Invoice Line Item"
+
+
+    [<Test>]
+    let ``ROUNDTRIP: don't make dupe annotations``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; ""
+                        ; "//                              MASTER USE CASES                               "
+                        ; "//                   Model Generation: 07/19/2017 05:55:37                     "
+                        ; "//                                                                             "
+                        ; ""
+                        ; "BUSINESS BEHAVIOR ABSTRACT TO-BE"
+                        ; "  ALL"
+                        ; ""
+                        ; ""
+                        ; "  Conduct Regular Inventory"
+                        ; "    WHEN: "
+                        ; "      The first of the month rolls around"
+                        ; "    ASA: "
+                        ; "      Warehouse Supervisor"
+                        ; "    INEEDTO: "
+                        ; "      Conduct a formal inventory using an audited procedure"
+                        ; "    SOTHAT: "
+                        ; "      Our accounting system stays coherent"
+                        ; "      We know what to order"
+                        ; ""
+                        ; ""
+                        ; "  Conduct Spot Inventory"
+                        ; "    WHEN: "
+                        ; "      A truck arrives at the gate"
+                        ; "      An accountant calls on the phone"
+                        ; "      There's a break-in at the warehouse"
+                        ; "    ASA: "
+                        ; "      Warehouse Worker"
+                        ; "      Warehouse Supervisor"
+                        ; "      Nightshift Guard Supervisor"
+                        ; "    INEEDTO: "
+                        ; "      Conduct a formal spot inventory by hand using the older books"
+                        ; "    SOTHAT: "
+                        ; "      The insurance company is notified in case of loss"
+                        ; "      Incoming shipments will adequately update the running inventory"
+                        ; "    NOTES: "
+                        ; "      I love inventory"
+                        ; "      the actor list isn't complete yet"
+                        ; "      I love inventory"
+                        ; "      the actor list isn't complete yet"
+                        ; "    QUESTIONS: "
+                        ; "      Do we differentiate between goods and services?"
+                        ; "      Do we differentiate between goods and services?"
+                        ; ""
+                        ; ""
+                        ; "  Create Shipment"
+                        ; "    WHEN: "
+                        ; "      An order has been picked and put in the staging area"
+                        ; "    ASA: "
+                        ; "      Warehouse Worker"
+                        ; "    INEEDTO: "
+                        ; "      Create a shipment to the customer"
+                        ; "    SOTHAT: "
+                        ; "      The items customers want will arrive on-time for them"
+                        ; "      The staging area is freed up to process shipments for customers"
+                        ; ""
+                        ; ""
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 5
+

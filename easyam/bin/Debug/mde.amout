@@ -1,19 +1,19 @@
 //                           MASTER DOMAIN ENTITIES                            
-//                   Model Generation: 07/19/2017 05:55:37                     
+//                   Model Generation: 07/19/2017 20:04:32                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE
-  Bill Of Lading
+  Shipment
     CONTAINS: 
-      Pallet List
-
-
-  Customer
-    CONTAINS: 
-      Customer Number
-      Address
+      Shipment Number
+      Shipment Date
+      Expected Arrival Date
     HASA:
-      Order
+      Bill Of Lading
+    QUESTIONS: 
+      Does this involve real ships?
+      Do we get free mints?
+      Are the ships full of mints?
 
 
   Order
@@ -23,24 +23,19 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Customer Number
       Total Amount
     HASA:
-      Invoice
-      Invoice Line
-      Invoice Line Item
       Shipment
-      Bill Of Lading
 
 
-  Invoice
+  Bill Of Lading
     CONTAINS: 
-      Invoice Number
-      Invoice Date
-      Invoice Total Amount
+      Pallet List
 
 
-  Employee Type
+  Inventory Item
     CONTAINS: 
-      Role Name
-      Salary Level
+      Inventory Item Description
+      Inventory Short Code
+      Inventory Long Code
 
 
   Employee
@@ -51,19 +46,10 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Hire Date
 
 
-  Inventory Item
+  Employee Type
     CONTAINS: 
-      Inventory Item Description
-      Inventory Short Code
-      Inventory Long Code
-
-
-  Invoice Line Item
-    CONTAINS: 
-      Long Description
-    HASA:
-      SKU
-      Inventory Item
+      Role Name
+      Salary Level
 
 
   SKU
@@ -71,9 +57,26 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Item Number
       Quantity
     HASA:
-      Shipment
-      Invoice
+      Inventory Item
+
+
+  Customer
+    CONTAINS: 
+      Customer Number
+      Address
+    HASA:
       Order
+      Invoice
+
+
+  Invoice
+    CONTAINS: 
+      Invoice Number
+      Invoice Date
+      Invoice Total Amount
+    HASA:
+      Invoice Line
+      Invoice Line Item
 
 
   Invoice Line
@@ -82,17 +85,11 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Line Total
 
 
-  Shipment
+  Invoice Line Item
     CONTAINS: 
-      Shipment Number
-      Shipment Date
-      Expected Arrival Date
-    QUESTIONS: 
-      Do we get free mints?
-      Are the ships full of mints?
-      Does this involve real ships?
-      Do we get free mints?
-      Are the ships full of mints?
+      Long Description
+    HASA:
+      SKU
 
 
   Vendor
@@ -104,9 +101,8 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Shipment
       Invoice
       Order
-      Bill Of Lading
-      Invoice Line
-      Invoice Line Item
-      SKU
+    TO-DO: 
+      Meet some vendors
+      Listen to stories about vendors
 
 
