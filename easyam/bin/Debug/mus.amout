@@ -1,172 +1,106 @@
 //                              MASTER USE CASES                               
-//                   Model Generation: 07/19/2017 20:04:32                     
+//                   Model Generation: 07/20/2017 05:42:03                     
 //                                                                             
 
 BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Order Goods
+  02.Start Quote
     WHEN: 
-      The inventory count for an item falls below its re-order point
+      A potential customer purchases new property
     ASA: 
-      Warehouse Worker
+      Agent
+      Agent Supervisor
     INEEDTO: 
-      Place an order with our suppliers to replenish needed items
+      Start a new quote
     SOTHAT: 
-      we don't run out of things and are able to fulfill our orders from our customers
+      The potential customer becomes a real customer
     NOTES: 
-      Order Goods was specifically requested by the guy in the plaid sweater
-      It seems to be very important for some reason
-
-
-  Receive Order
-    WHEN: 
-      I'm out of something I realize I need
-    ASA: 
-      Customer
-    INEEDTO: 
-      Place an order for new stuff
-    SOTHAT: 
-      I can be happy owning things I think I need
-
-
-  Receive Shipment
-    WHEN: 
-      A truck arrives at the loading dock
-    ASA: 
-      Warehouse Worker
-    INEEDTO: 
-      Unload the truck
-    SOTHAT: 
-      We can get new trucks in
-      We can have stuff to ship to other people
-
-
-  Reject Shipment
-    WHEN: 
-      We are recieving a shipment and most of the goods are unsatisfactory
-    ASA: 
-      Warehouse Worker
-    INEEDTO: 
-      Reject the shipment
-    SOTHAT: 
-      We can get the goods we need from another vendor
-
-
-  Reject Part Of Shipment
-    WHEN: 
-      We are recieving a shipment and a few of the items are unsatisfactory
-    ASA: 
-      Warehouse Worker
-    INEEDTO: 
-      Reject parts of the shipment that are unsatisfactory
-    SOTHAT: 
-      We can restock needed goods as soon as possible
-
-
-  Reconcile BOL
-    WHEN: 
-      A truck arrives at the guard shack
-    ASA: 
-      Guard
-    INEEDTO: 
-      Reconcile the BOL with the paperwork
-    SOTHAT: 
-      Warehouse workers will know a vetted truck is waiting to unload
-
-
-  Put Away New Shipment
-    WHEN: 
-      A shipment has been received approved and recorded
-    ASA: 
-      Warehouse Worker
-    INEEDTO: 
-      Put Away New Shipment
-    SOTHAT: 
-      The loading area is freed up to accept new shipments
-    NOTES: 
-      no commas allowed here
-
-
-  Conduct Spot Inventory
-    WHEN: 
-      A truck arrives at the gate
-      An accountant calls on the phone
-      There's a break-in at the warehouse
-    ASA: 
-      Warehouse Worker
-      Warehouse Supervisor
-      Nightshift Guard Supervisor
-    INEEDTO: 
-      Conduct a formal spot inventory by hand using the older books
-    SOTHAT: 
-      The insurance company is notified in case of loss
-      Incoming shipments will adequately update the running inventory
-    NOTES: 
-      I love inventory
-      the actor list isn't complete yet
+      20 points
+      This is a great meeting
+      I really like ice cream
+      Meet the agents
+      Have lunch with the agents
     QUESTIONS: 
-      Do we differentiate between goods and services?
+      What's a quote?
+      Why are we here?
+      Is this all done online or can it be done in person?
 
 
-  Conduct Regular Inventory
-    WHEN: 
-      The first of the month rolls around
-    ASA: 
-      Warehouse Supervisor
-    INEEDTO: 
-      Conduct a formal inventory using an audited procedure
-    SOTHAT: 
-      Our accounting system stays coherent
-      We know what to order
+  01.Identify Potential Customer
+    NOTES: 
+      12 points
 
 
-  Create Shipment
-    WHEN: 
-      An order has been picked and put in the staging area
-    ASA: 
-      Warehouse Worker
-    INEEDTO: 
-      Create a shipment to the customer
-    SOTHAT: 
-      The items customers want will arrive on-time for them
-      The staging area is freed up to process shipments for customers
+  03.Specify Quote Type
+    NOTES: 
+      12 points
 
 
-  Pick Shipment
-    WHEN: 
-      An order has been received and we have enough goods
-    ASA: 
-      Warehouse Worker
-    INEEDTO: 
-      Pick items from the warehouse to send to the customer
-    SOTHAT: 
-      We can put the items customers want on a truck and send it to them
+  04.Identify Policy Type
+    NOTES: 
+      12 points
 
 
-  Ship Goods
-    WHEN: 
-      An order has been picked and the shipment created
-    ASA: 
-      Guard
-    INEEDTO: 
-      Approve the outgoing items and shipment
-    SOTHAT: 
-      The customer receives goods they want
+  05.Identify Coverables
+    NOTES: 
+      20 points
 
 
-  Review Daily Warehouse Activity
-    WHEN: 
-      The end of the working day occurs
-    ASA: 
-      Warehouse Manager
-    INEEDTO: 
-      Review all the activity in the warehouse
-    SOTHAT: 
-      The business is operating as it should
+  06.Identify Coverages
+    NOTES: 
+      52 points
 
 
-  MISC
+  07.Get A Quote
+    NOTES: 
+      52 points
 
 
-  ALL
+  08.Select Offering
+    NOTES: 
+      12 points
+
+
+  09.Select Payment Plan
+    NOTES: 
+      52 points
+
+
+  10.Send Written Quote Proposal
+    NOTES: 
+      12 points
+
+
+  12.Issues Policy
+    NOTES: 
+      20 points
+
+
+  11.Receive Down Payment
+    NOTES: 
+      20 points
+
+
+  13.Provide links to other system
+    NOTES: 
+      20 points
+
+
+  14.Modify Existing Policy
+    NOTES: 
+      32 points
+
+
+  12.View Agent Work In Progress
+    NOTES: 
+      20 points
+
+
+  15.ALL
+
+
+  16.MISC
+
+
+  MASTER
 
 

@@ -1,0 +1,14 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                   QUOTE                                     
+//                   Model Generation: 07/20/2017 05:42:04                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Quote
+
+
+    HASA: 
+      Policy
+      Quote Proposal
+      Quote Type
+      Offering
+      Down Payment

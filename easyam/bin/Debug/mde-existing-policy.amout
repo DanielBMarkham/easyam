@@ -1,0 +1,10 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                              EXISTING POLICY                                
+//                   Model Generation: 07/20/2017 05:42:04                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Existing Policy
+
+
+    HASA: 
+      Policy

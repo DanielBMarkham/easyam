@@ -1,108 +1,61 @@
 //                           MASTER DOMAIN ENTITIES                            
-//                   Model Generation: 07/19/2017 20:04:32                     
+//                   Model Generation: 07/20/2017 05:42:03                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE
-  Shipment
-    CONTAINS: 
-      Shipment Number
-      Shipment Date
-      Expected Arrival Date
+  Quote Proposal
+
+
+  Potential Customer
     HASA:
-      Bill Of Lading
-    QUESTIONS: 
-      Does this involve real ships?
-      Do we get free mints?
-      Are the ships full of mints?
+      Quote
+      Existing Policy
 
 
-  Order
-    CONTAINS: 
-      Order Number
-      Order Date
-      Customer Number
-      Total Amount
+  Offering
+
+
+  Existing Policy
     HASA:
-      Shipment
+      Policy
 
 
-  Bill Of Lading
-    CONTAINS: 
-      Pallet List
-
-
-  Inventory Item
-    CONTAINS: 
-      Inventory Item Description
-      Inventory Short Code
-      Inventory Long Code
-
-
-  Employee
-    CONTAINS: 
-      First Name
-      Last Name
-      Social Security Number
-      Hire Date
-
-
-  Employee Type
-    CONTAINS: 
-      Role Name
-      Salary Level
-
-
-  SKU
-    CONTAINS: 
-      Item Number
-      Quantity
+  Quote
     HASA:
-      Inventory Item
+      Policy
+      Quote Proposal
+      Quote Type
+      Offering
+      Down Payment
 
 
-  Customer
-    CONTAINS: 
-      Customer Number
-      Address
+  Quote Type
+
+
+  Down Payment
+
+
+  Policy
     HASA:
-      Order
-      Invoice
+      Policy Coverages
+      Payment Plan
+      Policy Type
 
 
-  Invoice
-    CONTAINS: 
-      Invoice Number
-      Invoice Date
-      Invoice Total Amount
+  Policy Type
+
+
+  Payment Plan
+
+
+  Coverables
     HASA:
-      Invoice Line
-      Invoice Line Item
+      Policy Coverages
 
 
-  Invoice Line
-    CONTAINS: 
-      Line Number
-      Line Total
+  Policy Coverages
 
 
-  Invoice Line Item
-    CONTAINS: 
-      Long Description
-    HASA:
-      SKU
-
-
-  Vendor
-    CONTAINS: 
-      Vendor Number
-      Address
-      Last Order Date
-    HASA:
-      Shipment
-      Invoice
-      Order
-    TO-DO: 
-      Meet some vendors
-      Listen to stories about vendors
+  Other Systems
 
 
