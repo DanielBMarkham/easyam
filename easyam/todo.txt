@@ -1,0 +1,24 @@
+- Remove default sub-directory creation. Just send all to output
+
+- SCENARIO needs to be a keyword for behavior - that shows up in feature file output. A type of attribute.
+
+- basic feature file generation needs to be added, including parent mus info, comments, and supplementals and notes
+
+- add name/value tags in
+
+- add an option to do round-trip modeling from the command line
+
+- Add in a rename function from command line
+
+- filtering output by namespace
+
+- Needs some way of queue ordering instead of having to prefix.
+
+- Should we have some new way of handling points instead of making it a comment? Don't want it on cards
+
+- EXAMPLE FIle, the scenario notes are being attached to the wrong feature
+
+- basic test plan output for a given sprint, including parent mus info, comments, and supplementals and notes
+
+- auto SVG domain model creation, including a frame html file
+

@@ -54,14 +54,12 @@
         let BehaviorDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Behavior")
         let StructureDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Structure")
         let SupplementalDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Supplemental")
-        let MetaDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Meta")
         {
             SourceDirectoryInfo=sourceDirectoryInfo
             DestinationDirectoryInfo=destinationDirectoryInfo
             BehaviorDirectoryInfo=BehaviorDirectoryInfo
             StructureDirectoryInfo=StructureDirectoryInfo
             SupplementalDirectoryInfo=SupplementalDirectoryInfo
-            MetaDirectoryInfo=MetaDirectoryInfo
         }
     let allCardinalNumbers = {1..10000}
 
@@ -81,7 +79,9 @@
         let compilerResult = makeRawModel processedIncomingLines compilerReturn
         saveMasterQuestionList (System.AppDomain.CurrentDomain.BaseDirectory) "mql.html" compilerResult
         saveModelGuide (System.AppDomain.CurrentDomain.BaseDirectory + "master-cards.html") compilerResult
+        saveProjectBacklog (System.AppDomain.CurrentDomain.BaseDirectory + "project-cards.html") compilerResult
         saveCanonicalModel System.AppDomain.CurrentDomain.BaseDirectory compilerResult
+        saveFeatureFiles System.AppDomain.CurrentDomain.BaseDirectory compilerResult
         printCompilerMessages compilerResult.CompilerMessages
         ()
 

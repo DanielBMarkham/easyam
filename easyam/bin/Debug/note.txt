@@ -1,0 +1,25 @@
+
+
+SPRINT TEST PLAN OUTLINE
+
+- Introduction and Objectives (1 paragraph)
+- Scope (1 paragraph)
+
+- Acceptance Testing Strategy - This doc and the accompanying scripts, along with the test automation, consists of approval for this sprint
+
+- System Testing Strategy - Unit tests and test results are provided for data validation, API integration
+
+- Testing Strategy for non-automated tests (1 paragraph). We automate all behavior-based tests and have a plan for eventual automation of manual tests
+
+- Business Rule Testing - separate gherkin file
+
+- Testing strategy by Business Supplemental
+
+- Bug flow
+
+- (Optional) Activity Diagram (business level) for stories being completed this sprint
+
+- Exit criteria
+
+- Script reference
+

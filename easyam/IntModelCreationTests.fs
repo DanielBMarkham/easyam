@@ -1068,3 +1068,69 @@
         let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
         newCompilerStatus.ModelItems |> should haveLength 5
 
+    [<Test>]
+    let ``ROUNDTRIP: simple backlog list with annotations``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          "MASTER BACKLOG:"
+                        ; "  02.Start Quote // 20 points"
+                        ; "  01.Identify Potential Customer // 12 points"
+                        ; "  03.Specify Quote Type // 12 points"
+                        ; "  04.Identify Policy Type // 12 points"
+                        |]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 5
+
+    [<Test>]
+    let ``ROUNDTRIP: master supp page works``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Has to use existing back-end"
+                        |]
+        let fileInfo2 = getFakeFileInfo()
+        let testText2 = [|
+                          ""
+                        ; "BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Left nav must synchronize with main screen"
+                        |]
+        let fileInfo3 = getFakeFileInfo()
+        let testText3 = [|
+                          ""
+                        ; "BUSINESS SUPPLEMENTAL ABSTRACT TO-BE"
+                        ; "  Has to use existing back-end"
+                        ; ""
+                        ; ""
+                        ; "  Left nav must synchronize with main screen"
+                        ; ""
+                        ; ""
+                        ; "  Must be ADA compliant"
+                        ; "    NOTES: "
+                        ; "      <code goes here>"
+                        ; ""
+                        ; ""
+                        ; "  Must be compatible with major recent browsers"
+                        ; ""
+                        ; ""
+                        ; "  Must be responsive to different screen sizes"
+                        ; ""
+                        ; ""
+                        ; "  Must confirm to Service Level Agreements"
+                        ; ""
+                        ; ""
+                        ; "  Must support multiple user types"
+                        ; ""
+                        ; ""
+                        ; "  Must use existing middleware"
+                        ; ""
+                        ; ""
+                        ; "  Top summary must synchronize with main screen"
+                        ; ""
+                        ; ""
+                        |]
+        let listToProcess = [|(fileInfo1,testText1);(fileInfo2,testText2);(fileInfo3,testText3)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 10
+        newCompilerStatus.ModelItems.[1].Annotations |> should haveLength 0

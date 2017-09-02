@@ -1,8 +1,13 @@
 //                              MASTER USE CASES                               
-//                   Model Generation: 07/20/2017 05:42:03                     
+//                   Model Generation: 09/02/2017 15:44:57                     
 //                                                                             
 
 BUSINESS BEHAVIOR ABSTRACT TO-BE
+  01.Identify Potential Customer
+    NOTES: 
+      12 points
+
+
   02.Start Quote
     WHEN: 
       A potential customer purchases new property
@@ -23,11 +28,6 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
       What's a quote?
       Why are we here?
       Is this all done online or can it be done in person?
-
-
-  01.Identify Potential Customer
-    NOTES: 
-      12 points
 
 
   03.Specify Quote Type
@@ -70,12 +70,17 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
       12 points
 
 
+  11.Receive Down Payment
+    NOTES: 
+      20 points
+
+
   12.Issues Policy
     NOTES: 
       20 points
 
 
-  11.Receive Down Payment
+  12.View Agent Work In Progress
     NOTES: 
       20 points
 
@@ -88,11 +93,6 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
   14.Modify Existing Policy
     NOTES: 
       32 points
-
-
-  12.View Agent Work In Progress
-    NOTES: 
-      20 points
 
 
   15.ALL

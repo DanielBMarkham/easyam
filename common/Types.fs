@@ -302,7 +302,6 @@
             BehaviorDirectoryInfo:System.IO.DirectoryInfo
             StructureDirectoryInfo:System.IO.DirectoryInfo
             SupplementalDirectoryInfo:System.IO.DirectoryInfo
-            MetaDirectoryInfo:System.IO.DirectoryInfo
         }
     [<NoComparison>]
     type ProgramInputFiles = 

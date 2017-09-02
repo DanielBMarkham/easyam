@@ -1,0 +1,11 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                  CUSTOMER                                   
+//                   Model Generation: 09/02/2017 15:44:55                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Customer
+
+
+    HASA: 
+      Account
+      Agent

@@ -404,8 +404,9 @@
         | NewAttribute
         | ReferenceExistingAttribute
         | NewAnnotation
+        | NewAttributeAnnotation
          static member ToList() =
-            [PointerReset;NewModelItem;ReferenceExistingItem;LocationChange;NewJoin;NewAttribute;ReferenceExistingAttribute;NewAnnotation]
+            [PointerReset;NewModelItem;ReferenceExistingItem;LocationChange;NewJoin;NewAttribute;ReferenceExistingAttribute;NewAnnotation;NewAttributeAnnotation]
          override self.ToString() =
           match self with
             | PointerReset->"PointerReset"
@@ -416,6 +417,7 @@
             | NewAttribute->"NewAttribute"
             | ReferenceExistingAttribute->"ReferenceExistingAttribute"
             | NewAnnotation->"NewAnnotation"
+            | NewAttributeAnnotation->"NewAttributeAnnotation"
     [<NoComparison>]
     type ModelAttributeTypes =
         | Trigger
@@ -626,7 +628,7 @@
         }
     // helpers
     let getTopLevelItems (modelItems:ModelItem2 []) =
-        modelItems |> Array.filter(fun x->x.Location.AbstractionLevel=AbstractionLevels.Abstract && x.Location.Genre=Genres.Business && x.Location.TemporalIndicator=TemporalIndicators.ToBe)
+        modelItems |> Array.filter(fun x->x.Location.AbstractionLevel=AbstractionLevels.Abstract && x.Location.Genre=Genres.Business && x.Location.TemporalIndicator=TemporalIndicators.ToBe) |> Array.sortBy(fun x->x.Description)
     let getMasterUserStories (modelItems:ModelItem2 []) = 
         (getTopLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Behavior)
     let getALL_MUS (modelItems:ModelItem2 []) = 
@@ -656,6 +658,20 @@
         modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.HasA)
     let getIsOwnedByA (modelItem:ModelItem2) =
         modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.IsOwnedByA)
+
+
+    let getProjectLevelItems (modelItems:ModelItem2 []) =
+        modelItems |> Array.filter(fun x->x.Location.AbstractionLevel=AbstractionLevels.Realized && x.Location.Genre=Genres.Business && x.Location.TemporalIndicator=TemporalIndicators.ToBe)
+    let getProjectUserStories (modelItems:ModelItem2 []) = 
+        (getProjectLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Behavior)
+    let getALL_ProjectUserStories (modelItems:ModelItem2 []) = 
+        let allItem = getProjectUserStories modelItems |> Array.tryFind(fun x->x.Description="ALL")
+        allItem
+    let getProjectDomainEntities (modelItems:ModelItem2 []) = 
+        (getProjectLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Structure)
+    let getProjectSupplementals (modelItems:ModelItem2 []) = 
+        (getProjectLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Supplemental)
+
 
     let getTotalAnnotationCount (items:ModelItem2 []) (annotationType:ANNOTATION_TOKEN_TYPE) = 
         items|>Array.sumBy(fun x->x.Annotations|>Array.filter(fun y->(fst y)=annotationType)|>Array.length)

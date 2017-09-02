@@ -1,61 +1,70 @@
 //                           MASTER DOMAIN ENTITIES                            
-//                   Model Generation: 07/20/2017 05:42:03                     
+//                   Model Generation: 09/02/2017 15:44:57                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE
-  Quote Proposal
-
-
-  Potential Customer
+  Account
     HASA:
+      Policy
+
+
+  Agent
+    HASA:
+      Policy
+      Payment Plan
+      Quote Type(LOB)
+      Policy Type(HO)
+      Coverables
+
+
+  Coverables
+    HASA:
+      Coverages
+
+
+  Coverages
+
+
+  Customer
+    HASA:
+      Account
+      Agent
+      Policy
       Quote
-      Existing Policy
-
-
-  Offering
-
-
-  Existing Policy
-    HASA:
-      Policy
-
-
-  Quote
-    HASA:
-      Policy
-      Quote Proposal
-      Quote Type
-      Offering
-      Down Payment
-
-
-  Quote Type
 
 
   Down Payment
 
 
-  Policy
-    HASA:
-      Policy Coverages
-      Payment Plan
-      Policy Type
-
-
-  Policy Type
+  Other Systems
 
 
   Payment Plan
-
-
-  Coverables
     HASA:
-      Policy Coverages
+      Down Payment
 
 
-  Policy Coverages
+  Policy
+    HASA:
+      Quote
+      Payment Plan
+      Quote Type(LOB)
+      Down Payment
 
 
-  Other Systems
+  Policy Type(HO)
+
+
+  Quote
+    HASA:
+      Account
+      Agent
+
+
+  Quote Type(LOB)
+    HASA:
+      Policy Type(HO)
+      Coverables
+      Coverages
 
 

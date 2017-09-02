@@ -257,6 +257,13 @@
         let itemNumber= "  (" + itemAlphaPrefix+(string x.Id) + ") "
         //wl sw 5 ("<h2>" + x.Description + "</h2>")
         wl sw 5 ("<h2><span class='item-title'>" + x.Description + "</span><span class='item-number'>" + itemNumber + "</span></h2>")
+        let hasAParent = x.Relations|>Array.exists(fun z->z.ModelJoinType=ModelJoin.Parent)
+        if hasAParent
+            then
+                let itemsParentId=(x.Relations|>Array.find(fun z->z.ModelJoinType=ModelJoin.Parent)).TargetId
+                let itemsParent=modelItems|>Array.find(fun z->z.Id=itemsParentId)
+                wl sw 5 ("<h2><span class='item-title'>" + ("PARENT: " + itemsParent.Description) + "</span><span class='item-number'>" + (itemAlphaPrefix + itemsParent.Description) + "</span></h2>")
+            else ()
         writeItemAttributes sw modelItems x
         x.Annotations |> Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Note) |> Array.iter(fun z->
             wl sw 5 ("<p class='notes'>" + (snd z) + "</p>")
@@ -326,19 +333,50 @@
         sw.Flush()
         sw.Close()
         ()
-    let centerCommentText (s:string) = 
+    let saveProjectBacklog (fileName:string) (compilerStatus:CompilerReturn) =
+        let modeltems = compilerStatus.ModelItems
+        let sw = System.IO.File.CreateText(fileName)
+        writeMinimalHtmlHead sw "Project Backlog" ["model-master.css"]
+        wl sw 1 "<body>"
+        wl sw 2 "<div id='content'>"
+        wl sw 3 "<div class='bucket-div'>"
+        wl sw 4 "<h1>Master User Stories</h1>"
+        getProjectUserStories compilerStatus.ModelItems |> Array.iteri(fun i x->
+            writeMasterItemDetail sw compilerStatus.ModelItems x
+            )
+        wl sw 3 "</div'>"
+        wl sw 3 "<div class='bucket-div'>"
+        wl sw 4 "<h1>Master Domain Model</h1>"
+        getProjectDomainEntities compilerStatus.ModelItems |> Array.iteri(fun i x->
+            writeMasterItemDetail sw compilerStatus.ModelItems x
+            )
+        wl sw 3 "</div'>"
+        wl sw 3 "<div class='bucket-div'>"
+        wl sw 4 "<h1>Master Supplemental List</h1>"
+        getProjectSupplementals compilerStatus.ModelItems |> Array.filter(fun x->x.Location.Bucket=Buckets.Supplemental) |> Array.iteri(fun i x->
+            writeMasterItemDetail sw compilerStatus.ModelItems x
+            )
+        wl sw 3 "</div'>"
+        wl sw 2 "</div>"
+        wl sw 1 "</body>"
+        sw.Flush()
+        sw.Close()
+        ()
+    let centerGherkinCommentText (s:string) = 
+        if s.Length<78 then ("#" + s.PadBoth 78) else ("#" + s)
+    let centerEasyAMCommentText (s:string) = 
         if s.Length<77 then ("//" + s.PadBoth 77) else ("//" + s)
     let writeCompilerReportAmoutFormat (fullFileName:string) (compilerStatus:CompilerReturn) = 
         let sb= new System.Text.StringBuilder(65535)
-        sb.wl (centerCommentText "EASYAM REPORT")
-        sb.wl (centerCommentText ("Model Generation: " + string DateTime.Now))
-        sb.wl (centerCommentText "")
+        sb.wl (centerEasyAMCommentText "EASYAM REPORT")
+        sb.wl (centerEasyAMCommentText ("Model Generation: " + string DateTime.Now))
+        sb.wl (centerEasyAMCommentText "")
         sb.wl ("//    Compiler Messages")
         sb.wl ("//    -----------------")
         compilerStatus.CompilerMessages |> Array.iteri(fun i x->
             sb.wl (("//  " + x.SourceFileShort + ":" + (string x.SourceLineBegin) + ": " + (string x.MessageType) + ": " + x.Message))
             )
-        sb.wl (centerCommentText "")
+        sb.wl (centerEasyAMCommentText "")
         sb.wl ("//    Model Summary")
         sb.wl ("//    -------------")
         let MUS=getMasterUserStories compilerStatus.ModelItems
@@ -397,9 +435,9 @@
         )
     let writeMasterUseCasesAmoutFormat (fullFileName:string) (compilerStatus:CompilerReturn) =
         let sb= new System.Text.StringBuilder(65535)
-        sb.wl (centerCommentText "MASTER USE CASES")
-        sb.wl (centerCommentText ("Model Generation: " + string DateTime.Now))
-        sb.wl (centerCommentText "")
+        sb.wl (centerEasyAMCommentText "MASTER USE CASES")
+        sb.wl (centerEasyAMCommentText ("Model Generation: " + string DateTime.Now))
+        sb.wl (centerEasyAMCommentText "")
         sb.wl ("")
         sb.wl ("BUSINESS BEHAVIOR ABSTRACT TO-BE")
         let MUS=getMasterUserStories compilerStatus.ModelItems
@@ -425,9 +463,9 @@
         System.IO.File.WriteAllText(fullFileName, string sb)
     let writeMasterSupplementalsAmoutFormat (fullFileName:string) (compilerStatus:CompilerReturn) =
         let sb= new System.Text.StringBuilder(65535)
-        sb.wl (centerCommentText "MASTER SUPPLEMENTALS")
-        sb.wl (centerCommentText ("Model Generation: " + string DateTime.Now))
-        sb.wl (centerCommentText "")
+        sb.wl (centerEasyAMCommentText "MASTER SUPPLEMENTALS")
+        sb.wl (centerEasyAMCommentText ("Model Generation: " + string DateTime.Now))
+        sb.wl (centerEasyAMCommentText "")
         sb.wl ("")
         sb.wl ("BUSINESS SUPPLEMENTAL ABSTRACT TO-BE")
         let msp=getMasterSupplementals compilerStatus.ModelItems
@@ -452,9 +490,9 @@
     
     let writeMasterDomainEntitiesAmoutFormat (fullFileName:string) (compilerStatus:CompilerReturn) =
         let sb= new System.Text.StringBuilder(65535)
-        sb.wl (centerCommentText "MASTER DOMAIN ENTITIES")
-        sb.wl (centerCommentText ("Model Generation: " + string DateTime.Now))
-        sb.wl (centerCommentText "")
+        sb.wl (centerEasyAMCommentText "MASTER DOMAIN ENTITIES")
+        sb.wl (centerEasyAMCommentText ("Model Generation: " + string DateTime.Now))
+        sb.wl (centerEasyAMCommentText "")
         sb.wl ("")
         sb.wl ("BUSINESS STRUCTURE ABSTRACT TO-BE")
         let msp=getMasterDomainEntities compilerStatus.ModelItems
@@ -549,10 +587,10 @@
         writeMasterDomainEntitiesAmoutFormat MdeFileName compilerStatus
 
         let writeDetailHeader (sb:System.Text.StringBuilder) (title:string) (itemDescription:string) = 
-            sb.wl (centerCommentText title)
-            sb.wl (centerCommentText (itemDescription.ToUpper()))
-            sb.wl (centerCommentText ("Model Generation: " + string DateTime.Now))
-            sb.wl (centerCommentText "")
+            sb.wl (centerEasyAMCommentText title)
+            sb.wl (centerEasyAMCommentText (itemDescription.ToUpper()))
+            sb.wl (centerEasyAMCommentText ("Model Generation: " + string DateTime.Now))
+            sb.wl (centerEasyAMCommentText "")
             sb.wl ("")
         let writeDetailAnnotations (sb:System.Text.StringBuilder) (x:ModelItem2) =
             let notes=x.Annotations|>Array.filter(fun y->(fst y)=ANNOTATION_TOKEN_TYPE.Note)
@@ -667,9 +705,37 @@
 
         wl sw 2 "</div>"
         sw.Flush()
-        sw.Close()
-        
+        sw.Close()        
         ()
+
+    let saveFeatureFile (fileName:string) (musItem:ModelItem2) (compilerStatus:CompilerReturn) =
+        let sb= new System.Text.StringBuilder(65535)
+        sb.wl (centerGherkinCommentText "GHERKIN FEATURE FILE")
+        sb.wl (centerGherkinCommentText musItem.Description)
+        sb.wl (centerGherkinCommentText ("Model Generation: " + string DateTime.Now))
+        sb.wl (centerGherkinCommentText "")
+        sb.wl ("")
+        sb.wl ("Feature: " + musItem.Description)
+        sb.wl ("    Trigger(s): When ")
+        sb.wl ("    Actor(s): As a ")
+        sb.wl ("    Goal(s): I need to ")
+        sb.wl ("    Business Context(s): So that ")
+        sb.wl ("")
+        sb.wl ("    Notes")
+        sb.wl ("")
+        sb.wl ("    Questions")
+
+
+        System.IO.File.WriteAllText(fileName,sb.ToString())
+        ()
+
+    let saveFeatureFiles (directoryPath:string) (compilerStatus:CompilerReturn) =
+        let mus=getMasterUserStories compilerStatus.ModelItems
+        mus |> Array.iteri(fun i x->
+            let shortFileName=x.Description.ToSafeFileName() + ".feature"
+            let fileName=System.IO.Path.Combine([|directoryPath;shortFileName|])
+            saveFeatureFile fileName x compilerStatus
+            )
 
 //    let drawEntityBox (sw:System.IO.StreamWriter) (box:SVGEntityBox) (svgConfig:SVGSetup) =
 //        sw.WriteLine ("<rect x=\"" + box.xPos.ToString() + "\" y=\"" + box.yPos.ToString() + "\" height=\"" + box.height.ToString() + "\" width=\"" + box.width.ToString() + "\" style=\"stroke:" + svgConfig.EntityBorderColor + "; fill: " + svgConfig.EntityFillColor  + "; fill-opacity: " + svgConfig.EntityFillOpacity  + "\"/>")

@@ -1,0 +1,39 @@
+//                               EASYAM REPORT                                 
+//                   Model Generation: 09/02/2017 15:44:55                     
+//                                                                             
+//    Compiler Messages
+//    -----------------
+//  01-root-items.amin:: Info: file loading completed with 4 files processed along with 128 lines of code reviewed
+//  02-root-item-joins.amin:Some(3): Warning: target item ALL does not currently exist in model when trying to make join. Skipping.
+//  02-root-item-joins.amin:Some(5): Warning: target item ALL does not currently exist in model when trying to make join. Skipping.
+//  02-root-item-joins.amin:Some(7): Warning: target item ALL does not currently exist in model when trying to make join. Skipping.
+//  02-root-item-joins.amin:Some(9): Warning: target item ALL does not currently exist in model when trying to make join. Skipping.
+//  02-root-item-joins.amin:Some(11): Warning: target item ALL does not currently exist in model when trying to make join. Skipping.
+//  02-root-item-joins.amin:Some(13): Warning: target item ALL does not currently exist in model when trying to make join. Skipping.
+//  02-root-item-joins.amin:Some(15): Warning: target item ALL does not currently exist in model when trying to make join. Skipping.
+//  02-root-item-joins.amin:Some(17): Warning: target item ALL does not currently exist in model when trying to make join. Skipping.
+//  02-root-item-joins.amin:Some(19): Warning: target item ALL does not currently exist in model when trying to make join. Skipping.
+//  02-root-item-joins.amin:Some(21): Warning: target item ALL does not currently exist in model when trying to make join. Skipping.
+//  2017-07-19-notes.amin:Some(54): Warning: target item 01.Identify Potential Customer already exists once as a join. There is a duplicate entry. Previous join exists on 2017-07-19-notes.amin(2) line 48.
+//                                                                             
+//    Model Summary
+//    -------------
+//    Total Master User Stories: 18
+//    Total open questions: 3
+//    Total notes: 19
+//    Total to-do items: 0
+//    Total work items: 0
+//
+//    Total Master Domain Entities: 12
+//    Total open questions: 0
+//    Total notes: 0
+//    Total to-do items: 0
+//    Total work items: 0
+//
+//    Total Master Supplementals: 9
+//    Total open questions: 0
+//    Total notes: 1
+//    Total to-do items: 0
+//    Total work items: 0
+//
+//

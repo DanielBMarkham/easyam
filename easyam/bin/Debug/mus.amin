@@ -1,0 +1,106 @@
+//                              MASTER USE CASES                               
+//                   Model Generation: 09/02/2017 15:44:55                     
+//                                                                             
+
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  01.Identify Potential Customer
+    NOTES: 
+      12 points
+
+
+  02.Start Quote
+    WHEN: 
+      A potential customer purchases new property
+    ASA: 
+      Agent
+      Agent Supervisor
+    INEEDTO: 
+      Start a new quote
+    SOTHAT: 
+      The potential customer becomes a real customer
+    NOTES: 
+      20 points
+      This is a great meeting
+      I really like ice cream
+      Meet the agents
+      Have lunch with the agents
+    QUESTIONS: 
+      What's a quote?
+      Why are we here?
+      Is this all done online or can it be done in person?
+
+
+  03.Specify Quote Type
+    NOTES: 
+      12 points
+
+
+  04.Identify Policy Type
+    NOTES: 
+      12 points
+
+
+  05.Identify Coverables
+    NOTES: 
+      20 points
+
+
+  06.Identify Coverages
+    NOTES: 
+      52 points
+
+
+  07.Get A Quote
+    NOTES: 
+      52 points
+
+
+  08.Select Offering
+    NOTES: 
+      12 points
+
+
+  09.Select Payment Plan
+    NOTES: 
+      52 points
+
+
+  10.Send Written Quote Proposal
+    NOTES: 
+      12 points
+
+
+  11.Receive Down Payment
+    NOTES: 
+      20 points
+
+
+  12.Issues Policy
+    NOTES: 
+      20 points
+
+
+  12.View Agent Work In Progress
+    NOTES: 
+      20 points
+
+
+  13.Provide links to other system
+    NOTES: 
+      20 points
+
+
+  14.Modify Existing Policy
+    NOTES: 
+      32 points
+
+
+  15.ALL
+
+
+  16.MISC
+
+
+  MASTER
+
+
