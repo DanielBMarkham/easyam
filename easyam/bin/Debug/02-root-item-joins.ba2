@@ -1,0 +1,35 @@
+SYSTEM ABSTRACT SUPPLEMENTALS:
+  Has to use existing back-end
+    AFFECTS ALL
+  Must be compatible with major recent browsers
+    AFFECTS ALL
+  Must be responsive to different screen sizes 
+    AFFECTS ALL
+  Must be ADA compliant 
+    AFFECTS ALL
+  Must use existing middleware
+    AFFECTS ALL
+  Must confirm to Service Level Agreements 
+    AFFECTS ALL
+  Must support multiple user types 
+    AFFECTS ALL
+  Data entry on screens must be valid and conform to the database schema
+    AFFECTS ALL
+  Top summary must synchronize with main screen
+    AFFECTS ALL
+  Left nav must synchronize with main screen
+    AFFECTS ALL
+
+MASTER DOMAIN MODEL:
+  Customer HASA Account
+  Customer HASA Agent
+  Account HASA Policy
+  Account HASA Quote
+  Quote HASA Policy
+  Quote HASA Payment Plan
+  Quote HASA Quote Type(LOB)
+  Quote Type(LOB) HASA Policy Type(HO)
+  Quote Type(LOB) HASA Coverables
+  Coverables HASA Coverages
+  Payment Plan HASA Down Payment
+

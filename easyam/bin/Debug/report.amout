@@ -1,25 +1,27 @@
 //                               EASYAM REPORT                                 
-//                   Model Generation: 09/02/2017 15:44:57                     
+//                   Model Generation: 09/08/2017 11:23:25                     
 //                                                                             
 //    Compiler Messages
 //    -----------------
-//  mde-account.amin:: Info: file loading completed with 43 files processed along with 417 lines of code reviewed
+//  j2buxjcs.ijv_tester.bsx:: Info: file loading completed with 7 files processed along with 255 lines of code reviewed
+//  b5z4o3hr.ebo_tester.bsx:Some(29): Warning: target item Bill Of Lading already exists once as a join. There is a duplicate entry. Previous join exists on b5z4o3hr.ebo_tester.bsx(1) line 27.
+//  z13dr1yp.f5x_tester.bsx:Some(11): Warning: target item Vendor already exists once as a join. There is a duplicate entry. Previous join exists on z13dr1yp.f5x_tester.bsx(2) line 11.
 //                                                                             
 //    Model Summary
 //    -------------
-//    Total Master User Stories: 18
-//    Total open questions: 3
-//    Total notes: 19
+//    Total Master User Stories: 15
+//    Total open questions: 1
+//    Total notes: 5
 //    Total to-do items: 0
 //    Total work items: 0
 //
 //    Total Master Domain Entities: 12
-//    Total open questions: 0
+//    Total open questions: 3
 //    Total notes: 0
-//    Total to-do items: 0
+//    Total to-do items: 2
 //    Total work items: 0
 //
-//    Total Master Supplementals: 9
+//    Total Master Supplementals: 7
 //    Total open questions: 0
 //    Total notes: 1
 //    Total to-do items: 0

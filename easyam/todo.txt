@@ -1,16 +1,18 @@
-- Remove default sub-directory creation. Just send all to output
+? Remove default sub-directory creation. Just send all to output
 
-- SCENARIO needs to be a keyword for behavior - that shows up in feature file output. A type of attribute.
+X SCENARIO needs to be a keyword for behavior - that shows up in feature file output. A type of attribute.
 
-- basic feature file generation needs to be added, including parent mus info, comments, and supplementals and notes
+X basic feature file generation needs to be added, including parent mus info, comments, and notes
 
-- add name/value tags in
+X add name/value tags in
+
+- feature file generation with supplementals
 
 - add an option to do round-trip modeling from the command line
 
 - Add in a rename function from command line
 
-- filtering output by namespace
+- filtering/ordering output by namespace and/or name-value tags
 
 - Needs some way of queue ordering instead of having to prefix.
 
@@ -22,3 +24,7 @@
 
 - auto SVG domain model creation, including a frame html file
 
+- add tasks
+
+- Add diagrams output where needed
+- Add back in html documentation output

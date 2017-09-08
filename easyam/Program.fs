@@ -1,6 +1,7 @@
 ﻿module Main//
     open Types
     open SAModel
+    open Lenses
     open Utils
     open Persist
     open FParsec
@@ -54,12 +55,20 @@
         let BehaviorDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Behavior")
         let StructureDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Structure")
         let SupplementalDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Supplemental")
+        let featureDirectoryFullName=destinationDirectoryInfo.FullName + directorySeparatorCharacter + "features"
+        // for the features directory, we wipe it every time (for now) to prevent confusion caused by overwrites
+        if System.IO.Directory.Exists(featureDirectoryFullName) then System.IO.Directory.Delete(featureDirectoryFullName, true) else ()
+        let FeaturesDirectoryInfo = getOrMakeDirectory (featureDirectoryFullName)
+        // add standard two Ruby/Cucumber sub-folders
+        System.IO.Directory.CreateDirectory(featureDirectoryFullName + directorySeparatorCharacter + "step_definitions") |> ignore
+        System.IO.Directory.CreateDirectory(featureDirectoryFullName + directorySeparatorCharacter + "support") |> ignore
         {
             SourceDirectoryInfo=sourceDirectoryInfo
             DestinationDirectoryInfo=destinationDirectoryInfo
             BehaviorDirectoryInfo=BehaviorDirectoryInfo
             StructureDirectoryInfo=StructureDirectoryInfo
             SupplementalDirectoryInfo=SupplementalDirectoryInfo
+            FeaturesDirectoryInfo=FeaturesDirectoryInfo
         }
     let allCardinalNumbers = {1..10000}
 
@@ -72,16 +81,16 @@
     
     let doStuff (opts:EasyAMProgramConfig) =
         let programDirectories = getDirectories opts
-        let allFiles = System.IO.Directory.EnumerateFiles((fst opts.sourceDirectory.parameterValue), "*.amin", System.IO.SearchOption.AllDirectories)
+        let allFiles = System.IO.Directory.EnumerateFiles(programDirectories.SourceDirectoryInfo.FullName, "*.amin", System.IO.SearchOption.AllDirectories)
         let fileList = allFiles |> Seq.toArray |> Array.map(fun x->System.IO.FileInfo(x)) |> Array.sortBy(fun x->x.FullName)
         let listToProcess = loadInAllIncomingLines fileList
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let compilerResult = makeRawModel processedIncomingLines compilerReturn
-        saveMasterQuestionList (System.AppDomain.CurrentDomain.BaseDirectory) "mql.html" compilerResult
-        saveModelGuide (System.AppDomain.CurrentDomain.BaseDirectory + "master-cards.html") compilerResult
-        saveProjectBacklog (System.AppDomain.CurrentDomain.BaseDirectory + "project-cards.html") compilerResult
-        saveCanonicalModel System.AppDomain.CurrentDomain.BaseDirectory compilerResult
-        saveFeatureFiles System.AppDomain.CurrentDomain.BaseDirectory compilerResult
+        saveMasterQuestionList programDirectories.DestinationDirectoryInfo.FullName "mql.html" compilerResult
+        saveModelGuide (programDirectories.DestinationDirectoryInfo.FullName + "master-cards.html") compilerResult
+        saveProjectBacklog (programDirectories.DestinationDirectoryInfo.FullName + "project-cards.html") compilerResult
+        saveCanonicalModel programDirectories.DestinationDirectoryInfo.FullName compilerResult
+        saveFeatureFiles programDirectories.FeaturesDirectoryInfo.FullName compilerResult
         printCompilerMessages compilerResult.CompilerMessages
         ()
 

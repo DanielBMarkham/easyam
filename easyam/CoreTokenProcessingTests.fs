@@ -4,6 +4,7 @@
     open EasyamParsingEngine
     open Types
     open SAModel
+    open Lenses
 
 
     [<Test>]

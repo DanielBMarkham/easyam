@@ -1,0 +1,63 @@
+// These are the notes we took during that meeting with the client
+
+
+MASTER BACKLOG
+  02.Start Quote
+    QUESTIONS:
+      What's a quote?
+      Why are we here?
+    NOTES:
+      This is a great meeting
+      I really like ice cream
+    TODO:
+      Meet the agents
+      Have lunch with the agents
+
+  WHEN: A potential customer purchases new property
+  ASA: Agent
+    Agent Supervisor
+  INEEDTO: Start a new quote
+    QUESTION: Is this all done online or can it be done in person?
+  SOTHAT: The potential customer becomes a real customer
+
+MASTER SUPPLEMENTALS
+  Must be ADA compliant
+    NOTES:
+      //
+      // <code goes here>
+      //
+
+PROJECT BACKLOG
+  Identify Customer Blank Screen PARENT 01.Identify Potential Customer
+  ASA: Agent
+  INEEDTO: See the Customer Identification Screen
+  SOTHAT: I can interact with it
+
+  Enter Initial Customer Information PARENT 01.Identify Potential Customer
+  WHEN: I enter Customer Identification information
+  ASA: Agent
+  INEEDTO: Store the information entered
+  SOTHAT: I can work with the customer
+  
+  Retrieve Existing Customer Information PARENT 01.Identify Potential Customer
+  ASA: Agent
+  WHEN: I enter Customer Information
+  INEEDTO: See relevant customer information
+  SOTHAT: I can make sure I am working with the right customer
+
+  Reuse Existing Customer Information PARENT 01.Identify Potential Customer
+  ASA: Agent
+  INEEDTO: Fill out the information for an existing customer
+  SOTHAT: We don't have two different accounts for the same person
+    NOTE: They must get multi-policy discount if they are an existing customer
+
+  Enter a new customer PARENT 01.Identify Potential Customer
+  ASA: Agent
+  INEEDTO: Enter information for a new customer
+  SOTHAT: I can create an account for them
+
+  Refuse accepting an invalid address PARENT 01.Identify Potential Customer
+  ASA: Agent
+  INEEDTO: Make sure that I don't enter an invalid address for my customer
+  SOTHAT: We are able to help him
+

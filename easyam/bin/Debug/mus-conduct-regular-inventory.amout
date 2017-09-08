@@ -1,0 +1,27 @@
+//                             MASTER USER STORY                               
+//                         CONDUCT REGULAR INVENTORY                           
+//                   Model Generation: 09/08/2017 11:23:25                     
+//                                                                             
+
+MASTER USER STORY: Conduct Regular Inventory
+    WHEN: 
+      The first of the month rolls around
+    ASA: 
+      Warehouse Supervisor
+    INEEDTO: 
+      Conduct a formal inventory using an audited procedure
+    SOTHAT: 
+      Our accounting system stays coherent
+      We know what to order
+
+
+    AFFECTEDBY: 
+      Always respond in a way that's easy for the user to understand
+      Never make the user wait
+      Never confuse the user
+      Continuously inform the team about everything the users do
+      Always do the best we can to cheer the user up during any interaction
+
+    USES: 
+      Inventory Item
+      SKU

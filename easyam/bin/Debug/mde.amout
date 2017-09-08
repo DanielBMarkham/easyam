@@ -1,70 +1,108 @@
 //                           MASTER DOMAIN ENTITIES                            
-//                   Model Generation: 09/02/2017 15:44:57                     
+//                   Model Generation: 09/08/2017 11:23:25                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE
-  Account
-    HASA:
-      Policy
-
-
-  Agent
-    HASA:
-      Policy
-      Payment Plan
-      Quote Type(LOB)
-      Policy Type(HO)
-      Coverables
-
-
-  Coverables
-    HASA:
-      Coverages
-
-
-  Coverages
+  Bill Of Lading
+    CONTAINS: 
+      Pallet List
 
 
   Customer
+    CONTAINS: 
+      Customer Number
+      Address
     HASA:
-      Account
-      Agent
-      Policy
-      Quote
+      Order
+      Invoice
 
 
-  Down Payment
+  Employee
+    CONTAINS: 
+      First Name
+      Last Name
+      Social Security Number
+      Hire Date
 
 
-  Other Systems
+  Employee Type
+    CONTAINS: 
+      Role Name
+      Salary Level
 
 
-  Payment Plan
+  Inventory Item
+    CONTAINS: 
+      Inventory Item Description
+      Inventory Short Code
+      Inventory Long Code
+
+
+  Invoice
+    CONTAINS: 
+      Invoice Number
+      Invoice Date
+      Invoice Total Amount
     HASA:
-      Down Payment
+      Invoice Line
+      Invoice Line Item
 
 
-  Policy
+  Invoice Line
+    CONTAINS: 
+      Line Number
+      Line Total
+
+
+  Invoice Line Item
+    CONTAINS: 
+      Long Description
     HASA:
-      Quote
-      Payment Plan
-      Quote Type(LOB)
-      Down Payment
+      SKU
 
 
-  Policy Type(HO)
-
-
-  Quote
+  Order
+    CONTAINS: 
+      Order Number
+      Order Date
+      Customer Number
+      Total Amount
     HASA:
-      Account
-      Agent
+      Shipment
 
 
-  Quote Type(LOB)
+  SKU
+    CONTAINS: 
+      Item Number
+      Quantity
     HASA:
-      Policy Type(HO)
-      Coverables
-      Coverages
+      Inventory Item
+
+
+  Shipment
+    CONTAINS: 
+      Shipment Number
+      Shipment Date
+      Expected Arrival Date
+    HASA:
+      Bill Of Lading
+    QUESTIONS: 
+      Does this involve real ships?
+      Do we get free mints?
+      Are the ships full of mints?
+
+
+  Vendor
+    CONTAINS: 
+      Vendor Number
+      Address
+      Last Order Date
+    HASA:
+      Shipment
+      Invoice
+      Order
+    TO-DO: 
+      Meet some vendors
+      Listen to stories about vendors
 
 

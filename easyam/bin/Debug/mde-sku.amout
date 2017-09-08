@@ -1,0 +1,13 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                    SKU                                      
+//                   Model Generation: 09/08/2017 11:23:26                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: SKU
+    CONTAINS: 
+      Item Number
+      Quantity
+
+
+    HASA: 
+      Inventory Item

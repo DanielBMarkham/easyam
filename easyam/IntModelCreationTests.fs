@@ -4,26 +4,11 @@
     open EasyamParsingEngine
     open Types
     open Utils
+    open Persist
     open SAModel
+    open Lenses
     open BasicModel1
 
-    // Funky code. I need some way to pretend I have a real OS incoming file I'm processing
-    let getFakeFileInfo() = 
-        let tempColl = (new System.CodeDom.Compiler.TempFileCollection(System.AppDomain.CurrentDomain.BaseDirectory, false))
-        tempColl.AddExtension("bsx") |> ignore
-        let rndPrefix = System.IO.Path.GetRandomFileName()
-        let tempFileName = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, (rndPrefix + "_tester.bsx"))
-        tempColl.AddFile(tempFileName,false)
-        let fs1=System.IO.File.OpenWrite(tempFileName)
-        let sw1=new System.IO.StreamWriter(fs1)
-        sw1.WriteLine("test")
-        sw1.Close()
-        fs1.Close()
-        let ret=new System.IO.FileInfo(tempFileName)
-        tempColl.Delete()
-        ret
-    // memoize one to reuse
-    let dummyFileInfo = getFakeFileInfo()
 
     let setupCompilationScenario fileNumber incomingRawLineCount incomingLineCountWithEmptyLinesDeletedCount rawLineArray =
         initialProcessingOfIncomingFileLines fileNumber dummyFileInfo incomingRawLineCount incomingLineCountWithEmptyLinesDeletedCount rawLineArray

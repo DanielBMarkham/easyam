@@ -155,6 +155,7 @@
         |CONNECTIVE
         |ATTRIBUTE
         |NAMESPACE
+        |TAG
     [<NoComparison>]
     type EASYAM_TOKEN =
         {
@@ -169,8 +170,9 @@
         | Question
         | ToDo
         | Work
+        | Diagram
          static member ToList() =
-            [None;Note;Question;ToDo;Work]
+            [None;Note;Question;ToDo;Work;Diagram]
          override self.ToString() =
           match self with
             | None->"None"
@@ -178,6 +180,7 @@
             | Question->"Question"
             | ToDo->"ToDo"
             | Work->"Work"
+            | Diagram->"Diagram"
     let EasyAMTokens = 
         [
             {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES:"};
@@ -196,7 +199,10 @@
             {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="TO-DO:"};
             {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS:"};
             {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORKS"}
-            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="WORK:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="WORK:"}
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="DIAGRAMS:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="DIAGRAMS"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="DIAGRAM"};
 
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="PROGRAM BACKLOG:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="PROGRAM BACKLOG"};
@@ -307,6 +313,8 @@
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="INEEDTO"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="SOTHAT:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="SOTHAT"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="SCENARIO:"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="SCENARIO"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="CONTAINS:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="CONTAINS"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="INEEDTO:"};
@@ -315,6 +323,9 @@
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="BECAUSE"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="ITHASTOBETHAT:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="ITHASTOBETHAT"};
+
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TAG;           Token="@.+"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TAG;           Token="&.+"};
 
         ]
     let CommandTokens = EasyAMTokens |> List.map(fun x->x.Token)
@@ -341,7 +352,19 @@
             IndentLevel:int
             Commands:Command []
         }
-
+    let defaultIncomingLine =
+        {
+            FileCompilationNumber=0
+            File=null
+            FileRawLineNumber=0
+            FileEmptyLinesStrippedLineNumber=0
+            SourceRawLineNumber=0
+            SourceEmptyLinesStrippedLineNumber=0
+            LineText=""
+            LineWithoutLeadingSpaces=""
+            IndentLevel=0
+            Commands=Array.empty<Command>
+        }
 
 
 
@@ -424,18 +447,20 @@
         | Actor
         | Goal
         | BusinessContext
+        | Scenario
         | Contains
         | Because
         | Whenever
         | ItHasToBeThat
          static member ToList() =
-            [Trigger;Actor;Goal;BusinessContext;Contains;Because;Whenever;ItHasToBeThat]
+            [Trigger;Actor;Goal;BusinessContext;Scenario;Contains;Because;Whenever;ItHasToBeThat]
          override self.ToString() =
           match self with
             | Trigger->"PointerReset"
             | Actor->"NewModelItem"
             | Goal->"ReferenceExistingItem"
             | BusinessContext->"LocationChange"
+            | Scenario->"" // why are these things not the enum names?
             | Contains->"NewJoin"
             | Because->"NewAttribute"
             | Whenever->"ReferenceExistingAttribute"
@@ -473,6 +498,7 @@
             AbstractionLevel:AbstractionLevels
             TemporalIndicator:TemporalIndicators
             AnnotationIndicator:ANNOTATION_TOKEN_TYPE
+            Tags:System.Collections.Generic.KeyValuePair<string,string>[]
         }
     let defaultModelLocationPointer =
         {
@@ -487,6 +513,7 @@
             AbstractionLevel=AbstractionLevels.None
             TemporalIndicator=TemporalIndicators.None
             AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None
+            Tags=[||]
         }
     [<NoComparison>]
     type ModelJoin =
@@ -538,6 +565,7 @@
             Annotations:(ANNOTATION_TOKEN_TYPE*string) []
             SourceReferences:IncomingLine []
             Relations:ModelRelation []
+            Tags:System.Collections.Generic.KeyValuePair<string,string>[]
         }
     let defaultModelItem2:ModelItem2 =
         {
@@ -548,6 +576,7 @@
             Annotations=[||]
             SourceReferences=[||]
             Relations=[||]
+            Tags=[||]
         }
     [<NoComparison>]
     type CompilerWaitingFor =
@@ -626,59 +655,6 @@
             IncomingLinesConcatenated:IncomingLine []
             CompilerReturn:CompilerReturn
         }
-    // helpers
-    let getTopLevelItems (modelItems:ModelItem2 []) =
-        modelItems |> Array.filter(fun x->x.Location.AbstractionLevel=AbstractionLevels.Abstract && x.Location.Genre=Genres.Business && x.Location.TemporalIndicator=TemporalIndicators.ToBe) |> Array.sortBy(fun x->x.Description)
-    let getMasterUserStories (modelItems:ModelItem2 []) = 
-        (getTopLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Behavior)
-    let getALL_MUS (modelItems:ModelItem2 []) = 
-        let allItem = getMasterUserStories modelItems |> Array.tryFind(fun x->x.Description="ALL")
-        allItem
-    let getMasterDomainEntities (modelItems:ModelItem2 []) = 
-        (getTopLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Structure)
-    let getMasterSupplementals (modelItems:ModelItem2 []) = 
-        (getTopLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Supplemental)
-    let getNotes (modelItem:ModelItem2) =
-        modelItem.Annotations |> Array.filter(fun x->(fst x)=ANNOTATION_TOKEN_TYPE.Note)
-    let getQuestions (modelItem:ModelItem2) =
-        modelItem.Annotations |> Array.filter(fun x->(fst x)=ANNOTATION_TOKEN_TYPE.Question)
-    let getToDos (modelItem:ModelItem2) =
-        modelItem.Annotations |> Array.filter(fun x->(fst x)=ANNOTATION_TOKEN_TYPE.ToDo)
-    let getWorks (modelItem:ModelItem2) =
-        modelItem.Annotations |> Array.filter(fun x->(fst x)=ANNOTATION_TOKEN_TYPE.Work)
-    let getAffectedBy (modelItem:ModelItem2) =
-        modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.AffectedBy)
-    let getAffects (modelItem:ModelItem2) =
-        modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.Affects)
-    let getUses (modelItem:ModelItem2) =
-        modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.Uses)
-    let getUsedBy (modelItem:ModelItem2) =
-        modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.UsedBy)
-    let getHasA (modelItem:ModelItem2) =
-        modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.HasA)
-    let getIsOwnedByA (modelItem:ModelItem2) =
-        modelItem.Relations|>Array.filter(fun x->x.ModelJoinType=ModelJoin.IsOwnedByA)
-
-
-    let getProjectLevelItems (modelItems:ModelItem2 []) =
-        modelItems |> Array.filter(fun x->x.Location.AbstractionLevel=AbstractionLevels.Realized && x.Location.Genre=Genres.Business && x.Location.TemporalIndicator=TemporalIndicators.ToBe)
-    let getProjectUserStories (modelItems:ModelItem2 []) = 
-        (getProjectLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Behavior)
-    let getALL_ProjectUserStories (modelItems:ModelItem2 []) = 
-        let allItem = getProjectUserStories modelItems |> Array.tryFind(fun x->x.Description="ALL")
-        allItem
-    let getProjectDomainEntities (modelItems:ModelItem2 []) = 
-        (getProjectLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Structure)
-    let getProjectSupplementals (modelItems:ModelItem2 []) = 
-        (getProjectLevelItems modelItems) |> Array.filter(fun x->x.Location.Bucket=Buckets.Supplemental)
-
-
-    let getTotalAnnotationCount (items:ModelItem2 []) (annotationType:ANNOTATION_TOKEN_TYPE) = 
-        items|>Array.sumBy(fun x->x.Annotations|>Array.filter(fun y->(fst y)=annotationType)|>Array.length)
-    let getTotalNoteCount (items:ModelItem2 []) = getTotalAnnotationCount items ANNOTATION_TOKEN_TYPE.Note
-    let getTotalToDoCount (items:ModelItem2 []) = getTotalAnnotationCount items ANNOTATION_TOKEN_TYPE.ToDo
-    let getTotalWorkCount (items:ModelItem2 []) = getTotalAnnotationCount items ANNOTATION_TOKEN_TYPE.Work
-    let getTotalQuestionCount (items:ModelItem2 []) = getTotalAnnotationCount items ANNOTATION_TOKEN_TYPE.Question
 
 //// MIXED TYPES
 //    type SVGEntityBox =

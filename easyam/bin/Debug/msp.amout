@@ -1,34 +1,71 @@
 //                            MASTER SUPPLEMENTALS                             
-//                   Model Generation: 09/02/2017 15:44:57                     
+//                   Model Generation: 09/08/2017 11:23:25                     
 //                                                                             
 
 BUSINESS SUPPLEMENTAL ABSTRACT TO-BE
-  Has to use existing back-end
-
-
-  Left nav must synchronize with main screen
-
-
-  Must be ADA compliant
+  Always do the best we can to cheer the user up during any interaction
+    BECAUSE: 
+      Users don't like dealing with warehousing - inventory - and logistics
+    WHENEVER: 
+      We chat with our user friends
+    ITHASTOBETHAT: 
+      We make a special effort to cheer them up
     NOTES: 
-      <code goes here>
+      Note no commas
 
 
-  Must be compatible with major recent browsers
+  Always keep track of the path users take to arrive on-site
+    BECAUSE: 
+      It's important for us to understand why people choose our business
+    WHENEVER: 
+      Somebody comes by to make a transaction
+      even people we know
+    ITHASTOBETHAT: 
+      We understand the journey people take to use us
 
 
-  Must be responsive to different screen sizes
+  Always respond in a way that's easy for the user to understand
+    BECAUSE: 
+      Most of our users are operating at a sixth-grade education
+    WHENEVER: 
+      We talk with them or have any interaction with them
+    ITHASTOBETHAT: 
+      They're never confused or made to feel inferior
 
 
-  Must confirm to Service Level Agreements
+  Continuously inform the team about everything the users do
+    BECAUSE: 
+      The team isn't as close to the users as they need to be
+    WHENEVER: 
+      Users interact with our business
+    ITHASTOBETHAT: 
+      We record everything that happened so that we can look back later and figure out what we might have done wrong
 
 
-  Must support multiple user types
+  Make it as easy as possible for the user to provide negative feedback
+    BECAUSE: 
+      People very rarely give any negative feedback
+    WHENEVER: 
+      Something happens that might make a user unhappy
+    ITHASTOBETHAT: 
+      WE do everything we can to help and encourage them to tell us what went wrong
 
 
-  Must use existing middleware
+  Never confuse the user
+    BECAUSE: 
+      We deal in complicated logistics concepts
+    WHENEVER: 
+      We explain what we're doing to the user
+    ITHASTOBETHAT: 
+      The average 6-year-old barely paying attention to the transaction can understand what's going on
 
 
-  Top summary must synchronize with main screen
+  Never make the user wait
+    BECAUSE: 
+      The average business customer gets annoyed after having to wait six seconds
+    WHENEVER: 
+      Our customers ask us anything
+    ITHASTOBETHAT: 
+      We respond in some form within 100ms and with a reasonable answer in 3s
 
 

@@ -80,8 +80,35 @@
             )
              new System.String(temp)
     type System.Text.StringBuilder with
+        /// Write a line ending with the current OS newline character
         member x.wl (stringToWrite:string) =
             x.Append(stringToWrite + System.Environment.NewLine) |> ignore
+        /// Write a line at a certain tab level ending with the current OS newline character
+        member x.wt (level:int) (content:string) =
+            let prefix = new System.String(' ', level*2)
+            x.Append(prefix+content + System.Environment.NewLine) |> ignore
+        /// Centers text across line using spaces on both sides. Default 80-character line can be overridden
+        member x.wc (content:string) (?lineLength:int) =
+            if lineLength.IsSome
+                then
+                    x.Append((content.PadBoth lineLength.Value) + System.Environment.NewLine) |> ignore
+                else
+                    x.Append((content.PadBoth 80) + System.Environment.NewLine) |> ignore
+    type System.IO.TextWriter with
+        /// Shorter version of WriteLine
+        member x.wl (stringToWrite:string) =
+            x.WriteLine(stringToWrite)
+        /// WriteLine at a certain tab level
+        member x.wt (level:int) (content:string) =
+            let prefix = new System.String(' ', level*2)
+            x.WriteLine(prefix+content)
+        /// Centers text across line using spaces on both sides. Default 80-character line can be overridden
+        member x.wc (content:string) (?lineLength:int) =
+            if lineLength.IsSome
+                then
+                    x.WriteLine(content.PadBoth lineLength.Value)
+                else
+                    x.WriteLine(content.PadBoth 80) 
 
     type System.Collections.Generic.Dictionary<'A, 'B> with
         member x.stringValueOrEmptyForKey n = 
@@ -134,6 +161,12 @@
                 None
     type FileParm = string*System.IO.FileInfo option
     type DirectoryParm = string*System.IO.DirectoryInfo option
+    //[<NoComparisonAttribute>]
+    //type DirectoryParm = 
+    //    {
+    //        DirectoryFullName:string
+    //        DirectoryInfo:System.IO.DirectoryInfo option
+    //    }
 
     type ConfigEntry<'A> =
         {
@@ -302,6 +335,7 @@
             BehaviorDirectoryInfo:System.IO.DirectoryInfo
             StructureDirectoryInfo:System.IO.DirectoryInfo
             SupplementalDirectoryInfo:System.IO.DirectoryInfo
+            FeaturesDirectoryInfo:System.IO.DirectoryInfo
         }
     [<NoComparison>]
     type ProgramInputFiles = 

@@ -2,6 +2,36 @@
 <doc>
 <assembly><name>easyam</name></assembly>
 <members>
+<member name="M:Types.TextWriter.wc(System.IO.TextWriter,System.String,Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+<summary>
+ Centers text across line using spaces on both sides. Default 80-character line can be overridden
+</summary>
+</member>
+<member name="M:Types.TextWriter.wt(System.IO.TextWriter,System.Int32,System.String)">
+<summary>
+ WriteLine at a certain tab level
+</summary>
+</member>
+<member name="M:Types.TextWriter.wl(System.IO.TextWriter,System.String)">
+<summary>
+ Shorter version of WriteLine
+</summary>
+</member>
+<member name="M:Types.StringBuilder.wc(System.Text.StringBuilder,System.String,Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+<summary>
+ Centers text across line using spaces on both sides. Default 80-character line can be overridden
+</summary>
+</member>
+<member name="M:Types.StringBuilder.wt(System.Text.StringBuilder,System.Int32,System.String)">
+<summary>
+ Write a line at a certain tab level ending with the current OS newline character
+</summary>
+</member>
+<member name="M:Types.StringBuilder.wl(System.Text.StringBuilder,System.String)">
+<summary>
+ Write a line ending with the current OS newline character
+</summary>
+</member>
 <member name="M:Types.String.PadBoth(System.String,System.Int32)">
 <summary>
  Centers text using spaces given a certain line length

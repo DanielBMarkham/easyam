@@ -1,6 +1,7 @@
 ﻿module EasyamParsingEngine
     open Types
     open SAModel
+    open Lenses
     open Utils
     open Persist
 
@@ -209,6 +210,7 @@
                                 Annotations= [||]
                                 SourceReferences=[|incomingLine|]
                                 Relations=[||]
+                                Tags=location.Tags
                             }
                         let newLoc = {newLocationPointer with ParentId=newModelItem.Id}
                         let newModelItems = [|newModelItem|] |> Array.append compilerStatus.ModelItems
@@ -387,6 +389,22 @@
                         let newCompilerLocation ={currentCompilerStatus.CurrentLocation with AttributeId = Some newModelAttribute.id; AttributeType=Some newModelAttribute.AttributeType}
                         let modifiedModelItem = {targetModelItem with SourceReferences=newTargetModelItemSourceReferences; Attributes=newTargetModelItemAttributes}
                         updateModelItem {currentCompilerStatus with CompilerState=newCompilerState; CurrentLocation=newCompilerLocation} modifiedModelItem
+    let areTheseTwoKeyValueStringArraysEqual (array1:System.Collections.Generic.KeyValuePair<string,string> []) (array2:System.Collections.Generic.KeyValuePair<string,string> []) =
+        if array1.Length<>array2.Length then false else
+        if array1.Length=0 then true else
+        let itemsAreEqual (item1:System.Collections.Generic.KeyValuePair<string,string>) (item2:System.Collections.Generic.KeyValuePair<string,string>) = (item1.Key=item2.Key) && (item1.Value=item2.Value)
+        let array1FoundIn2 = array1|>Array.fold(fun acc x->array2|>Array.exists(fun y->(itemsAreEqual y x)) && acc) true
+        let array2FoundIn1 = array2|>Array.fold(fun acc x->array1|>Array.exists(fun y->(itemsAreEqual y x)) && acc) true
+        (array1FoundIn2 && array2FoundIn1)
+    let updateExistingItemWithCurrentLocationExtras (compilerStatus:CompilerReturn) (id:int) =
+        let doesItemExistInModel = compilerStatus.ModelItems |> Array.exists(fun x->x.Id=id)
+        if doesItemExistInModel=false then compilerStatus else
+        let itemToChange = compilerStatus.ModelItems |> Array.find(fun x->x.Id=id)
+        let tagsAreTheSame = areTheseTwoKeyValueStringArraysEqual itemToChange.Tags compilerStatus.CurrentLocation.Tags
+        if tagsAreTheSame=true then compilerStatus else
+        // if they're not the same, there's no merge. Instead whatever's in location gets overwritten into the item
+        let changedItem={itemToChange with Tags=compilerStatus.CurrentLocation.Tags}
+        updateModelItem compilerStatus changedItem
 
     let rec updateModelLocationPointer (originalCompilerStatus:CompilerReturn) (incomingLine:IncomingLine) (incomingCommand:Command):CompilerReturn =
         // context resets when the file changes
@@ -405,7 +423,11 @@
         let newCompilerState={fileCheckedCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; IndentLevelChange=newIndentLevel}
         let incomingCompilerStatus = {fileCheckedCompilerStatus with CompilerState=newCompilerState}
 
-        let tokenForCommand = EasyAMTokens |> List.tryFind(fun z->z.Token.Trim()=incomingCommand.Token.Trim())
+        let tokenForCommand = 
+            let tokenSimpleFind=EasyAMTokens |> List.tryFind(fun z->z.Token.Trim()=incomingCommand.Token.Trim())
+            if tokenSimpleFind.IsSome then tokenSimpleFind
+                elif (incomingCommand.Token.GetLeft 1 = "@") || (incomingCommand.Token.GetLeft 1 = "&") then EasyAMTokens |> List.tryFind(fun z->(z.Token.GetLeft 1 = "@") || (z.Token.GetLeft 1 = "&"))
+                else Option.None
 
         match tokenForCommand with 
             |option.None->
@@ -436,7 +458,8 @@
                                         // We have a new parent
                                         let newLocation = {incomingCompilerStatus.CurrentLocation with ParentId=itemAlreadyExists.Value.Id}
                                         let newState = {incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.Nothing; LastJoinType=option.None; LastCompilerOperation=LastCompilerOperations.ReferenceExistingItem}
-                                        {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}                                                
+                                        let compilerStatusWithExtrasCheckedForExistingItem=updateExistingItemWithCurrentLocationExtras incomingCompilerStatus itemAlreadyExists.Value.Id
+                                        {compilerStatusWithExtrasCheckedForExistingItem with CurrentLocation=newLocation; CompilerState=newState}                                                
                                     | IndentLevelComparisons.IndentIsMoreThanPreviousIndent, false->
                                         // multiple targets, there's a join, the indent is more, and the item does not already exist
                                         // if there's a comma, check each item separately
@@ -469,13 +492,16 @@
                                         let lastJoinType = if incomingCompilerStatus.CompilerState.LastJoinType.IsSome then incomingCompilerStatus.CompilerState.LastJoinType.Value else raise(new System.Exception("We have a join but no join type to use"))
                                         let currentTargetDescription=incomingCompilerStatus.ModelItems|>Array.tryFind(fun x->x.Id=incomingCompilerStatus.CurrentLocation.ParentId)
                                         let currentTargetDescription=if currentTargetDescription.IsSome then currentTargetDescription.Value.Description else ""
-                                        joinModelItems incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine lastJoinType currentTargetDescription  (incomingCommand.Value)
+                                        let joinedCompilerStatus=joinModelItems incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine lastJoinType currentTargetDescription  (incomingCommand.Value)
+                                        let compilerStatusWithExtrasCheckedForExistingItem=updateExistingItemWithCurrentLocationExtras joinedCompilerStatus joinedCompilerStatus.CurrentLocation.ParentId
+                                        compilerStatusWithExtrasCheckedForExistingItem
                                     | IndentLevelComparisons.IndentIsSameAsPreviousIndent, true->
                                         // multiple targets, there's a join, the indent is the same, and the item does exist
                                         // it's just another join
                                         let lastJoinType = if incomingCompilerStatus.CompilerState.LastJoinType.IsSome then incomingCompilerStatus.CompilerState.LastJoinType.Value else raise(new System.Exception("We have a join but no join type to use"))
                                         let currentTargetDescription=incomingCompilerStatus.ModelItems|>Array.tryFind(fun x->x.Id=incomingCompilerStatus.CurrentLocation.ParentId)
                                         let currentTargetDescription=if currentTargetDescription.IsSome then currentTargetDescription.Value.Description else ""
+                                        let compilerStatusWithExtrasCheckedForExistingItem=updateExistingItemWithCurrentLocationExtras incomingCompilerStatus itemAlreadyExists.Value.Id
                                         joinModelItems incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine lastJoinType currentTargetDescription  (incomingCommand.Value)
                                     | IndentLevelComparisons.IndentIsSameAsPreviousIndent, false->
                                         // multiple targets, there's a join, the indent is the same, and the item does not exist
@@ -506,10 +532,11 @@
                                                     addModelItem incomingCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine incomingCommand.Value
                                         newCompilerStatus
                                     else
-                                        let newLocation = {incomingCompilerStatus.CurrentLocation with ParentId=itemAlreadyExists.Value.Id}
+                                        let compilerStatusWithExtrasCheckedForExistingItem=updateExistingItemWithCurrentLocationExtras incomingCompilerStatus itemAlreadyExists.Value.Id
+                                        let newLocation = {compilerStatusWithExtrasCheckedForExistingItem.CurrentLocation with ParentId=itemAlreadyExists.Value.Id}
                                         //let newState = {incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.Nothing; LastJoinType=option.None; LastCompilerOperation=LastCompilerOperations.ReferenceExistingItem}
-                                        let newState = {incomingCompilerStatus.CompilerState with WaitingFor=originalCompilerStatus.CompilerState.WaitingFor; LastJoinType=option.None; LastCompilerOperation=LastCompilerOperations.ReferenceExistingItem}
-                                        {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}
+                                        let newState = {compilerStatusWithExtrasCheckedForExistingItem.CompilerState with WaitingFor=compilerStatusWithExtrasCheckedForExistingItem.CompilerState.WaitingFor; LastJoinType=option.None; LastCompilerOperation=LastCompilerOperations.ReferenceExistingItem}
+                                        {compilerStatusWithExtrasCheckedForExistingItem with CurrentLocation=newLocation; CompilerState=newState}
                     |CompilerWaitingFor.MultipleAttributeTargets->
                         match newIndentLevel with 
                             |IndentIsMoreThanPreviousIndent->
@@ -696,6 +723,7 @@
                                 Annotations=[||]
                                 SourceReferences= [||]
                                 Relations=[||]
+                                Tags=[||]
                             }
                         let newModelItemList = [|newModelItem|] |> Array.append incomingCompilerStatus.ModelItems
                         {incomingCompilerStatus with ModelItems=newModelItemList}
@@ -757,6 +785,7 @@
                                 | "//" | "NOTE " | "NOTE: "|"NOTE:"->ANNOTATION_TOKEN_TYPE.Note
                                 | "TODO " | "TODO: "|"TODO:"|"TO-DO"|"TO-DO: "|"TO-DO:"->ANNOTATION_TOKEN_TYPE.ToDo
                                 | "WORK: " | "WORK "|"WORK:"->ANNOTATION_TOKEN_TYPE.Work
+                                | "DIAGRAM:" | "DIAGRAMS"|"DIAGRAMS"->ANNOTATION_TOKEN_TYPE.Diagram
                                 |_->ANNOTATION_TOKEN_TYPE.Note // ERROR ERROR
                         if (incomingCommand.CommandIndentLevel<originalCompilerStatus.CompilerState.CurrentIndentLevel)
                             then
@@ -806,7 +835,7 @@
                                 | "QUESTIONS"|"QUESTIONS " | "QUESTIONS: " | "QUESTIONS:"->ANNOTATION_TOKEN_TYPE.Question
                                 | "NOTES"|"NOTES " | "NOTES: "|"NOTES:"->ANNOTATION_TOKEN_TYPE.Note
                                 | "TODOS"|"TODOS " | "TODOS: "|"TODOS:"|"TO-DOS"|"TO-DOS "|"TO-DOS: "|"TO-DOS:"->ANNOTATION_TOKEN_TYPE.ToDo
-                                | "WORKS"|"WORKS: " | "WORKS "|"WORKS:"->ANNOTATION_TOKEN_TYPE.Work
+                                | "WORKS"|"WORKS: " | "WORKS "|"WORKS:"|"WORK:"->ANNOTATION_TOKEN_TYPE.Work
                                 |_->ANNOTATION_TOKEN_TYPE.Note // ERROR ERROR
                         // run through everything split on this line by a comma and add
                         let splitByComma = incomingCommand.Value.Split([|","|], System.StringSplitOptions.None) |> Array.filter(fun x->x.Length<>0)
@@ -832,6 +861,51 @@
                         updatedCompilerStatus
                     |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.ABSOLUTE_LOCATOR,_->
                         match token.Category with 
+                            |TOKEN_CATEGORY.TAG->
+                                let newToken=incomingCommand.Token.Substring(1)
+                                let isEqualsPresent=newToken.Contains("=")
+                                let isCommaPresent=newToken.Contains(",")
+                                let addDupeKeysOkay (newTags:System.Collections.Generic.KeyValuePair<string,string> []) (existingTags:System.Collections.Generic.KeyValuePair<string,string> []) = newTags |> Array.append existingTags
+                                let addOverwriteDupeKeys (newTags:System.Collections.Generic.KeyValuePair<string,string> []) (existingTags:System.Collections.Generic.KeyValuePair<string,string> []) =
+                                    newTags |> Array.fold(fun acc x->
+                                        let alreadyExists = acc |> Array.exists(fun (y:System.Collections.Generic.KeyValuePair<string,string>)->x.Key=y.Key)
+                                        if alreadyExists=false then [|x|] |> Array.append acc else
+                                        acc|>Array.map(fun z->if z.Key=x.Key then x else z)
+                                        ) existingTags
+                                let addKeyValueTags (newTags:System.Collections.Generic.KeyValuePair<string,string> []) (existingTags:System.Collections.Generic.KeyValuePair<string,string> []) =
+                                    if incomingCommand.Token.GetLeft 1 = "@" then addDupeKeysOkay newTags existingTags else addOverwriteDupeKeys newTags existingTags
+                                if isEqualsPresent=false
+                                    then
+                                        let newTag=new System.Collections.Generic.KeyValuePair<string,string>(newToken,"")
+                                        let newTags=addKeyValueTags [|newTag|] incomingCompilerStatus.CurrentLocation.Tags //[|newTag|] |> Array.append incomingCompilerStatus.CurrentLocation.Tags
+                                        let newLocation={incomingCompilerStatus.CurrentLocation with Tags=newTags}
+                                        {incomingCompilerStatus with CurrentLocation=newLocation}
+                                    else
+                                        if isCommaPresent=false
+                                            then
+                                                let splitLocation=newToken.IndexOf("=")
+                                                let key=newToken.GetLeft splitLocation
+                                                let value=if splitLocation<newToken.Length-1 then newToken.Substring(splitLocation+1) else ""
+                                                let newTag=new System.Collections.Generic.KeyValuePair<string,string>(key,value)
+                                                let newTags=addKeyValueTags [|newTag|] incomingCompilerStatus.CurrentLocation.Tags //[|newTag|] |> Array.append incomingCompilerStatus.CurrentLocation.Tags
+                                                let newLocation={incomingCompilerStatus.CurrentLocation with Tags=newTags}
+                                                {incomingCompilerStatus with CurrentLocation=newLocation}
+                                            else
+                                                let splitLocation=newToken.IndexOf("=")
+                                                let keys=newToken.GetLeft splitLocation
+                                                let values=if splitLocation<newToken.Length-1 then newToken.Substring(splitLocation+1) else ""
+                                                let valArray=values.Split([|","|], System.StringSplitOptions.None)
+                                                let keyArray=keys.Split([|","|], System.StringSplitOptions.None)
+                                                //let tagArray = valArray |> Array.fold(fun acc x->
+                                                //    let newItem=new System.Collections.Generic.KeyValuePair<string,string>(key,x)
+                                                //    [|newItem|] |> Array.append acc) [||]
+                                                let tagArray = keyArray|> Array.fold(fun acc2 y->
+                                                    valArray |> Array.fold(fun acc x->
+                                                        let newItem=new System.Collections.Generic.KeyValuePair<string,string>(y,x)
+                                                        [|newItem|] |> Array.append acc) acc2) [||]
+                                                let newTags= addKeyValueTags tagArray incomingCompilerStatus.CurrentLocation.Tags //tagArray |> Array.append incomingCompilerStatus.CurrentLocation.Tags
+                                                let newLocation={incomingCompilerStatus.CurrentLocation with Tags=newTags}
+                                                {incomingCompilerStatus with CurrentLocation=newLocation}
                             |TOKEN_CATEGORY.BUCKETS->
                                 let newBucket = match token.Token with 
                                                 | "BEHAVIOR" | "BEHAVIOR:" | "BEHAVIORS" |"BEHAVIORS:"->Buckets.Behavior
@@ -914,6 +988,7 @@
                                                         | "ASA"|"ASA:"->ModelAttributeTypes.Actor
                                                         | "INEEDTO"|"INEEDTO:"->ModelAttributeTypes.Goal
                                                         | "SOTHAT"|"SOTHAT:"->ModelAttributeTypes.BusinessContext
+                                                        | "SCENARIO"|"SCENARIO:"->ModelAttributeTypes.Scenario
                                                         | "BECAUSE"|"BECAUSE:"->ModelAttributeTypes.Because
                                                         | "WHENEVER"|"WHENEVER:"->ModelAttributeTypes.Whenever
                                                         | "ITHASTOBETHAT"|"ITHASTOBETHAT:"->ModelAttributeTypes.ItHasToBeThat
@@ -956,6 +1031,19 @@
                         {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewJoin; LastJoinType=Some joinType; WaitingFor=CompilerWaitingFor.MultipleJoinTargets; CurrentIndentLevel=newIndentLevelWithCommasConsidered}; CurrentLocation=newLoc}
                     |_,_,_->incomingCompilerStatus
                 
+    let verifyOrAddAMUSItem compilerStatus description = 
+        let allMUS=getMasterUserStories compilerStatus.ModelItems
+        let alreadyExists=allMUS|>Array.exists(fun x->x.Description=description)
+        if alreadyExists then compilerStatus
+        else
+            let newLocation = {defaultModelLocationPointer with Genre=Genres.Business; Bucket=Buckets.Behavior; AbstractionLevel=AbstractionLevels.Abstract; TemporalIndicator=TemporalIndicators.ToBe}
+            let newIncomingLine:IncomingLine = defaultIncomingLine
+            let newCompilerReturn = addModelItem compilerStatus newLocation newIncomingLine description
+            newCompilerReturn
+    //let verifyOrAddMISCandALL compilerStatus =
+    //    let statWithMISCAdded = verifyOrAddAMUSItem compilerStatus "MISC"
+    //    let statWithMISCandALL = verifyOrAddAMUSItem statWithMISCAdded "ALL"
+    //    statWithMISCandALL
 
     let makeRawModel (incomingLines:IncomingLine []) (incomingCompilerStatus:CompilerReturn) =
         let initialModelLines = incomingLines |> Array.fold(fun (currentCompilerStatus:CompilerReturn) x->
@@ -966,5 +1054,6 @@
                                         let newacc = modelItemsOnThisLine
                                         newacc
                                 ) incomingCompilerStatus
+        //verifyOrAddMISCandALL initialModelLines
         initialModelLines
 

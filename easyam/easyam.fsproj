@@ -68,6 +68,7 @@
     <Compile Include="..\common\SAModel.fs">
       <Link>SAModel.fs</Link>
     </Compile>
+    <Compile Include="Lenses.fs" />
     <Compile Include="..\common\Utils.fs">
       <Link>Utils.fs</Link>
     </Compile>
@@ -82,6 +83,7 @@
     <Compile Include="BasicModel1.fs" />
     <Compile Include="IntModelCreationTests.fs" />
     <Compile Include="BasicModelCheckTests.fs" />
+    <Compile Include="BasicModelOutputTests.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <None Include="post-build.ps1" />

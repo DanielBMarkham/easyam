@@ -1,0 +1,43 @@
+MASTER BACKLOG:
+  Start Quote
+  Identify Potential Customer
+  Specify Quote Type
+  Identify Policy Type
+  Identify Coverables
+  Identify Coverages
+  Get A Quote
+  Select Offering
+  Select Payment Plan
+  Send Written Quote Proposal
+  Issues Policy
+  Receive Down Payment
+  Provide links to other system
+  Modify Existing Policy
+  View Agent Work In Progress
+  ALL
+  MISC
+
+MASTER SUPPLEMENTALS:
+  Has to use existing back-end
+  Must be compatible with major recent browsers
+  Must be responsive to different screen sizes 
+  Must be ADA compliant 
+  Must use existing middleware
+  Must confirm to Service Level Agreements 
+  Must support multiple user types 
+  Top summary must synchronize with main screen
+  Left nav must synchronize with main screen
+
+MASTER DOMAIN MODEL:
+  Customer
+  Agent
+  Account
+  Policy 
+  Quote
+  Quote Type(LOB)
+  Policy Type(HO)
+  Coverables
+  Coverages
+  Payment Plan 
+  Down Payment 
+  Other Systems
