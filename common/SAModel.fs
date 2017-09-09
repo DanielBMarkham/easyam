@@ -324,8 +324,8 @@
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="ITHASTOBETHAT:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=ATTRIBUTE;           Token="ITHASTOBETHAT"};
 
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TAG;           Token="@.+"};
-            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TAG;           Token="&.+"};
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TAG;           Token="@[^@|^&]+"}; //[^\\s\"']+|\"([^\"]*)\"|'([^']*)'[^\s]
+            {Type=ABSOLUTE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=TAG;           Token="&[^@|^&]+"};
 
         ]
     let CommandTokens = EasyAMTokens |> List.map(fun x->x.Token)
@@ -654,6 +654,32 @@
             IncomingLineCountWithEmptyLinesStripped:int
             IncomingLinesConcatenated:IncomingLine []
             CompilerReturn:CompilerReturn
+        }
+
+    [<NoComparison>]
+    type SortOrder = Ascending | Descending
+    [<NoComparison>]
+    type TagOrAttName = Tag | AttName
+    [<NoComparison>]
+    type ThingsICanTryConvertingTo = None | Int | Float | Money | DateTime | TimeSpan
+    [<NoComparison>]
+    type sortParameterType =
+        {
+           TagOrAttName:TagOrAttName
+           ThingToInspect:string
+           ThingToTryToConvertItTo:ThingsICanTryConvertingTo
+           SortOrder:SortOrder
+        }
+    [<NoComparison>]
+    type FilterParmeterType =
+        {
+            Genre:Genres
+            Bucket:Buckets
+            AbstractionLevel:AbstractionLevels
+            TemporalIndicator:TemporalIndicators
+            CheckValue:sortParameterType
+            FromVal:string
+            ToVal:string
         }
 
 //// MIXED TYPES

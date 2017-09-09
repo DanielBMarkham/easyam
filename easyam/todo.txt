@@ -4,7 +4,7 @@ X SCENARIO needs to be a keyword for behavior - that shows up in feature file ou
 
 X basic feature file generation needs to be added, including parent mus info, comments, and notes
 
-X add name/value tags in
+* add name/value tags in
 
 - feature file generation with supplementals
 

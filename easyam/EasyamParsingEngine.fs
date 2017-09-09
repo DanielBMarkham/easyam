@@ -426,7 +426,7 @@
         let tokenForCommand = 
             let tokenSimpleFind=EasyAMTokens |> List.tryFind(fun z->z.Token.Trim()=incomingCommand.Token.Trim())
             if tokenSimpleFind.IsSome then tokenSimpleFind
-                elif (incomingCommand.Token.GetLeft 1 = "@") || (incomingCommand.Token.GetLeft 1 = "&") then EasyAMTokens |> List.tryFind(fun z->(z.Token.GetLeft 1 = "@") || (z.Token.GetLeft 1 = "&"))
+                elif ((incomingCommand.Token + incomingCommand.Value).GetLeft 1 = "@") || ((incomingCommand.Token + incomingCommand.Value).GetLeft 1 = "&") then EasyAMTokens |> List.tryFind(fun z->(z.Token.GetLeft 1 = "@") || (z.Token.GetLeft 1 = "&"))
                 else Option.None
 
         match tokenForCommand with 
@@ -862,50 +862,59 @@
                     |TOKEN_TARGET_TYPE.MULTIPLE_TARGETS,TOKEN_TYPE.ABSOLUTE_LOCATOR,_->
                         match token.Category with 
                             |TOKEN_CATEGORY.TAG->
-                                let newToken=incomingCommand.Token.Substring(1)
-                                let isEqualsPresent=newToken.Contains("=")
-                                let isCommaPresent=newToken.Contains(",")
-                                let addDupeKeysOkay (newTags:System.Collections.Generic.KeyValuePair<string,string> []) (existingTags:System.Collections.Generic.KeyValuePair<string,string> []) = newTags |> Array.append existingTags
-                                let addOverwriteDupeKeys (newTags:System.Collections.Generic.KeyValuePair<string,string> []) (existingTags:System.Collections.Generic.KeyValuePair<string,string> []) =
-                                    newTags |> Array.fold(fun acc x->
-                                        let alreadyExists = acc |> Array.exists(fun (y:System.Collections.Generic.KeyValuePair<string,string>)->x.Key=y.Key)
-                                        if alreadyExists=false then [|x|] |> Array.append acc else
-                                        acc|>Array.map(fun z->if z.Key=x.Key then x else z)
-                                        ) existingTags
-                                let addKeyValueTags (newTags:System.Collections.Generic.KeyValuePair<string,string> []) (existingTags:System.Collections.Generic.KeyValuePair<string,string> []) =
-                                    if incomingCommand.Token.GetLeft 1 = "@" then addDupeKeysOkay newTags existingTags else addOverwriteDupeKeys newTags existingTags
-                                if isEqualsPresent=false
-                                    then
-                                        let newTag=new System.Collections.Generic.KeyValuePair<string,string>(newToken,"")
-                                        let newTags=addKeyValueTags [|newTag|] incomingCompilerStatus.CurrentLocation.Tags //[|newTag|] |> Array.append incomingCompilerStatus.CurrentLocation.Tags
-                                        let newLocation={incomingCompilerStatus.CurrentLocation with Tags=newTags}
-                                        {incomingCompilerStatus with CurrentLocation=newLocation}
-                                    else
-                                        if isCommaPresent=false
-                                            then
-                                                let splitLocation=newToken.IndexOf("=")
-                                                let key=newToken.GetLeft splitLocation
-                                                let value=if splitLocation<newToken.Length-1 then newToken.Substring(splitLocation+1) else ""
-                                                let newTag=new System.Collections.Generic.KeyValuePair<string,string>(key,value)
-                                                let newTags=addKeyValueTags [|newTag|] incomingCompilerStatus.CurrentLocation.Tags //[|newTag|] |> Array.append incomingCompilerStatus.CurrentLocation.Tags
-                                                let newLocation={incomingCompilerStatus.CurrentLocation with Tags=newTags}
-                                                {incomingCompilerStatus with CurrentLocation=newLocation}
-                                            else
-                                                let splitLocation=newToken.IndexOf("=")
-                                                let keys=newToken.GetLeft splitLocation
-                                                let values=if splitLocation<newToken.Length-1 then newToken.Substring(splitLocation+1) else ""
-                                                let valArray=values.Split([|","|], System.StringSplitOptions.None)
-                                                let keyArray=keys.Split([|","|], System.StringSplitOptions.None)
-                                                //let tagArray = valArray |> Array.fold(fun acc x->
-                                                //    let newItem=new System.Collections.Generic.KeyValuePair<string,string>(key,x)
-                                                //    [|newItem|] |> Array.append acc) [||]
-                                                let tagArray = keyArray|> Array.fold(fun acc2 y->
-                                                    valArray |> Array.fold(fun acc x->
-                                                        let newItem=new System.Collections.Generic.KeyValuePair<string,string>(y,x)
-                                                        [|newItem|] |> Array.append acc) acc2) [||]
-                                                let newTags= addKeyValueTags tagArray incomingCompilerStatus.CurrentLocation.Tags //tagArray |> Array.append incomingCompilerStatus.CurrentLocation.Tags
-                                                let newLocation={incomingCompilerStatus.CurrentLocation with Tags=newTags}
-                                                {incomingCompilerStatus with CurrentLocation=newLocation}
+                                if (incomingCommand.Token + incomingCommand.Value).GetLeft 2="@&" || (incomingCommand.Token + incomingCommand.Value).GetLeft 2="&@"
+                                then
+                                    let newLocation={incomingCompilerStatus.CurrentLocation with Tags=[||]}
+                                    {incomingCompilerStatus with CurrentLocation=newLocation}                                    
+                                else
+                                    let newToken=incomingCommand.Token.Substring(1)
+                                    let isEqualsPresent=newToken.Contains("=")
+                                    let isCommaPresent=newToken.Contains(",")
+                                    let removeQuotes (str:string) =
+                                        if ((str.GetLeft 1 = "\"") || (str.GetLeft 1 = "'")) && ((str.GetRight 1 = "\"") || (str.GetRight 1 = "'"))
+                                            then str.TrimBoth 1 1
+                                            else str
+                                    let addDupeKeysOkay (newTags:System.Collections.Generic.KeyValuePair<string,string> []) (existingTags:System.Collections.Generic.KeyValuePair<string,string> []) = newTags |> Array.append existingTags
+                                    let addOverwriteDupeKeys (newTags:System.Collections.Generic.KeyValuePair<string,string> []) (existingTags:System.Collections.Generic.KeyValuePair<string,string> []) =
+                                        newTags |> Array.fold(fun acc x->
+                                            let alreadyExists = acc |> Array.exists(fun (y:System.Collections.Generic.KeyValuePair<string,string>)->x.Key=y.Key)
+                                            if alreadyExists=false then [|x|] |> Array.append acc else
+                                            acc|>Array.map(fun z->if z.Key=x.Key then x else z)
+                                            ) existingTags
+                                    let addKeyValueTags (newTags:System.Collections.Generic.KeyValuePair<string,string> []) (existingTags:System.Collections.Generic.KeyValuePair<string,string> []) =
+                                        if incomingCommand.Token.GetLeft 1 = "@" then addDupeKeysOkay newTags existingTags else addOverwriteDupeKeys newTags existingTags
+                                    if isEqualsPresent=false
+                                        then
+                                            let newTag=new System.Collections.Generic.KeyValuePair<string,string>(removeQuotes(newToken),"")
+                                            let newTags=addKeyValueTags [|newTag|] incomingCompilerStatus.CurrentLocation.Tags //[|newTag|] |> Array.append incomingCompilerStatus.CurrentLocation.Tags
+                                            let newLocation={incomingCompilerStatus.CurrentLocation with Tags=newTags}
+                                            {incomingCompilerStatus with CurrentLocation=newLocation}
+                                        else
+                                            if isCommaPresent=false
+                                                then
+                                                    let splitLocation=newToken.IndexOf("=")
+                                                    let key=removeQuotes(newToken.GetLeft splitLocation)
+                                                    let value=if splitLocation<newToken.Length-1 then removeQuotes(newToken.Substring(splitLocation+1)) else ""
+                                                    let newTag=new System.Collections.Generic.KeyValuePair<string,string>(key,value)
+                                                    let newTags=addKeyValueTags [|newTag|] incomingCompilerStatus.CurrentLocation.Tags //[|newTag|] |> Array.append incomingCompilerStatus.CurrentLocation.Tags
+                                                    let newLocation={incomingCompilerStatus.CurrentLocation with Tags=newTags}
+                                                    {incomingCompilerStatus with CurrentLocation=newLocation}
+                                                else
+                                                    let splitLocation=newToken.IndexOf("=")
+                                                    let keys=newToken.GetLeft splitLocation
+                                                    let values=if splitLocation<newToken.Length-1 then newToken.Substring(splitLocation+1) else ""
+                                                    let valArray=values.Split([|","|], System.StringSplitOptions.None)
+                                                    let keyArray=keys.Split([|","|], System.StringSplitOptions.None)
+                                                    //let tagArray = valArray |> Array.fold(fun acc x->
+                                                    //    let newItem=new System.Collections.Generic.KeyValuePair<string,string>(key,x)
+                                                    //    [|newItem|] |> Array.append acc) [||]
+                                                    let tagArray = keyArray|> Array.fold(fun acc2 y->
+                                                        valArray |> Array.fold(fun acc x->
+                                                            let newItem=new System.Collections.Generic.KeyValuePair<string,string>(removeQuotes(y),removeQuotes(x))
+                                                            [|newItem|] |> Array.append acc) acc2) [||]
+                                                    let newTags= addKeyValueTags tagArray incomingCompilerStatus.CurrentLocation.Tags //tagArray |> Array.append incomingCompilerStatus.CurrentLocation.Tags
+                                                    let newLocation={incomingCompilerStatus.CurrentLocation with Tags=newTags}
+                                                    {incomingCompilerStatus with CurrentLocation=newLocation}
                             |TOKEN_CATEGORY.BUCKETS->
                                 let newBucket = match token.Token with 
                                                 | "BEHAVIOR" | "BEHAVIOR:" | "BEHAVIORS" |"BEHAVIORS:"->Buckets.Behavior

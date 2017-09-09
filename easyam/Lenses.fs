@@ -18,6 +18,8 @@
         modelItem.Annotations |> Array.filter(fun x->(fst x)=ANNOTATION_TOKEN_TYPE.Question)
     let getToDos (modelItem:ModelItem2) =
         modelItem.Annotations |> Array.filter(fun x->(fst x)=ANNOTATION_TOKEN_TYPE.ToDo)
+    let getOpenItems (modelItem:ModelItem2) = 
+        (getQuestions modelItem) |> Array.append (getToDos modelItem)
     let getWorks (modelItem:ModelItem2) =
         modelItem.Annotations |> Array.filter(fun x->(fst x)=ANNOTATION_TOKEN_TYPE.Work)
     let getDiagrams (modelItem:ModelItem2) =
@@ -76,3 +78,161 @@
     let getTotalToDoCount (items:ModelItem2 []) = getTotalAnnotationCount items ANNOTATION_TOKEN_TYPE.ToDo
     let getTotalWorkCount (items:ModelItem2 []) = getTotalAnnotationCount items ANNOTATION_TOKEN_TYPE.Work
     let getTotalQuestionCount (items:ModelItem2 []) = getTotalAnnotationCount items ANNOTATION_TOKEN_TYPE.Question
+
+
+    let getTheRightThingToCheck (modelItem:ModelItem2) (tagOrAttName:TagOrAttName) (thingToInspect:string) =
+        match tagOrAttName with
+            |Tag->
+                if thingToInspect="" then "" else
+                let tagExistsOnThisItem=modelItem.Tags |> Array.exists(fun x->x.Key=thingToInspect)
+                if tagExistsOnThisItem=false then "" else (modelItem.Tags|>Array.find(fun x->x.Key=thingToInspect)).Value
+            |AttName->
+                if thingToInspect="" then "" else
+                match thingToInspect with
+                    |"Description"->modelItem.Description
+                    |"Id"->modelItem.Id.ToString()
+                    |"NumberOfQuestions"->(getQuestions modelItem).Length.ToString()
+                    |"NumberOfToDos"->(getToDos modelItem).Length.ToString()
+                    |"OpenItems"->(getOpenItems modelItem).Length.ToString()
+                    |"AmountOfWork"->(getWorks modelItem).Length.ToString()
+                    |"NumberOfAttributes"->(modelItem.Attributes).Length.ToString()
+                    |"NumberOfAnnotations"->(modelItem.Annotations).Length.ToString()
+                    |"NumberOfRelations"->(modelItem.Relations).Length.ToString()
+                    |"NumberOfSourceReferences"->(modelItem.SourceReferences).Length.ToString()
+                    |_->""
+    let sortModelByOneParameter (incomingModelItems:ModelItem2 []) (sortParameter:sortParameterType) =
+        let initialSort=incomingModelItems |> Array.sortWith(fun (a:ModelItem2) (b:ModelItem2)->
+            let itemToSortA=getTheRightThingToCheck a sortParameter.TagOrAttName sortParameter.ThingToInspect
+            let itemToSortB=getTheRightThingToCheck b sortParameter.TagOrAttName sortParameter.ThingToInspect
+            match sortParameter.ThingToTryToConvertItTo with
+                |None->itemToSortA.CompareTo itemToSortB
+                |DateTime->
+                    let aConverted=if fst (System.DateTime.TryParse(itemToSortA))=true then System.DateTime.Parse(itemToSortA) else System.DateTime.MinValue
+                    let bConverted=if fst (System.DateTime.TryParse(itemToSortB))=true then System.DateTime.Parse(itemToSortB) else System.DateTime.MinValue
+                    aConverted.CompareTo bConverted
+                |TimeSpan->
+                    let aConverted=if fst (System.TimeSpan.TryParse(itemToSortA))=true then System.TimeSpan.Parse(itemToSortA) else System.TimeSpan.MinValue
+                    let bConverted=if fst (System.TimeSpan.TryParse(itemToSortB))=true then System.TimeSpan.Parse(itemToSortB) else System.TimeSpan.MinValue
+                    aConverted.CompareTo bConverted
+                |Float->
+                    let aConverted=if fst (System.Double.TryParse(itemToSortA))=true then System.Double.Parse(itemToSortA) else System.Double.MinValue
+                    let bConverted=if fst (System.Double.TryParse(itemToSortB))=true then System.Double.Parse(itemToSortB) else System.Double.MinValue
+                    aConverted.CompareTo bConverted
+                |Int->
+                    let aConverted=if fst (System.Int64.TryParse(itemToSortA))=true then System.Int64.Parse(itemToSortA) else System.Int64.MinValue
+                    let bConverted=if fst (System.Int64.TryParse(itemToSortB))=true then System.Int64.Parse(itemToSortB) else System.Int64.MinValue
+                    aConverted.CompareTo bConverted
+                |Money->
+                    let aConverted=if fst (System.Decimal.TryParse(itemToSortA))=true then System.Decimal.Parse(itemToSortA) else System.Decimal.MinValue
+                    let bConverted=if fst (System.Decimal.TryParse(itemToSortB))=true then System.Decimal.Parse(itemToSortB) else System.Decimal.MinValue
+                    aConverted.CompareTo bConverted
+            )
+        let ret = if sortParameter.SortOrder = SortOrder.Ascending then initialSort else initialSort |> Array.rev
+        ret
+    let modelItemHasTagBetweenTwoValues (modelItem:ModelItem2) (valueToCheck:sortParameterType) (fromVal:string) (toVal:string):bool = 
+            let thingToCheck=getTheRightThingToCheck modelItem valueToCheck.TagOrAttName valueToCheck.ThingToInspect
+            let tagExistsOnThisItem modelItem tagName =modelItem.Tags |> Array.exists(fun x->x.Key=tagName)
+            if valueToCheck.TagOrAttName=AttName && fromVal="" && toVal="" then true else
+            if valueToCheck.TagOrAttName=Tag && fromVal="" && toVal="" && (tagExistsOnThisItem modelItem valueToCheck.ThingToInspect) then true else
+            match valueToCheck.ThingToTryToConvertItTo with
+                |None->
+                    let comparedToFromVal=thingToCheck.CompareTo fromVal
+                    let comparedToToVal=thingToCheck.CompareTo toVal
+                    comparedToFromVal>0 && comparedToToVal<0
+                |DateTime->
+                    let convertedThing=if fst (System.DateTime.TryParse(thingToCheck))=true then System.DateTime.Parse(thingToCheck) else System.DateTime.MinValue
+                    let convertedFromVal=if fst (System.DateTime.TryParse(fromVal))=true then System.DateTime.Parse(fromVal) else System.DateTime.MinValue
+                    let convertedToVal=if fst (System.DateTime.TryParse(toVal))=true then System.DateTime.Parse(toVal) else System.DateTime.MinValue
+                    let comparedToFromVal=convertedThing.CompareTo convertedFromVal
+                    let comparedToToVal=convertedThing.CompareTo convertedToVal
+                    comparedToFromVal>0 && comparedToToVal<0
+                |TimeSpan->
+                    let convertedThing=if fst (System.TimeSpan.TryParse(thingToCheck))=true then System.TimeSpan.Parse(thingToCheck) else System.TimeSpan.MinValue
+                    let convertedFromVal=if fst (System.TimeSpan.TryParse(fromVal))=true then System.TimeSpan.Parse(fromVal) else System.TimeSpan.MinValue
+                    let convertedToVal=if fst (System.TimeSpan.TryParse(toVal))=true then System.TimeSpan.Parse(toVal) else System.TimeSpan.MinValue
+                    let comparedToFromVal=convertedThing.CompareTo convertedFromVal
+                    let comparedToToVal=convertedThing.CompareTo convertedToVal
+                    comparedToFromVal>0 && comparedToToVal<0
+                |Float->
+                    let convertedThing=if fst (System.Double.TryParse(thingToCheck))=true then System.Double.Parse(thingToCheck) else System.Double.MinValue
+                    let convertedFromVal=if fst (System.Double.TryParse(fromVal))=true then System.Double.Parse(fromVal) else System.Double.MinValue
+                    let convertedToVal=if fst (System.Double.TryParse(toVal))=true then System.Double.Parse(toVal) else System.Double.MinValue
+                    let comparedToFromVal=convertedThing.CompareTo convertedFromVal
+                    let comparedToToVal=convertedThing.CompareTo convertedToVal
+                    comparedToFromVal>0 && comparedToToVal<0
+                |Int->
+                    let convertedThing=if fst (System.Int64.TryParse(thingToCheck))=true then System.Int64.Parse(thingToCheck) else System.Int64.MinValue
+                    let convertedFromVal=if fst (System.Int64.TryParse(fromVal))=true then System.Int64.Parse(fromVal) else System.Int64.MinValue
+                    let convertedToVal=if fst (System.Int64.TryParse(toVal))=true then System.Int64.Parse(toVal) else System.Int64.MinValue
+                    let comparedToFromVal=convertedThing.CompareTo convertedFromVal
+                    let comparedToToVal=convertedThing.CompareTo convertedToVal
+                    comparedToFromVal>0 && comparedToToVal<0
+                |Money->
+                    let convertedThing=if fst (System.Decimal.TryParse(thingToCheck))=true then System.Decimal.Parse(thingToCheck) else System.Decimal.MinValue
+                    let convertedFromVal=if fst (System.Decimal.TryParse(fromVal))=true then System.Decimal.Parse(fromVal) else System.Decimal.MinValue
+                    let convertedToVal=if fst (System.Decimal.TryParse(toVal))=true then System.Decimal.Parse(toVal) else System.Decimal.MinValue
+                    let comparedToFromVal=convertedThing.CompareTo convertedFromVal
+                    let comparedToToVal=convertedThing.CompareTo convertedToVal
+                    comparedToFromVal>0 && comparedToToVal<0
+
+    let filterModelByOneParameter (incomingModelItems:ModelItem2 []) (filterParameter:FilterParmeterType)=
+        let allOfTheAMTagsAreUnknown=filterParameter.Bucket=Buckets.Unknown&&filterParameter.AbstractionLevel=AbstractionLevels.Unknown&&filterParameter.TemporalIndicator=TemporalIndicators.Unknown&&filterParameter.Genre=Genres.Unknown
+        let filterByAMTags=incomingModelItems |> Array.filter(fun x->
+            let matchesBucket = if filterParameter.Bucket=Buckets.Unknown then true else x.Location.Bucket=filterParameter.Bucket
+            let matchesGenre = if filterParameter.Genre=Genres.Unknown then true else x.Location.Genre=filterParameter.Genre
+            let matchesTemporal = if filterParameter.TemporalIndicator=TemporalIndicators.Unknown then true else x.Location.TemporalIndicator=filterParameter.TemporalIndicator
+            let matchesAbstraction = if filterParameter.AbstractionLevel=AbstractionLevels.Unknown then true else x.Location.AbstractionLevel=filterParameter.AbstractionLevel
+            let matchesModelParms = matchesBucket && matchesGenre && matchesTemporal && matchesAbstraction
+            if allOfTheAMTagsAreUnknown=true then true else matchesBucket&&matchesGenre&&matchesTemporal&&matchesAbstraction
+            )
+        if filterParameter.CheckValue.ThingToInspect="" then filterByAMTags else
+        let filterByCheckVal=filterByAMTags |> Array.filter(fun x->
+            modelItemHasTagBetweenTwoValues x filterParameter.CheckValue filterParameter.FromVal filterParameter.ToVal            
+            )
+        filterByCheckVal
+
+    // common shortcuts
+    let getAllBehaviorForASprintTagValue (modelItems:ModelItem2 []) (sprint:string) =
+        let sprintFloat = if fst (System.Double.TryParse(sprint))=true then System.Double.Parse(sprint) else System.Double.MinValue
+        let checkParameter =
+            {
+                TagOrAttName=Tag
+                ThingToInspect="Sprint"
+                ThingToTryToConvertItTo=Float
+                SortOrder=Ascending
+            }
+        let filterParameter =
+            {
+                Genre=Genres.Unknown
+                Bucket=Buckets.Behavior
+                AbstractionLevel=AbstractionLevels.Unknown
+                TemporalIndicator=TemporalIndicators.Unknown
+                CheckValue=checkParameter
+                FromVal=(sprintFloat-0.001).ToString()
+                ToVal=(sprintFloat+0.001).ToString()
+            }
+        let ret = filterModelByOneParameter modelItems filterParameter
+        ret
+
+    let sortByRankTag (modelItems:ModelItem2 [])=
+        let sortParameter =
+            {
+                TagOrAttName=Tag
+                ThingToInspect="Rank"
+                ThingToTryToConvertItTo=Int
+                SortOrder=Ascending
+            }
+        let ret = sortModelByOneParameter modelItems sortParameter
+        ret
+    let sortByDescription (modelItems:ModelItem2 [])=
+        let sortParameter =
+            {
+                TagOrAttName=AttName
+                ThingToInspect="Description"
+                ThingToTryToConvertItTo=None
+                SortOrder=Ascending
+            }
+        let ret = sortModelByOneParameter modelItems sortParameter
+        ret
+
+
