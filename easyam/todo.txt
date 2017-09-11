@@ -25,6 +25,8 @@ X basic feature file generation needs to be added, including parent mus info, co
 - auto SVG domain model creation, including a frame html file
 
 - add tasks
-
+- add bugs
+- model check: make sure you can only add attributes to where they belong
+- model check: make sure parents and children are of the same genre
 - Add diagrams output where needed
 - Add back in html documentation output

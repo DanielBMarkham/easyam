@@ -270,10 +270,10 @@
     let ``BASIC MODEL OUTPUT: sort by tag integer value``() =
         let sortParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect="Rank"
-                ThingToTryToConvertItTo=Int
-                SortOrder=Descending
+                TagOrAtt=Tag
+                Thing="Rank"
+                ConvertTo=Int
+                Order=Descending
             }
         let sortedModel = sortModelByOneParameter sortFilterCompilerStatus.ModelItems sortParameter
         sortedModel.Length |> should equal 13
@@ -283,10 +283,10 @@
     let ``BASIC MODEL OUTPUT: sort by tag date value``() =
         let sortParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect="Review Date"
-                ThingToTryToConvertItTo=DateTime
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing="Review Date"
+                ConvertTo=DateTime
+                Order=Ascending
             }
         let sortedModel = sortModelByOneParameter sortFilterCompilerStatus.ModelItems sortParameter
         sortedModel.Length |> should equal 13
@@ -294,12 +294,12 @@
         sortedModel.[12].Description |> should equal "Be good to yourself"
     [<Test>]
     let ``BASIC MODEL OUTPUT: sort by basic attribute``() =
-        let sortParameter =
+        let sortParameter:sortParameterType =
             {
-                TagOrAttName=AttName
-                ThingToInspect="Description"
-                ThingToTryToConvertItTo=None
-                SortOrder=Ascending
+                TagOrAtt=Att
+                Thing="Description"
+                ConvertTo=ConvertTo.DontConvert
+                Order=Ascending
             }
         let sortedModel = sortModelByOneParameter sortFilterCompilerStatus.ModelItems sortParameter
         sortedModel.Length |> should equal 13
@@ -310,10 +310,10 @@
     let ``BASIC MODEL OUTPUT: filter by Genre positive``() =
         let checkParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect=""
-                ThingToTryToConvertItTo=None
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing=""
+                ConvertTo=ConvertTo.DontConvert
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -331,10 +331,10 @@
     let ``BASIC MODEL OUTPUT: filter by Genre negative``() =
         let checkParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect=""
-                ThingToTryToConvertItTo=None
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing=""
+                ConvertTo=ConvertTo.DontConvert
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -352,10 +352,10 @@
     let ``BASIC MODEL OUTPUT: filter by Bucket``() =
         let checkParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect=""
-                ThingToTryToConvertItTo=None
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing=""
+                ConvertTo=ConvertTo.DontConvert
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -373,10 +373,10 @@
     let ``BASIC MODEL OUTPUT: filter by AbstractionLevel positive``() =
         let checkParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect=""
-                ThingToTryToConvertItTo=None
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing=""
+                ConvertTo=ConvertTo.DontConvert
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -394,10 +394,10 @@
     let ``BASIC MODEL OUTPUT: filter by AbstractionLevel negative``() =
         let checkParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect=""
-                ThingToTryToConvertItTo=None
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing=""
+                ConvertTo=ConvertTo.DontConvert
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -415,10 +415,10 @@
     let ``BASIC MODEL OUTPUT: filter by Temporal positive``() =
         let checkParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect=""
-                ThingToTryToConvertItTo=None
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing=""
+                ConvertTo=ConvertTo.DontConvert
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -436,10 +436,10 @@
     let ``BASIC MODEL OUTPUT: filter by Temporal negative``() =
         let checkParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect=""
-                ThingToTryToConvertItTo=None
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing=""
+                ConvertTo=ConvertTo.DontConvert
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -457,10 +457,10 @@
     let ``BASIC MODEL OUTPUT: filter by date range``() =
         let checkParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect="Review Date"
-                ThingToTryToConvertItTo=DateTime
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing="Review Date"
+                ConvertTo=DateTime
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -478,10 +478,10 @@
     let ``BASIC MODEL OUTPUT: filter by string range``() =
         let checkParameter =
             {
-                TagOrAttName=AttName
-                ThingToInspect="Description"
-                ThingToTryToConvertItTo=None
-                SortOrder=Ascending
+                TagOrAtt=Att
+                Thing="Description"
+                ConvertTo=ConvertTo.DontConvert
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -499,10 +499,10 @@
     let ``BASIC MODEL OUTPUT: filter by integer range``() =
         let checkParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect="Points"
-                ThingToTryToConvertItTo=Int
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing="Points"
+                ConvertTo=Int
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -521,10 +521,10 @@
     let ``BASIC MODEL OUTPUT: filter by presence of a tag``() =
         let checkParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect="ConflictingInformation"
-                ThingToTryToConvertItTo=None
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing="ConflictingInformation"
+                ConvertTo=ConvertTo.DontConvert
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -542,10 +542,10 @@
     let ``BASIC MODEL OUTPUT: combine filter and sort``() =
         let checkParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect=""
-                ThingToTryToConvertItTo=None
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing=""
+                ConvertTo=ConvertTo.DontConvert
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -560,10 +560,10 @@
         let filteredModel = filterModelByOneParameter sortFilterCompilerStatus.ModelItems filterParameter
         let sortParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect="Rank"
-                ThingToTryToConvertItTo=Int
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing="Rank"
+                ConvertTo=Int
+                Order=Ascending
             }
         let sortedModel = sortModelByOneParameter filteredModel sortParameter
         sortedModel.Length |> should equal 4

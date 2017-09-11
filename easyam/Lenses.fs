@@ -1,4 +1,5 @@
 ﻿module Lenses
+    open Types
     open SAModel
 
     let getTopLevelItems (modelItems:ModelItem2 []) =
@@ -80,13 +81,13 @@
     let getTotalQuestionCount (items:ModelItem2 []) = getTotalAnnotationCount items ANNOTATION_TOKEN_TYPE.Question
 
 
-    let getTheRightThingToCheck (modelItem:ModelItem2) (tagOrAttName:TagOrAttName) (thingToInspect:string) =
+    let getTheRightThingToCheck (modelItem:ModelItem2) (tagOrAttName:TagOrAtt) (thingToInspect:string) =
         match tagOrAttName with
             |Tag->
                 if thingToInspect="" then "" else
                 let tagExistsOnThisItem=modelItem.Tags |> Array.exists(fun x->x.Key=thingToInspect)
                 if tagExistsOnThisItem=false then "" else (modelItem.Tags|>Array.find(fun x->x.Key=thingToInspect)).Value
-            |AttName->
+            |Att->
                 if thingToInspect="" then "" else
                 match thingToInspect with
                     |"Description"->modelItem.Description
@@ -102,10 +103,10 @@
                     |_->""
     let sortModelByOneParameter (incomingModelItems:ModelItem2 []) (sortParameter:sortParameterType) =
         let initialSort=incomingModelItems |> Array.sortWith(fun (a:ModelItem2) (b:ModelItem2)->
-            let itemToSortA=getTheRightThingToCheck a sortParameter.TagOrAttName sortParameter.ThingToInspect
-            let itemToSortB=getTheRightThingToCheck b sortParameter.TagOrAttName sortParameter.ThingToInspect
-            match sortParameter.ThingToTryToConvertItTo with
-                |None->itemToSortA.CompareTo itemToSortB
+            let itemToSortA=getTheRightThingToCheck a sortParameter.TagOrAtt sortParameter.Thing
+            let itemToSortB=getTheRightThingToCheck b sortParameter.TagOrAtt sortParameter.Thing
+            match sortParameter.ConvertTo with
+                |ConvertTo.DontConvert->itemToSortA.CompareTo itemToSortB
                 |DateTime->
                     let aConverted=if fst (System.DateTime.TryParse(itemToSortA))=true then System.DateTime.Parse(itemToSortA) else System.DateTime.MinValue
                     let bConverted=if fst (System.DateTime.TryParse(itemToSortB))=true then System.DateTime.Parse(itemToSortB) else System.DateTime.MinValue
@@ -127,15 +128,15 @@
                     let bConverted=if fst (System.Decimal.TryParse(itemToSortB))=true then System.Decimal.Parse(itemToSortB) else System.Decimal.MinValue
                     aConverted.CompareTo bConverted
             )
-        let ret = if sortParameter.SortOrder = SortOrder.Ascending then initialSort else initialSort |> Array.rev
+        let ret = if sortParameter.Order = SortOrder.Ascending then initialSort else initialSort |> Array.rev
         ret
     let modelItemHasTagBetweenTwoValues (modelItem:ModelItem2) (valueToCheck:sortParameterType) (fromVal:string) (toVal:string):bool = 
-            let thingToCheck=getTheRightThingToCheck modelItem valueToCheck.TagOrAttName valueToCheck.ThingToInspect
+            let thingToCheck=getTheRightThingToCheck modelItem valueToCheck.TagOrAtt valueToCheck.Thing
             let tagExistsOnThisItem modelItem tagName =modelItem.Tags |> Array.exists(fun x->x.Key=tagName)
-            if valueToCheck.TagOrAttName=AttName && fromVal="" && toVal="" then true else
-            if valueToCheck.TagOrAttName=Tag && fromVal="" && toVal="" && (tagExistsOnThisItem modelItem valueToCheck.ThingToInspect) then true else
-            match valueToCheck.ThingToTryToConvertItTo with
-                |None->
+            if valueToCheck.TagOrAtt=Att && fromVal="" && toVal="" then true else
+            if valueToCheck.TagOrAtt=Tag && fromVal="" && toVal="" && (tagExistsOnThisItem modelItem valueToCheck.Thing) then true else
+            match valueToCheck.ConvertTo with
+                |ConvertTo.DontConvert->
                     let comparedToFromVal=thingToCheck.CompareTo fromVal
                     let comparedToToVal=thingToCheck.CompareTo toVal
                     comparedToFromVal>0 && comparedToToVal<0
@@ -185,7 +186,7 @@
             let matchesModelParms = matchesBucket && matchesGenre && matchesTemporal && matchesAbstraction
             if allOfTheAMTagsAreUnknown=true then true else matchesBucket&&matchesGenre&&matchesTemporal&&matchesAbstraction
             )
-        if filterParameter.CheckValue.ThingToInspect="" then filterByAMTags else
+        if filterParameter.CheckValue.Thing="" then filterByAMTags else
         let filterByCheckVal=filterByAMTags |> Array.filter(fun x->
             modelItemHasTagBetweenTwoValues x filterParameter.CheckValue filterParameter.FromVal filterParameter.ToVal            
             )
@@ -196,10 +197,10 @@
         let sprintFloat = if fst (System.Double.TryParse(sprint))=true then System.Double.Parse(sprint) else System.Double.MinValue
         let checkParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect="Sprint"
-                ThingToTryToConvertItTo=Float
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing="Sprint"
+                ConvertTo=Float
+                Order=Ascending
             }
         let filterParameter =
             {
@@ -217,20 +218,20 @@
     let sortByRankTag (modelItems:ModelItem2 [])=
         let sortParameter =
             {
-                TagOrAttName=Tag
-                ThingToInspect="Rank"
-                ThingToTryToConvertItTo=Int
-                SortOrder=Ascending
+                TagOrAtt=Tag
+                Thing="Rank"
+                ConvertTo=Int
+                Order=Ascending
             }
         let ret = sortModelByOneParameter modelItems sortParameter
         ret
     let sortByDescription (modelItems:ModelItem2 [])=
         let sortParameter =
             {
-                TagOrAttName=AttName
-                ThingToInspect="Description"
-                ThingToTryToConvertItTo=None
-                SortOrder=Ascending
+                TagOrAtt=Att
+                Thing="Description"
+                ConvertTo=ConvertTo.DontConvert
+                Order=Ascending
             }
         let ret = sortModelByOneParameter modelItems sortParameter
         ret

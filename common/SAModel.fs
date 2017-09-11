@@ -33,65 +33,65 @@
 //            !counter
 //    let getNextItemNumber()=IntegerFactory()
 //    // Structured Analysis Model Super Types
-    type Buckets =
-        | Unknown
-        | None
-        | Behavior
-        | Structure
-        | Supplemental
-         static member ToList() =
-            [Unknown;None;Behavior;Structure;Supplemental]
-         override self.ToString() =
-          match self with
-            | Unknown->"Unknown"
-            | None->"None"
-            | Behavior->"Behavior"
-            | Structure->"Structure"
-            | Supplemental->"Supplemental"
-    type Genres =
-        | Unknown
-        | None
-        | Business
-        | System
-        | Meta
-         static member ToList() =
-            [Unknown;None;Business; System; Meta]
-         override self.ToString() =
-          match self with
-            | Unknown->"Unknown"
-            | None->"None"
-            | Business->"Business"
-            | System->"System"
-            | Meta->"Meta"
+    //type Buckets =
+    //    | Unknown
+    //    | None
+    //    | Behavior
+    //    | Structure
+    //    | Supplemental
+    //     static member ToList() =
+    //        [Unknown;None;Behavior;Structure;Supplemental]
+    //     override self.ToString() =
+    //      match self with
+    //        | Unknown->"Unknown"
+    //        | None->"None"
+    //        | Behavior->"Behavior"
+    //        | Structure->"Structure"
+    //        | Supplemental->"Supplemental"
+    //type Genres =
+    //    | Unknown
+    //    | None
+    //    | Business
+    //    | System
+    //    | Meta
+    //     static member ToList() =
+    //        [Unknown;None;Business; System; Meta]
+    //     override self.ToString() =
+    //      match self with
+    //        | Unknown->"Unknown"
+    //        | None->"None"
+    //        | Business->"Business"
+    //        | System->"System"
+    //        | Meta->"Meta"
 
-    type AbstractionLevels = 
-        | Unknown
-        | None
-        | Abstract
-        | Realized
-         static member ToList() =
-            [Unknown;None;Abstract;Realized]
-         override self.ToString() =
-          match self with
-            | Unknown->"Unknown"
-            | None->"None"
-            | Abstract->"Abstract"
-            | Realized->"Realized"
-    type TemporalIndicators =
-        | Unknown
-        | None
-        | Was
-        | AsIs
-        | ToBe
-         static member ToList() =
-            [Unknown;None;Was;AsIs;ToBe]
-         override self.ToString() =
-          match self with
-            | Unknown->"Unknown"
-            | None->"None"
-            | Was->"Was"
-            | AsIs->"As-Is"
-            | ToBe->"To-Be"
+    //type AbstractionLevels = 
+    //    | Unknown
+    //    | None
+    //    | Abstract
+    //    | Realized
+    //     static member ToList() =
+    //        [Unknown;None;Abstract;Realized]
+    //     override self.ToString() =
+    //      match self with
+    //        | Unknown->"Unknown"
+    //        | None->"None"
+    //        | Abstract->"Abstract"
+    //        | Realized->"Realized"
+    //type TemporalIndicators =
+    //    | Unknown
+    //    | None
+    //    | Was
+    //    | AsIs
+    //    | ToBe
+    //     static member ToList() =
+    //        [Unknown;None;Was;AsIs;ToBe]
+    //     override self.ToString() =
+    //      match self with
+    //        | Unknown->"Unknown"
+    //        | None->"None"
+    //        | Was->"Was"
+    //        | AsIs->"As-Is"
+    //        | ToBe->"To-Be"
 
 
 //    // HYPOTHESIS
@@ -634,7 +634,6 @@
         {
             CompilerState:CompilerState
             CurrentLocation:ModelLocationPointer
-            //CompilerWaitingForState:CompilerWaitingFor
             CompilerMessages:CompilerMessage []
             ModelItems:ModelItem2 []
         }
@@ -642,7 +641,6 @@
         {
             CompilerState=defaultCompilerState
             CurrentLocation=defaultModelLocationPointer
-            //CompilerWaitingForState=CompilerWaitingFor.Nothing
             CompilerMessages=[||]
             ModelItems= [|defaultModelItem2|]
         }
@@ -656,19 +654,13 @@
             CompilerReturn:CompilerReturn
         }
 
-    [<NoComparison>]
-    type SortOrder = Ascending | Descending
-    [<NoComparison>]
-    type TagOrAttName = Tag | AttName
-    [<NoComparison>]
-    type ThingsICanTryConvertingTo = None | Int | Float | Money | DateTime | TimeSpan
-    [<NoComparison>]
+
     type sortParameterType =
         {
-           TagOrAttName:TagOrAttName
-           ThingToInspect:string
-           ThingToTryToConvertItTo:ThingsICanTryConvertingTo
-           SortOrder:SortOrder
+           TagOrAtt:TagOrAtt
+           Thing:string
+           ConvertTo:ConvertTo
+           Order:SortOrder
         }
     [<NoComparison>]
     type FilterParmeterType =

@@ -161,12 +161,169 @@
                 None
     type FileParm = string*System.IO.FileInfo option
     type DirectoryParm = string*System.IO.DirectoryInfo option
-    //[<NoComparisonAttribute>]
-    //type DirectoryParm = 
-    //    {
-    //        DirectoryFullName:string
-    //        DirectoryInfo:System.IO.DirectoryInfo option
-    //    }
+    type SortOrder = Ascending | Descending
+                        static member ToList()=[Ascending;Descending]
+                        override this.ToString()=
+                            match this with
+                                | Ascending->"Ascending"
+                                | Descending->"Descending"
+                        static member TryParse(stringToParse:string) =
+                            match stringToParse with
+                                |"a"|"asc"|"ascending"|"A"|"ASC"|"Ascending"|"Asc"|"ASCENDING"->true,SortOrder.Ascending
+                                |"d"|"desc"|"descending"|"D"|"DESC"|"Descending"|"Desc"|"DESCENDING"->true,SortOrder.Descending
+                                |_->false, SortOrder.Ascending
+                        static member Parse(stringToParse:string) =
+                            match stringToParse with
+                                |"a"|"asc"|"ascending"|"A"|"ASC"|"Ascending"|"Asc"|"ASCENDING"->SortOrder.Ascending
+                                |"d"|"desc"|"descending"|"D"|"DESC"|"Descending"|"Desc"|"DESCENDING"->SortOrder.Descending
+                                |_->raise(new System.ArgumentOutOfRangeException("Sort Order","The string value provided for Sort Order is not in the Sort Order enum"))
+    type TagOrAtt = Tag | Att
+                        static member ToList()=[Tag;Att]
+                        override this.ToString()=
+                            match this with
+                                | Tag->"Tag"
+                                | Att->"Att"
+                        static member TryParse(stringToParse:string) =
+                            match stringToParse with
+                                |"T"|"t"|"tag"|"Tag"|"TAG"->true,TagOrAtt.Tag
+                                |"A"|"a"|"att"|"Att"|"ATT"->true,TagOrAtt.Att
+                                |_->false, TagOrAtt.Tag
+                        static member Parse(stringToParse:string) =
+                            match stringToParse with
+                                |"T"|"t"|"tag"|"Tag"|"TAG"->TagOrAtt.Tag
+                                |"A"|"a"|"att"|"Att"|"ATT"->TagOrAtt.Att
+                                |_->raise(new System.ArgumentOutOfRangeException("Tag Or Attribute","The string value provided for TagOrAtt is not in the TagOrAtt enum"))
+    type ConvertTo = DontConvert | Int | Float | Money | DateTime | TimeSpan
+                        static member ToList()=[DontConvert;Int;Float;Money;DateTime;TimeSpan]
+                        override this.ToString()=
+                            match this with
+                                | DontConvert->"Don't Convert"
+                                | Int->"Int"
+                                | Float->"Float"
+                                | Money->"Money"
+                                | DateTime->"DateTime"
+                                | TimeSpan->"TimeSpan"
+                        static member TryParse(stringToParse:string) =
+                            match stringToParse with
+                                |"d"|"date"|"datetime"|"D"|"DATE"|"Datetime"|"DateTime"|"DATETIME"->true,ConvertTo.DateTime
+                                |"f"|"float"|"F"|"Float"|"FLOAT"->true,ConvertTo.Float
+                                |"i"|"int"|"I"|"Int"->true,ConvertTo.Int
+                                |"m"|"money"|"M"|"Money"|"dec"|"Dec"|"decimal"|"Decimal"->true,ConvertTo.Money
+                                |"t"|"timespan"|"T"|"Timespan"|"TimeSpan"->true,ConvertTo.TimeSpan
+                                |_->false,ConvertTo.DontConvert
+                        static member Parse(stringToParse:string) =
+                            match stringToParse with
+                                |"d"|"date"|"datetime"|"D"|"DATE"|"Datetime"|"DateTime"|"DATETIME"->ConvertTo.DateTime
+                                |"f"|"float"|"F"|"Float"|"FLOAT"->ConvertTo.Float
+                                |"i"|"int"|"I"|"Int"->ConvertTo.Int
+                                |"m"|"money"|"M"|"Money"|"dec"|"Dec"|"decimal"|"Decimal"->ConvertTo.Money
+                                |"t"|"timespan"|"T"|"Timespan"|"TimeSpan"->ConvertTo.TimeSpan
+                                |_->raise(new System.ArgumentOutOfRangeException("Sort Convert To","The string value provided for ConvertTo is not in the ConvertTo enum"))
+    type Buckets =
+        | Unknown
+        | None
+        | Behavior
+        | Structure
+        | Supplemental
+         static member ToList() =
+            [Unknown;None;Behavior;Structure;Supplemental]
+         override self.ToString() =
+          match self with
+            | Unknown->"Unknown"
+            | None->"None"
+            | Behavior->"Behavior"
+            | Structure->"Structure"
+            | Supplemental->"Supplemental"
+         static member TryParse(stringToParse:string) =
+            match stringToParse.ToUpper() with
+                |"BEHAVIOR"|"BEHAVIOUR"->(true,Buckets.Behavior)
+                |"STRUCTURE"->(true,Buckets.Structure)
+                |"SUPPLEMENTAL"->(true,Buckets.Supplemental)
+                |_->(false, Buckets.Unknown)
+         static member Parse(stringToParse:string) =
+            match stringToParse.ToUpper() with
+                |"BEHAVIOR"|"BEHAVIOUR"->Buckets.Behavior
+                |"STRUCTURE"->Buckets.Structure
+                |"SUPPLEMENTAL"->Buckets.Supplemental
+                |_->raise(new System.ArgumentOutOfRangeException("Buckets","The string value provided for Buckets is not in the Buckets enum"))
+    type Genres =
+        | Unknown
+        | None
+        | Business
+        | System
+        | Meta
+         static member ToList() =
+            [Unknown;None;Business; System; Meta]
+         override self.ToString() =
+          match self with
+            | Unknown->"Unknown"
+            | None->"None"
+            | Business->"Business"
+            | System->"System"
+            | Meta->"Meta"
+         static member TryParse(stringToParse:string) =
+            match stringToParse.ToUpper() with
+                |"BUSINESS"|"BIZ"|"BUS"->true,Genres.Business
+                |"SYSTEM"|"SYS"->true,Genres.System
+                |"META"->true,Genres.Meta
+                |_->(false, Genres.Unknown)
+         static member Parse(stringToParse:string) =
+            match stringToParse.ToUpper() with
+                |"BUSINESS"|"BIZ"|"BUS"->Genres.Business
+                |"SYSTEM"|"SYS"->Genres.System
+                |"META"->Genres.Meta
+                |_->raise(new System.ArgumentOutOfRangeException("Genres","The string value provided for Genres is not in the Genres enum"))
+
+    type AbstractionLevels = 
+        | Unknown
+        | None
+        | Abstract
+        | Realized
+         static member ToList() =
+            [Unknown;None;Abstract;Realized]
+         override self.ToString() =
+          match self with
+            | Unknown->"Unknown"
+            | None->"None"
+            | Abstract->"Abstract"
+            | Realized->"Realized"
+         static member TryParse(stringToParse:string) =
+            match stringToParse.ToUpper() with
+                |"ABS"|"ABSTRACT"->true,AbstractionLevels.Abstract
+                |"REAL"|"REALIZED"|"Actual"->true,AbstractionLevels.Realized
+                |_->(false, AbstractionLevels.Unknown)
+         static member Parse(stringToParse:string) =
+            match stringToParse.ToUpper() with
+                |"ABS"|"ABSTRACT"->AbstractionLevels.Abstract
+                |"REAL"|"REALIZED"|"Actual"->AbstractionLevels.Realized
+                |_->raise(new System.ArgumentOutOfRangeException("AbstractionLevels","The string value provided for AbstractionLevels is not in the AbstractionLevels enum"))
+    type TemporalIndicators =
+        | Unknown
+        | None
+        | Was
+        | AsIs
+        | ToBe
+         static member ToList() =
+            [Unknown;None;Was;AsIs;ToBe]
+         override self.ToString() =
+          match self with
+            | Unknown->"Unknown"
+            | None->"None"
+            | Was->"Was"
+            | AsIs->"As-Is"
+            | ToBe->"To-Be"
+         static member TryParse(stringToParse:string) =
+            match stringToParse.ToUpper() with
+                |"WAS"->true,TemporalIndicators.Was
+                |"ASIS"|"AS-IS"|"IS"->true,TemporalIndicators.AsIs
+                |"TOBE"|"TO-BE"|"TO BE"->true,TemporalIndicators.ToBe
+                |_->(false, TemporalIndicators.Unknown)
+         static member Parse(stringToParse:string) =
+            match stringToParse.ToUpper() with
+                |"WAS"->TemporalIndicators.Was
+                |"ASIS"|"AS-IS"|"IS"->TemporalIndicators.AsIs
+                |"TOBE"|"TO-BE"|"TO BE"->TemporalIndicators.ToBe
+                |_->raise(new System.ArgumentOutOfRangeException("TemporalIndicators","The string value provided for TemporalIndicators is not in the TemporalIndicators enum"))
 
     type ConfigEntry<'A> =
         {
@@ -206,7 +363,7 @@
                             then 
                                 let tempDirectoryInfo = Some(System.IO.DirectoryInfo(parmValue.Value))
                                 defaultConfig.swapInNewValue (parmValue.Value, tempDirectoryInfo)
-                            else defaultConfig.swapInNewValue (parmValue.Value, None)
+                            else defaultConfig.swapInNewValue (parmValue.Value, Option.None)
                     else
                         defaultConfig
             static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<FileParm>), (args:string[])):ConfigEntry<FileParm>  =
@@ -218,7 +375,7 @@
                                 let tempFileInfo = Some(System.IO.FileInfo(parmValue.Value))
                                 defaultConfig.swapInNewValue (parmValue.Value, tempFileInfo)
                             else
-                                defaultConfig.swapInNewValue (parmValue.Value, None)
+                                defaultConfig.swapInNewValue (parmValue.Value, Option.None)
                     else
                         defaultConfig
             static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<bool>), (args:string[])):ConfigEntry<bool> =
@@ -254,6 +411,48 @@
                         defaultConfig.swapInNewValue (System.DateTime.Parse(parmValue.Value))
                     else
                         defaultConfig
+            static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<SortOrder>), (args:string[])):ConfigEntry<SortOrder>  =
+                let parmValue = getValuePartOfMostRelevantCommandLineMatch args defaultConfig.commandLineParameterSymbol
+                let newVal=if parmValue.IsNone then defaultConfig.parameterValue else
+                            let tp=SortOrder.TryParse parmValue.Value
+                            if fst tp=true then snd tp else defaultConfig.parameterValue
+                defaultConfig.swapInNewValue newVal
+            static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<TagOrAtt>), (args:string[])):ConfigEntry<TagOrAtt>  =
+                let parmValue = getValuePartOfMostRelevantCommandLineMatch args defaultConfig.commandLineParameterSymbol
+                let newVal=if parmValue.IsNone then defaultConfig.parameterValue else
+                            let tp=TagOrAtt.TryParse parmValue.Value
+                            if fst tp=true then snd tp else defaultConfig.parameterValue
+                defaultConfig.swapInNewValue newVal
+            static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<ConvertTo>), (args:string[])):ConfigEntry<ConvertTo>  =
+                let parmValue = getValuePartOfMostRelevantCommandLineMatch args defaultConfig.commandLineParameterSymbol
+                let newVal=if parmValue.IsNone then defaultConfig.parameterValue else
+                            let tp=ConvertTo.TryParse parmValue.Value
+                            if fst tp=true then snd tp else defaultConfig.parameterValue
+                defaultConfig.swapInNewValue newVal
+            static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<Genres>), (args:string[])):ConfigEntry<Genres>  =
+                let parmValue = getValuePartOfMostRelevantCommandLineMatch args defaultConfig.commandLineParameterSymbol
+                let newVal=if parmValue.IsNone then defaultConfig.parameterValue else
+                            let tp=Genres.TryParse parmValue.Value
+                            if fst tp=true then snd tp else defaultConfig.parameterValue
+                defaultConfig.swapInNewValue newVal
+            static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<Buckets>), (args:string[])):ConfigEntry<Buckets>  =
+                let parmValue = getValuePartOfMostRelevantCommandLineMatch args defaultConfig.commandLineParameterSymbol
+                let newVal=if parmValue.IsNone then defaultConfig.parameterValue else
+                            let tp=Buckets.TryParse parmValue.Value
+                            if fst tp=true then snd tp else defaultConfig.parameterValue
+                defaultConfig.swapInNewValue newVal
+            static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<AbstractionLevels>), (args:string[])):ConfigEntry<AbstractionLevels>  =
+                let parmValue = getValuePartOfMostRelevantCommandLineMatch args defaultConfig.commandLineParameterSymbol
+                let newVal=if parmValue.IsNone then defaultConfig.parameterValue else
+                            let tp=AbstractionLevels.TryParse parmValue.Value
+                            if fst tp=true then snd tp else defaultConfig.parameterValue
+                defaultConfig.swapInNewValue newVal
+            static member populateValueFromCommandLine ((defaultConfig:ConfigEntry<TemporalIndicators>), (args:string[])):ConfigEntry<TemporalIndicators>  =
+                let parmValue = getValuePartOfMostRelevantCommandLineMatch args defaultConfig.commandLineParameterSymbol
+                let newVal=if parmValue.IsNone then defaultConfig.parameterValue else
+                            let tp=TemporalIndicators.TryParse parmValue.Value
+                            if fst tp=true then snd tp else defaultConfig.parameterValue
+                defaultConfig.swapInNewValue newVal
     [<NoComparison>]
     type InterimProgress =
         {
@@ -295,6 +494,21 @@
             sourceDirectory:ConfigEntry<DirectoryParm>
             destinationDirectory:ConfigEntry<DirectoryParm>
             nameSpace:ConfigEntry<string>
+            sortTagOrAtt:ConfigEntry<TagOrAtt>
+            sortThing:ConfigEntry<string>
+            sortConvertTo:ConfigEntry<ConvertTo>
+            sortOrder:ConfigEntry<SortOrder>
+            filterGenre:ConfigEntry<Genres>
+            filterBucket:ConfigEntry<Buckets>
+            filterAbstractionLevel:ConfigEntry<AbstractionLevels>
+            filterTemporalIndicator:ConfigEntry<TemporalIndicators>
+            filterTagOrAtt:ConfigEntry<TagOrAtt>
+            filterThing:ConfigEntry<string>
+            filterConvertTo:ConfigEntry<ConvertTo>
+            filterOrder:ConfigEntry<SortOrder>
+            filterFromVal:ConfigEntry<string>
+            filterToVal:ConfigEntry<string>
+            outputFormat:ConfigEntry<string>
         }
         member this.printThis() =
             printfn "EasyAMConfig Parameters Provided"
@@ -304,6 +518,22 @@
             this.destinationDirectory.printVal
             printfn "destinationDirectoryExists: %b" (snd this.destinationDirectory.parameterValue).IsSome
             this.nameSpace.printVal
+            printfn "Namespace: %s" this.nameSpace.parameterValue
+            printfn "Sort Tag or Att: %s" (string this.sortTagOrAtt.parameterValue)
+            printfn "Thing to sort: %s" (string this.sortThing.parameterValue)
+            printfn "Convert the thing into: %s" (string this.sortConvertTo.parameterValue)
+            printfn "Sort order: %s" (string this.sortOrder.parameterValue)
+            printfn "Filter Genre: %s" (string this.filterGenre.parameterValue)
+            printfn "Filter Bucket: %s" (string this.filterBucket.parameterValue)
+            printfn "Filter Abstraction Level: %s" (string this.filterAbstractionLevel.parameterValue)
+            printfn "Filter Temporal Indicator: %s" (string this.filterTemporalIndicator.parameterValue)
+            printfn "Filter Tag Or Att: %s" (string this.filterTagOrAtt.parameterValue)
+            printfn "Filter Thing: %s" (string this.filterThing.parameterValue)
+            printfn "Filter Convert To: %s" (string this.filterConvertTo.parameterValue)
+            printfn "Filter order: %s" (string this.filterOrder.parameterValue)
+            printfn "Filter From Val: %s" (string this.filterFromVal.parameterValue)
+            printfn "Filter To Val: %s" (string this.filterToVal.parameterValue)
+            printfn "Output format: %s" (string this.outputFormat.parameterValue)
 
     let directoryExists (dir:ConfigEntry<DirectoryParm>) = (snd (dir.parameterValue)).IsSome
     let fileExists (dir:ConfigEntry<FileParm>) = (snd (dir.parameterValue)).IsSome
