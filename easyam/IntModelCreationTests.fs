@@ -48,7 +48,7 @@
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let newCompilerStatus=makeRawModel processedIncomingLines beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 5
-        let tok, valu = newCompilerStatus.ModelItems.[1].Annotations.[0]
+        let tok, valu = newCompilerStatus.ModelItems.[1].Annotations.[0].AnnotationType,newCompilerStatus.ModelItems.[1].Annotations.[0].AnnotationText
         valu="What's a sprog?" |> should equal true 
 
     [<Test>]
@@ -604,8 +604,8 @@
         let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
         newCompilerStatus.ModelItems |> should haveLength 13
         newCompilerStatus.ModelItems.[12].Annotations|> should haveLength 2
-        ( fst newCompilerStatus.ModelItems.[12].Annotations.[0]) |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-        ( fst newCompilerStatus.ModelItems.[12].Annotations.[1]) |> should equal ANNOTATION_TOKEN_TYPE.ToDo
+        newCompilerStatus.ModelItems.[12].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.ToDo
+        newCompilerStatus.ModelItems.[12].Annotations.[1].AnnotationType |> should equal AnnotationTokenType.ToDo
 
     [<Test>]
     let ``INT MODEL CREATION: Simple shortcut works``()=
@@ -885,8 +885,8 @@
         newCompilerStatus.ModelItems.[1].Description |> should equal "Conduct Spot Inventory"
         newCompilerStatus.ModelItems.[1].Attributes |> should haveLength 9
         newCompilerStatus.ModelItems.[1].Attributes.[8].Annotations |> should haveLength 1
-        (fst newCompilerStatus.ModelItems.[1].Attributes.[8].Annotations.[0]) |> should equal ANNOTATION_TOKEN_TYPE.Question
-        (snd newCompilerStatus.ModelItems.[1].Attributes.[8].Annotations.[0]) |> should equal "Is there such a thing as a 'walking inventory'"
+        newCompilerStatus.ModelItems.[1].Attributes.[8].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Question
+        newCompilerStatus.ModelItems.[1].Attributes.[8].Annotations.[0].AnnotationText |> should equal "Is there such a thing as a 'walking inventory'"
 
 
 
@@ -1119,3 +1119,125 @@
         let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
         newCompilerStatus.ModelItems |> should haveLength 10
         newCompilerStatus.ModelItems.[1].Annotations |> should haveLength 0
+
+    [<Test>]
+    let ``ROUNDTRIP: attribute annotations dont fall back to parent``()=
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|
+                          ""
+                        ; "MASTER BACKLOG:"
+                        ; "  Start Quote"
+                        ; "  Identify Potential Customer"
+                        |]
+        let fileInfo2 = getFakeFileInfo()
+        let testText2 = [|
+                          ""
+                        ; ""
+                        |]
+        let fileInfo3 = getFakeFileInfo()
+        let testText3 = [|
+                          ""
+                        ; "MASTER BACKLOG"
+                        ; "  Start Quote"
+                        ; "    QUESTIONS:"
+                        ; "      What's a quote?"
+                        ; "      Why are we here?"
+                        ; "    NOTES:"
+                        ; "      This is a great meeting"
+                        ; "      I really like ice cream"
+                        ; "    TODO:"
+                        ; "      Meet the agents"
+                        ; "      Have lunch with the agents"
+                        ; ""
+                        ; "  WHEN: A potential customer purchases new property"
+                        ; "  ASA: Agent"
+                        ; "    Agent Supervisor"
+                        ; "  INEEDTO: Start a new quote"
+                        ; "    QUESTION: Is this all done online or can it be done in person?"
+                        ; "  SOTHAT: The potential customer becomes a real customer"
+                        ; ""
+                        ; "MASTER SUPPLEMENTALS"
+                        ; "  Must be ADA compliant"
+                        ; "    NOTES:"
+                        ; "      //"
+                        ; "      // <code goes here>"
+                        ; "      //"
+                        ; ""
+                        ; "PROJECT BACKLOG"
+                        ; "  Identify Customer Blank Screen PARENT Identify Potential Customer"
+                        ; "  ASA: Agent"
+                        ; "    NOTE: Agents are associated by contract to the company"
+                        ; "  INEEDTO: See the Customer Identification Screen"
+                        ; "  SOTHAT: I can interact with it"
+                        ; ""
+                        ; ""
+                        |]
+        let listToProcess = [|(fileInfo1,testText1);(fileInfo2,testText2);(fileInfo3,testText3)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let newCompilerStatus=makeRawModel processedIncomingLines compilerReturn
+        newCompilerStatus.ModelItems |> should haveLength 6
+        newCompilerStatus.ModelItems.[5].Annotations |> should haveLength 0
+        newCompilerStatus.ModelItems.[5].Attributes |> should haveLength 3
+        newCompilerStatus.ModelItems.[5].Attributes.[0].Annotations |> should haveLength 1
+        newCompilerStatus.ModelItems.[5].Attributes.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Note
+        newCompilerStatus.ModelItems.[5].Attributes.[0].Annotations.[0].AnnotationText |> should equal "Agents are associated by contract to the company"
+
+    [<Test>]
+    /// Take whatever is in the directory, process it, then process that again, and see if it matches
+    let ``ROUNDTRIP: SANITY CHECK``()=
+        let allFiles = System.IO.Directory.EnumerateFiles(System.Environment.CurrentDirectory, "*.amin", System.IO.SearchOption.AllDirectories)
+        let fileList = allFiles |> Seq.toArray |> Array.map(fun x->System.IO.FileInfo(x)) |> Array.sortBy(fun x->x.FullName)
+        let listToProcess = loadInAllIncomingLines fileList
+
+        //processing first time
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let firstCompilerResult = makeRawModel processedIncomingLines compilerReturn        
+        let originalConsoleOut = System.Console.Out
+        let writer=new System.IO.StringWriter()
+        System.Console.SetOut(writer)
+        let dummyOutputDirectory=new System.IO.DirectoryInfo(System.IO.Directory.GetCurrentDirectory())
+        writeOutModel firstCompilerResult.ModelItems firstCompilerResult.ModelItems ModelOutputType.AMOUT dummyOutputDirectory  true ""
+        let firstModelOutput = writer.GetStringBuilder().ToString()
+
+        //processing second time
+        let fileInfo1 = getFakeFileInfo()
+        let testText1 = [|firstModelOutput|]
+        let listToProcess = [|(fileInfo1,testText1)|]
+        let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
+        let secondCompilerResult=makeRawModel processedIncomingLines compilerReturn
+        let secondWriter=new System.IO.StringWriter()
+        System.Console.SetOut(secondWriter)
+        let dummyOutputDirectory=new System.IO.DirectoryInfo(System.IO.Directory.GetCurrentDirectory())
+        writeOutModel secondCompilerResult.ModelItems secondCompilerResult.ModelItems ModelOutputType.AMOUT dummyOutputDirectory  true ""
+        let secondModelOutput = writer.GetStringBuilder().ToString()
+
+        System.Console.SetOut(originalConsoleOut)
+
+        firstModelOutput |> should equal secondModelOutput
+        firstCompilerResult.ModelItems |> should haveLength secondCompilerResult.ModelItems.Length
+        firstCompilerResult.ModelItems |> Array.iteri(fun i x->
+                x.Description|>should equal secondCompilerResult.ModelItems.[i].Description
+                x.Attributes.Length |> should equal secondCompilerResult.ModelItems.[i].Attributes.Length
+                x.Attributes|> Array.iteri(fun j y->
+                    y.AttributeType |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].AttributeType
+                    y.Description |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].Description
+                    y.Annotations.Length |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].Annotations.Length
+                    y.Annotations |> Array.iteri(fun k z->
+                        z.AnnotationType |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].Annotations.[k].AnnotationType
+                        z.AnnotationText |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].Annotations.[k].AnnotationText
+                        )
+                    )
+                // don't compare the default root item. Lots of noise up there, including model generation stuff
+                // if rest of model checks out, it doesn't matter
+                if x.Id=(-1) then () else
+                x.Annotations.Length |> should equal secondCompilerResult.ModelItems.[i].Annotations.Length
+                x.Annotations |> Array.iteri(fun j y->
+                    y.AnnotationType |> should equal secondCompilerResult.ModelItems.[i].Annotations.[j].AnnotationType
+                    y.AnnotationText |> should equal secondCompilerResult.ModelItems.[i].Annotations.[j].AnnotationText
+                    )
+                x.Relations.Length |> should equal secondCompilerResult.ModelItems.[i].Relations.Length
+                x.Relations|>Array.iteri(fun k z->
+                    z.ModelJoinType |> should equal secondCompilerResult.ModelItems.[i].Relations.[k].ModelJoinType
+                    z.TargetId |> should equal secondCompilerResult.ModelItems.[i].Relations.[k].TargetId
+                    )
+            )

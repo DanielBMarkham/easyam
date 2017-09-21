@@ -70,5 +70,10 @@
 
 </summary>
 </member>
+<member name="M:IntModelCreationTests.ROUNDTRIP: SANITY CHECK">
+<summary>
+ Take whatever is in the directory, process it, then process that again, and see if it matches
+</summary>
+</member>
 </members>
 </doc>

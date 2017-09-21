@@ -18,7 +18,7 @@
         let newCompilerStatus=makeRawModel ret beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 1
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.ToDo
     [<Test>]
     let ``BASIC MODEL CREATION: Two annotations go in the right buckets``() =
         let testText = [|"TODO: Check on Pluto"; "It should be a planet by now"|]
@@ -26,8 +26,8 @@
         let newCompilerStatus=makeRawModel compilationScenario beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 2
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-        fst newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal ANNOTATION_TOKEN_TYPE.Note
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.ToDo
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationType |> should equal AnnotationTokenType.Note
     [<Test>]
     let ``BASIC MODEL CREATION: Freetext followed by a question registers correctly``() =
         let testText = [|"This is the same things they said last time. Q: Wonder why they repeat themselves?"|]
@@ -35,10 +35,10 @@
         let newCompilerStatus=makeRawModel compilationScenario beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 2
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Note
-        snd newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal "This is the same things they said last time."
-        fst newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal ANNOTATION_TOKEN_TYPE.Question
-        snd newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal "Wonder why they repeat themselves?"
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Note
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationText |> should equal "This is the same things they said last time."
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationType |> should equal AnnotationTokenType.Question
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationText |> should equal "Wonder why they repeat themselves?"
     [<Test>]
     let ``BASIC MODEL CREATION: Question line followed by freetext registers correctly``() =
         let testText = [|"Q: Why all the salsa?";"Salsa might be the key to a long life."|]
@@ -46,10 +46,10 @@
         let newCompilerStatus=makeRawModel compilationScenario beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 2
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Question
-        snd newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal "Why all the salsa?"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal ANNOTATION_TOKEN_TYPE.Note
-        snd newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal "Salsa might be the key to a long life."
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Question
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationText |> should equal "Why all the salsa?"
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationType |> should equal AnnotationTokenType.Note
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationText |> should equal "Salsa might be the key to a long life."
     [<Test>]
     let ``BASIC MODEL CREATION: TODO put between two freetext lines works correctly``() =
         let testText = [|"Many a time";"TODO: Find out how many";"Sheep jump over the moon"|]
@@ -57,12 +57,12 @@
         let newCompilerStatus=makeRawModel compilationScenario beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 3
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Note
-        snd newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal "Many a time"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-        snd newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal "Find out how many"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[2] |> should equal ANNOTATION_TOKEN_TYPE.Note
-        snd newCompilerStatus.ModelItems.[0].Annotations.[2] |> should equal "Sheep jump over the moon"
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Note
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationText |> should equal "Many a time"
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationType |> should equal AnnotationTokenType.ToDo
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationText |> should equal "Find out how many"
+        newCompilerStatus.ModelItems.[0].Annotations.[2].AnnotationType |> should equal AnnotationTokenType.Note
+        newCompilerStatus.ModelItems.[0].Annotations.[2].AnnotationText |> should equal "Sheep jump over the moon"
     [<Test>]
     let ``BASIC MODEL CREATION: Multiple notes on the same line works``() =
         let testText = [|"NOTES: The fever is hot, the beer is cold, the chickens are squawking in the barnyard"|]
@@ -70,12 +70,12 @@
         let newCompilerStatus=makeRawModel compilationScenario beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 3
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Note
-        snd newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal "The fever is hot"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal ANNOTATION_TOKEN_TYPE.Note
-        snd newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal "the beer is cold"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[2] |> should equal ANNOTATION_TOKEN_TYPE.Note
-        snd newCompilerStatus.ModelItems.[0].Annotations.[2] |> should equal "the chickens are squawking in the barnyard"
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Note
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationText |> should equal "The fever is hot"
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationType |> should equal AnnotationTokenType.Note
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationText |> should equal "the beer is cold"
+        newCompilerStatus.ModelItems.[0].Annotations.[2].AnnotationType |> should equal AnnotationTokenType.Note
+        newCompilerStatus.ModelItems.[0].Annotations.[2].AnnotationText |> should equal "the chickens are squawking in the barnyard"
     [<Test>]
     let ``BASIC MODEL CREATION: TODOS on multiple lines work``() =
         let testText = [|"TODOS: Mix pumpkin juice"; "Attack lunar base"|]
@@ -83,10 +83,10 @@
         let newCompilerStatus=makeRawModel compilationScenario beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 2
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-        snd newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal "Mix pumpkin juice"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-        snd newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal "Attack lunar base"
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.ToDo
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationText |> should equal "Mix pumpkin juice"
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationType |> should equal AnnotationTokenType.ToDo
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationText |> should equal "Attack lunar base"
     [<Test>]
     let ``BASIC MODEL CREATION: TODO by itself followed by list works``() =
         let testText = [|"TODOS"; "    Attack lunar base"; "    Gain superpowers"; "    Discover the atom"|]
@@ -94,12 +94,12 @@
         let newCompilerStatus=makeRawModel compilationScenario beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 3
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-        snd newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal "Attack lunar base"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-        snd newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal "Gain superpowers"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[2] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-        snd newCompilerStatus.ModelItems.[0].Annotations.[2] |> should equal "Discover the atom"
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.ToDo
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationText |> should equal "Attack lunar base"
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationType |> should equal AnnotationTokenType.ToDo
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationText |> should equal "Gain superpowers"
+        newCompilerStatus.ModelItems.[0].Annotations.[2].AnnotationType |> should equal AnnotationTokenType.ToDo
+        newCompilerStatus.ModelItems.[0].Annotations.[2].AnnotationText |> should equal "Discover the atom"
     [<Test>]
     let ``BASIC MODEL CREATION: Two multiples in a row works``() =
         let testText = [|"WORKS: "; "    Paved driveway"; "    Fixed roof"; "QUESTIONS:"; "    Why zero?";"    Eggs?"|]
@@ -107,14 +107,14 @@
         let newCompilerStatus=makeRawModel compilationScenario beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 4
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Work
-        snd newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal "Paved driveway"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal ANNOTATION_TOKEN_TYPE.Work
-        snd newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal "Fixed roof"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[2] |> should equal ANNOTATION_TOKEN_TYPE.Question
-        snd newCompilerStatus.ModelItems.[0].Annotations.[2] |> should equal "Why zero?"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[3] |> should equal ANNOTATION_TOKEN_TYPE.Question
-        snd newCompilerStatus.ModelItems.[0].Annotations.[3] |> should equal "Eggs?"
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Work
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationText |> should equal "Paved driveway"
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationType |> should equal AnnotationTokenType.Work
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationText |> should equal "Fixed roof"
+        newCompilerStatus.ModelItems.[0].Annotations.[2].AnnotationType |> should equal AnnotationTokenType.Question
+        newCompilerStatus.ModelItems.[0].Annotations.[2].AnnotationText |> should equal "Why zero?"
+        newCompilerStatus.ModelItems.[0].Annotations.[3].AnnotationType |> should equal AnnotationTokenType.Question
+        newCompilerStatus.ModelItems.[0].Annotations.[3].AnnotationText |> should equal "Eggs?"
     [<Test>]
     let ``BASIC MODEL CREATION: Simple annotation followed by complex annotation followed by multiple works``() =
         let testText = [|"Here's some freeform text"; "TODOS: do stuff, do more stuff, do nothing"; "QUESTIONS: "; "What is this?"; "    Why are we here?"|]
@@ -122,18 +122,18 @@
         let newCompilerStatus=makeRawModel compilationScenario beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 6
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Note
-        snd newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal "Here's some freeform text"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-        snd newCompilerStatus.ModelItems.[0].Annotations.[1] |> should equal "do stuff"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[2] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-        snd newCompilerStatus.ModelItems.[0].Annotations.[2] |> should equal "do more stuff"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[3] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
-        snd newCompilerStatus.ModelItems.[0].Annotations.[3] |> should equal "do nothing"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[4] |> should equal ANNOTATION_TOKEN_TYPE.Question
-        snd newCompilerStatus.ModelItems.[0].Annotations.[4] |> should equal "What is this?"
-        fst newCompilerStatus.ModelItems.[0].Annotations.[5] |> should equal ANNOTATION_TOKEN_TYPE.Question
-        snd newCompilerStatus.ModelItems.[0].Annotations.[5] |> should equal "Why are we here?"
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Note
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationText |> should equal "Here's some freeform text"
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationType |> should equal AnnotationTokenType.ToDo
+        newCompilerStatus.ModelItems.[0].Annotations.[1].AnnotationText |> should equal "do stuff"
+        newCompilerStatus.ModelItems.[0].Annotations.[2].AnnotationType |> should equal AnnotationTokenType.ToDo
+        newCompilerStatus.ModelItems.[0].Annotations.[2].AnnotationText |> should equal "do more stuff"
+        newCompilerStatus.ModelItems.[0].Annotations.[3].AnnotationType |> should equal AnnotationTokenType.ToDo
+        newCompilerStatus.ModelItems.[0].Annotations.[3].AnnotationText |> should equal "do nothing"
+        newCompilerStatus.ModelItems.[0].Annotations.[4].AnnotationType |> should equal AnnotationTokenType.Question
+        newCompilerStatus.ModelItems.[0].Annotations.[4].AnnotationText |> should equal "What is this?"
+        newCompilerStatus.ModelItems.[0].Annotations.[5].AnnotationType |> should equal AnnotationTokenType.Question
+        newCompilerStatus.ModelItems.[0].Annotations.[5].AnnotationText |> should equal "Why are we here?"
 
 
     [<Test>]
@@ -258,8 +258,8 @@
         newCompilerStatus.ModelItems |> should haveLength 2
         newCompilerStatus.ModelItems.[1].Description |> should equal "Balance Account"
         newCompilerStatus.ModelItems.[1].Annotations.Length |> should equal 1
-        let annotationTokenType, tokenValue=newCompilerStatus.ModelItems.[1].Annotations.[0]
-        annotationTokenType |> should equal ANNOTATION_TOKEN_TYPE.Question
+        let annotationTokenType, tokenValue=newCompilerStatus.ModelItems.[1].Annotations.[0].AnnotationType,newCompilerStatus.ModelItems.[1].Annotations.[0].AnnotationText
+        annotationTokenType |> should equal AnnotationTokenType.Question
     [<Test>]
     let ``BASIC MODEL CREATION: Multiple annotations for an item in a list works``() =
         let testText = [|"SYSTEM STRUCTURE REALIZED AS-IS"; "  Customer"; "    Q: What's a customer?"; "    // Not sure of the weasel"; "    TO-DO: Look up 'customer' in dictionary"|]
@@ -268,12 +268,12 @@
         newCompilerStatus.ModelItems |> should haveLength 2
         newCompilerStatus.ModelItems.[1].Description |> should equal "Customer"
         newCompilerStatus.ModelItems.[1].Annotations.Length |> should equal 3
-        let annotationTokenType, tokenValue=newCompilerStatus.ModelItems.[1].Annotations.[0]
-        annotationTokenType |> should equal ANNOTATION_TOKEN_TYPE.Question
-        let annotationTokenType, tokenValue=newCompilerStatus.ModelItems.[1].Annotations.[1]
-        annotationTokenType |> should equal ANNOTATION_TOKEN_TYPE.Note
-        let annotationTokenType, tokenValue=newCompilerStatus.ModelItems.[1].Annotations.[2]
-        annotationTokenType |> should equal ANNOTATION_TOKEN_TYPE.ToDo
+        let annotationTokenType, tokenValue=newCompilerStatus.ModelItems.[1].Annotations.[0].AnnotationType,newCompilerStatus.ModelItems.[1].Annotations.[0].AnnotationText
+        annotationTokenType |> should equal AnnotationTokenType.Question
+        let annotationTokenType, tokenValue=newCompilerStatus.ModelItems.[1].Annotations.[1].AnnotationType,newCompilerStatus.ModelItems.[1].Annotations.[1].AnnotationText
+        annotationTokenType |> should equal AnnotationTokenType.Note
+        let annotationTokenType, tokenValue=newCompilerStatus.ModelItems.[1].Annotations.[2].AnnotationType,newCompilerStatus.ModelItems.[1].Annotations.[2].AnnotationText
+        annotationTokenType |> should equal AnnotationTokenType.ToDo
     [<Test>]
     let ``BASIC MODEL CREATION: Multiple master items each with annotations``() =
         let testText = [|
@@ -287,10 +287,10 @@
         newCompilerStatus.ModelItems |> should haveLength 3
         newCompilerStatus.ModelItems.[1].Description |> should equal "Be nice to customers"
         newCompilerStatus.ModelItems.[1].Annotations.Length |> should equal 1
-        fst newCompilerStatus.ModelItems.[1].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Question
+        newCompilerStatus.ModelItems.[1].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Question
         newCompilerStatus.ModelItems.[2].Description |> should equal "Don't fear the reaper"
         newCompilerStatus.ModelItems.[2].Annotations.Length |> should equal 1
-        fst newCompilerStatus.ModelItems.[2].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Work
+        newCompilerStatus.ModelItems.[2].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Work
     [<Test>]
     let ``BASIC MODEL CREATION: Changing item types``() =
         let testText = [|"BUSINESS BEHAVIOR ABSTRACT TO-BE"; "  Reconcile account"; "      //Not the joo-joo beans"; "SYSTEM STRUCTURE REALIZED AS-IS"; "    Customer transport page"; "        TO-DO: Buy a nice truck"|]
@@ -299,10 +299,10 @@
         newCompilerStatus.ModelItems |> should haveLength 3
         newCompilerStatus.ModelItems.[1].Description |> should equal "Reconcile account"
         newCompilerStatus.ModelItems.[1].Annotations.Length |> should equal 1
-        fst newCompilerStatus.ModelItems.[1].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Note
+        newCompilerStatus.ModelItems.[1].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Note
         newCompilerStatus.ModelItems.[2].Description |> should equal "Customer transport page"
         newCompilerStatus.ModelItems.[2].Annotations.Length |> should equal 1
-        fst newCompilerStatus.ModelItems.[2].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
+        newCompilerStatus.ModelItems.[2].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.ToDo
 
     [<Test>]
     let ``BASIC MODEL CREATION: Context resets over file change``() =

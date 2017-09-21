@@ -164,6 +164,12 @@
             let itemCount = (a |> List.filter(fun y->f x y)).Length
             if itemCount>1 then List.append acc [x] else acc
             ) []
+    let prependToDelimitedList (prependString:string) (currentString:string) (newStringItem:string) =
+        let prepend = if currentString.Length=0 || (currentString.GetRight 1) = prependString
+                        then ""
+                        else prependString.ToString()
+        if newStringItem.Length=0 then currentString else
+            (currentString + prepend + newStringItem)
 
     // Funky code. I need some way to pretend I have a real OS incoming file I'm processing
     let getFakeFileInfo() = 
@@ -182,3 +188,83 @@
         ret
     // memoize one to reuse
     let dummyFileInfo = getFakeFileInfo()
+
+
+    let loadInAllIncomingLines (fileList:System.IO.FileInfo[]) =        
+        let fileInfosAndContents:(System.IO.FileInfo*string[]) [] = fileList |> Array.map(fun x->
+                                    let contentsForTheFile=System.IO.File.ReadAllLines(x.FullName)
+                                    (x,contentsForTheFile)
+                                    )
+        fileInfosAndContents
+    let applyCommandLineSortAndFilter (compilerResult:CompilerReturn) (opts:EasyAMProgramConfig) = 
+        let sortedModel=
+            if opts.sortThing.parameterValue.Length>0
+                then
+                    let sortParm:sortParameterType =
+                        {
+                            TagOrAtt=opts.sortTagOrAtt.parameterValue
+                            Thing=opts.sortThing.parameterValue
+                            ConvertTo=opts.sortConvertTo.parameterValue
+                            Order=opts.sortOrder.parameterValue
+                        }
+                    sortModelByOneParameter compilerResult.ModelItems sortParm
+                else compilerResult.ModelItems
+        let filteredAndSortedModel =
+            if opts.filterThing.parameterValue.Length>0
+                then 
+                    let filterSortParm:sortParameterType =
+                        {
+                            TagOrAtt=opts.filterTagOrAtt.parameterValue
+                            Thing=opts.filterThing.parameterValue
+                            ConvertTo=opts.filterConvertTo.parameterValue
+                            Order=opts.filterOrder.parameterValue
+                        }
+                    let filterParm:FilterParmeterType=
+                        {
+                            Genre=opts.filterGenre.parameterValue
+                            Bucket=opts.filterBucket.parameterValue
+                            AbstractionLevel=opts.filterAbstractionLevel.parameterValue
+                            TemporalIndicator=opts.filterTemporalIndicator.parameterValue
+                            CheckValue=filterSortParm
+                            FromVal=opts.filterFromVal.parameterValue
+                            ToVal=opts.filterToVal.parameterValue
+                        }
+                    filterModelByOneParameter sortedModel filterParm
+                else compilerResult.ModelItems
+        filteredAndSortedModel
+
+    let areModelsEqual (a:ModelItem []) (b:ModelItem []) =
+        let aZapRoot = a|>Array.filter(fun x->x.Id<>(-1))
+        let bZapRoot = b|>Array.filter(fun x->x.Id<>(-1))
+
+        (aZapRoot.Length=bZapRoot.Length)
+        && (Array.fold (&&) true (Array.zip aZapRoot bZapRoot |> Array.map(fun (aa,bb)->aa=bb)))
+
+        //firstCompilerResult.ModelItems |> should haveLength secondCompilerResult.ModelItems.Length
+        //firstCompilerResult.ModelItems |> Array.iteri(fun i x->
+        //        x.Description|>should equal secondCompilerResult.ModelItems.[i].Description
+        //        x.Attributes.Length |> should equal secondCompilerResult.ModelItems.[i].Attributes.Length
+        //        x.Attributes|> Array.iteri(fun j y->
+        //            y.AttributeType |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].AttributeType
+        //            y.Description |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].Description
+        //            y.Annotations.Length |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].Annotations.Length
+        //            y.Annotations |> Array.iteri(fun k z->
+        //                z.AnnotationType |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].Annotations.[k].AnnotationType
+        //                z.AnnotationText |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].Annotations.[k].AnnotationText
+        //                )
+        //            )
+        //        // don't compare the default root item. Lots of noise up there, including model generation stuff
+        //        // if rest of model checks out, it doesn't matter
+        //        if x.Id=(-1) then () else
+        //        x.Annotations.Length |> should equal secondCompilerResult.ModelItems.[i].Annotations.Length
+        //        x.Annotations |> Array.iteri(fun j y->
+        //            y.AnnotationType |> should equal secondCompilerResult.ModelItems.[i].Annotations.[j].AnnotationType
+        //            y.AnnotationText |> should equal secondCompilerResult.ModelItems.[i].Annotations.[j].AnnotationText
+        //            )
+        //        x.Relations.Length |> should equal secondCompilerResult.ModelItems.[i].Relations.Length
+        //        x.Relations|>Array.iteri(fun k z->
+        //            z.ModelJoinType |> should equal secondCompilerResult.ModelItems.[i].Relations.[k].ModelJoinType
+        //            z.TargetId |> should equal secondCompilerResult.ModelItems.[i].Relations.[k].TargetId
+        //            )
+        //    )
+    

@@ -1,6 +1,14 @@
 ﻿module SAModel
     open Types
 
+    let prependToDelimitedList (prependString:string) (currentString:string) (newStringItem:string) =
+        let prepend = if currentString.Length=0 || (currentString.GetRight 1) = prependString
+                        then ""
+                        else prependString.ToString()
+        if newStringItem.Length=0 then currentString else
+            (currentString + prepend + newStringItem)
+
+
 //// REFACTOR
 //// Everything entered in has three things: an origin, a tagged context, and free text (markup)
 //// There are four types of models: Structure, Behavior, Supplemental, and Meta
@@ -119,8 +127,9 @@
 //            ExpectedExperimentSuspenseTime=""
 //        }
 
-    [<NoComparison>]
-    type TOKEN_TYPE =
+
+
+    type TokenType =
         |RELATIVE_LOCATOR
         |ABSOLUTE_LOCATOR
         |JOINER
@@ -131,8 +140,7 @@
             | RELATIVE_LOCATOR->"Relative Locator"
             | ABSOLUTE_LOCATOR->"Absolute Locator"
             | JOINER->"Joiner"
-    [<NoComparison>]
-    type TOKEN_TARGET_TYPE =
+    type TokenTargetType =
         |SINGLE_TARGET
         |MULTIPLE_TARGETS
          static member ToList() =
@@ -141,38 +149,39 @@
           match self with
             | SINGLE_TARGET->"Single Target"
             | MULTIPLE_TARGETS->"Multiple Targets"
-    [<NoComparison>]
-    type TOKEN_CATEGORY = 
+    type TokenCategory = 
+        |MISC
+        |SHORTCUT
         |BUCKETS
         |GENRE
         |TEMPORAL
         |ABSTRACTION_LEVEL
-        |TASKS
-        |MISC
         |HDD
-        |SCOPING
-        |SHORTCUT
+        |NAMESPACE
         |CONNECTIVE
         |ATTRIBUTE
-        |NAMESPACE
         |TAG
+        //|TASKS
+        //|SCOPING
     [<NoComparison>]
-    type EASYAM_TOKEN =
+    type EASYAM_Token =
         {
-            Type:TOKEN_TYPE
-            TargetType:TOKEN_TARGET_TYPE
-            Category:TOKEN_CATEGORY
+            Type:TokenType
+            TargetType:TokenTargetType
+            Category:TokenCategory
             Token:string
         }
-    type ANNOTATION_TOKEN_TYPE =
+    type AnnotationTokenType =
         | None
         | Note
         | Question
         | ToDo
         | Work
         | Diagram
+        | Code
+        | Defect
          static member ToList() =
-            [None;Note;Question;ToDo;Work;Diagram]
+            [None;Note;Question;ToDo;Work;Diagram;Code]
          override self.ToString() =
           match self with
             | None->"None"
@@ -181,6 +190,17 @@
             | ToDo->"ToDo"
             | Work->"Work"
             | Diagram->"Diagram"
+            | Code->"Code"
+            | Defect->"Defect"
+        member self.ToModelOutputSectionHeading(outputType:ModelOutputType) =
+            match outputType with 
+                | AMOUT | TEXT ->
+                    self.ToString().ToUpper() + ":"
+                | HTML->"<div class='annotationTitle'>" + self.ToString() + "</div> <!-- annotationTitle -->"
+                | CSV->
+                    self.ToString().ToUpper()
+                | GHERKIN->""
+
     let EasyAMTokens = 
         [
             {Type=RELATIVE_LOCATOR;     TargetType=MULTIPLE_TARGETS;     Category=MISC;                 Token="NOTES:"};
@@ -203,6 +223,15 @@
             {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="DIAGRAMS:"};
             {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="DIAGRAMS"};
             {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="DIAGRAM"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="CODE:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="DEFECTS:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="DEFECTS"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="DEFECT:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="DEFECT"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="BUGS:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="BUGS"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="BUG:"};
+            {Type=RELATIVE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=MISC;                 Token="BUG"};
 
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="PROGRAM BACKLOG:"};
             {Type=ABSOLUTE_LOCATOR;     TargetType=SINGLE_TARGET;        Category=SHORTCUT;             Token="PROGRAM BACKLOG"};
@@ -391,13 +420,7 @@
                 SourceLineColumnBegin:int option
                 SourceLineColumnEnd:int option
             }
-    let prependToDelimitedList (prependString:string) (currentString:string) (newStringItem:string) =
-        let prepend = if currentString.Length=0 || (currentString.GetRight 1) = prependString
-                        then ""
-                        else prependString.ToString()
-        if newStringItem.Length=0 then currentString else
-            (currentString + prepend + newStringItem)
-    let printCompilerMessages (compilerMessages:CompilerMessage []) =
+    let printCompilerMessages (compilerMessages:CompilerMessage []) (printAsEASYAMComments:bool) =
         compilerMessages |> Array.iteri(fun i x->
             let messagePrefix=match x.MessageType with
                                     |CompilerMessageType.Info->"INFO"
@@ -415,7 +438,9 @@
                                     |_,_,_,_->
                                         let part1=prependToDelimitedList ": " x.SourceFileShort messagePrefix
                                         part1 + x.Message
-            System.Console.WriteLine(formattedMessage)
+            if printAsEASYAMComments=false
+                then System.Console.WriteLine(formattedMessage)
+                else System.Console.WriteLine("// " + formattedMessage)
             )
     [<NoComparison>]
     type LastCompilerOperations =
@@ -441,7 +466,7 @@
             | ReferenceExistingAttribute->"ReferenceExistingAttribute"
             | NewAnnotation->"NewAnnotation"
             | NewAttributeAnnotation->"NewAttributeAnnotation"
-    [<NoComparison>]
+
     type ModelAttributeTypes =
         | Trigger
         | Actor
@@ -456,26 +481,62 @@
             [Trigger;Actor;Goal;BusinessContext;Scenario;Contains;Because;Whenever;ItHasToBeThat]
          override self.ToString() =
           match self with
-            | Trigger->"PointerReset"
-            | Actor->"NewModelItem"
-            | Goal->"ReferenceExistingItem"
-            | BusinessContext->"LocationChange"
-            | Scenario->"" // why are these things not the enum names?
-            | Contains->"NewJoin"
-            | Because->"NewAttribute"
-            | Whenever->"ReferenceExistingAttribute"
-            | ItHasToBeThat->"NewAnnotation"
-    [<NoComparison>]
-    type ModelItem2Attribute =
+            | Trigger->"WHEN"
+            | Actor->"ASA"
+            | Goal->"INEEDTO"
+            | BusinessContext->"SOTHAT"
+            | Scenario->"SCENARIO"
+            | Contains->"CONTAINS"
+            | Because->"BECAUSE"
+            | Whenever->"WHENEVER"
+            | ItHasToBeThat->"ITHASTOBETHAT"
+        member self.ToModelOutputSectionHeading(outputType:ModelOutputType) =
+            match outputType with 
+                | AMOUT | TEXT ->
+                    self.ToString().ToUpper() + ":"
+                | HTML->"<span class='modelAttributeDescription'>" + self.ToString() + "</span> <!-- modelAttributeDescription -->"
+                | CSV->
+                    self.ToString().ToUpper()
+                | GHERKIN->""
+    [<CustomEquality;CustomComparison>]
+    type ModelItemAnnotation =
+        {
+            AnnotationType:AnnotationTokenType
+            AnnotationText:string
+        }
+        override x.GetHashCode()=hash x
+        override x.Equals(yobj)=
+            match yobj with 
+                | :? ModelItemAnnotation as y->(x=y)
+                |_->false
+        interface System.IComparable with
+            member x.CompareTo yobj =
+                match yobj with 
+                    | :? ModelItemAnnotation as y->compare (x.AnnotationType, x.AnnotationText) (y.AnnotationType, y.AnnotationText)
+                    |_-> invalidArg "yobj" "cannot compare value of different types"
+
+    [<CustomEquality;CustomComparison>]
+    type ModelItemAttribute =
         {
             id:int
             ModelItemParentId:int
             AttributeType:ModelAttributeTypes
             Description:string
-            Annotations:(ANNOTATION_TOKEN_TYPE*string) []
+            Annotations:ModelItemAnnotation[]
+            //Annotations:(ANNOTATION_TOKEN_TYPE*string) []
             SourceReferences:IncomingLine []
         }
-    let defaultModelItem2Attribute =
+        override x.GetHashCode()=hash (x.id,x.ModelItemParentId,x.AttributeType,x.Description)
+        override x.Equals(yobj)=
+            match yobj with 
+                | :? ModelItemAttribute as y->(x.id=y.id && x.ModelItemParentId=y.ModelItemParentId && x.AttributeType=y.AttributeType && x.Description = y.Description)
+                |_->false
+        interface System.IComparable with
+            member x.CompareTo yobj =
+                match yobj with 
+                    | :? ModelItemAttribute as y->compare (x.AttributeType, x.Description, x.Annotations) (y.AttributeType, y.Description, y.Annotations)
+                    |_-> invalidArg "yobj" "cannot compare value of different types"
+    let defaultModelItemAttribute =
         {
             id=(-1)
             ModelItemParentId=(-1)
@@ -484,7 +545,8 @@
             Annotations=[||]
             SourceReferences=[||]
         }
-    [<NoComparison>]
+
+    [<CustomEquality;CustomComparison>]
     type ModelLocationPointer =
         {
             Namespace:string
@@ -497,9 +559,36 @@
             Genre:Genres
             AbstractionLevel:AbstractionLevels
             TemporalIndicator:TemporalIndicators
-            AnnotationIndicator:ANNOTATION_TOKEN_TYPE
+            AnnotationIndicator:AnnotationTokenType
             Tags:System.Collections.Generic.KeyValuePair<string,string>[]
         }
+        override x.GetHashCode()=hash x
+        override x.Equals(yobj)=
+            match yobj with 
+                | :? ModelLocationPointer as y->
+                    (
+                           x.Namespace=y.Namespace
+                        && x.ParentId=y.ParentId
+                        && x.AttributeType=y.AttributeType
+                        && x.AttributeId=y.AttributeId
+                        && x.LastJoinTargetId=y.LastJoinTargetId
+                        && x.InHDDMode=y.InHDDMode
+                        && x.Bucket=y.Bucket
+                        && x.Genre=y.Genre
+                        && x.AbstractionLevel=y.AbstractionLevel
+                        && x.TemporalIndicator=y.TemporalIndicator
+                        && x.AnnotationIndicator=y.AnnotationIndicator
+                        && (Array.fold (&&) true (Array.zip x.Tags y.Tags |> Array.map(fun (aa,bb)->aa=bb)))
+                    )
+                |_->false
+        interface System.IComparable with
+            member x.CompareTo yobj =
+                match yobj with 
+                    | :? ModelLocationPointer as y->
+                        compare
+                            (x.Namespace, x.Genre, x.Bucket, x.AbstractionLevel, x.TemporalIndicator, x.AttributeType, x.ParentId, x.AttributeId, x.LastJoinTargetId, x.InHDDMode, x.AnnotationIndicator)
+                            (y.Namespace, y.Genre, y.Bucket, y.AbstractionLevel, y.TemporalIndicator, y.AttributeType, y.ParentId, y.AttributeId, y.LastJoinTargetId, y.InHDDMode, y.AnnotationIndicator)
+                    |_-> invalidArg "yobj" "cannot compare value of different types"
     let defaultModelLocationPointer =
         {
             Namespace = ""
@@ -512,10 +601,9 @@
             Genre=Genres.None
             AbstractionLevel=AbstractionLevels.None
             TemporalIndicator=TemporalIndicators.None
-            AnnotationIndicator=ANNOTATION_TOKEN_TYPE.None
+            AnnotationIndicator=AnnotationTokenType.None
             Tags=[||]
         }
-    [<NoComparison>]
     type ModelJoin =
         |Parent
         |Child
@@ -547,7 +635,7 @@
             | UsedBy->Uses
             | HasA->IsOwnedByA
             | IsOwnedByA->HasA
-    [<NoComparison>]
+    [<CustomEquality;CustomComparison>]
     type ModelRelation =
         {
             id:int
@@ -555,19 +643,59 @@
             TargetId:int
             SourceReference:IncomingLine
         }
-    [<NoComparison>]
-    type ModelItem2 =
+        override x.GetHashCode()=hash x
+        override x.Equals(yobj)=
+            match yobj with 
+                | :? ModelRelation as y->
+                    (
+                           x.id=y.id
+                        && x.ModelJoinType=y.ModelJoinType
+                        && x.TargetId=y.TargetId
+                    )
+                |_->false
+        interface System.IComparable with
+            member x.CompareTo yobj =
+                match yobj with 
+                    | :? ModelRelation as y->
+                        compare
+                            (x.id, x.ModelJoinType, x.TargetId)
+                            (y.id, y.ModelJoinType, y.TargetId)
+                    |_-> invalidArg "yobj" "cannot compare value of different types"
+    [<CustomEquality;CustomComparison>]
+    type ModelItem =
         {
             Id:int
             Location:ModelLocationPointer
             Description:string
-            Attributes:ModelItem2Attribute []
-            Annotations:(ANNOTATION_TOKEN_TYPE*string) []
+            Attributes:ModelItemAttribute []
+            Annotations:ModelItemAnnotation []
             SourceReferences:IncomingLine []
             Relations:ModelRelation []
             Tags:System.Collections.Generic.KeyValuePair<string,string>[]
         }
-    let defaultModelItem2:ModelItem2 =
+        override x.GetHashCode()=hash x
+        override x.Equals(yobj)=
+            match yobj with 
+                | :? ModelItem as y->
+                    (
+                           x.Id=y.Id
+                        && x.Location=y.Location
+                        && x.Description=y.Description
+                        && x.Attributes=y.Attributes
+                        && x.Annotations=y.Annotations
+                        && x.Relations=y.Relations
+                        && x.Tags=y.Tags
+                    )
+                |_->false
+        interface System.IComparable with
+            member x.CompareTo yobj =
+                match yobj with 
+                    | :? ModelItem as y->
+                        compare
+                            (x.Location, x.Description, x.Attributes, x.Annotations, x.Relations)
+                            (y.Location, y.Description, y.Attributes, y.Annotations, y.Relations)
+                    |_-> invalidArg "yobj" "cannot compare value of different types"
+    let defaultModelItem2:ModelItem =
         {
             Id=(-1)
             Location=defaultModelLocationPointer
@@ -578,6 +706,47 @@
             Relations=[||]
             Tags=[||]
         }
+    type ModelDetailItemType =
+        |Everything
+        |Item
+        |AttributesALL
+        |AttributesTrigger
+        |AttributesActor
+        |AttributesGoal
+        |AttributesBusinessContext
+        |AttributesScenario
+        |AttributesContains
+        |AttributesBecause
+        |AttributesWhenever
+        |AttributesItHasToBeThat
+        |AttributeAnnotationsALL
+        |AttributeAnnotationsNote
+        |AttributeAnnotationsQuestion
+        |AttributeAnnotationsToDo
+        |AttributeAnnotationsWork
+        |AttributeAnnotationsDiagram
+        |AttributeAnnotationsCode
+        |AttributeAnnotationsDefect
+        |AnnotationsALL
+        |AnnotationsNote
+        |AnnotationsQuestion
+        |AnnotationsToDo
+        |AnnotationsWork
+        |AnnotationsDiagram
+        |AnnotationsCode
+        |AnnotationsDefect
+        |JoinsALL
+        |JoinsParent
+        |JoinsChild
+        |JoinsAffects
+        |JoinsAffectedBy
+        |JoinsUses
+        |JoinsUsedBy
+        |JoinsHasA
+        |JoinsIsOwnedByA
+        |JoinsSourceReferencesALL
+        |JoinsTagsALL
+    type ModelDetailLevelFlags = ModelDetailItemType[]
     [<NoComparison>]
     type CompilerWaitingFor =
         |Nothing
@@ -635,7 +804,7 @@
             CompilerState:CompilerState
             CurrentLocation:ModelLocationPointer
             CompilerMessages:CompilerMessage []
-            ModelItems:ModelItem2 []
+            ModelItems:ModelItem []
         }
     let beginningCompilerStatus =
         {

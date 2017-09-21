@@ -30,6 +30,7 @@ MASTER SUPPLEMENTALS
 PROJECT BACKLOG
   Identify Customer Blank Screen PARENT Identify Potential Customer
   ASA: Agent
+    NOTE: Agents are associated by contract to the company
   INEEDTO: See the Customer Identification Screen
   SOTHAT: I can interact with it
 

@@ -119,8 +119,8 @@
         if System.IO.Directory.Exists(featureDirectoryFullName) then System.IO.Directory.Delete(featureDirectoryFullName, true) else ()
         let FeaturesDirectoryInfo = getOrMakeDirectory (featureDirectoryFullName)
         // add standard two Ruby/Cucumber sub-folders
-        System.IO.Directory.CreateDirectory(featureDirectoryFullName + directorySeparatorCharacter + "step_definitions") |> ignore
-        System.IO.Directory.CreateDirectory(featureDirectoryFullName + directorySeparatorCharacter + "support") |> ignore
+        getOrMakeDirectory(featureDirectoryFullName + directorySeparatorCharacter + "step_definitions") |> ignore
+        getOrMakeDirectory(featureDirectoryFullName + directorySeparatorCharacter + "support") |> ignore
         {
             SourceDirectoryInfo=sourceDirectoryInfo
             DestinationDirectoryInfo=destinationDirectoryInfo
@@ -131,27 +131,38 @@
         }
     let allCardinalNumbers = {1..10000}
 
-    let loadInAllIncomingLines (fileList:System.IO.FileInfo[]) =        
-        let fileInfosAndContents:(System.IO.FileInfo*string[]) [] = fileList |> Array.map(fun x->
-                                    let contentsForTheFile=System.IO.File.ReadAllLines(x.FullName)
-                                    (x,contentsForTheFile)
-                                    )
-        fileInfosAndContents
-    
     let doStuff (opts:EasyAMProgramConfig) =
+        // coming in
         let programDirectories = getDirectories opts
         let allFiles = System.IO.Directory.EnumerateFiles(programDirectories.SourceDirectoryInfo.FullName, "*.amin", System.IO.SearchOption.AllDirectories)
         let fileList = allFiles |> Seq.toArray |> Array.map(fun x->System.IO.FileInfo(x)) |> Array.sortBy(fun x->x.FullName)
         let listToProcess = loadInAllIncomingLines fileList
+        //processing
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let compilerResult = makeRawModel processedIncomingLines compilerReturn
-        saveMasterQuestionList programDirectories.DestinationDirectoryInfo.FullName "mql.html" compilerResult
-        saveModelGuide (programDirectories.DestinationDirectoryInfo.FullName + "master-cards.html") compilerResult
-        saveProjectBacklog (programDirectories.DestinationDirectoryInfo.FullName + "project-cards.html") compilerResult
-        saveCanonicalModel programDirectories.DestinationDirectoryInfo.FullName compilerResult
-        saveFeatureFiles programDirectories.FeaturesDirectoryInfo.FullName compilerResult
-        printCompilerMessages compilerResult.CompilerMessages
-        ()
+        let outputModel = applyCommandLineSortAndFilter compilerResult opts
+        // heading out
+        //
+        // TEST SCAFFOLDING FOR GENERIC FUNCTION
+        writeOutModel compilerResult.ModelItems outputModel ModelOutputType.AMOUT programDirectories.DestinationDirectoryInfo true ""
+        //
+        //
+        if opts.outputFormat.parameterValue.Contains("SINGLEFILE")
+            then
+                let targetFilename=
+                    let providedFileName=if opts.outputFormat.parameterValue.Contains("=") then (opts.outputFormat.parameterValue.Split([|"="|], System.StringSplitOptions.None)).[1] else ""
+                    if providedFileName.Length=0 then "" else providedFileName
+                saveAllToOneAMOUTFile programDirectories.DestinationDirectoryInfo.FullName targetFilename outputModel compilerResult
+                printCompilerMessages compilerResult.CompilerMessages true
+                ()
+            else
+                saveMasterQuestionList programDirectories.DestinationDirectoryInfo.FullName "mql.html" compilerResult
+                saveModelGuide (programDirectories.DestinationDirectoryInfo.FullName + "master-cards.html") compilerResult
+                saveProjectBacklog (programDirectories.DestinationDirectoryInfo.FullName + "project-cards.html") compilerResult
+                saveCanonicalModel programDirectories.DestinationDirectoryInfo.FullName compilerResult
+                saveFeatureFiles programDirectories.FeaturesDirectoryInfo.FullName compilerResult
+                printCompilerMessages compilerResult.CompilerMessages false
+                ()
 
 
     [<EntryPoint>]

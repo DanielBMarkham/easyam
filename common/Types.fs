@@ -1,12 +1,11 @@
 ﻿module Types
     open System.Text.RegularExpressions
 
-    type 'a ``[]`` with 
+    type 'a ``[]`` with         
         member x.randomItem = 
             let rnd = new System.Random()
             let idx = rnd.Next(x.Length)
             x.[idx]
-
     type System.Random with
         /// Generates an infinite sequence of random numbers within the given range.
         member this.GetValues(minValue, maxValue) =
@@ -116,7 +115,8 @@
         member x.TryFind n = 
             let x,(y:'B) = x.TryGetValue n
             if x then Some y else None
-            
+    //type Microsoft.FSharp.Collections.List<'T when 'T : equality> with
+    //    member this.IntersectionWithOtherList (b:List<'T> when 'T : equality) = this |> List.filter (fun x -> not (List.contains x b))
     type System.Text.RegularExpressions.MatchCollection with
         member this.toSeq =
             seq {for i = 0 to this.Count - 1 do yield this.[i]}
@@ -219,6 +219,12 @@
                                 |"m"|"money"|"M"|"Money"|"dec"|"Dec"|"decimal"|"Decimal"->ConvertTo.Money
                                 |"t"|"timespan"|"T"|"Timespan"|"TimeSpan"->ConvertTo.TimeSpan
                                 |_->raise(new System.ArgumentOutOfRangeException("Sort Convert To","The string value provided for ConvertTo is not in the ConvertTo enum"))
+    type ModelOutputType = 
+        | AMOUT 
+        | HTML 
+        | TEXT 
+        | CSV
+        | GHERKIN
     type Buckets =
         | Unknown
         | None
@@ -246,6 +252,15 @@
                 |"STRUCTURE"->Buckets.Structure
                 |"SUPPLEMENTAL"->Buckets.Supplemental
                 |_->raise(new System.ArgumentOutOfRangeException("Buckets","The string value provided for Buckets is not in the Buckets enum"))
+        member self.ToModelOutputSectionHeading(outputType:ModelOutputType) =
+            match outputType with 
+                | AMOUT | TEXT ->
+                    self.ToString().ToUpper() + ":"
+                | HTML->"<span class='bucketDescription'>" + self.ToString() + "</span> <!-- bucketDescription -->"
+                | CSV->
+                    self.ToString().ToUpper()
+                | GHERKIN->""
+
     type Genres =
         | Unknown
         | None
@@ -273,6 +288,14 @@
                 |"SYSTEM"|"SYS"->Genres.System
                 |"META"->Genres.Meta
                 |_->raise(new System.ArgumentOutOfRangeException("Genres","The string value provided for Genres is not in the Genres enum"))
+        member self.ToModelOutputSectionHeading(outputType:ModelOutputType) =
+            match outputType with 
+                | AMOUT | TEXT ->
+                    self.ToString().ToUpper() + ":"
+                | HTML->"<span class='genreDescription'>" + self.ToString() + "</span> <!-- genreDescription -->"
+                | CSV->
+                    self.ToString().ToUpper()
+                | GHERKIN->""
 
     type AbstractionLevels = 
         | Unknown
@@ -297,6 +320,14 @@
                 |"ABS"|"ABSTRACT"->AbstractionLevels.Abstract
                 |"REAL"|"REALIZED"|"Actual"->AbstractionLevels.Realized
                 |_->raise(new System.ArgumentOutOfRangeException("AbstractionLevels","The string value provided for AbstractionLevels is not in the AbstractionLevels enum"))
+        member self.ToModelOutputSectionHeading(outputType:ModelOutputType) =
+            match outputType with 
+                | AMOUT | TEXT ->
+                    self.ToString().ToUpper() + ":"
+                | HTML->"<span class='abstractionLevelDescription'>" + self.ToString() + "</span> <!-- abstractionLevelDescription -->"
+                | CSV->
+                    self.ToString().ToUpper()
+                | GHERKIN->""
     type TemporalIndicators =
         | Unknown
         | None

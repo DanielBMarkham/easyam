@@ -1,13 +1,13 @@
 //                             MASTER USER STORY                               
 //                           CONDUCT SPOT INVENTORY                            
-//                   Model Generation: 09/11/2017 08:29:32                     
+//                   Model Generation: 09/21/2017 04:35:24                     
 //                                                                             
 
 MASTER USER STORY: Conduct Spot Inventory
     WHEN: 
       A truck arrives at the gate
         NOTES: 
-           could be any kind of truck
+          could be any kind of truck
       An accountant calls on the phone
       There's a break-in at the warehouse
     ASA: 

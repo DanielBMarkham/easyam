@@ -70,7 +70,7 @@
         let newCompilerStatus=makeRawModel ret beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 1
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Note
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Note
     [<Test>]
     let ``MISC SINGLE WORD: A simple annotation Q: command adds an annotation to the default item``() =
         let testText = [|"Q: Is this the real life? Is this just fantasy?"|]
@@ -79,7 +79,7 @@
         let newCompilerStatus=makeRawModel ret beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 1
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.Question
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.Question
     [<Test>]
     let ``MISC SINGLE WORD: A simple annotation TODO: command adds an annotation to the default item``() =
         let testText = [|"TODO: Check on Pluto"|]
@@ -88,4 +88,4 @@
         let newCompilerStatus=makeRawModel ret beginningCompilerStatus
         newCompilerStatus.ModelItems |> should haveLength 1
         newCompilerStatus.ModelItems.[0].Annotations |> should haveLength 1
-        fst newCompilerStatus.ModelItems.[0].Annotations.[0] |> should equal ANNOTATION_TOKEN_TYPE.ToDo
+        newCompilerStatus.ModelItems.[0].Annotations.[0].AnnotationType |> should equal AnnotationTokenType.ToDo
