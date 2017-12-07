@@ -70,6 +70,16 @@
  Generates an infinite sequence of random numbers within the given range.
 </summary>
 </member>
+<member name="M:Types.op_BarQmarkQmark``1(System.Nullable{``0},``0)">
+<summary>
+ for .NET nullable types, gimme the value or the default I&apos;ll provide
+</summary>
+</member>
+<member name="M:Types.op_BarQmark``1(Microsoft.FSharp.Core.FSharpOption{``0},``0)">
+<summary>
+ for option types, gimme either the value or a default I&apos;ll provide
+</summary>
+</member>
 <member name="T:Types">
 <summary>
  Universal types and type modifications for all programs

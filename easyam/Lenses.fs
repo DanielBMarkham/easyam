@@ -181,6 +181,54 @@ module Lenses
             let nextLevelUpParents=GetAllParentalItems referenceModel x
             [|x|] |>Array.append nextLevelUpParents |> Array.append acc
             ) [||]
+    let itemWithThisNameAlreadyExistsAtThisLocation (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (desription:string) =
+        let itemsWithThisNameAlreadyInTheModel = compilerStatus.ModelItems|>Array.filter(fun x->x.Description.Trim()=desription.Trim())
+        if itemsWithThisNameAlreadyInTheModel.Length=0 then false
+        else
+            let itemsFurtherMatchedUpByLocation = itemsWithThisNameAlreadyInTheModel |> Array.filter(fun x->
+                let xLoc = x.Location
+                (xLoc.AbstractionLevel=location.AbstractionLevel && xLoc.Bucket=location.Bucket && xLoc.Genre=location.Genre && xLoc.TemporalIndicator=location.TemporalIndicator && xLoc.Namespace=location.Namespace)
+                )
+            itemsFurtherMatchedUpByLocation.Length>0
+    let getItemWithThisNameAtThisLocation (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (desription:string) =
+            let itemsWithThisNameAlreadyInTheModel = compilerStatus.ModelItems|>Array.filter(fun x->x.Description.Trim()=desription.Trim())
+            let itemsFurtherMatchedUpByLocation = itemsWithThisNameAlreadyInTheModel |> Array.filter(fun x->
+                let xLoc = x.Location
+                (xLoc.AbstractionLevel=location.AbstractionLevel && xLoc.Bucket=location.Bucket && xLoc.Genre=location.Genre && xLoc.TemporalIndicator=location.TemporalIndicator && xLoc.Namespace=location.Namespace)
+                )
+            itemsFurtherMatchedUpByLocation.[0]
+    let itemWithThisNameAlreadyExistsEitherAtThisLocationOrHigher (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (desription:string) =
+        let genreAndAbstrationLevelListToCheck =
+            match location.Genre, location.AbstractionLevel with 
+                | Business,Abstract->[|(Business,Abstract)|]
+                | Business,Realized->[|(Business,Realized);(Business,Abstract)|]
+                | System,Abstract->[|(System,Abstract);(Business,Realized);(Business,Abstract)|]
+                | System,Realized->[|(System,Realized);(System,Abstract);(Business,Realized);(Business,Abstract)|]
+                |_,_->[||]
+        let searchResults=genreAndAbstrationLevelListToCheck|>Array.map(fun x->
+            let searchLoc={location with Genre=(fst x); AbstractionLevel=(snd x)}
+            let search=itemWithThisNameAlreadyExistsAtThisLocation compilerStatus searchLoc desription
+            (search,x)
+            )
+        let foundResults=searchResults|>Array.filter(fun x->(fst x)) |>Array.map(fun x->(snd x))
+        foundResults.Length>0
+    let getItemWithThisNameEitherAtThisLocationOrHigher (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (desription:string) =
+        let genreAndAbstrationLevelListToCheck =
+            match location.Genre, location.AbstractionLevel with 
+                | Business,Abstract->[|(Business,Abstract)|]
+                | Business,Realized->[|(Business,Realized);(Business,Abstract)|]
+                | System,Abstract->[|(System,Abstract);(Business,Realized);(Business,Abstract)|]
+                | System,Realized->[|(System,Realized);(System,Abstract);(Business,Realized);(Business,Abstract)|]
+                |_,_->[||]
+        let searchResults=genreAndAbstrationLevelListToCheck|>Array.map(fun x->
+            let searchLoc={location with Genre=(fst x); AbstractionLevel=(snd x)}
+            let search=itemWithThisNameAlreadyExistsAtThisLocation compilerStatus searchLoc desription
+            (search,x)
+            )
+        let foundResults=searchResults|>Array.filter(fun x->(fst x)) |>Array.map(fun x->(snd x))
+        let genreToFindIt,AbstractionLevelToFindIt=foundResults.[0]
+        let locationToFindIt={location with Genre=genreToFindIt;AbstractionLevel=AbstractionLevelToFindIt}
+        getItemWithThisNameAtThisLocation compilerStatus locationToFindIt desription
 
 
     let getTheRightThingToCheck (modelItem:ModelItem) (tagOrAttName:TagOrAtt) (thingToInspect:string) =

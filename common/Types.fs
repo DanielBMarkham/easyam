@@ -3,6 +3,13 @@ module Types
     open System.Text.RegularExpressions
     open System.Collections
     open System.Collections.Generic
+    open System
+
+    /// for option types, gimme either the value or a default I'll provide
+    let inline (|?) (a: 'a option) b = if a.IsSome then a.Value else b
+    /// for .NET nullable types, gimme the value or the default I'll provide
+    let inline (|??) (a: 'a Nullable) b = if a.HasValue then a.Value else b
+
 
     type 'a ``[]`` with         
         member x.randomItem = 

@@ -178,26 +178,9 @@
         let completedAndUpdatedCompilerReturn=logCompilerMessage completedRunningStatus.CompilerReturn newCompilerMessage        
         completedRunningStatus.IncomingLinesConcatenated, completedAndUpdatedCompilerReturn
 
-    let itemWithThisNameAlreadyExistsAtThisLocation (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (desription:string) =
-        let itemsWithThisNameAlreadyInTheModel = compilerStatus.ModelItems|>Array.filter(fun x->x.Description.Trim()=desription.Trim())
-        if itemsWithThisNameAlreadyInTheModel.Length=0 then false
-        else
-            let itemsFurtherMatchedUpByLocation = itemsWithThisNameAlreadyInTheModel |> Array.filter(fun x->
-                let xLoc = x.Location
-                (xLoc.AbstractionLevel=location.AbstractionLevel && xLoc.Bucket=location.Bucket && xLoc.Genre=location.Genre && xLoc.TemporalIndicator=location.TemporalIndicator && xLoc.Namespace=location.Namespace)
-                )
-            itemsFurtherMatchedUpByLocation.Length>0
-    let getItemWithThisNameAtThisLocation (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (desription:string) =
-            let itemsWithThisNameAlreadyInTheModel = compilerStatus.ModelItems|>Array.filter(fun x->x.Description.Trim()=desription.Trim())
-            let itemsFurtherMatchedUpByLocation = itemsWithThisNameAlreadyInTheModel |> Array.filter(fun x->
-                let xLoc = x.Location
-                (xLoc.AbstractionLevel=location.AbstractionLevel && xLoc.Bucket=location.Bucket && xLoc.Genre=location.Genre && xLoc.TemporalIndicator=location.TemporalIndicator && xLoc.Namespace=location.Namespace)
-                )
-            itemsFurtherMatchedUpByLocation.[0]
-
     /// adds/finds an item, updates the model, then returns the new model and the found/added item
-    let addFindModelItem (compilerStatus:CompilerReturn) (incomingLine:IncomingLine) (forJoinType:ModelJoin option) (desription:string) =
-        if desription.Trim().Length>0
+    let addFindModelItem (compilerStatus:CompilerReturn) (incomingLine:IncomingLine) (forJoinType:ModelJoin option) (description:string) =
+        if description.Trim().Length>0
             then
                 let currentLocation=compilerStatus.CurrentLocation
                 let targetLocation=
@@ -220,22 +203,34 @@
                     let newTemporalIndicator=if currentLocation.TemporalIndicator=TemporalIndicators.None then TemporalIndicators.ToBe else currentLocation.TemporalIndicator
                     let newLocationPointer = {currentLocation with Bucket=newBucket; Genre=newGenre; AbstractionLevel=newAbstractionLevel; TemporalIndicator=newTemporalIndicator}
                     newLocationPointer
-                let itemWithExactMatchExistsAtThisLocation =itemWithThisNameAlreadyExistsAtThisLocation compilerStatus targetLocation desription
-                let itemWithNoNameSpaceAndAbstratExistsAtTheTop= itemWithThisNameAlreadyExistsAtThisLocation compilerStatus {targetLocation with AbstractionLevel=Abstract; Namespace=""} desription
+                let itemWithExactMatchExistsAtThisLocation =itemWithThisNameAlreadyExistsAtThisLocation compilerStatus targetLocation description
+                let itemWithMatchExistsAtThisOrAHigherLevel=
+                    // certain kinds of joins cannot point to higher-level items. It wouldn't make sense
+                    if forJoinType.Value=ModelJoin.Affects || forJoinType.Value=ModelJoin.Child || forJoinType.Value=ModelJoin.HasA
+                        then false
+                        else itemWithThisNameAlreadyExistsEitherAtThisLocationOrHigher compilerStatus targetLocation description
+                let itemWithoutRegardToNameSpacesExistsAtThisOrAHigherLevel=
+                    // certain kinds of joins cannot point to higher-level items. It wouldn't make sense
+                    if forJoinType.Value=ModelJoin.Affects || forJoinType.Value=ModelJoin.Child || forJoinType.Value=ModelJoin.HasA
+                        then false                
+                        else itemWithThisNameAlreadyExistsEitherAtThisLocationOrHigher compilerStatus {targetLocation with Namespace=""} description
+                //let itemWithNoNameSpaceAndAbstratExistsAtTheTop= itemWithThisNameAlreadyExistsAtThisLocation compilerStatus {targetLocation with AbstractionLevel=Abstract; Namespace=""} description
 
-                if itemWithExactMatchExistsAtThisLocation || itemWithNoNameSpaceAndAbstratExistsAtTheTop
+                if itemWithExactMatchExistsAtThisLocation || itemWithMatchExistsAtThisOrAHigherLevel || itemWithoutRegardToNameSpacesExistsAtThisOrAHigherLevel
                     then
                         let alreadyExistingItem=
                             if itemWithExactMatchExistsAtThisLocation
-                                then getItemWithThisNameAtThisLocation compilerStatus targetLocation desription
-                                else getItemWithThisNameAtThisLocation compilerStatus {targetLocation with AbstractionLevel=Abstract; Namespace=""} desription
+                                then getItemWithThisNameAtThisLocation compilerStatus targetLocation description
+                            elif itemWithMatchExistsAtThisOrAHigherLevel
+                                then getItemWithThisNameEitherAtThisLocationOrHigher compilerStatus targetLocation description
+                            else getItemWithThisNameEitherAtThisLocationOrHigher compilerStatus {targetLocation with Namespace=""} description
                         (compilerStatus,alreadyExistingItem)
                     else
                         let newModelItem =
                             {
                                 Id=getNextModelItemNumber()
                                 Location=targetLocation
-                                Description=desription.Trim()
+                                Description=description.Trim()
                                 Attributes=[||]
                                 Annotations= [||]
                                 SourceReferences=[|incomingLine|]
@@ -839,7 +834,7 @@
                                             then
                                                 // ident has popped up. Whatever we were referencing, we are now referencing the item
                                                 let newParentId=
-                                                    if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewJoin then incomingCompilerStatus.CurrentLocation.RelationSourceId.Value else incomingCompilerStatus.CurrentLocation.ParentId
+                                                    if incomingCompilerStatus.CompilerState.LastCompilerOperation=LastCompilerOperations.NewJoin then (incomingCompilerStatus.CurrentLocation.RelationSourceId |? (-1)) else incomingCompilerStatus.CurrentLocation.ParentId
                                                 let newLocation={incomingCompilerStatus.CurrentLocation with AttributeId=option.None; AttributeType=option.None; ParentId=newParentId; AnnotationIndicator=newTempAnnotationIndicator}
                                                 let newState={incomingCompilerStatus.CompilerState with CurrentIndentLevel=incomingCommand.CommandIndentLevel; WaitingFor=CompilerWaitingFor.MultipleAnnotations; LastCompilerOperation=LastCompilerOperations.LocationChange}
                                                 let adjustedCompilerStatus={incomingCompilerStatus with CurrentLocation=newLocation; CompilerState=newState}

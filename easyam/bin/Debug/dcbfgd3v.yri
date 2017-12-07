@@ -1,0 +1,179 @@
+//                           SINGLE FILE MODEL OUTPUT                           
+//                  EASYAM Analysis Modeling Language Compiler                  
+//                    Model Generation: 12/07/2017 11:03:57                     
+//                                                                              
+
+BUSINESS STRUCTURE ABSTRACT TO-BE
+  Customer
+    HASA
+      Account
+      Agent
+  Agent
+    ISOWNEDBYA
+      Customer
+  Account
+    HASA
+      Policy
+      Quote
+    ISOWNEDBYA
+      Customer
+  Policy
+    ISOWNEDBYA
+      Account
+      Quote
+  Quote
+    HASA
+      Policy
+      Payment Plan
+      Quote Type(LOB)
+    ISOWNEDBYA
+      Account
+  Quote Type(LOB)
+    HASA
+      Policy Type(HO)
+      Coverables
+    ISOWNEDBYA
+      Quote
+  Policy Type(HO)
+    ISOWNEDBYA
+      Quote Type(LOB)
+  Coverables
+    HASA
+      Coverages
+    ISOWNEDBYA
+      Quote Type(LOB)
+  Coverages
+    ISOWNEDBYA
+      Coverables
+  Payment Plan
+    HASA
+      Down Payment
+    ISOWNEDBYA
+      Quote
+  Down Payment
+    ISOWNEDBYA
+      Payment Plan
+  Other Systems
+BUSINESS SUPPLEMENTAL ABSTRACT TO-BE
+  Has to use existing back-end
+    AFFECTS
+  Must be compatible with major recent browsers
+    AFFECTS
+  Must be responsive to different screen sizes
+    AFFECTS
+  Must be ADA compliant
+    AFFECTS
+    NOTE:
+      <code goes here>
+  Must use existing middleware
+    AFFECTS
+  Must confirm to Service Level Agreements
+    AFFECTS
+  Must support multiple user types
+    AFFECTS
+  Top summary must synchronize with main screen
+    AFFECTS
+  Left nav must synchronize with main screen
+    AFFECTS
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Start Quote
+    NOTE:
+      This is a great meeting
+      I really like ice cream
+    QUESTION:
+      What's a quote?
+      Why are we here?
+    TODO:
+      Meet the agents
+      Have lunch with the agents
+    WHEN:
+      A potential customer purchases new property
+    ASA:
+      Agent
+      Agent Supervisor
+    INEEDTO:
+      Start a new quote
+        QUESTION:
+          Is this all done online or can it be done in person?
+    SOTHAT:
+      The potential customer becomes a real customer
+  Identify Potential Customer
+    CHILD 
+  Specify Quote Type
+  Identify Policy Type
+  Identify Coverables
+  Identify Coverages
+  Get A Quote
+  Select Offering
+  Select Payment Plan
+  Send Written Quote Proposal
+  Issues Policy
+  Receive Down Payment
+  Provide links to other system
+  Modify Existing Policy
+  View Agent Work In Progress
+  ALL
+  MISC
+  MASTER
+SYSTEM SUPPLEMENTAL ABSTRACT TO-BE
+  Data entry on screens must be valid and conform to the database schema
+    AFFECTS
+      ALL
+SYSTEM BEHAVIOR ABSTRACT TO-BE
+  ALL
+    AFFECTEDBY
+      Data entry on screens must be valid and conform to the database schema
+BUSINESS BEHAVIOR REALIZED TO-BE
+  Identify Customer Blank Screen
+    PARENT
+    ASA:
+      Agent
+        NOTE:
+          Agents are associated by contract to the company
+    INEEDTO:
+      See the Customer Identification Screen
+    SOTHAT:
+      I can interact with it
+  Enter Initial Customer Information
+    PARENT
+    WHEN:
+      I enter Customer Identification information
+    ASA:
+      Agent
+    INEEDTO:
+      Store the information entered
+    SOTHAT:
+      I can work with the customer
+  Retrieve Existing Customer Information
+    PARENT
+    WHEN:
+      I enter Customer Information
+    ASA:
+      Agent
+    INEEDTO:
+      See relevant customer information
+    SOTHAT:
+      I can make sure I am working with the right customer
+  Reuse Existing Customer Information
+    PARENT
+    ASA:
+      Agent
+    INEEDTO:
+      Fill out the information for an existing customer
+      Enter information for a new customer
+    SOTHAT:
+      We don't have two different accounts for the same person
+        NOTE:
+          They must get multi-policy discount if they are an existing customer
+      Enter a new customer
+      I can create an account for them
+  Refuse accepting an invalid address
+    PARENT
+    ASA:
+      Agent
+    INEEDTO:
+      Make sure that I don't enter an invalid address for my customer
+    SOTHAT:
+      We are able to help him
+
+

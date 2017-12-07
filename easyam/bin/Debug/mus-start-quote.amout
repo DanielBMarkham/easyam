@@ -1,0 +1,28 @@
+//                             MASTER USER STORY                               
+//                                START QUOTE                                  
+//                   Model Generation: 12/07/2017 11:05:03                     
+//                                                                             
+
+MASTER USER STORY: Start Quote
+    WHEN: 
+      A potential customer purchases new property
+    ASA: 
+      Agent
+      Agent Supervisor
+    INEEDTO: 
+      Start a new quote
+        QUESTIONS: 
+          Is this all done online or can it be done in person?
+    SOTHAT: 
+      The potential customer becomes a real customer
+
+    NOTES: 
+      This is a great meeting
+      I really like ice cream
+    QUESTIONS: 
+      What's a quote?
+      Why are we here?
+    TODO: 
+      Meet the agents
+      Have lunch with the agents
+

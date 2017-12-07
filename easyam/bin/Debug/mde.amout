@@ -1,108 +1,58 @@
 //                           MASTER DOMAIN ENTITIES                            
-//                   Model Generation: 12/06/2017 20:51:11                     
+//                   Model Generation: 12/07/2017 11:05:03                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE
-  Bill Of Lading
-    CONTAINS: 
-      Pallet List
+  Account
+    HASA:
+      Policy
+      Quote
+
+
+  Agent
+
+
+  Coverables
+    HASA:
+      Coverages
+
+
+  Coverages
 
 
   Customer
-    CONTAINS: 
-      Customer Number
-      Address
     HASA:
-      Order
-      Invoice
+      Account
+      Agent
 
 
-  Employee
-    CONTAINS: 
-      First Name
-      Last Name
-      Social Security Number
-      Hire Date
+  Down Payment
 
 
-  Employee Type
-    CONTAINS: 
-      Role Name
-      Salary Level
+  Other Systems
 
 
-  Inventory Item
-    CONTAINS: 
-      Inventory Item Description
-      Inventory Short Code
-      Inventory Long Code
-
-
-  Invoice
-    CONTAINS: 
-      Invoice Number
-      Invoice Date
-      Invoice Total Amount
+  Payment Plan
     HASA:
-      Invoice Line
-      Invoice Line Item
+      Down Payment
 
 
-  Invoice Line
-    CONTAINS: 
-      Line Number
-      Line Total
+  Policy
 
 
-  Invoice Line Item
-    CONTAINS: 
-      Long Description
+  Policy Type(HO)
+
+
+  Quote
     HASA:
-      SKU
+      Policy
+      Payment Plan
+      Quote Type(LOB)
 
 
-  Order
-    CONTAINS: 
-      Order Number
-      Order Date
-      Customer Number
-      Total Amount
+  Quote Type(LOB)
     HASA:
-      Shipment
-
-
-  SKU
-    CONTAINS: 
-      Item Number
-      Quantity
-    HASA:
-      Inventory Item
-
-
-  Shipment
-    CONTAINS: 
-      Shipment Number
-      Shipment Date
-      Expected Arrival Date
-    HASA:
-      Bill Of Lading
-    QUESTIONS: 
-      Does this involve real ships?
-      Do we get free mints?
-      Are the ships full of mints?
-
-
-  Vendor
-    CONTAINS: 
-      Vendor Number
-      Address
-      Last Order Date
-    HASA:
-      Shipment
-      Invoice
-      Order
-    TO-DO: 
-      Meet some vendors
-      Listen to stories about vendors
+      Policy Type(HO)
+      Coverables
 
 

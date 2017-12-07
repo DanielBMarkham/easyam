@@ -1,0 +1,10 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                PAYMENT PLAN                                 
+//                   Model Generation: 12/07/2017 11:05:04                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Payment Plan
+
+
+    HASA: 
+      Down Payment

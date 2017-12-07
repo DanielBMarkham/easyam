@@ -247,8 +247,8 @@ module Utils
         let aZapRoot = a|>Array.filter(fun x->x.Id<>(-1))
         let bZapRoot = b|>Array.filter(fun x->x.Id<>(-1))
         // since descriptions can't collide, sort both models by description
-        let aProcessedModel = aZapRoot |> Array.sortBy(fun x->x.Description)
-        let bProcessedModel = bZapRoot |> Array.sortBy(fun x->x.Description)
+        let aProcessedModel = aZapRoot |> Array.sortBy(fun x->x.Description+x.Location.Bucket.ToString()+x.Location.Genre.ToString()+x.Location.AbstractionLevel.ToString()+x.Location.TemporalIndicator.ToString())
+        let bProcessedModel = bZapRoot |> Array.sortBy(fun x->x.Description+x.Location.Bucket.ToString()+x.Location.Genre.ToString()+x.Location.AbstractionLevel.ToString()+x.Location.TemporalIndicator.ToString()+x.Description)
         aProcessedModel.Length=bProcessedModel.Length &&
         (Array.fold (&&) true (Array.zip aProcessedModel bProcessedModel |> Array.map(fun (aa,bb)->aa=bb)))
 

@@ -482,6 +482,7 @@ module SAModel
                             (y.id, y.ModelJoinType, y.TargetId)
                     |_-> invalidArg "yobj" "cannot compare value of different types"
     [<CustomEquality;CustomComparison>]
+    [<StructuredFormatDisplay("{StructuredFormatDisplay}")>]
     type ModelLocationPointer =
         {
             Namespace:string
@@ -504,6 +505,9 @@ module SAModel
             AnnotationIndicator:AnnotationTokenType
             Tags:System.Collections.Generic.KeyValuePair<string,string>[]
         }
+        member private t.StructuredFormatDisplay = 
+                let ns = if t.Namespace.Length>0 then (t.Namespace + "::") else ""
+                ns + t.Bucket.ToString() + "/" + t.Genre.ToString() + "/" + t.AbstractionLevel.ToString() + "/" + t.TemporalIndicator.ToString()
         override x.GetHashCode()=hash x
         override x.Equals(yobj)=
             match yobj with 
@@ -528,6 +532,7 @@ module SAModel
                 match yobj with 
                     | :? ModelLocationPointer as y->
                         compare
+                            // Note there's a difference between whether an item represents the same thing or is the same thing as another one
                             //(x.Namespace, x.Genre, x.Bucket, x.AbstractionLevel, x.TemporalIndicator, x.AttributeType, x.ParentId, x.AttributeId, x.RelationTargetId, x.InHDDMode, x.AnnotationIndicator)
                             //(y.Namespace, y.Genre, y.Bucket, y.AbstractionLevel, y.TemporalIndicator, y.AttributeType, y.ParentId, y.AttributeId, y.RelationTargetId, y.InHDDMode, y.AnnotationIndicator)
                             (x.Namespace, x.Genre, x.Bucket, x.AbstractionLevel, x.TemporalIndicator)

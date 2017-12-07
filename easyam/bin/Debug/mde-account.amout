@@ -1,0 +1,11 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                  ACCOUNT                                    
+//                   Model Generation: 12/07/2017 11:05:03                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Account
+
+
+    HASA: 
+      Policy
+      Quote

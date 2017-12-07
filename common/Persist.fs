@@ -734,15 +734,28 @@ module Persist
         if outputFilterExistsInPlanningToDisplay planningToOutput detailLevel
             then 
                 let sortedJoins=modelItem.Relations |> Array.sortBy(fun x->x.ModelJoinType) |> Array.groupBy(fun x->x.ModelJoinType)
+                // only show targets of the join that are in this level
+                // otherwise it messes with scope on readback, putting things in higher places than when they started
+                let sortedJoinsOnlyOnThisLevel = sortedJoins |> Array.map(fun x->
+                    let joinType=fst x 
+                    let joinsForThisJoinType=snd x 
+                    let filteredJoinsOnlyOnThisLevel=joinsForThisJoinType|>Array.filter(fun y->
+                        let targetItem=getModelItemById referenceModel y.TargetId
+                        let locationIsTheSame=
+                            (targetItem.Location.Genre=modelItem.Location.Genre) && (targetItem.Location.AbstractionLevel=modelItem.Location.AbstractionLevel) && (targetItem.Location.TemporalIndicator=modelItem.Location.TemporalIndicator)
+                        locationIsTheSame
+                        )
+                    (joinType,filteredJoinsOnlyOnThisLevel)
+                    )
                 match outputFormat with
                     | AMOUT->
                         //sb.wt 1 modelItem.Description
-                        let sortedJoinTypes=sortedJoins|>Array.map(fun x->(fst x)) |> Array.toList
+                        let sortedJoinTypes=sortedJoinsOnlyOnThisLevel|>Array.map(fun x->(fst x)) |> Array.toList
                         ModelJoin.ToList()|>List.iter(fun y->
                             if (List.contains y sortedJoinTypes)
                                 then 
                                     sb.wt 2 ((string y).ToUpper())
-                                    let joinsToDisplay = sortedJoins|>Array.filter(fun z->(fst z)=y) |> Array.map(fun z->(snd z)) |> Array.concat
+                                    let joinsToDisplay = sortedJoinsOnlyOnThisLevel|>Array.filter(fun z->(fst z)=y) |> Array.map(fun z->(snd z)) |> Array.concat
                                     joinsToDisplay |> Array.iter(fun z->
                                         let targetItem = referenceModel|>Array.find(fun a->a.Id=z.TargetId)
                                         sb.wt 3 (targetItem.Description)
