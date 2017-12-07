@@ -90,6 +90,11 @@
  Flattened model -- used to indicate which items to use for reporting
 </summary>
 </member>
+<member name="M:SAModel.areModelsEqual(SAModel.ModelItem[],SAModel.ModelItem[])">
+<summary>
+ Compares two models for equality
+</summary>
+</member>
 <member name="T:Lenses">
 <summary>
  Lenses turn complex lists into something more consumable
@@ -122,13 +127,13 @@
  Finds only the duplicates in a list. Items must be comparable
 </summary>
 </member>
-<member name="M:Utils.duplicatesUniqueBy``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean}},Microsoft.FSharp.Collections.FSharpList{``0})">
+<member name="M:Utils.removeDuplicatesBy``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean}},Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
  Eliminates duplicates in a list by evaluating the result of a function on each item
  Resulting items must be comparable
 </summary>
 </member>
-<member name="M:Utils.duplicatesUnique``1(Microsoft.FSharp.Collections.FSharpList{``0})">
+<member name="M:Utils.removeDuplicates``1(Microsoft.FSharp.Collections.FSharpList{``0})">
 <summary>
  Eliminates duplicate items in a list. Items must be comparable
 </summary>
@@ -156,6 +161,17 @@
 <member name="T:Utils">
 <summary>
  All-purpose utilties for all programs
+</summary>
+</member>
+<member name="M:Persist.saveFeatureFiles(System.String,SAModel.CompilerReturn)">
+<summary>
+ beat function to create gherkin feature files
+ used as a sample model extension to begin to prove out functionality
+</summary>
+</member>
+<member name="M:Persist.saveFeatureFile(System.String,SAModel.ModelItem,SAModel.CompilerReturn)">
+<summary>
+ beta function that saves a gherkin feature file based on the model
 </summary>
 </member>
 <member name="T:Persist">
