@@ -2,6 +2,29 @@
 <doc>
 <assembly><name>easyam</name></assembly>
 <members>
+<member name="T:Types.Stack`1">
+<summary>
+ Homegrown/copied pure functional stack implementation
+ from https://viralfsharp.com/2012/02/11/implementing-a-stack-in-f/
+</summary>
+</member>
+<member name="T:Types.EasyAMProgramConfig">
+<summary>
+ Command-line parameters for this particular (easyam) program
+</summary>
+</member>
+<member name="T:Types.InterimProgress">
+<summary>
+ A type so that programs can report what they&apos;re doing as they do it
+</summary>
+</member>
+<member name="T:Types.ConfigEntry`1">
+<summary>
+ Parameterized type to allow command-line argument processing without a lot of extra coder work
+ Instantiate the type with the type of value you want. Make a default entry in case nothing is found
+ Then call the populate method. Will pull from args and return a val and args with the found value (if any consumed)
+</summary>
+</member>
 <member name="M:Types.TextWriter.wc(System.IO.TextWriter,System.String,Microsoft.FSharp.Core.FSharpOption{System.Int32})">
 <summary>
  Centers text across line using spaces on both sides. Default 80-character line can be overridden
@@ -47,9 +70,107 @@
  Generates an infinite sequence of random numbers within the given range.
 </summary>
 </member>
+<member name="T:Types">
+<summary>
+ Universal types and type modifications for all programs
+</summary>
+</member>
+<member name="T:SAModel.ModelDetailItemType">
+<summary>
+ Flattened model -- used to indicate which items to use for reporting
+</summary>
+</member>
+<member name="T:Lenses">
+<summary>
+ Lenses turn complex lists into something more consumable
+ Think &quot;view&quot; from SQL
+</summary>
+</member>
+<member name="M:Utils.applyCommandLineSortAndFilter(SAModel.CompilerReturn,Types.EasyAMProgramConfig)">
+<summary>
+ Takes a completed model and sorts and filters. Used for reporting and custom output
+</summary>
+</member>
+<member name="M:Utils.loadInAllIncomingLines(System.IO.FileInfo[])">
+<summary>
+ Takes a list of FileInfo objects and returns a list tuple of the Info object plus all the lines in each file
+</summary>
+</member>
+<member name="M:Utils.getFakeFileInfo">
+<summary>
+ Create a dummy file in the OS and return a .NET FileInfo object. Used as a mock for testing
+</summary>
+</member>
+<member name="M:Utils.duplicatesBy``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean}},Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+ finds only the duplicates in a list by applying a function to to each item
+ new items must be comparable
+</summary>
+</member>
+<member name="M:Utils.duplicates``1(Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+ Finds only the duplicates in a list. Items must be comparable
+</summary>
+</member>
+<member name="M:Utils.duplicatesUniqueBy``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean}},Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+ Eliminates duplicates in a list by evaluating the result of a function on each item
+ Resulting items must be comparable
+</summary>
+</member>
+<member name="M:Utils.duplicatesUnique``1(Microsoft.FSharp.Collections.FSharpList{``0})">
+<summary>
+ Eliminates duplicate items in a list. Items must be comparable
+</summary>
+</member>
+<member name="M:Utils.copyToDestinationDirectory(System.String,System.String)">
+<summary>
+ OS-independent file copy from one place to another. Uses shell.
+</summary>
+</member>
+<member name="P:Utils.isLinuxFileSystem">
+<summary>
+ Are we running on linux?
+</summary>
+</member>
+<member name="M:Utils.commandLinePrintWhileExit(Types.ConfigBase)">
+<summary>
+ Exiting program command line report. Detail level is based on verbosity setting
+</summary>
+</member>
 <member name="M:Utils.commandLinePrintWhileEnter(Types.ConfigBase,Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit})">
 <summary>
- Prints out the options for the command. Standard stuff.
+ Prints out the options for the command before it runs. Detail level is based on verbosity setting
+</summary>
+</member>
+<member name="T:Utils">
+<summary>
+ All-purpose utilties for all programs
+</summary>
+</member>
+<member name="T:Persist">
+<summary>
+ Persistence functions. Stuff dealing with IO
+</summary>
+</member>
+<member name="M:EasyamParsingEngine.updateModelLocationPointer(SAModel.CompilerReturn,SAModel.IncomingLine,SAModel.Command)">
+<summary>
+ Main loop. Processes a command token, changes the model array, compiler state and location pointer
+</summary>
+</member>
+<member name="M:EasyamParsingEngine.updateExistingItemWithCurrentLocationExtras(SAModel.CompilerReturn,System.Int32)">
+<summary>
+ This takes a ModelItem and the current compiler status and adds all the name/val tags for where we are and updates the item
+</summary>
+</member>
+<member name="M:EasyamParsingEngine.updateModelItem(SAModel.CompilerReturn,SAModel.ModelItem)">
+<summary>
+ Updates a ModelItem in place. Change your item, then pass it here for it to be updated in the array    
+</summary>
+</member>
+<member name="M:EasyamParsingEngine.addFindModelItem(SAModel.CompilerReturn,SAModel.IncomingLine,Microsoft.FSharp.Core.FSharpOption{SAModel.ModelJoin},System.String)">
+<summary>
+ adds/finds an item, updates the model, then returns the new model and the found/added item
 </summary>
 </member>
 <member name="M:EasyamParsingEngine.bulkFileLineProcessing(System.Tuple{System.IO.FileInfo,System.String[]}[])">
@@ -64,10 +185,15 @@
 
 </summary>
 </member>
+<member name="M:EasyamParsingEngine.splitOutIncomingLineIntoCommandList(Microsoft.FSharp.Collections.FSharpList{System.String},System.String)">
+<summary>
+ TOKEN PROCESSING FIRST STEP. TAKES A LINE AND MAKES A LIST OF COMMANDS AND VALUES
+</summary>
+</member>
 <member name="M:EasyamParsingEngine.findInitialTextKeywordAndRemainingTextOnALine(Microsoft.FSharp.Collections.FSharpList{System.String},System.String)">
 <summary>
- TOKEN PROCESSING. TAKES A LINE AND MAKES A LIST OF COMMANDS AND VALUES
-
+ Helper function for token processing first step. Takes a list of tokens and a string and
+ splits it into 3 parts: text before first-token-found, token text, and text after token
 </summary>
 </member>
 <member name="M:IntModelCreationTests.ROUNDTRIP: SANITY CHECK">

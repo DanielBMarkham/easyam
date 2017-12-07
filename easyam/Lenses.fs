@@ -1,12 +1,24 @@
-﻿module Lenses
+﻿/// Lenses turn complex lists into something more consumable
+/// Think "view" from SQL
+module Lenses
     open Types
     open SAModel
 
     // Model Lenses
-    let getModelItemDescForId (modelItems:ModelItem []) (id:int) = 
-        (modelItems|> Array.map(fun y->modelItems|>Array.tryFind(fun z->z.Id=id))).[0].Value.Description
-    let getModelItemForId (modelItems:ModelItem []) (id:int) = 
-        (modelItems|> Array.map(fun y->modelItems|>Array.tryFind(fun z->z.Id=id))).[0]
+    let existsModelItemForId (modelItems:ModelItem[]) (id:int) =
+        modelItems|>Array.exists(fun x->x.Id=id)
+    let existsModelItemForDescription (modelItems:ModelItem[]) (description:string)=
+        modelItems|>Array.exists(fun x->x.Description=description)
+    let tryFindModelItemDescriptionForId (modelItems:ModelItem []) (id:int) = 
+        let wasItFound=(modelItems|> Array.map(fun y->modelItems|>Array.tryFind(fun z->z.Id=id)))|>Array.filter(fun x->x.IsSome)
+        if wasItFound.Length>0 then wasItFound.[0] else option.None
+    let findModelItemDescriptionForId (modelItems:ModelItem []) (id:int) = 
+        (modelItems|> Array.map(fun y->modelItems|>Array.find(fun z->z.Id=id))).[0]
+    let tryFindModelItemForId (modelItems:ModelItem []) (id:int) = 
+        let wasItFound=(modelItems|> Array.map(fun y->modelItems|>Array.tryFind(fun z->z.Id=id)))
+        if wasItFound.Length>0 then wasItFound.[0] else option.None
+    let findModelItemForId (modelItems:ModelItem []) (id:int) = 
+        (modelItems|> Array.map(fun y->modelItems|>Array.find(fun z->z.Id=id))).[0]
 
     let gettAllForABucket (modelItems:ModelItem []) (bucket:Buckets)=modelItems |> Array.filter(fun x->x.Location.Bucket=bucket)
     let getSupplementals (modelItems:ModelItem []) = gettAllForABucket modelItems Buckets.Supplemental
@@ -107,6 +119,27 @@
     let getAllDefectSubAnnotations (modelItem:ModelItem) = (getAllSubAnnotations modelItem) |> Array.filter(fun x->x.AnnotationType=AnnotationTokenType.Defect)
 
     // Item to Model Lenses
+    let doesModelItemExistInModelByDescription (referenceModel:ModelItem []) (modelItemDescription:string) =
+        let temp=referenceModel |> Array.tryFind(fun z->z.Description.Trim()=modelItemDescription.Trim())
+        temp.IsSome
+    let getModelItemByDescription (referenceModel:ModelItem []) (modelItemDescription:string) =
+        if (doesModelItemExistInModelByDescription referenceModel modelItemDescription)
+            then
+                let temp=referenceModel |> Array.find(fun z->z.Description.Trim()=modelItemDescription.Trim())
+                temp
+            else
+                raise (new System.ArgumentOutOfRangeException("A model item by that description does not exist in the model"))
+    let doesModelItemExistInModelById (referenceModel:ModelItem []) (itemId:int) =
+        let temp=referenceModel |> Array.tryFind(fun z->z.Id=itemId)
+        temp.IsSome
+    let getModelItemById (referenceModel:ModelItem []) (itemId:int) =
+        if (doesModelItemExistInModelById referenceModel itemId)
+            then
+                let temp=referenceModel |> Array.find(fun z->z.Id=itemId)
+                temp
+            else
+                raise (new System.ArgumentOutOfRangeException("A model item with that Id does not exist in the model"))
+
     let getAllJoinItemsForAModelItem (referenceModel:ModelItem []) (modelItem:ModelItem) (joinType:ModelJoin) =
         let allJoinsForModelItem=getAllJoinsForAModelItem modelItem joinType
         allJoinsForModelItem |> Array.collect(fun x->
@@ -125,6 +158,18 @@
     let getChildrenItems (referenceModel:ModelItem [])  (modelItem:ModelItem)=getAllJoinItemsForAModelItem referenceModel modelItem Child
     let getParentItems (referenceModel:ModelItem [])  (modelItem:ModelItem)=getAllJoinItemsForAModelItem referenceModel modelItem Parent
 
+    let getAllAttributes (referenceModel:ModelItem []) =
+        referenceModel |> Array.map(fun x->x.Attributes) |> Array.concat
+    let getAllAnnotations (referenceModel:ModelItem []) =
+        referenceModel |> Array.map(fun x->x.Annotations) |> Array.concat
+    let existsAttributeId (referenceModel:ModelItem []) (id:int) =
+        (getAllAttributes referenceModel) |> Array.exists(fun x->x.id=id)
+    let getAttributeById (referenceModel:ModelItem []) (id:int) =
+        if (existsAttributeId referenceModel id)
+            then 
+                let ret=(getAllAttributes referenceModel) |> Array.find(fun x->x.id=id)
+                ret
+            else (raise (new System.Exception("Attribute by that Id does not exist")))
 
     let rec GetAllDescendentItems (referenceModel:ModelItem []) (modelItem:ModelItem) =
         getChildrenItems referenceModel modelItem |> Array.fold(fun acc x->

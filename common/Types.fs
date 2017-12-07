@@ -1,5 +1,8 @@
-﻿module Types
+﻿/// Universal types and type modifications for all programs
+module Types
     open System.Text.RegularExpressions
+    open System.Collections
+    open System.Collections.Generic
 
     type 'a ``[]`` with         
         member x.randomItem = 
@@ -296,7 +299,6 @@
                 | CSV->
                     self.ToString().ToUpper()
                 | GHERKIN->""
-
     type AbstractionLevels = 
         | Unknown
         | None
@@ -356,6 +358,9 @@
                 |"TOBE"|"TO-BE"|"TO BE"->TemporalIndicators.ToBe
                 |_->raise(new System.ArgumentOutOfRangeException("TemporalIndicators","The string value provided for TemporalIndicators is not in the TemporalIndicators enum"))
 
+    /// Parameterized type to allow command-line argument processing without a lot of extra coder work
+    /// Instantiate the type with the type of value you want. Make a default entry in case nothing is found
+    /// Then call the populate method. Will pull from args and return a val and args with the found value (if any consumed)
     type ConfigEntry<'A> =
         {
             commandLineParameterSymbol:string
@@ -484,6 +489,8 @@
                             let tp=TemporalIndicators.TryParse parmValue.Value
                             if fst tp=true then snd tp else defaultConfig.parameterValue
                 defaultConfig.swapInNewValue newVal
+    /// A type so that programs can report what they're doing as they do it
+    // This was the programmer can decide what to do with it instead of the OS
     [<NoComparison>]
     type InterimProgress =
         {
@@ -503,6 +510,7 @@
                     this.items.Item(key).ToString()
                 else
                     ""
+    // All programs have at least this configuration on the command line
     [<NoComparison>]
     type ConfigBase =
         {
@@ -518,6 +526,7 @@
             printfn "%s" this.programName
             this.programHelpText |> Seq.iter(System.Console.WriteLine)
 
+    /// Command-line parameters for this particular (easyam) program
     [<NoComparison>]
     type EasyAMProgramConfig =
         {
@@ -568,34 +577,14 @@
 
     let directoryExists (dir:ConfigEntry<DirectoryParm>) = (snd (dir.parameterValue)).IsSome
     let fileExists (dir:ConfigEntry<FileParm>) = (snd (dir.parameterValue)).IsSome
-    type SVGSetup =
-        {
-            FontSize:int
-            FontName:string
-            TextMargin:int
-            EntityBorderColor:string
-            EntityBorderWidth:string
-            EntityFillColor:string
-            EntityFillOpacity:string
-        }
-    let defaultSVGSetup =
-        {
-            FontSize=12
-            FontName="Verdana"
-            TextMargin=6
-            EntityBorderColor="#ff0000"
-            EntityBorderWidth="1"
-            EntityFillColor="#dddddd"
-            EntityFillOpacity="80%"
-        }
     [<NoComparison>]
     type ProgramDirectories =
         {
             SourceDirectoryInfo:System.IO.DirectoryInfo
             DestinationDirectoryInfo:System.IO.DirectoryInfo
-            BehaviorDirectoryInfo:System.IO.DirectoryInfo
-            StructureDirectoryInfo:System.IO.DirectoryInfo
-            SupplementalDirectoryInfo:System.IO.DirectoryInfo
+            //BehaviorDirectoryInfo:System.IO.DirectoryInfo
+            //StructureDirectoryInfo:System.IO.DirectoryInfo
+            //SupplementalDirectoryInfo:System.IO.DirectoryInfo
             FeaturesDirectoryInfo:System.IO.DirectoryInfo
         }
     [<NoComparison>]
@@ -603,3 +592,67 @@
         {
             Files:System.IO.FileInfo list
         }
+
+    let replaceArrayItemInPlace (arr:'A []) (itemToReplace:'A) (funEquality:'A->'A->bool):'A [] =
+        let itemIndex=
+            let tempFind = arr |> Array.tryFindIndex(funEquality itemToReplace)
+            if tempFind.IsSome then tempFind.Value else raise(new System.ArgumentOutOfRangeException())
+        Array.set arr itemIndex itemToReplace
+        arr
+
+ /// Homegrown/copied pure functional stack implementation
+ /// from https://viralfsharp.com/2012/02/11/implementing-a-stack-in-f/
+    [<StructuredFormatDisplay("{StructuredFormatDisplay}")>]
+    type Stack<'a> = 
+        | StackNode of 'a list
+        with
+            member private t.StructuredFormatDisplay = 
+                if t.length = 0 then "()"
+                else
+                    let str = t |> Seq.fold (fun st e -> st + e.ToString() + "; ") "("
+                    str.Substring(0, str.Length - 2) + ")"
+ 
+            member t.length =
+                t |> Seq.length
+            member internal t.asList = 
+                match t with StackNode(x) -> x
+ 
+            member t.isEmpty = t.length = 0
+            static member empty=StackNode(FSharp.Collections.List<'a>.Empty)
+            interface IEnumerable<'a> with
+                member x.GetEnumerator() = (x.asList |> List.toSeq).GetEnumerator()
+ 
+            interface IEnumerable with
+                member x.GetEnumerator() =  (x.asList |> List.toSeq).GetEnumerator() :> IEnumerator
+    let peek = function
+        | StackNode([]) -> Unchecked.defaultof<'a>
+        | StackNode(hd::tl) -> hd
+ 
+    let pushStack hd tl = 
+        match tl with
+        |StackNode(x) -> StackNode(hd::x)
+    let concatStack firstStack secondStack  =
+        match firstStack, secondStack with
+        |StackNode(stack1),StackNode(stack2)->
+        let ret = (List.concat [stack1;stack2])
+        StackNode(ret)
+    let pushStackNTimes (stack:Stack<'a>) (itemToAdd:'a) (n:int) =
+        let stackToAdd=StackNode(List.init n (fun y->itemToAdd))
+        stack |> concatStack stackToAdd
+    let pop = function
+        | StackNode([]) -> Unchecked.defaultof<'a>, StackNode([])
+        | StackNode(hd::tl) -> hd, StackNode(tl)
+    let popMany n (stack : Stack<'a>) =
+         let noopReturn = [], stack
+         if stack.length = 0 then noopReturn
+         else
+             match n with
+             | x when x <= 0 || stack.length < n -> noopReturn
+             | x -> 
+                 let rec popManyTail n st acc =
+                     match n with
+                     | 0 -> acc   // exit recursion
+                     | _ -> 
+                         let hd, tl = List.head st, List.tail st
+                         popManyTail (n - 1) tl (hd::fst acc, StackNode(tl)) //keep track of intermediate results
+                 popManyTail n stack.asList ([],StackNode(FSharp.Collections.List<'a>.Empty)) // call the actual worker function

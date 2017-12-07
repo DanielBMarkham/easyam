@@ -6,6 +6,7 @@
     open SAModel
     open Lenses
     open Utils
+    open BasicModel1
 
     let setupCompilationScenario fileNumber incomingRawLineCount incomingLineCountWithEmptyLinesDeletedCount rawLineArray =
         initialProcessingOfIncomingFileLines fileNumber dummyFileInfo incomingRawLineCount incomingLineCountWithEmptyLinesDeletedCount rawLineArray
@@ -569,3 +570,25 @@
         sortedModel.Length |> should equal 4
         sortedModel.[0].Description |> should equal "Raise money for orphans"
 
+    [<Test>]
+    let ``EAT_TAIL``() =
+        let listToProcess = basicModel1
+        let firstProcessedIncomingLines, firstCompilerReturn = bulkFileLineProcessing listToProcess
+        let firstCompilerStatus=makeRawModel firstProcessedIncomingLines firstCompilerReturn
+        let firstModelItemsSorted=firstCompilerStatus.ModelItems|>Array.sortBy(fun x->x.Description)
+        let tempFileName=System.IO.Path.GetRandomFileName()
+        let currentDirectoryInfo=(new System.IO.DirectoryInfo(System.Environment.CurrentDirectory))
+        Persist.writeOutModel firstCompilerStatus.ModelItems firstCompilerStatus.ModelItems ModelOutputType.AMOUT currentDirectoryInfo true tempFileName
+        let tempFileInfo=new System.IO.FileInfo(tempFileName)
+        // load back in. Is it the same?
+        let listToProcess = loadInAllIncomingLines [|tempFileInfo|]
+        let secondProcessedIncomingLines, secondCompilerReturn = bulkFileLineProcessing listToProcess
+        
+        let secondCompilerStatus = makeRawModel secondProcessedIncomingLines secondCompilerReturn
+        let secondModelItemsSorted=secondCompilerStatus.ModelItems|>Array.sortBy(fun x->x.Description)
+        let vendor1=firstModelItemsSorted.[34]
+        let vendor2=secondModelItemsSorted.[34]
+        let areSame=vendor1=vendor2
+        // comment out next line to have program leave a file on disk with single file dump
+        System.IO.File.Delete(tempFileName)
+        areModelsEqual firstCompilerStatus.ModelItems secondCompilerStatus.ModelItems |> should equal true

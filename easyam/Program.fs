@@ -111,9 +111,9 @@
         let sourceDirectoryInfo = forceDirectoryCreation opts.sourceDirectory
         let destinationDirectoryInfo = forceDirectoryCreation opts.destinationDirectory
         let directorySeparatorCharacter = string System.IO.Path.DirectorySeparatorChar
-        let BehaviorDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Behavior")
-        let StructureDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Structure")
-        let SupplementalDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Supplemental")
+        //let BehaviorDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Behavior")
+        //let StructureDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Structure")
+        //let SupplementalDirectoryInfo = getOrMakeDirectory (destinationDirectoryInfo.FullName + directorySeparatorCharacter + "Supplemental")
         let featureDirectoryFullName=destinationDirectoryInfo.FullName + directorySeparatorCharacter + "features"
         // for the features directory, we wipe it every time (for now) to prevent confusion caused by overwrites
         if System.IO.Directory.Exists(featureDirectoryFullName) then System.IO.Directory.Delete(featureDirectoryFullName, true) else ()
@@ -124,9 +124,9 @@
         {
             SourceDirectoryInfo=sourceDirectoryInfo
             DestinationDirectoryInfo=destinationDirectoryInfo
-            BehaviorDirectoryInfo=BehaviorDirectoryInfo
-            StructureDirectoryInfo=StructureDirectoryInfo
-            SupplementalDirectoryInfo=SupplementalDirectoryInfo
+            //BehaviorDirectoryInfo=BehaviorDirectoryInfo
+            //StructureDirectoryInfo=StructureDirectoryInfo
+            //SupplementalDirectoryInfo=SupplementalDirectoryInfo
             FeaturesDirectoryInfo=FeaturesDirectoryInfo
         }
     let allCardinalNumbers = {1..10000}
@@ -140,11 +140,12 @@
         //processing
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let compilerResult = makeRawModel processedIncomingLines compilerReturn
+        persistenceRoundTripCheck compilerResult // ALWAYS CHECK TO MAKE SURE WE CAN DIGEST WHAT WE PRODUCE
         let outputModel = applyCommandLineSortAndFilter compilerResult opts
         // heading out
         //
         // TEST SCAFFOLDING FOR GENERIC FUNCTION
-        writeOutModel compilerResult.ModelItems outputModel ModelOutputType.AMOUT programDirectories.DestinationDirectoryInfo true ""
+        //writeOutModel compilerResult.ModelItems outputModel ModelOutputType.AMOUT programDirectories.DestinationDirectoryInfo true ""
         //
         //
         if opts.outputFormat.parameterValue.Contains("SINGLEFILE")

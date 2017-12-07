@@ -1,0 +1,156 @@
+//                           SINGLE FILE MODEL OUTPUT                           
+//                  EASYAM Analysis Modeling Language Compiler                  
+//                    Model Generation: 12/06/2017 14:52:27                     
+//                                                                              
+
+BUSINESS STRUCTURE ABSTRACT TO-BE
+  Customer
+    HASA
+      Account
+      Agent
+  Agent
+    ISOWNEDBYA
+      Customer
+  Account
+    HASA
+      Policy
+      Quote
+    ISOWNEDBYA
+      Customer
+  Policy
+    ISOWNEDBYA
+      Account
+      Quote
+  Quote
+    HASA
+      Policy
+      Payment Plan
+      Quote Type(LOB)
+    ISOWNEDBYA
+      Account
+  Quote Type(LOB)
+    HASA
+      Policy Type(HO)
+      Coverables
+    ISOWNEDBYA
+      Quote
+  Policy Type(HO)
+    ISOWNEDBYA
+      Quote Type(LOB)
+  Coverables
+    HASA
+      Coverages
+    ISOWNEDBYA
+      Quote Type(LOB)
+  Coverages
+    ISOWNEDBYA
+      Coverables
+  Payment Plan
+    HASA
+      Down Payment
+    ISOWNEDBYA
+      Quote
+  Down Payment
+    ISOWNEDBYA
+      Payment Plan
+  Other Systems
+BUSINESS SUPPLEMENTAL ABSTRACT TO-BE
+  Has to use existing back-end
+    AFFECTS
+      ALL
+  Must be compatible with major recent browsers
+    AFFECTS
+      ALL
+  Must be responsive to different screen sizes
+    AFFECTS
+      ALL
+  Must be ADA compliant
+    AFFECTS
+      ALL
+    NOTE:
+      <code goes here>
+  Must use existing middleware
+    AFFECTS
+      ALL
+  Must confirm to Service Level Agreements
+    AFFECTS
+      ALL
+  Must support multiple user types
+    AFFECTS
+      ALL
+  Top summary must synchronize with main screen
+    AFFECTS
+      ALL
+  Left nav must synchronize with main screen
+    AFFECTS
+      ALL
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Start Quote
+    NOTE:
+      This is a great meeting
+      I really like ice cream
+    QUESTION:
+      What's a quote?
+      Why are we here?
+    TODO:
+      Meet the agents
+      Have lunch with the agents
+    WHEN:
+      A potential customer purchases new property
+    ASA:
+      Agent
+      Agent Supervisor
+    INEEDTO:
+      Start a new quote
+        QUESTION:
+          Is this all done online or can it be done in person?
+    SOTHAT:
+      The potential customer becomes a real customer
+  Identify Potential Customer
+    CHILD 
+      Identify Customer Blank Screen
+  Specify Quote Type
+  Identify Policy Type
+  Identify Coverables
+  Identify Coverages
+  Get A Quote
+  Select Offering
+  Select Payment Plan
+  Send Written Quote Proposal
+  Issues Policy
+  Receive Down Payment
+  Provide links to other system
+  Modify Existing Policy
+  View Agent Work In Progress
+  ALL
+    AFFECTEDBY
+      Has to use existing back-end
+      Must be compatible with major recent browsers
+      Must be responsive to different screen sizes
+      Must be ADA compliant
+      Must use existing middleware
+      Must confirm to Service Level Agreements
+      Must support multiple user types
+      Data entry on screens must be valid and conform to the database schema
+      Top summary must synchronize with main screen
+      Left nav must synchronize with main screen
+  MISC
+  MASTER
+SYSTEM SUPPLEMENTAL ABSTRACT TO-BE
+  Data entry on screens must be valid and conform to the database schema
+    AFFECTS
+      ALL
+BUSINESS BEHAVIOR REALIZED TO-BE
+  Identify Customer Blank Screen
+    PARENT
+      Identify Potential Customer
+    ASA:
+      Agent
+        NOTE:
+          Agents are associated by contract to the company
+    INEEDTO:
+      See the Customer Identification Screen
+    SOTHAT:
+      I can interact with it
+
+

@@ -1,4 +1,5 @@
-﻿module Utils
+﻿/// All-purpose utilties for all programs
+module Utils
     open Types
     open SAModel
     open Lenses
@@ -8,7 +9,7 @@
 
 
     
-    /// Prints out the options for the command. Standard stuff.
+    /// Prints out the options for the command before it runs. Detail level is based on verbosity setting
     let commandLinePrintWhileEnter (opts:ConfigBase) fnPrintMe =
                 // Entering program command line report
             let nowString = string System.DateTime.Now
@@ -40,8 +41,8 @@
                     printfn "Begin: %s" (nowString)
                     fnPrintMe()
 
+    /// Exiting program command line report. Detail level is based on verbosity setting
     let commandLinePrintWhileExit (baseOptions:ConfigBase) =
-            // Exiting program command line report
         let nowString = string System.DateTime.Now
         match baseOptions.verbose.parameterValue with
             | Verbosity.Silent ->
@@ -87,6 +88,7 @@
             parameterValue=initialValue
         }
 
+    /// Are we running on linux?
     let isLinuxFileSystem =
         let os = Environment.OSVersion
         let platformId = os.Platform
@@ -94,6 +96,7 @@
             | PlatformID.Win32NT | PlatformID.Win32S | PlatformID.Win32Windows | PlatformID.WinCE | PlatformID.Xbox -> false
             | PlatformID.MacOSX | PlatformID.Unix -> true
             | _ ->false
+    /// OS-independent file copy from one place to another. Uses shell.
     let copyToDestinationDirectory (localFileName:string) (copyTo:string) =
         if System.IO.File.Exists(localFileName) = false
             then
@@ -127,6 +130,7 @@
             then (snd dir.parameterValue).Value
             else System.IO.Directory.CreateDirectory(fst dir.parameterValue)
 
+    /// Eliminates duplicate items in a list. Items must be comparable
     let duplicatesUnique a =
         a |> List.fold(fun acc x->
             let itemCount = (a |> List.filter(fun y->x=y)).Length
@@ -140,6 +144,8 @@
                 else
                     acc
             ) []
+    /// Eliminates duplicates in a list by evaluating the result of a function on each item
+    /// Resulting items must be comparable
     let duplicatesUniqueBy f a =
         a |> List.fold(fun acc x->
             let itemCount = (a |> List.filter(fun y->f x y)).Length
@@ -153,12 +159,14 @@
                 else
                     acc
             ) []
-
+    /// Finds only the duplicates in a list. Items must be comparable
     let duplicates a =
         a |> List.fold(fun acc x->
             let itemCount = (a |> List.filter(fun y->x=y)).Length
             if itemCount>1 then List.append acc [x] else acc
             ) []
+    /// finds only the duplicates in a list by applying a function to to each item
+    /// new items must be comparable
     let duplicatesBy f a =
         a |> List.fold(fun acc x->
             let itemCount = (a |> List.filter(fun y->f x y)).Length
@@ -171,7 +179,7 @@
         if newStringItem.Length=0 then currentString else
             (currentString + prepend + newStringItem)
 
-    // Funky code. I need some way to pretend I have a real OS incoming file I'm processing
+    /// Create a dummy file in the OS and return a .NET FileInfo object. Used as a mock for testing
     let getFakeFileInfo() = 
         let tempColl = (new System.CodeDom.Compiler.TempFileCollection(System.AppDomain.CurrentDomain.BaseDirectory, false))
         tempColl.AddExtension("bsx") |> ignore
@@ -189,13 +197,14 @@
     // memoize one to reuse
     let dummyFileInfo = getFakeFileInfo()
 
-
+    /// Takes a list of FileInfo objects and returns a list tuple of the Info object plus all the lines in each file
     let loadInAllIncomingLines (fileList:System.IO.FileInfo[]) =        
         let fileInfosAndContents:(System.IO.FileInfo*string[]) [] = fileList |> Array.map(fun x->
                                     let contentsForTheFile=System.IO.File.ReadAllLines(x.FullName)
                                     (x,contentsForTheFile)
                                     )
         fileInfosAndContents
+    /// Takes a completed model and sorts and filters. Used for reporting and custom output
     let applyCommandLineSortAndFilter (compilerResult:CompilerReturn) (opts:EasyAMProgramConfig) = 
         let sortedModel=
             if opts.sortThing.parameterValue.Length>0
@@ -232,39 +241,15 @@
                     filterModelByOneParameter sortedModel filterParm
                 else compilerResult.ModelItems
         filteredAndSortedModel
-
+    // Compares two models for equality
     let areModelsEqual (a:ModelItem []) (b:ModelItem []) =
+        // eliminate root items from both
         let aZapRoot = a|>Array.filter(fun x->x.Id<>(-1))
         let bZapRoot = b|>Array.filter(fun x->x.Id<>(-1))
+        // since descriptions can't collide, sort both models by description
+        let aProcessedModel = aZapRoot |> Array.sortBy(fun x->x.Description)
+        let bProcessedModel = bZapRoot |> Array.sortBy(fun x->x.Description)
+        aProcessedModel.Length=bProcessedModel.Length &&
+        (Array.fold (&&) true (Array.zip aProcessedModel bProcessedModel |> Array.map(fun (aa,bb)->aa=bb)))
 
-        (aZapRoot.Length=bZapRoot.Length)
-        && (Array.fold (&&) true (Array.zip aZapRoot bZapRoot |> Array.map(fun (aa,bb)->aa=bb)))
-
-        //firstCompilerResult.ModelItems |> should haveLength secondCompilerResult.ModelItems.Length
-        //firstCompilerResult.ModelItems |> Array.iteri(fun i x->
-        //        x.Description|>should equal secondCompilerResult.ModelItems.[i].Description
-        //        x.Attributes.Length |> should equal secondCompilerResult.ModelItems.[i].Attributes.Length
-        //        x.Attributes|> Array.iteri(fun j y->
-        //            y.AttributeType |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].AttributeType
-        //            y.Description |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].Description
-        //            y.Annotations.Length |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].Annotations.Length
-        //            y.Annotations |> Array.iteri(fun k z->
-        //                z.AnnotationType |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].Annotations.[k].AnnotationType
-        //                z.AnnotationText |> should equal secondCompilerResult.ModelItems.[i].Attributes.[j].Annotations.[k].AnnotationText
-        //                )
-        //            )
-        //        // don't compare the default root item. Lots of noise up there, including model generation stuff
-        //        // if rest of model checks out, it doesn't matter
-        //        if x.Id=(-1) then () else
-        //        x.Annotations.Length |> should equal secondCompilerResult.ModelItems.[i].Annotations.Length
-        //        x.Annotations |> Array.iteri(fun j y->
-        //            y.AnnotationType |> should equal secondCompilerResult.ModelItems.[i].Annotations.[j].AnnotationType
-        //            y.AnnotationText |> should equal secondCompilerResult.ModelItems.[i].Annotations.[j].AnnotationText
-        //            )
-        //        x.Relations.Length |> should equal secondCompilerResult.ModelItems.[i].Relations.Length
-        //        x.Relations|>Array.iteri(fun k z->
-        //            z.ModelJoinType |> should equal secondCompilerResult.ModelItems.[i].Relations.[k].ModelJoinType
-        //            z.TargetId |> should equal secondCompilerResult.ModelItems.[i].Relations.[k].TargetId
-        //            )
-        //    )
     
