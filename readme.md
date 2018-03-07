@@ -1,43 +1,19 @@
 #EasyAM
-##A Cucumber-like tool for Structured Analysis.
 
-Analysis is the part of the project that you have to understand that's not telling you exactly what to do.
+When keeping information in a program, many times we use relational databases. When we normalize the database we ensure we only store the minimum amount of information necessary for the job and there is no duplication.
 
-If the project work were filling a hole, analysis is describing everything around the hole. It begins with observations and questions, proceeds through more questions, and ends up with a series of executable tests that exactly describe the hole to be filled.
+I teach folks how to develop and maintain backlogs, ordered queues of discussions to have in order to make stuff that people want. This is easy when it's just a small group, but it can grow quickly out of control. In many places, there are these online tools where people waste a lot of time filling out forms and generating documentation instead of getting valuable work done.
 
-Analysis is the most important part of any project. It's the "why"
+But you have to have some kind of system for organizing information.
 
-Unstructured analysis, the type any three-year-old can perform, consists of asking any questions that cross your mind until you know enough to accomplish what you want to.
+So here's the question: how do you keep the minimum amount of information necessary so that it has the maximum impact? How do you "normalize" information about the work you do?
 
-Structured analysis is tagging information and questions so that dozens of people of having hundreds of conversations can organize it all so that things aren't repeated, conflicting information is easily identified, and all relevant information (and only relevant information) is available to people when they need it.
+EasyAM answers that question.
 
-Just like cucumber lets you enter business needs in almost freeform text, easyam lets you interview, follow-up, and organize all business conversations in the same kind of "almost freeform text"
+I teach a simple tagging system for all project information, from customer experiences to production bugs. Once you learn this tagging system, you store this information in text files. Keep them on Dropbox, check them into GitHub. Treat your project information the same way you treat your code.
 
-It is OHIO, Only Handle Information Once, as close to business intent as possible, then deploy, mix and match that same information everywhere else it's used.
+And just like your code, once notes are checked in, easyam runs and organizes whatever you've entered into a standard format. It's a compiler for organization information. You hook it up in a pipeline and collect information where conversations happen and the deliver it to where the information is needed. The default app will generate gherkin feature files for ATDD, story cards, master question lists, test cases, project backlogs, and program portfolios.
 
-It is a command-line, text-based, source-controlled system for accepting and storing all of your project information.
+If you want to track stuff, you put it in. If you don't, you don't put it in. Like any other compiler, you run it as needed and pipe things to where you want them to go. It's continuous information delivery. DevOps for organization information.
 
-So, for example, questions about a user story the team has for an upcoming sprint will be automatically associated with the business intent and conversations around that. Conversations and answers about higher-level features that affect that team's user stories will automatically flow to where they are needed.
-
-Release planning can now automatically include the consideration of bugs and feature requests around the areas being considered.
-
-Bug reports automatically go to the people with the most expertise in that area of the system.
-
-Static analysis tools provide hints to which features to develop ahead of others -- the ones that address the most architectural risk and customer value.
-
-Done correctly, seven or eight 200-300-line structured analysis files contain the same information as 50 to 100 times that amount using traditional formats
-
-##Usage
-
-The easyam compiler *is* the code. The default executable takes a target directory and compiles all of the files in that directory ending in .amin
-
-In the target directory it creates a set of files with the .amout format
-
-These files can be reused. The system eats its own output. That is, whatever the program puts out, it can also consume.
-
-All of these files representing conversations, work, and questions can be accessed, changed, and compiled directly alongside all of the other technology in the project, using tools like git, subversion, Maven, etc. Easyam should be part of every project's (and enterprise's) build pipeline.
-
-Note that the compilation process enforces rules on the notes. It is possible to "break" the analysis build. For example, nobody should be allowed to add a thousand items to any team's backlog.
-
-It is expected that dozens of new tools can use this code to take easyam formatted files and create enterprise products: team/program backlogs, release plans, feature team groupings, prioritized backlogs based on business impact, bug reports prioritized by customer value, user story cards, Lean Startup canvases, PI planning cards, etc.
-
+Information Ops.
