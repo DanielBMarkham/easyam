@@ -1,0 +1,48 @@
+//                           SINGLE FILE MODEL OUTPUT                           
+//                  EASYAM Analysis Modeling Language Compiler                  
+//                    Model Generation: 03/06/2018 11:18:08                     
+//                                                                              
+
+BUSINESS STRUCTURE ABSTRACT TO-BE
+  User Story
+  Business Rule
+    HASA
+      Acceptance Tests
+  Acceptance Tests
+    ISOWNEDBYA
+      Business Rule
+  Business Value
+  Business Priority
+  Cost
+  Acceptance Test
+  Iterations
+  QA
+  Programmers
+  Business Analyst I
+    USEDBY
+      Assign Business Value To User Stories
+BUSINESS SUPPLEMENTAL ABSTRACT TO-BE
+  Acceptance Tests Are All Automated
+    NOTE:
+      I like acceptance tests. Let's do more of them
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Assign Business Value To User Stories
+    CHILD 
+    USES
+      Business Analyst I
+    ASA:
+      Business Analyst
+    INEEDTO:
+      Assign Business Value To User Stories
+  Assign Cost To User Stories
+  Schedule Iterations
+  Execute Acceptance Tests
+  Write Acceptance Tests
+  Capture Business Rules
+    QUESTION:
+      Is there a one to many relationship from capture business rules into story cards?
+BUSINESS BEHAVIOR REALIZED TO-BE
+  Assign business value for one story
+    PARENT
+
+

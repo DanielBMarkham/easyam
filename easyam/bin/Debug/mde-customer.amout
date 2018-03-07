@@ -1,11 +1,14 @@
 //                        MASTER DOMAIN MODEL - ENTITY                         
 //                                  CUSTOMER                                   
-//                   Model Generation: 12/07/2017 17:35:29                     
+//                   Model Generation: 03/07/2018 13:55:28                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE: Customer
+    CONTAINS: 
+      Customer Number
+      Address
 
 
     HASA: 
-      Account
-      Agent
+      Order
+      Invoice

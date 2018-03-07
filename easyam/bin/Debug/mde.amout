@@ -1,58 +1,41 @@
 //                           MASTER DOMAIN ENTITIES                            
-//                   Model Generation: 12/07/2017 17:35:28                     
+//                   Model Generation: 03/07/2018 17:16:15                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE
-  Account
-    HASA:
-      Policy
-      Quote
+  Cabinet
 
 
-  Agent
+  Chairs
 
 
-  Coverables
-    HASA:
-      Coverages
+  Family
 
 
-  Coverages
+  Food
 
 
-  Customer
-    HASA:
-      Account
-      Agent
+  Friends
 
 
-  Down Payment
+  Gas grill
 
 
-  Other Systems
+  Hammock
 
 
-  Payment Plan
-    HASA:
-      Down Payment
+  Hobbies
 
 
-  Policy
+  Hot tub
 
 
-  Policy Type(HO)
+  Plant
 
 
-  Quote
-    HASA:
-      Policy
-      Payment Plan
-      Quote Type(LOB)
+  Recliner
 
 
-  Quote Type(LOB)
-    HASA:
-      Policy Type(HO)
-      Coverables
+  Table
 
 

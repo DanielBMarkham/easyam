@@ -1,0 +1,47 @@
+I want story cards.
+Story cards capture my business rules.
+Business rules have business value, business priority, and cost.
+Business value is assigned by business analysts
+Cost is assigned by programmers
+Business rules are specified by business analysts and QA
+Business rules have acceptance tests.
+Acceptance tests are all automated.
+Acceptance tests are written by QA
+Acceptance tests are executed by programmers
+Iterations are scheduled with muiltiple stories
+	
+BEHAVIOR
+  Assign Business Value To User Stories
+  Assign Cost To User Stories
+  Schedule Iterations
+  Execute Acceptance Tests
+  Write Acceptance Tests
+  Capture Business Rules
+    Q: Is there a one to many relationship from capture business rules into story cards?
+  
+  
+
+STRUCTURE
+  User Story
+  Business Rule HASA Acceptance Tests
+  Business Value
+  Business Priority
+  Cost
+  Acceptance Test
+  Iterations
+  QA
+  Programmers
+  Business Analyst ISUSEDBY Assign Business Value To User Stories
+
+SUPPLEMENTALS
+  Acceptance Tests Are All Automated // I like acceptance tests. Let's do more of them
+
+
+BEHAVIOR
+  Assign Business Value To User Stories
+    ASA Business Analyst
+    INEEDTO Assign Business Value To User Stories
+
+PROJECT BACKLOG
+  &Points=7 &Sprint=9
+  Assign business value for one story PARENT Assign Business Value To User Stories

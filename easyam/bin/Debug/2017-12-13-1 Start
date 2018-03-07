@@ -1,0 +1,29 @@
+DOMAIN MODEL
+  Story card
+  Business Rule
+  Business Value
+  Business Priority
+  Cost
+  Acceptance Test
+  Iterations
+  QA
+  Programmers
+
+
+
+
+
+I want story cards.
+Story cards capture my business rules.
+Business rules have business value, business priority, and cost.
+Business value is assigned by business analysts
+Cost is assigned by programmers
+Business rules are specified by business analysts and QA
+Business rules have acceptance tests.
+Acceptance tests are all automated.
+Acceptance tests are written by QA
+Acceptance tests are executed by programmers
+Iterations are scheduled with muiltiple stories
+	
+
+

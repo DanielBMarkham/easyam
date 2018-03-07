@@ -1,0 +1,10 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                               BUSINESS RULE                                 
+//                   Model Generation: 03/07/2018 14:27:13                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Business Rule
+
+
+    HASA: 
+      Acceptance Tests

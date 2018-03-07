@@ -1,8 +1,16 @@
 //                             MASTER USER STORY                               
 //                                    MISC                                     
-//                   Model Generation: 12/07/2017 17:35:28                     
+//                   Model Generation: 03/07/2018 13:55:28                     
 //                                                                             
 
 MASTER USER STORY: MISC
 
+
+    AFFECTEDBY: 
+      Always keep track of the path users take to arrive on-site
+      Always respond in a way that's easy for the user to understand
+      Never make the user wait
+      Never confuse the user
+      Continuously inform the team about everything the users do
+      Always do the best we can to cheer the user up during any interaction
 

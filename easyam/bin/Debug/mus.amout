@@ -1,77 +1,38 @@
 //                              MASTER USE CASES                               
-//                   Model Generation: 12/07/2017 17:35:28                     
+//                   Model Generation: 03/07/2018 17:16:15                     
 //                                                                             
 
 BUSINESS BEHAVIOR ABSTRACT TO-BE
   ALL
 
 
-  Get A Quote
-
-
-  Identify Coverables
-
-
-  Identify Coverages
-
-
-  Identify Policy Type
-
-
-  Identify Potential Customer
-
-
-  Issues Policy
-
-
-  MASTER
-
-
-  MISC
-
-
-  Modify Existing Policy
-
-
-  Provide links to other system
-
-
-  Receive Down Payment
-
-
-  Select Offering
-
-
-  Select Payment Plan
-
-
-  Send Written Quote Proposal
-
-
-  Specify Quote Type
-
-
-  Start Quote
-    WHEN: 
-      A potential customer purchases new property
-    ASA: 
-      Agent
-      Agent Supervisor
-    INEEDTO: 
-      Start a new quote
-    SOTHAT: 
-      The potential customer becomes a real customer
-    NOTES: 
-      This is a great meeting
-      I really like ice cream
+  Cookout food
     QUESTIONS: 
-      What's a quote?
-      Why are we here?
-    TO-DO: 
-      Meet the agents
-      Have lunch with the agents
+      For five max, right? Not cookout with five people for 50
 
 
-  View Agent Work In Progress
+  Enter and leave
+
+
+  Entertain friends
+
+
+  Nap in the summertime
+    QUESTIONS: 
+      Does this have to be a hammock? Could an outdoor cot work?
+
+
+  Play cards
+
+
+  Soak in hot water in the winter
+
+
+  Stargaze
+    QUESTIONS: 
+      Do we need to make accomodations for reducing light from the house?
+
+
+  Sunbathe with my friends
 
 

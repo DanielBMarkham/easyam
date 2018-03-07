@@ -781,3 +781,20 @@ module SAModel
             FromVal:string
             ToVal:string
         }
+    let turnAModelItemIntoASortableString x=
+        x.Description+string x.Location.Bucket+string x.Location.Genre+string x.Location.AbstractionLevel+string x.Location.TemporalIndicator
+    let sortModelForVisualComparison model = model|>Array.sortBy(fun x->turnAModelItemIntoASortableString x)       
+    let getRidOfModelRootItem model = model|>Array.filter(fun x->x.Id<>(-1))
+    let preparedModelsRepresentTheSameThing (a:ModelItem[]) (b:ModelItem[])=
+        (a.Length=b.Length) && (Array.fold (&&) true (Array.zip a b |> Array.map(fun (aa,bb)->aa=bb)))
+    /// Compares two models for equality
+    let areModelsEqual a b =
+        // THIS ENTIRE THING CAN JUST COLLAPSE INTO A ONE LINER
+        // eliminate root items from both
+        let aZapRoot = a|>getRidOfModelRootItem
+        let bZapRoot = b|>getRidOfModelRootItem
+        // since descriptions can't collide, sort both models by description and location
+        let aProcessedModel = aZapRoot|>sortModelForVisualComparison
+        let bProcessedModel = bZapRoot|>sortModelForVisualComparison
+        preparedModelsRepresentTheSameThing aProcessedModel bProcessedModel
+ 

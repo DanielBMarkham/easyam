@@ -1,17 +1,16 @@
 //                               EASYAM REPORT                                 
-//                   Model Generation: 12/07/2017 17:35:28                     
+//                   Model Generation: 03/07/2018 17:16:15                     
 //                                                                             
 //    Compiler Messages
 //    -----------------
-//  01-root-items.amin:: Info: file loading completed with 3 files processed along with 127 lines of code reviewed
-//  2017-07-19-notes.amin:Some(55): Warning: target item Identify Potential Customer already exists once as a join. There is a duplicate entry. Previous join exists on 2017-07-19-notes.amin(2) line 49.
+//  2018-05-01 dbm Initial Notes.amin:: Info: file loading completed with 2 files processed along with 57 lines of code reviewed
 //                                                                             
 //    Model Summary
 //    -------------
-//    Total Master User Stories: 18
-//    Total open questions: 2
-//    Total notes: 2
-//    Total to-do items: 2
+//    Total Master User Stories: 9
+//    Total open questions: 3
+//    Total notes: 0
+//    Total to-do items: 0
 //    Total work items: 0
 //
 //    Total Master Domain Entities: 12
@@ -20,8 +19,8 @@
 //    Total to-do items: 0
 //    Total work items: 0
 //
-//    Total Master Supplementals: 9
-//    Total open questions: 0
+//    Total Master Supplementals: 8
+//    Total open questions: 4
 //    Total notes: 1
 //    Total to-do items: 0
 //    Total work items: 0

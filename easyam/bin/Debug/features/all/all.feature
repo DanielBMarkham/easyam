@@ -1,6 +1,6 @@
 #                             GHERKIN FEATURE FILE                             
 #                                     ALL                                      
-#                    Model Generation: 12/07/2017 17:35:37                     
+#                    Model Generation: 03/07/2018 17:16:15                     
 #                                                                              
 
 
@@ -9,7 +9,6 @@
 #  BUSINESS REALIZED SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA
 
 #  SYSTEM ABSTRACT SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA
-#  Data entry on screens must be valid and conform to the database schema
 
 Feature: ALL
 

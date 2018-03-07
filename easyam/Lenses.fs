@@ -230,7 +230,23 @@ module Lenses
         let locationToFindIt={location with Genre=genreToFindIt;AbstractionLevel=AbstractionLevelToFindIt}
         getItemWithThisNameAtThisLocation compilerStatus locationToFindIt desription
 
-
+    let getAllSupplementalsThatAffectThisUserStory (referenceModel:ModelItem[]) (modelItem:ModelItem) (genre:Genres) (abstractionLevel:AbstractionLevels)  =
+        if modelItem.Location.Bucket<>Buckets.Behavior then [||] else
+        let allSupplementalsAtThisLevel =
+            referenceModel|>Array.filter(fun x->x.Location.Bucket=Supplemental&&x.Location.Genre=genre&&x.Location.AbstractionLevel=abstractionLevel)
+        let getALLUSAtThisLevel=
+            referenceModel|>Array.filter(fun x->x.Location.Bucket=Behavior&&x.Location.Genre=genre&&x.Location.AbstractionLevel=abstractionLevel&&x.Description.ToUpper().Trim()="ALL")
+        let allUserStory = if getALLUSAtThisLevel.Length=0 then option.None else Some getALLUSAtThisLevel.[0]
+        let supplementalsThatAffectAllStories=
+            if allUserStory.IsNone then [||] else
+                allSupplementalsAtThisLevel|>Array.filter(fun x->
+                    x.Relations|>Array.exists(fun y->y.TargetId=allUserStory.Value.Id)
+                    )
+        let supplementalsThatAffectThisStory=
+            allSupplementalsAtThisLevel|>Array.filter(fun x->
+                x.Relations|>Array.exists(fun y->y.TargetId=modelItem.Id)
+                )
+        supplementalsThatAffectAllStories|>Array.append supplementalsThatAffectThisStory
     let getTheRightThingToCheck (modelItem:ModelItem) (tagOrAttName:TagOrAtt) (thingToInspect:string) =
         match tagOrAttName with
             |Tag->

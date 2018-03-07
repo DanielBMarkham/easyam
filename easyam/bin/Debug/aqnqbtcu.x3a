@@ -1,0 +1,70 @@
+//                           SINGLE FILE MODEL OUTPUT                           
+//                  EASYAM Analysis Modeling Language Compiler                  
+//                    Model Generation: 03/07/2018 13:43:22                     
+//                                                                              
+
+BUSINESS STRUCTURE ABSTRACT TO-BE
+  User Story
+  Business Rule
+    HASA
+      Acceptance Tests
+  Acceptance Tests
+    ISOWNEDBYA
+      Business Rule
+  Business Value
+  Business Priority
+  Cost
+  Acceptance Test
+  Iterations
+  QA
+  Programmers
+  Business Analyst I
+    USEDBY
+      Assign Business Value To User Stories
+  Food
+  Hammock
+  Hot tub
+  Recliner
+  Table
+  Chairs
+  Gas grill
+  Family
+  Friends
+  Hobbies
+BUSINESS SUPPLEMENTAL ABSTRACT TO-BE
+  Acceptance Tests Are All Automated
+    NOTE:
+      I like acceptance tests. Let's do more of them
+  Meets local building codes
+  Easy-to-use
+  Looks nice to the neighbors
+  Must comfortably accomodate two large people side-by-side
+  Must be impervious to weather for ten years
+  Uses joining technology that doesn't poke out after wear
+BUSINESS BEHAVIOR ABSTRACT TO-BE
+  Assign Business Value To User Stories
+    CHILD 
+    USES
+      Business Analyst I
+    ASA:
+      Business Analyst
+    INEEDTO:
+      Assign Business Value To User Stories
+  Assign Cost To User Stories
+  Schedule Iterations
+  Execute Acceptance Tests
+  Write Acceptance Tests
+  Capture Business Rules
+    QUESTION:
+      Is there a one to many relationship from capture business rules into story cards?
+  Cookout food
+  Nap in the summertime
+  Entertain friends
+  Soak in hot water in the winter
+  Sunbathe with my friends
+  Enter and leave
+BUSINESS BEHAVIOR REALIZED TO-BE
+  Assign business value for one story
+    PARENT
+
+

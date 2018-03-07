@@ -1,34 +1,39 @@
 //                            MASTER SUPPLEMENTALS                             
-//                   Model Generation: 12/07/2017 17:35:28                     
+//                   Model Generation: 03/07/2018 17:16:15                     
 //                                                                             
 
 BUSINESS SUPPLEMENTAL ABSTRACT TO-BE
-  Has to use existing back-end
+  Easy-to-use
 
 
-  Left nav must synchronize with main screen
+  Handle up to five people
 
 
-  Must be ADA compliant
+  Handle up to two people for semi-clothed events
+    QUESTIONS: 
+      Are these people nudists? We gotta ask
+
+
+  Looks nice to the neighbors
+    QUESTIONS: 
+      Does this mean we ask the neighbors, or we ask him which neighbors have good decks?
+
+
+  Meets local building codes
+    QUESTIONS: 
+      There are some national best-practices. Are those okay to follow as well?
+
+
+  Must be impervious to weather for ten years
+
+
+  Must comfortably accomodate two large people side-by-side
     NOTES: 
-      <code goes here>
+      Given a weight of 450 pounds, three people side-by-side take up ten feet
 
 
-  Must be compatible with major recent browsers
-
-
-  Must be responsive to different screen sizes
-
-
-  Must confirm to Service Level Agreements
-
-
-  Must support multiple user types
-
-
-  Must use existing middleware
-
-
-  Top summary must synchronize with main screen
+  Uses joining technology that doesn't poke out after wear
+    QUESTIONS: 
+      So screws, right?
 
 

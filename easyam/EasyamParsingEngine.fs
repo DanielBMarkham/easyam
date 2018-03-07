@@ -523,11 +523,11 @@
         let compilerStatusWithIndentsApplied = {fileCheckedCompilerStatus with CompilerState=newCompilerState}
         let levelsJumped = System.Math.Abs(originalCompilerStatus.CompilerState.CurrentIndentLevel-compilerStatusWithIndentsApplied.CompilerState.CurrentIndentLevel)
         let newLocationStack = match newIndentLevelChange with 
-            |IndentIsLessThanPreviousIndent->snd (compilerStatusWithIndentsApplied.CompilerState.LocationStack |> popMany levelsJumped)
-            |IndentIsSameAsPreviousIndent->compilerStatusWithIndentsApplied.CompilerState.LocationStack
-            |IndentIsMoreThanPreviousIndent->
-                let topOfLocationStack=(peek compilerStatusWithIndentsApplied.CompilerState.LocationStack)
-                pushStackNTimes compilerStatusWithIndentsApplied.CompilerState.LocationStack topOfLocationStack (levelsJumped-1)
+                                |IndentIsLessThanPreviousIndent->snd (compilerStatusWithIndentsApplied.CompilerState.LocationStack |> popMany levelsJumped)
+                                |IndentIsSameAsPreviousIndent->compilerStatusWithIndentsApplied.CompilerState.LocationStack
+                                |IndentIsMoreThanPreviousIndent->
+                                    let topOfLocationStack=(peek compilerStatusWithIndentsApplied.CompilerState.LocationStack)
+                                    pushStackNTimes compilerStatusWithIndentsApplied.CompilerState.LocationStack topOfLocationStack (levelsJumped-1)
         let incomingCompilerStatus={compilerStatusWithIndentsApplied with CompilerState={compilerStatusWithIndentsApplied.CompilerState with LocationStack=newLocationStack}}
         let numberOfCommaSeparatedCommandSegments=incomingCommand.Value.Split([|","|], System.StringSplitOptions.None).Length
         let tokenForCommand = 
@@ -1000,7 +1000,6 @@
                                         let newGenre= if currentLocation.Genre=Genres.None then Genres.Business else currentLocation.Genre
                                         let newAbstractionLevel=if currentLocation.AbstractionLevel=AbstractionLevels.None then AbstractionLevels.Abstract else currentLocation.AbstractionLevel
                                         let newTemporalIndicator=if currentLocation.TemporalIndicator=TemporalIndicators.None then TemporalIndicators.ToBe else currentLocation.TemporalIndicator
-                                        //let newLocationPointer = {incomingCompilerStatus.CurrentLocation with Bucket=newBucket; Genre=newGenre; AbstractionLevel=newAbstractionLevel; TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
                                         let newLocationPointer = 
                                             if incomingCompilerStatus.CurrentLocation.Bucket<>newBucket
                                                 then
@@ -1019,7 +1018,6 @@
                                                                     | "ABSTRACT" | "ABSTRACT:"->AbstractionLevels.Abstract
                                                                     | "REALIZED" | "REALIZED:"|_->AbstractionLevels.Realized
                                         let newParentId=if incomingCompilerStatus.CurrentLocation.AbstractionLevel<>AbstractionLevels.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
-                                        //let newLocation = {incomingCompilerStatus.CurrentLocation with AbstractionLevel=newAbstractionLevel; ParentId=newParentId}
                                         let newLocation = 
                                             if incomingCompilerStatus.CurrentLocation.AbstractionLevel<>newAbstractionLevel
                                                 then {incomingCompilerStatus.CurrentLocation with AbstractionLevel=newAbstractionLevel; ParentId=newParentId; RelationType=option.None; RelationSourceId=option.None; RelationTargetId=option.None}
@@ -1037,7 +1035,6 @@
                                                         | "META" | "META:"->Genres.Meta
                                                         | "BUSINESS" | "BUSINESS:"|_->Genres.Business
                                         let newParentId=if incomingCompilerStatus.CurrentLocation.Genre<>Genres.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
-                                        //let newLocation = {incomingCompilerStatus.CurrentLocation with Genre=newGenre; ParentId=newParentId}
                                         let newLocation = if incomingCompilerStatus.CurrentLocation.Genre<>newGenre
                                                             then
                                                                  {incomingCompilerStatus.CurrentLocation with Genre=newGenre; ParentId=newParentId; RelationType=option.None; RelationSourceId=option.None; RelationTargetId=option.None}
@@ -1055,7 +1052,6 @@
                                                                     | "TO-BE" | "TO-BE:"->TemporalIndicators.ToBe
                                                                     | "AS-IS" | "AS-IS:"|_->TemporalIndicators.AsIs
                                         let newParentId=if incomingCompilerStatus.CurrentLocation.TemporalIndicator<>TemporalIndicators.None then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
-                                        //let newLocation = {incomingCompilerStatus.CurrentLocation with TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
                                         let newLocation = 
                                             if incomingCompilerStatus.CurrentLocation.TemporalIndicator<>newTemporalIndicator
                                                 then {incomingCompilerStatus.CurrentLocation with TemporalIndicator=newTemporalIndicator; ParentId=newParentId; RelationType=option.None;RelationTargetId=option.None;RelationSourceId=option.None}
@@ -1078,7 +1074,6 @@
                                         let newInHDDMode=true
                                         let newParentId=if incomingCompilerStatus.CurrentLocation.InHDDMode=false then (-1) else incomingCompilerStatus.CurrentLocation.ParentId
                                         let newLocation = {incomingCompilerStatus.CurrentLocation with InHDDMode=newInHDDMode; Bucket=newBucket; AbstractionLevel=newAbstractionLevel; Genre=newGenre; TemporalIndicator=newTemporalIndicator; ParentId=newParentId}
-                                        //{incomingCompilerStatus with CompilerWaitingForState=CompilerWaitingFor.MultipleTargets; CurrentLocation=newLocation}
                                         {incomingCompilerStatus with CurrentLocation=newLocation; CompilerState={incomingCompilerStatus.CompilerState with WaitingFor=CompilerWaitingFor.MultipleModelItems}}
                                     |TokenCategory.ATTRIBUTE->
                                         let newAttributeType = match token.Token with
@@ -1119,14 +1114,7 @@
                                 let sourceItem=getModelItemById newAcc.ModelItems newAcc.CurrentLocation.ParentId
                                 if targetItem.Id=(-1) || sourceItem.Id=(-1) then newAcc else 
                                 joinModelItems2 newAcc incomingLine sourceItem targetItem joinType
-                                //let currentTargetDescriptionOpt=accumulatorCompilerStatus.ModelItems|>Array.tryFind(fun x->x.Id=accumulatorCompilerStatus.CurrentLocation.ParentId)
-                                //let currentTargetDescription=if currentTargetDescriptionOpt.IsSome then currentTargetDescriptionOpt.Value.Description else ""
-                                //if currentTargetDescription=""||x.Trim()=""
-                                //    then accumulatorCompilerStatus
-                                //    else
-                                //        joinModelItems accumulatorCompilerStatus incomingCompilerStatus.CurrentLocation incomingLine joinType currentTargetDescription (x.Trim())
                             )
-                        //let newLoc={newCompilerStatus.CurrentLocation with RelationTargetId=Some newCompilerStatus.CurrentLocation.ParentId; AttributeId=option.None; AttributeType=option.None; RelationSourceId=option.None; RelationTargetId=option.None}
                         // if the indent is less, pick up the source of a join if you were doing joins, also it's location, otherwise make it root (fail)
                         let newLoc =
                             match newCompilerStatus.CompilerState.IndentLevelChange with 
@@ -1143,21 +1131,9 @@
                                     retLoc
                                 |IndentIsMoreThanPreviousIndent->
                                     {newCompilerStatus.CurrentLocation with RelationSourceId=Some newCompilerStatus.CurrentLocation.ParentId; RelationTargetId=option.None}
-                                    //newCompilerStatus.CurrentLocation
 
                         let newIndentLevelWithCommasConsidered=newCompilerStatus.CompilerState.CurrentIndentLevel + numberOfCommaSeparatedCommandSegments
                         {newCompilerStatus with CompilerState={newCompilerStatus.CompilerState with LastCompilerOperation=LastCompilerOperations.NewJoin; LastJoinType=Some joinType; WaitingFor=CompilerWaitingFor.MultipleRelations; CurrentIndentLevel=newIndentLevelWithCommasConsidered}; CurrentLocation=newLoc}
-
-                
-    let verifyOrAddAMUSItem compilerStatus description = 
-        let allMUS=getMasterUserStories compilerStatus.ModelItems
-        let alreadyExists=allMUS|>Array.exists(fun x->x.Description=description)
-        if alreadyExists then compilerStatus
-        else
-            let newLocation = {defaultModelLocationPointer with Genre=Genres.Business; Bucket=Buckets.Behavior; AbstractionLevel=AbstractionLevels.Abstract; TemporalIndicator=TemporalIndicators.ToBe}
-            let newIncomingLine:IncomingLine = defaultIncomingLine
-            let newCompilerReturn = addModelItem compilerStatus newLocation newIncomingLine description
-            newCompilerReturn
 
     let makeRawModel (incomingLines:IncomingLine []) (incomingCompilerStatus:CompilerReturn) =
         let initialModelLines = incomingLines |> Array.fold(fun (currentCompilerStatus:CompilerReturn) x->
@@ -1193,7 +1169,7 @@
         let secondModelItemsSorted=secondCompilerStatus.ModelItems|>Array.sortBy(fun x->x.Description)
         let areSame=areModelsEqual firstModelItemsSorted secondModelItemsSorted
         // comment out next line to have program leave a file on disk with single file dump
-        //System.IO.File.Delete(tempFileName)
+        System.IO.File.Delete(tempFileName)
         if areSame
             then ()
             else raise (new System.Exception("ROUND TRIP IN persistenceRoundTripCheck failed"))

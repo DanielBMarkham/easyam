@@ -136,11 +136,20 @@
         let programDirectories = getDirectories opts
         let allFiles = System.IO.Directory.EnumerateFiles(programDirectories.SourceDirectoryInfo.FullName, "*.amin", System.IO.SearchOption.AllDirectories)
         let fileList = allFiles |> Seq.toArray |> Array.map(fun x->System.IO.FileInfo(x)) |> Array.sortBy(fun x->x.FullName)
+        if opts.configBase.verbose.parameterValue>=Verbosity.Verbose
+            then printfn "%s files found in the Source directory" (string fileList.Length) else ()
+        if opts.configBase.verbose.parameterValue<>Verbosity.Verbose
+            then () else fileList|>Array.iteri(fun i x->printfn "  %d: %s" (i+1) x.Name)
         let listToProcess = loadInAllIncomingLines fileList
         //processing
         let processedIncomingLines, compilerReturn = bulkFileLineProcessing listToProcess
         let compilerResult = makeRawModel processedIncomingLines compilerReturn
-        persistenceRoundTripCheck compilerResult // ALWAYS CHECK TO MAKE SURE WE CAN DIGEST WHAT WE PRODUCE
+        //
+        // LATER 
+        //
+        //persistenceRoundTripCheck compilerResult // ALWAYS CHECK TO MAKE SURE WE CAN DIGEST WHAT WE PRODUCE
+        //
+        //
         let outputModel = applyCommandLineSortAndFilter compilerResult opts
         // heading out
         //
