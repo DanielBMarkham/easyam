@@ -1,0 +1,16 @@
+//                             MASTER USER STORY                               
+//                            CREATE FLYING TESTS                              
+//                   Model Generation: 03/19/2018 11:15:12                     
+//                                                                             
+
+MASTER USER STORY: Create flying tests
+    WHEN: 
+      The training material has been completed
+    ASA: 
+      Teacher
+
+
+    USES: 
+      Course
+      Training material
+      Test

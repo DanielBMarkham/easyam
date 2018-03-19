@@ -270,7 +270,7 @@ module Lenses
                     |"NumberOfRelations"->string (modelItem.Relations).Length
                     |"NumberOfSourceReferences"->string (modelItem.SourceReferences).Length
                     |_->""
-    let sortModelByOneParameter (incomingModelItems:ModelItem []) (sortParameter:sortParameterType) =
+    let sortModelByOneParameter (sortParameter:sortParameterType) (incomingModelItems:ModelItem [])  =
         let initialSort=incomingModelItems |> Array.sortWith(fun (a:ModelItem) (b:ModelItem)->
             let itemToSortA=getTheRightThingToCheck a sortParameter.TagOrAtt sortParameter.Thing
             let itemToSortB=getTheRightThingToCheck b sortParameter.TagOrAtt sortParameter.Thing
@@ -392,7 +392,7 @@ module Lenses
                 ConvertTo=Int
                 Order=Ascending
             }
-        let ret = sortModelByOneParameter modelItems sortParameter
+        let ret = sortModelByOneParameter sortParameter modelItems 
         ret
     let sortByDescription (modelItems:ModelItem [])=
         let sortParameter =
@@ -402,7 +402,7 @@ module Lenses
                 ConvertTo=ConvertTo.DontConvert
                 Order=Ascending
             }
-        let ret = sortModelByOneParameter modelItems sortParameter
+        let ret = sortModelByOneParameter sortParameter modelItems 
         ret
     let getAllItemsForTemporalGenreAbstraction (referenceModel:ModelItem []) (temporal:TemporalIndicators) (genre:Genres) (abst:AbstractionLevels) =
         let checkParameter =

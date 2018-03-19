@@ -1,10 +1,32 @@
 //                             MASTER USER STORY                               
 //                                COOKOUT FOOD                                 
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:05                     
 //                                                                             
 
 MASTER USER STORY: Cookout food
+    WHEN: 
+      I'm hungry on a holiday
+    ASA: 
+      House Owner
+    INEEDTO: 
+      Cookout food for my friends and family
+    SOTHAT: 
+      We can create happy memories together
 
     QUESTIONS: 
       For five max, right? Not cookout with five people for 50
 
+    AFFECTEDBY: 
+      Easy-to-use
+      Looks nice to the neighbors
+      Reminds me of nature
+      Meets local building codes
+
+    USES: 
+      Food
+      Table
+      Chair
+      Gas grill
+      Family
+      Friend
+      Cabinet

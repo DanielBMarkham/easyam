@@ -1,0 +1,40 @@
+PROJECT BACKLOG
+// Items next up 
+  &Points=1 &Rank=1
+  Schedule Classes (show something) PARENT Schedule Classes
+  &Points=1 &Rank=2
+  Schedule Classes (Do something) PARENT Schedule Classes
+  &Points=1 &Rank=3
+  Schedule Classes (Do something and update) PARENT Schedule Classes
+  &Points=1 &Rank=4
+  Schedule Classes (rest of current business supplementals) PARENT Schedule Classes
+// Items on the radar
+  &Points=1 &Rank=5
+  Enroll Possums Into School
+  &Points=1 &Rank=6
+  Assign Possums To Classes
+// Master Backlog
+  &Points=16 &Rank=7
+  Teach Classes
+  &Points=16 &Rank=8
+  Launch Possums From Catapults
+  &Points=16 &Rank=9
+  Create Training Material
+  &Points=16 &Rank=10
+  Create Flying Tests
+  &Points=16 &Rank=11
+  Create Training Meterial
+  &Points=16 &Rank=12
+  Gather Possums
+  &Points=16 &Rank=13
+  Organize Possums Into Tribes
+  &Points=16 &Rank=14
+  Clean Possums
+// MBL items we think we've covered but there's still work to do  
+  &Points=8 &Rank=15
+  Schedule Classes
+  &Points=8 &Rank=16
+  Enroll Possums Into School
+  &Points=8 &Rank=17
+  Assign Possums To Classes
+  

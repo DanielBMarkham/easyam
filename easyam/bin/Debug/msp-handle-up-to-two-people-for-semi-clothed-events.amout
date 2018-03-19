@@ -1,10 +1,21 @@
 //                            MASTER SUPPLEMENTAL                              
 //              HANDLE UP TO TWO PEOPLE FOR SEMI-CLOTHED EVENTS                
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:06                     
 //                                                                             
 
 BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Handle up to two people for semi-clothed events
+    BECAUSE: 
+      I am shy although I like my spouse
+    WHENEVER: 
+      I'm doing anything where I'm partially undressed
+    ITHASTOBETHAT: 
+      The facilities can handle up to two people
 
+    NOTES: 
+      We don't need a privacy screen if the hot tub lid can be used as one
     QUESTIONS: 
       Are these people nudists? We gotta ask
 
+    AFFECTS: 
+      Soak in hot water in the winter
+      Sunbathe

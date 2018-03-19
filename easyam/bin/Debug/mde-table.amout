@@ -1,8 +1,18 @@
 //                        MASTER DOMAIN MODEL - ENTITY                         
 //                                   TABLE                                     
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:06                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE: Table
+    CONTAINS: 
+      silverware
+      plates
+      cups
+      centerpiece
+      monopoly game
 
+    NOTES: 
+      Customer will buy a table at local home improvement store next week
 
+    HASA: 
+      Chair

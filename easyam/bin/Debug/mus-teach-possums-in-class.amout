@@ -1,0 +1,12 @@
+//                             MASTER USER STORY                               
+//                           TEACH POSSUMS IN CLASS                            
+//                   Model Generation: 03/19/2018 11:15:12                     
+//                                                                             
+
+MASTER USER STORY: Teach possums in class
+    WHEN: 
+      The scheduled time arrives
+    ASA: 
+      Teacher
+
+

@@ -1,0 +1,12 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                   COURSE                                    
+//                   Model Generation: 03/19/2018 11:15:12                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Course
+
+
+    HASA: 
+      Catapult
+      Test
+      Training material

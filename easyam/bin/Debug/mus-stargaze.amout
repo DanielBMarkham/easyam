@@ -1,10 +1,32 @@
 //                             MASTER USER STORY                               
 //                                  STARGAZE                                   
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:05                     
 //                                                                             
 
 MASTER USER STORY: Stargaze
+    WHEN: 
+      It's dark and clear outside
+    ASA: 
+      House Owner
+    INEEDTO: 
+      Stargaze
+    SOTHAT: 
+      I can learn more about the cosmos and take pictures to impress my friends
 
     QUESTIONS: 
       Do we need to make accomodations for reducing light from the house?
+      Is the telescope big enough to impact the deck layout?
+      Are we going to store the telescope on the deck?
+      Do we need electric power on the deck to power the telescope?
+      Are there other pieces of telescope equipment besides the telescope?
 
+    AFFECTEDBY: 
+      Easy-to-use
+      Must comfortably accomodate two large people side-by-side
+      Handle up to five people
+      Meets local building codes
+
+    USES: 
+      Family
+      Friend
+      Chair

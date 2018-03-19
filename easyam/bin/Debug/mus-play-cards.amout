@@ -1,8 +1,28 @@
 //                             MASTER USER STORY                               
 //                                 PLAY CARDS                                  
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:05                     
 //                                                                             
 
 MASTER USER STORY: Play cards
+    WHEN: 
+      People come to visit
+    ASA: 
+      House Owner
+      House Guest
+    INEEDTO: 
+      Play cards outside
+    SOTHAT: 
+      I can enjoy friendship and nature at the same time
 
 
+    AFFECTEDBY: 
+      Easy-to-use
+      Handle up to five people
+      Meets local building codes
+
+    USES: 
+      Table
+      Chair
+      Family
+      Friend
+      Cabinet

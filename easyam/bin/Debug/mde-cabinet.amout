@@ -1,8 +1,15 @@
 //                        MASTER DOMAIN MODEL - ENTITY                         
 //                                  CABINET                                    
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:05                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE: Cabinet
+    CONTAINS: 
+      cabinet doors
 
+    NOTES: 
+      There's a set of solid marble cabinets in the garage for us to use
 
+    HASA: 
+      Food
+      Hobby

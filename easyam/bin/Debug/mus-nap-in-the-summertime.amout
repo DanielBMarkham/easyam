@@ -1,10 +1,29 @@
 //                             MASTER USER STORY                               
 //                           NAP IN THE SUMMERTIME                             
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:05                     
 //                                                                             
 
 MASTER USER STORY: Nap in the summertime
+    WHEN: 
+      It's a weekend and I have nothing to do
+    ASA: 
+      House Owner
+      House Guest
+    INEEDTO: 
+      Take a nap
+    SOTHAT: 
+      I can enjoy the outside and feel rested
 
     QUESTIONS: 
       Does this have to be a hammock? Could an outdoor cot work?
 
+    AFFECTEDBY: 
+      Easy-to-use
+      Must comfortably accomodate two large people side-by-side
+      Must be impervious to weather for ten years
+      Reminds me of nature
+      Meets local building codes
+
+    USES: 
+      Hammock
+      Recliner

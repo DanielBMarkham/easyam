@@ -111,7 +111,10 @@ module Persist
             sw.wt 5 ("<p class='notes'>" + z.AnnotationText + "</p>")
             )
         let questions = getQuestions x
-        let questionSummary = if questions.Length>0 then (string questions.Length + " open question(s)") else ""
+        let questionSummary = 
+            if questions.Length=0 
+                then "no open questions"
+                else (string questions.Length + " open question(s)")
         let todos = getToDos x
         let todoSummary = if todos.Length>0 then (string todos.Length + " open to-do item(s)") else ""
         let annotationSummary= match questionSummary.Length, todoSummary.Length with
@@ -120,6 +123,11 @@ module Persist
                                                                     |_,0->"This has " + questionSummary
                                                                     |_,_->"This has " + todoSummary + " and " + questionSummary
         if annotationSummary.Length>0 then (sw.wt 4 ("<p class='annotation-summary'>" + annotationSummary + "</p>")) else ()
+        sw.wt 4 "<div class='question-list'><ul>"
+        questions |> Array.iteri(fun i x->
+            sw.wt 4 ("<li>" + x.AnnotationText + "</li>")
+            )
+        sw.wt 4 "</ul></div>"
         if x.Relations.Length>0
             then
                 sw.wt 5 ("<h3>Cross-References</h3>")
@@ -176,19 +184,20 @@ module Persist
         sw.wt 1 "<body>"
         sw.wt 2 "<div id='content'>"
         sw.wt 3 "<div class='bucket-div'>"
-        sw.wt 4 "<h1>Master User Stories</h1>"
-        getProjectUserStories compilerStatus.ModelItems |> Array.iteri(fun i x->
+        sw.wt 4 "<h1>Project User Stories</h1>"
+        let projectUserStories = (getProjectUserStories compilerStatus.ModelItems) |> sortModelByOneParameter {TagOrAtt=Tag; Thing="Rank"; ConvertTo=Int; Order=Ascending}
+        projectUserStories |> Array.iteri(fun i x->
             writeMasterItemDetail sw compilerStatus.ModelItems x
             )
         sw.wt 3 "</div'>"
         sw.wt 3 "<div class='bucket-div'>"
-        sw.wt 4 "<h1>Master Domain Model</h1>"
+        sw.wt 4 "<h1>Project Domain Model</h1>"
         getProjectDomainEntities compilerStatus.ModelItems |> Array.iteri(fun i x->
             writeMasterItemDetail sw compilerStatus.ModelItems x
             )
         sw.wt 3 "</div'>"
         sw.wt 3 "<div class='bucket-div'>"
-        sw.wt 4 "<h1>Master Supplemental List</h1>"
+        sw.wt 4 "<h1>Project Supplemental List</h1>"
         getProjectSupplementals compilerStatus.ModelItems |> Array.filter(fun x->x.Location.Bucket=Buckets.Supplemental) |> Array.iteri(fun i x->
             writeMasterItemDetail sw compilerStatus.ModelItems x
             )
@@ -687,6 +696,25 @@ module Persist
         let fullFileName=System.IO.Path.Combine([|directoryPath; fileName|])
         let sb=new System.Text.StringBuilder(65535)
         writeDetailHeader sb "SINGLE FILE MODEL OUTPUT" "EASYAM Analysis Modeling Language Compiler"
+        if fileName.Length>0 then System.IO.File.WriteAllText(fullFileName, sb.ToString()) else System.Console.Write(sb.ToString())
+    let saveAllTagsToOneCSVFile (directoryPath:string) (fileName:string) (modelToOutput:ModelItem []) (currentCompilerStatus:CompilerReturn) =
+        let behavior=(getBehavior modelToOutput) |> Array.sortBy(fun x->x.Description)
+        let supplementals=(getSupplementals modelToOutput) |> Array.sortBy(fun x->x.Description)
+        let structure=(getStructure modelToOutput) |> Array.sortBy(fun x->x.Description)
+        let organizedModel = [|structure;supplementals;behavior|] |> Array.concat
+        let fullFileName=System.IO.Path.Combine([|directoryPath; fileName|])
+        let sb=new System.Text.StringBuilder(65535)
+        //writeDetailHeader sb "SINGLE FILE MODEL OUTPUT" "EASYAM Analysis Modeling Language Compiler"
+        organizedModel |> Array.iteri(fun i x->
+            sb.Append ("\"" + x.Description + "\"") |> ignore
+            x.Tags |> Array.iteri(fun j y->
+                sb.Append "," |> ignore
+                sb.Append ("\"" + y.Key + "\"") |> ignore
+                sb.Append "," |> ignore
+                sb.Append ("\"" + y.Value + "\"") |> ignore
+                )
+            sb.Append System.Environment.NewLine |> ignore
+            )
         if fileName.Length>0 then System.IO.File.WriteAllText(fullFileName, sb.ToString()) else System.Console.Write(sb.ToString())
 
     let osLineEnd=System.Environment.NewLine

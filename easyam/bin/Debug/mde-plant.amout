@@ -1,8 +1,13 @@
 //                        MASTER DOMAIN MODEL - ENTITY                         
 //                                   PLANT                                     
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:06                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE: Plant
+    CONTAINS: 
+      pot
+      soil
 
+    NOTES: 
+      Customer will buy the planters online and do the work on their own
 

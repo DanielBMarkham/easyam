@@ -1,41 +1,76 @@
 //                           MASTER DOMAIN ENTITIES                            
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/19/2018 11:15:12                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE
-  Cabinet
+  Administrator
+    HASA:
+      Teacher
+      Possum
 
 
-  Chairs
+  Assign possums to classes, Create training material, Create flying tests
 
 
-  Family
+  Assign possums to classes, Launch possums from catapults, Clean possums
 
 
-  Food
+  Catapult
 
 
-  Friends
+  Classroom
 
 
-  Gas grill
+  Course
+    HASA:
+      Catapult
+      Test
+      Training material
 
 
-  Hammock
+  Launch possums from catapults, Clean possums, Create training material, Create flying tests
 
 
-  Hobbies
+  Possum
+    HASA:
+      Tribe
 
 
-  Hot tub
+  Schedule
+    HASA:
+      Training Period
 
 
-  Plant
+  School
+    HASA:
+      Administrator
+      Teacher
+      Tribe
 
 
-  Recliner
+  Teacher
+    HASA:
+      Course
 
 
-  Table
+  Test
+
+
+  Training Period
+    CONTAINS: 
+      Schedule
+    HASA:
+      Course
+      Teacher
+      Possum
+
+
+  Training material
+
+
+  Training period
+
+
+  Tribe
 
 

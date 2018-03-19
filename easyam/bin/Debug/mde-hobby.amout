@@ -1,0 +1,16 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                   HOBBY                                     
+//                   Model Generation: 03/08/2018 15:37:06                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Hobby
+    CONTAINS: 
+      pieces
+
+    NOTES: 
+      We double-checked. Hobbies are monopoly
+      cards
+      and beer pong
+
+    HASA: 
+      Table

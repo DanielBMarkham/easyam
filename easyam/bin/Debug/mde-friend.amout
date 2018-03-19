@@ -1,0 +1,18 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                   FRIEND                                    
+//                   Model Generation: 03/08/2018 15:37:05                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Friend
+    CONTAINS: 
+      baggage
+      coat
+      hat
+
+    NOTES: 
+      They're a homely lot
+      http:
+      teamjimmyjoe.com/wp-content/uploads/2013/03/Ugly-Couple.jpg
+
+    HASA: 
+      Hobby

@@ -1,0 +1,17 @@
+//                             MASTER USER STORY                               
+//                        ORGANIZE POSSUMS INTO TRIBES                         
+//                   Model Generation: 03/19/2018 11:15:12                     
+//                                                                             
+
+MASTER USER STORY: Organize possums into tribes
+    WHEN: 
+      Possums first arrive at school
+    ASA: 
+      Administrator
+
+
+    USES: 
+      Administrator
+      Teacher
+      Possum
+      Tribe

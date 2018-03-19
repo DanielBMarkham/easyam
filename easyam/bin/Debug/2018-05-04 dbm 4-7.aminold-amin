@@ -1,0 +1,86 @@
+MASTER SUPPLEMENTAL MODEL
+  Meets local building codes
+    BECAUSE I don't want to go to jail
+    WHENEVER We build anything
+    ITHASTOBETHAT We follow all the local building laws and code 
+    NOTES: Also make sure we meet best industry practices
+  Easy-to-use
+    BECAUSE The backyard is made for relaxation
+    WHENEVER I'm outside on my deck
+    ITHASTOBETHAT I'm not frustrated by the way it's set up or used 
+    NOTES: Nothing should be complicated to work. Make it idiot-proof
+  Looks nice to the neighbors
+    BECAUSE I want people to look up to me with envy
+    WHENEVER People see my belongings
+    ITHASTOBETHAT My stuff looks cool to the neighbors
+    NOTES: Do some stealth research on what people like in the neighborhood and report back
+  Must comfortably accomodate two large people side-by-side
+    BECAUSE I have some obese family members
+    WHENEVER I have events with my family on the deck
+    ITHASTOBETHAT Two large people can stand side-by-side without crowding anybody
+    NOTES: There's also weight consideration here
+  Must be impervious to weather for ten years
+    BECAUSE I hate doing maintenance
+    WHENEVER Spring comes around
+    ITHASTOBETHAT I don't have to do anytyhing to maintain this deck for a long time
+    NOTES: Double-coats of weatherproofing should work
+  Uses joining technology that doesn't poke out after wear
+    BECAUSE I want people to have a good time when they visit
+    WHENEVER They're on the deck
+    ITHASTOBETHAT No construction joining material pokes out to hurt people 
+    NOTES: The customer liked the organic screws
+  Handle up to five people
+    BECAUSE I am a man of many friends
+    WHENEVER I have social activities on my deck
+    ITHASTOBETHAT It can accomodate up to five people 
+    NOTES: Standard-sized chair positions are fine even though some friends are large
+  Handle up to two people for semi-clothed events
+    BECAUSE I am shy although I like my spouse
+    WHENEVER I'm doing anything where I'm partially undressed
+    ITHASTOBETHAT The facilities can handle up to two people
+    NOTES: We don't need a privacy screen if the hot tub lid can be used as one
+  Reminds me of nature
+    BECAUSE I love nature and the forest
+    WHENEVER I look at my deck
+    ITHASTOBETHAT I am reminded of trees and nature.
+    NOTES: We should experiment with some paint texturing techniques before we coat and weatherproof 
+
+MASTER DOMAIN MODEL
+  Food
+    CONTAINS: ingredients, spices
+    NOTES: This is just normal holiday barbeque food 
+  Hammock
+    CONTAINS: hammock stand, mosquito net
+    NOTES: A stand-alone hammock is fine. No need to build one in
+  Hot tub
+    CONTAINS: water, hot tub cover, rubber duckies
+    NOTES: We will need to coordinate with the hot tub vendor the purchase and installation
+  Recliner
+    CONTAINS: outdoor cushion
+    NOTES: Recliners (we need two) should easily fold-up and store when not in use 
+  Table 
+    CONTAINS: silverware, plates, cups, centerpiece, monopoly game
+    NOTES: Customer will buy a table at local home improvement store next week
+  Chair 
+    CONTAINS: outdoor cushion, outdoor blanket
+    NOTES: We want Wankalot Moose chairs, in camo green
+  Gas grill
+    CONTAINS: gas grill cover, fuel
+    NOTES: There's already a gas grill on site. We'll use that one
+  Family 
+    CONTAINS: relatvies
+    NOTES: known to get angry if left without beer for very long
+    DIAGRAMS: http://photobucket.com/gallery/user/allbowerpower/media/bWVkaWFJZDo4ODEwMTgwNw==/?ref=
+  Friend 
+    CONTAINS: baggage, coat, hat
+    NOTES: They're a homely lot
+    DIAGRAMS: http://teamjimmyjoe.com/wp-content/uploads/2013/03/Ugly-Couple.jpg
+  Hobby
+    CONTAINS: pieces
+    NOTES: We double-checked. Hobbies are monopoly, cards, and beer pong
+  Plant
+    CONTAINS: pot, soil
+    NOTES: Customer will buy the planters online and do the work on their own
+  Cabinet
+    CONTAINS: cabinet doors 
+    NOTES: There's a set of solid marble cabinets in the garage for us to use

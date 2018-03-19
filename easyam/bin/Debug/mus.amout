@@ -1,38 +1,114 @@
 //                              MASTER USE CASES                               
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/19/2018 11:15:12                     
 //                                                                             
 
 BUSINESS BEHAVIOR ABSTRACT TO-BE
-  ALL
+  Administer flying tests
+    WHEN: 
+      The possums have learned as much as they can
+    ASA: 
+      Administrator
 
 
-  Cookout food
-    QUESTIONS: 
-      For five max, right? Not cookout with five people for 50
+  Assign Possums To Classes
+    WHEN: 
+      A new school year comes around
+    ASA: 
+      Administrator
+    INEEDTO: 
+      Work with the possums to see which classes suit them
+    SOTHAT: 
+      possums and teachers are happy
+    NOTES: 
+      Master Backlog
 
 
-  Enter and leave
+  Assign possums to classes
+    WHEN: 
+      A new school year comes around
+    ASA: 
+      Administrator
 
 
-  Entertain friends
+  Clean possums
+    WHEN: 
+      Friday classes are complete
+    ASA: 
+      Teacher
 
 
-  Nap in the summertime
-    QUESTIONS: 
-      Does this have to be a hammock? Could an outdoor cot work?
+  Create flying tests
+    WHEN: 
+      The training material has been completed
+    ASA: 
+      Teacher
 
 
-  Play cards
+  Create training material
+    WHEN: 
+      School's out for the summer
+    ASA: 
+      Teacher
 
 
-  Soak in hot water in the winter
+  Enroll possums into school
+    WHEN: 
+      Eager possums have arrived on campus
+    ASA: 
+      Administrator
 
 
-  Stargaze
-    QUESTIONS: 
-      Do we need to make accomodations for reducing light from the house?
+  Gather possums
+    WHEN: 
+      we visit the woods for more students
+    ASA: 
+      Administrator
 
 
-  Sunbathe with my friends
+  Launch Possums From Catapults
+    WHEN: 
+      The possums have completed their initial exams
+    ASA: 
+      Teacher
+    INEEDTO: 
+      shoot a possum as high as I can
+    SOTHAT: 
+      the possum will feel like he is flying
+
+
+  Launch possums from catapults
+    WHEN: 
+      The possums have completed their initial exams
+    ASA: 
+      Teacher
+
+
+  Organize possums into tribes
+    WHEN: 
+      Possums first arrive at school
+    ASA: 
+      Administrator
+
+
+  Schedule classes
+    WHEN: 
+      Teachers have finished creating training material for the year
+      Possums are enrolled
+    ASA: 
+      Administrator
+
+
+  Teach class
+    WHEN: 
+      The scheduled time rolls around and the possums are alll there
+    ASA: 
+      Teacher
+
+
+  Teach possums in class
+    WHEN: 
+      The scheduled time arrives
+    ASA: 
+      Teacher
 
 

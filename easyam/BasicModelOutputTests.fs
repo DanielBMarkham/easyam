@@ -276,7 +276,7 @@
                 ConvertTo=Int
                 Order=Descending
             }
-        let sortedModel = sortModelByOneParameter sortFilterCompilerStatus.ModelItems sortParameter
+        let sortedModel = sortModelByOneParameter sortParameter sortFilterCompilerStatus.ModelItems 
         sortedModel.Length |> should equal 13
         sortedModel.[1].Description |> should equal "Make the world a better place"
         sortedModel.[12].Description |> should equal ""
@@ -289,7 +289,7 @@
                 ConvertTo=DateTime
                 Order=Ascending
             }
-        let sortedModel = sortModelByOneParameter sortFilterCompilerStatus.ModelItems sortParameter
+        let sortedModel = sortModelByOneParameter sortParameter sortFilterCompilerStatus.ModelItems 
         sortedModel.Length |> should equal 13
         sortedModel.[1].Description |> should equal "Countries"
         sortedModel.[12].Description |> should equal "Be good to yourself"
@@ -302,7 +302,7 @@
                 ConvertTo=ConvertTo.DontConvert
                 Order=Ascending
             }
-        let sortedModel = sortModelByOneParameter sortFilterCompilerStatus.ModelItems sortParameter
+        let sortedModel = sortModelByOneParameter sortParameter sortFilterCompilerStatus.ModelItems
         sortedModel.Length |> should equal 13
         sortedModel.[1].Description |> should equal "Always be nice"
         sortedModel.[12].Description |> should equal "Raise money for orphans"
@@ -566,7 +566,7 @@
                 ConvertTo=Int
                 Order=Ascending
             }
-        let sortedModel = sortModelByOneParameter filteredModel sortParameter
+        let sortedModel = sortModelByOneParameter sortParameter filteredModel 
         sortedModel.Length |> should equal 4
         sortedModel.[0].Description |> should equal "Raise money for orphans"
 

@@ -1,8 +1,17 @@
 //                        MASTER DOMAIN MODEL - ENTITY                         
 //                                   FAMILY                                    
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:05                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE: Family
+    CONTAINS: 
+      relatvies
 
+    NOTES: 
+      known to get angry if left without beer for very long
+      http:
+      photobucket.com/gallery/user/allbowerpower/media/bWVkaWFJZDo4ODEwMTgwNw==/?ref=
 
+    HASA: 
+      Friend
+      Hobby

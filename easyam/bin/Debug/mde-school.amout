@@ -1,0 +1,12 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                   SCHOOL                                    
+//                   Model Generation: 03/19/2018 11:15:12                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: School
+
+
+    HASA: 
+      Administrator
+      Teacher
+      Tribe

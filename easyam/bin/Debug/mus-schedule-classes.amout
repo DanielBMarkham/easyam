@@ -1,0 +1,13 @@
+//                             MASTER USER STORY                               
+//                              SCHEDULE CLASSES                               
+//                   Model Generation: 03/19/2018 11:15:12                     
+//                                                                             
+
+MASTER USER STORY: Schedule classes
+    WHEN: 
+      Teachers have finished creating training material for the year
+      Possums are enrolled
+    ASA: 
+      Administrator
+
+

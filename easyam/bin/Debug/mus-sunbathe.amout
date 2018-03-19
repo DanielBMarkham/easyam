@@ -1,0 +1,28 @@
+//                             MASTER USER STORY                               
+//                                  SUNBATHE                                   
+//                   Model Generation: 03/08/2018 15:37:05                     
+//                                                                             
+
+MASTER USER STORY: Sunbathe
+    WHEN: 
+      It's hot and I look like a sheep
+    ASA: 
+      House Owner
+    INEEDTO: 
+      Sunbathe
+    SOTHAT: 
+      People won't laugh at me
+
+
+    AFFECTEDBY: 
+      Easy-to-use
+      Looks nice to the neighbors
+      Handle up to two people for semi-clothed events
+      Meets local building codes
+
+    USES: 
+      Recliner
+      Chair
+      Hammock
+      Family
+      Friend

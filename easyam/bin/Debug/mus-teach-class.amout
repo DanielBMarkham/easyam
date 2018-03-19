@@ -1,0 +1,12 @@
+//                             MASTER USER STORY                               
+//                                TEACH CLASS                                  
+//                   Model Generation: 03/19/2018 11:15:12                     
+//                                                                             
+
+MASTER USER STORY: Teach class
+    WHEN: 
+      The scheduled time rolls around and the possums are alll there
+    ASA: 
+      Teacher
+
+

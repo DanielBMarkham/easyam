@@ -1,8 +1,28 @@
 //                             MASTER USER STORY                               
 //                             ENTERTAIN FRIENDS                               
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:05                     
 //                                                                             
 
 MASTER USER STORY: Entertain friends
+    WHEN: 
+      Our friends come to visit
+    ASA: 
+      House Owner
+    INEEDTO: 
+      Entertain friends outside
+    SOTHAT: 
+      They enjoy their stay and think of us fondly
 
 
+    AFFECTEDBY: 
+      Easy-to-use
+      Looks nice to the neighbors
+      Handle up to five people
+      Meets local building codes
+
+    USES: 
+      Table
+      Chair
+      Family
+      Friend
+      Hobby

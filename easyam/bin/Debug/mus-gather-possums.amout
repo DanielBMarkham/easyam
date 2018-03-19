@@ -1,0 +1,16 @@
+//                             MASTER USER STORY                               
+//                               GATHER POSSUMS                                
+//                   Model Generation: 03/19/2018 11:15:12                     
+//                                                                             
+
+MASTER USER STORY: Gather possums
+    WHEN: 
+      we visit the woods for more students
+    ASA: 
+      Administrator
+
+
+    USES: 
+      Administrator
+      Teacher
+      Possum

@@ -1,0 +1,88 @@
+// Puttin all the cross-links here
+
+MASTER BACKLOG
+  ALL
+  Cookout food
+    AFFECTEDBY
+      Easy-to-use
+      Looks nice to the neighbors
+      Reminds me of nature
+    USES Food, Table, Chair, Gas grill, Family, Friend, Cabinet
+  Nap in the summertime
+    AFFECTEDBY
+      Easy-to-use
+      Must comfortably accomodate two large people side-by-side
+      Must be impervious to weather for ten years
+      Reminds me of nature
+    USES Hammock, Recliner
+  Entertain friends
+    AFFECTEDBY
+      Easy-to-use
+      Looks nice to the neighbors
+      Handle up to five people
+    USES Table, Chair, Family, Friend, Hobby
+  Soak in hot water in the winter
+    AFFECTEDBY
+      Meets local building codes
+      Easy-to-use
+      Must comfortably accomodate two large people side-by-side
+      Handle up to two people for semi-clothed events
+      Reminds me of nature
+    USES Hot tub, Family, Friend
+  Sunbathe
+    AFFECTEDBY
+      Easy-to-use
+      Looks nice to the neighbors
+      Handle up to two people for semi-clothed events
+    USES Recliner, Chair, Hammock, Family, Friend
+  Enter and leave
+    AFFECTEDBY
+      Meets local building codes
+      Easy-to-use
+      Looks nice to the neighbors
+      Must comfortably accomodate two large people side-by-side
+    USES Family, Friend
+  Play cards
+    AFFECTEDBY
+      Easy-to-use
+      Handle up to five people
+    USES Table, Chair, Family, Friend, Cabinet
+  Stargaze
+    AFFECTEDBY
+      Easy-to-use
+      Must comfortably accomodate two large people side-by-side
+      Handle up to five people
+    USES Family, Friend, Chair
+    DEFECT Outside security light prevents good stargazing
+    WORKS Spent six hours on the phone with an astronomer from Hershey. There's no fixing the light problem
+    TODOS Call the city to see if the light can be moved  
+
+MASTER SUPPLEMENTAL MODEL
+  Meets local building codes
+    AFFECTS ALL
+  Easy-to-use
+  Looks nice to the neighbors
+  Must comfortably accomodate two large people side-by-side
+    NOTES
+      The deck shouldn't inconvenience larger people that come to visit
+      There are only two larger people that might visit
+      Plan on two people at 450 pounds each plus a good safety margin
+  Must be impervious to weather for ten years
+  Uses joining technology that doesn't poke out after wear
+  Handle up to five people
+  Handle up to two people for semi-clothed events
+  Reminds me of nature
+
+MASTER DOMAIN MODEL
+  Food
+  Hammock
+  Hot tub
+  Recliner
+  Table HASA Chair
+  Chair 
+  Gas grill HASA Food, Cabinet
+  Family HASA Friend, Hobby
+  Friend HASA Hobby
+  Hobby HASA Table
+  Plant
+  Cabinet HASA Food, Hobby

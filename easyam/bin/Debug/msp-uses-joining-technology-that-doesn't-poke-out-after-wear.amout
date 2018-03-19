@@ -1,10 +1,18 @@
 //                            MASTER SUPPLEMENTAL                              
 //          USES JOINING TECHNOLOGY THAT DOESN'T POKE OUT AFTER WEAR           
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:06                     
 //                                                                             
 
 BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Uses joining technology that doesn't poke out after wear
+    BECAUSE: 
+      I want people to have a good time when they visit
+    WHENEVER: 
+      They're on the deck
+    ITHASTOBETHAT: 
+      No construction joining material pokes out to hurt people
 
+    NOTES: 
+      The customer liked the organic screws
     QUESTIONS: 
       So screws, right?
 

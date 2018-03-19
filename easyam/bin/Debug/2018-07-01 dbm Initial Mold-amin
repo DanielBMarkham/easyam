@@ -1,0 +1,44 @@
+MASTER BACKLOG
+  Gather possums WHEN we visit the woods for more students ASA Administrator
+  Organize possums into tribes WHEN Possums first arrive at school ASA Administrator
+  Clean possums WHEN Friday classes are complete ASA Teacher
+  Teach possums in class WHEN The scheduled time arrives ASA Teacher
+  Create training material WHEN School's out for the summer ASA Teacher
+  Create flying tests WHEN The training material has been completed ASA Teacher
+  Administer flying tests WHEN The possums have learned as much as they can ASA Administrator
+  Assign possums to classes WHEN A new school year comes around ASA Administrator
+  Launch possums from catapults WHEN The possums have completed their initial exams ASA Teacher
+  Enroll possums into school WHEN Eager possums have arrived on campus ASA Administrator
+  Schedule classes
+    WHEN Teachers have finished creating training material for the year, Possums are enrolled ASA Administrator
+MASTER SUPPLEMENTAL MODEL
+  Be encouraging BECAUSE Possums give up too easily
+  Be fair BECAUSE  A lost reputation is too difficult to restore
+  Take your time BECAUSE We care about letting things happen in their own time
+  Listen to the possums BECAUSE Without happy students our school can't continue
+  Safety is job one BECAUSE A lost opportunity and a dead possum look the same
+MASTER DOMAIN MODEL
+  School USEDBY Enroll possums into school
+  Administrator 
+    USEDBY Gather possums, Organize possums into tribes, Administer flying tests
+      Assign possums to classes, Create training material, Create flying tests
+  Teacher 
+    USEDBY Gather possums, Organize possums into tribes, Assign possums to classes
+      Launch possums from catapults, Clean possums, Create training material, Create flying tests
+  Possum USEDBY Gather possums, Organize possums into tribes
+    Assign possums to classes, Launch possums from catapults, Clean possums
+  Catapult USEDBY Launch possums from catapults
+  Course USEDBY Assign possums to classes, Create training material, Create flying tests
+  Classroom USEDBY Assign possums to classes
+  Training period USEDBY Assign possums to classes, Launch possums from catapults
+  Training material USEDBY Create training material, Create flying tests
+  Tribe USEDBY Organize possums into tribes
+  Test USEDBY Create flying tests, Administer flying tests
+  School HASA Administrator, Teacher, Tribe 
+  Administrator HASA Teacher, Possum 
+  Teacher HASA Course
+  Training Period HASA Course, Teacher, Possum 
+  Training Period CONTAINS Schedule
+  Course HASA Catapult, Test, Training material
+  Possum HASA Tribe
+  Schedule HASA Training Period

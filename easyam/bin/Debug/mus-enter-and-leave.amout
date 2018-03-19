@@ -1,8 +1,26 @@
 //                             MASTER USER STORY                               
 //                              ENTER AND LEAVE                                
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:05                     
 //                                                                             
 
 MASTER USER STORY: Enter and leave
+    WHEN: 
+      People come to visit
+    ASA: 
+      House Guest
+    INEEDTO: 
+      Enter and leave the property
+    SOTHAT: 
+      I'm not held prisoner
 
 
+    AFFECTEDBY: 
+      Meets local building codes
+      Easy-to-use
+      Looks nice to the neighbors
+      Must comfortably accomodate two large people side-by-side
+      Meets local building codes
+
+    USES: 
+      Family
+      Friend

@@ -1,0 +1,15 @@
+//                             MASTER USER STORY                               
+//                       LAUNCH POSSUMS FROM CATAPULTS                         
+//                   Model Generation: 03/19/2018 11:15:12                     
+//                                                                             
+
+MASTER USER STORY: Launch possums from catapults
+    WHEN: 
+      The possums have completed their initial exams
+    ASA: 
+      Teacher
+
+
+    USES: 
+      Catapult
+      Training period

@@ -1,8 +1,28 @@
 //                             MASTER USER STORY                               
 //                      SOAK IN HOT WATER IN THE WINTER                        
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:05                     
 //                                                                             
 
 MASTER USER STORY: Soak in hot water in the winter
+    WHEN: 
+      It's cold and I'm tired
+    ASA: 
+      House Owner
+    INEEDTO: 
+      Soak in the hot tub
+    SOTHAT: 
+      I feel more relaxed
 
 
+    AFFECTEDBY: 
+      Meets local building codes
+      Easy-to-use
+      Must comfortably accomodate two large people side-by-side
+      Handle up to two people for semi-clothed events
+      Reminds me of nature
+      Meets local building codes
+
+    USES: 
+      Hot tub
+      Family
+      Friend

@@ -217,7 +217,7 @@ module Utils
                             ConvertTo=opts.sortConvertTo.parameterValue
                             Order=opts.sortOrder.parameterValue
                         }
-                    sortModelByOneParameter compilerResult.ModelItems sortParm
+                    sortModelByOneParameter sortParm compilerResult.ModelItems
                 else compilerResult.ModelItems
         let filteredAndSortedModel =
             if opts.filterThing.parameterValue.Length>0

@@ -1,0 +1,14 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                   CHAIR                                     
+//                   Model Generation: 03/08/2018 15:37:05                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Chair
+    CONTAINS: 
+      outdoor cushion
+      outdoor blanket
+
+    NOTES: 
+      We want Wankalot Moose chairs
+      in camo green
+

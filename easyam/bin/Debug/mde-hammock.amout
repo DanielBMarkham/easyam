@@ -1,8 +1,13 @@
 //                        MASTER DOMAIN MODEL - ENTITY                         
 //                                  HAMMOCK                                    
-//                   Model Generation: 03/07/2018 17:16:15                     
+//                   Model Generation: 03/08/2018 15:37:06                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE: Hammock
+    CONTAINS: 
+      hammock stand
+      mosquito net
 
+    NOTES: 
+      A stand-alone hammock is fine. No need to build one in
 

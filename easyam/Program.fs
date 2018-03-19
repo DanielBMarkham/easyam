@@ -47,7 +47,7 @@
     let defaulSourceDirectory = createNewConfigEntry "S" "Source Directory (Optional)" [|"/S:<path> -> path to the directory having the source files."|] (System.AppDomain.CurrentDomain.BaseDirectory, Some(System.IO.DirectoryInfo(System.AppDomain.CurrentDomain.BaseDirectory)))
     let defaultDestinationDirectory = createNewConfigEntry "D" "Destination Directory (Optional)" [|"/D:<path> -> path to the directory where compiled files will be deployed."|] (System.AppDomain.CurrentDomain.BaseDirectory, Some(System.IO.DirectoryInfo(System.AppDomain.CurrentDomain.BaseDirectory)))
     let defaultOutputFormat = createNewConfigEntry "O" "Output Format (Optional)" [|"/O:SINGLEFILE=<path> -> Output everything to a single file"|] ""
-    let defaultNamespace = createNewConfigEntry "N" "Namespace (Optional)" [|"/N:<namespace> -> namespace filter to show in output."; "Example: a team's sprint stories may have a namespace of BadgerTeam: Sprint 3"|] ""
+    let defaultNamespace = createNewConfigEntry "N" "Namespace (Optionl)" [|"/N:<namespace> -> namespace filter to show in output."; "Example: a team's sprint stories may have a namespace of BadgerTeam: Sprint 3"|] ""
     let defaultSortTagOrAtt = createNewConfigEntry "SORT-TAGATT" "Sort based on either a tag or attribute (Optional)" [|"/SORT-TAGATT:<ATT|TAG> -> there will be a sort on either a tag or attribute"; "(rest of sort information is provided in other parameters"; "Example:SORT-TAGATT:ATT"|] TagOrAtt.Tag
     let defaultSortThing = createNewConfigEntry "SORT-THING" "Once you've picked tag or att, the name of the tag or attribute (Optional)" [|"/SORT-THING:<name> -> If you've tagged things in the model, use tag here. There are also a limited number of attributes, like Description, you can use"; "(rest of sort information is provided in other parameters)"; "Example:SORT-THING:Description"|] ""
     let defaultSortConvertTo = createNewConfigEntry "SORT-CONVERTO" "Once you've picked a tag or att, what do I convert it to (Optional)" [|"/SORT-CONVERTTO:<typename> -> typenames supported: Int | Float | Money | DateTime | TimeSpan"; "Failure to provide defaults to string";"(rest of sort information is provided in other parameters)"; "Example:easyam SORT_TAGATT:TAG SORT-THING:Rank SORT-CONVERTO:INT SORT-oRDER:ASC"|] ConvertTo.DontConvert
@@ -157,6 +157,7 @@
         //writeOutModel compilerResult.ModelItems outputModel ModelOutputType.AMOUT programDirectories.DestinationDirectoryInfo true ""
         //
         //
+        saveAllTagsToOneCSVFile programDirectories.DestinationDirectoryInfo.FullName "tags.csv" outputModel compilerResult
         if opts.outputFormat.parameterValue.Contains("SINGLEFILE")
             then
                 let targetFilename=
@@ -192,7 +193,7 @@
                 System.Console.WriteLine (ex.StackTrace)
                 if ex.InnerException = null
                     then
-                        0
+                        0 
                     else
                         System.Console.WriteLine("---   Inner Exception   ---")
                         System.Console.WriteLine (ex.InnerException.Message)

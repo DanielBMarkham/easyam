@@ -1,0 +1,10 @@
+//                        MASTER DOMAIN MODEL - ENTITY                         
+//                                  TEACHER                                    
+//                   Model Generation: 03/19/2018 11:15:12                     
+//                                                                             
+
+BUSINESS STRUCTURE ABSTRACT TO-BE: Teacher
+
+
+    HASA: 
+      Course

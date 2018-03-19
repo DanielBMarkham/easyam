@@ -1,0 +1,52 @@
+MASTER BACKLOG
+  ALL
+    DIAGRAM: https://www.lucidchart.com/invitations/accept/284edbd2-039b-4f09-a8e3-81b5a615ba76
+
+MASTER BACKLOG
+  ALL
+  Cookout food
+    WHEN I'm hungry on a holiday
+    ASA House Owner
+    INEEDTO Cookout food for my friends and family
+    SOTHAT We can create happy memories together
+  Nap in the summertime
+    WHEN It's a weekend and I have nothing to do
+    ASA House Owner, House Guest
+    INEEDTO Take a nap 
+    SOTHAT I can enjoy the outside and feel rested
+  Entertain friends
+    WHEN Our friends come to visit
+    ASA House Owner
+    INEEDTO Entertain friends outside
+    SOTHAT They enjoy their stay and think of us fondly
+  Soak in hot water in the winter
+    WHEN It's cold and I'm tired
+    ASA House Owner
+    INEEDTO Soak in the hot tub
+    SOTHAT I feel more relaxed
+  Sunbathe
+    WHEN It's hot and I look like a sheep
+    ASA House Owner
+    INEEDTO Sunbathe
+    SOTHAT People won't laugh at me
+  Enter and leave
+    WHEN People come to visit
+    ASA House Guest
+    INEEDTO Enter and leave the property
+    SOTHAT I'm not held prisoner
+  Play cards
+    WHEN People come to visit 
+    ASA House Owner, House Guest
+    INEEDTO Play cards outside
+    SOTHAT I can enjoy friendship and nature at the same time
+  Stargaze
+    WHEN It's dark and clear outside
+    ASA House Owner
+    INEEDTO Stargaze
+    SOTHAT I can learn more about the cosmos and take pictures to impress my friends
+
+MASTER BACKLOG
+  ALL
+    Q: Without hurting myself?
+    Q: Even if I have been drinking?
+    Q: Without the neighbors seeing?

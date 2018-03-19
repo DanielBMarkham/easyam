@@ -1,0 +1,15 @@
+//                             MASTER USER STORY                               
+//                          ADMINISTER FLYING TESTS                            
+//                   Model Generation: 03/19/2018 11:15:12                     
+//                                                                             
+
+MASTER USER STORY: Administer flying tests
+    WHEN: 
+      The possums have learned as much as they can
+    ASA: 
+      Administrator
+
+
+    USES: 
+      Administrator
+      Test
