@@ -1,5 +1,5 @@
 //                              MASTER USE CASES                               
-//                   Model Generation: 03/19/2018 11:15:12                     
+//                   Model Generation: 03/20/2018 03:19:17                     
 //                                                                             
 
 BUSINESS BEHAVIOR ABSTRACT TO-BE
@@ -74,6 +74,9 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
       shoot a possum as high as I can
     SOTHAT: 
       the possum will feel like he is flying
+    NOTES: 
+      This might be more System Abstract Supplementals
+      but for the linkage to work it has to be at same level or above as the behavior it is targeting
 
 
   Launch possums from catapults
@@ -90,7 +93,7 @@ BUSINESS BEHAVIOR ABSTRACT TO-BE
       Administrator
 
 
-  Schedule classes
+  Schedule Classes
     WHEN: 
       Teachers have finished creating training material for the year
       Possums are enrolled

@@ -1,16 +1,10 @@
 #                             GHERKIN FEATURE FILE                             
-#                               Schedule classes                               
-#                    Model Generation: 03/19/2018 11:15:12                     
+#                               Schedule Classes                               
+#                    Model Generation: 03/20/2018 03:19:18                     
 #                                                                              
 
 
-#  MASTER SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA
-
-#  BUSINESS REALIZED SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA
-
-#  SYSTEM ABSTRACT SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA
-
-Feature: Schedule classes
+Feature: Schedule Classes
   Triggers
     Teachers have finished creating training material for the year
     Possums are enrolled

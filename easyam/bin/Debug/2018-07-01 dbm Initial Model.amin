@@ -9,7 +9,7 @@ MASTER BACKLOG
   Assign possums to classes WHEN A new school year comes around ASA Administrator
   Launch possums from catapults WHEN The possums have completed their initial exams ASA Teacher
   Enroll possums into school WHEN Eager possums have arrived on campus ASA Administrator
-  Schedule classes
+  Schedule Classes
     WHEN Teachers have finished creating training material for the year, Possums are enrolled ASA Administrator
 MASTER SUPPLEMENTAL MODEL
   Be encouraging BECAUSE Possums give up too easily

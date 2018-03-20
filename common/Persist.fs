@@ -563,6 +563,30 @@ module Persist
                     sb.wl (titleIndent + newTitle)
                     itemList |> Array.iter(fun x->
                         sb.wl (detailIndent + x))
+
+    let writeFeatureSupplementalNotes (sb:System.Text.StringBuilder) (musItem:ModelItem) (compilerStatus:CompilerReturn) =
+        sb.wl ("#  " + musItem.Description)
+        musItem.Annotations|>Array.filter(fun z->z.AnnotationType=Note)|>Array.iter(fun z->
+            sb.wl ("#    " + z.AnnotationText)
+            )
+    let writeFeatureSupplementals (sb:System.Text.StringBuilder) (supplementals:ModelItem []) (compilerStatus:CompilerReturn) (title:string)=
+        if supplementals.Length=0 then ()
+        else
+            sb.wl ("")
+            sb.wl ("#  " + title)
+            let collectedAncestors=
+                supplementals|>Array.fold(fun acc y->
+                    writeFeatureSupplementalNotes sb y compilerStatus
+                    let parents=getAncestors compilerStatus.ModelItems y
+                    let newAcc= parents |> Array.append acc
+                    newAcc 
+                    ) [||]
+            let uniqueCollectedAncestors = collectedAncestors |> Array.distinctBy(fun x->x.Description)
+            uniqueCollectedAncestors|> Array.iter(fun a->
+                sb.wl ("#  ANCESTOR " + a.Description)
+                a.Annotations|>Array.iter(fun b->(sb.wl ("#    " + b.AnnotationText)))
+                ) 
+
     /// beta function that saves a gherkin feature file based on the model
     let saveFeatureFile (fileName:string) (musItem:ModelItem) (compilerStatus:CompilerReturn) =
         let sb= new System.Text.StringBuilder(65535)
@@ -582,36 +606,15 @@ module Persist
         sb.wl (centerGherkinCommentText "")
         sb.wl ("")
         // kick out any MSPs (and their notes) that impact this story
-        let applicableMSPs=getAllSupplementalsThatAffectThisUserStory compilerStatus.ModelItems musItem Business Abstract 
-        sb.wl ("")
-        sb.wl ("#  MASTER SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA")
-        applicableMSPs|>Array.iter(fun y->
-            sb.wl ("#  " + y.Description)
-            y.Annotations|>Array.filter(fun z->z.AnnotationType=Note)|>Array.iter(fun z->
-                sb.wl ("#    " + z.AnnotationText)
-                )
-            )
+        let applicableMSPs=getAllSupplementalsThatAffectThisUserStory compilerStatus.ModelItems musItem Business Abstract
+        writeFeatureSupplementals sb applicableMSPs compilerStatus "MASTER SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA"
         // kick out any Business Realized Supplmentals (and their notes) that impact this story
         let applicableBRSPs=getAllSupplementalsThatAffectThisUserStory compilerStatus.ModelItems musItem Business Realized 
-        sb.wl ("")
-        sb.wl ("#  BUSINESS REALIZED SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA")
-        applicableBRSPs|>Array.iter(fun y->
-            sb.wl ("#  " + y.Description)
-            y.Annotations|>Array.filter(fun z->z.AnnotationType=Note)|>Array.iter(fun z->
-                sb.wl ("#    " + z.AnnotationText)
-                )
-            )
+        writeFeatureSupplementals sb applicableBRSPs compilerStatus "MASTER SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA"
         // Finally, kick out any System Abstract Supplmentals (and their notes) that impact this story
         // Kick out the even if it's only ALL items. After all, this is a System Test harness. System Abstract applies
         let applicableSASPs=getAllSupplementalsThatAffectThisUserStory compilerStatus.ModelItems musItem System Abstract
-        sb.wl ("")
-        sb.wl ("#  SYSTEM ABSTRACT SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA")
-        applicableSASPs|>Array.iter(fun y->
-            sb.wl ("#  " + y.Description)
-            y.Annotations|>Array.filter(fun z->z.AnnotationType=Note)|>Array.iter(fun z->
-                sb.wl ("#    " + z.AnnotationText)
-                )
-            )
+        writeFeatureSupplementals sb applicableSASPs compilerStatus "MASTER SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA"
         sb.wl ("")
         sb.wl ("Feature: " + musItem.Description)
         if scenarios.Length>0

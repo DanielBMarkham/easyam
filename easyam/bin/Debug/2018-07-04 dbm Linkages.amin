@@ -1,0 +1,30 @@
+MASTER SUPPLEMENTAL MODEL
+  Do something when the user acts (UX)
+    NOTES:
+      English only please
+      Make it a double
+  Do something and update the rest of the system when the user acts (delivery pipeline)
+    NOTES:
+      This means a database should change value
+      Use inspection to check while writing story
+      Provide automated test with story delivery
+  Show something to the user related to the goal
+    NOTES:
+      Display some sort of information related to the goal the user is trying to accomplish
+
+PROJECT BACKLOG
+  Schedule Classes (show something) PARENT Schedule Classes
+    AFFECTEDBY
+      Show something to the user related to the goal
+  Schedule Classes (Do something)
+    AFFECTEDBY
+      Show something to the user related to the goal
+      Do something when the user acts (UX)
+  Schedule Classes (Do something and update) PARENT Schedule Classes
+    AFFECTEDBY
+      Show something to the user related to the goal
+      Do something when the user acts (UX)
+      Do something and update the rest of the system when the user acts (delivery pipeline)
+  Schedule Classes (rest of current business supplementals) PARENT Schedule Classes
+    AFFECTEDBY
+      Check and monitor delivery stack

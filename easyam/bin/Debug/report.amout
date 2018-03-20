@@ -1,15 +1,18 @@
 //                               EASYAM REPORT                                 
-//                   Model Generation: 03/19/2018 11:15:12                     
+//                   Model Generation: 03/20/2018 03:19:17                     
 //                                                                             
 //    Compiler Messages
 //    -----------------
-//  2018-07-01 dbm Initial Model.amin:: Info: file loading completed with 3 files processed along with 115 lines of code reviewed
+//  2018-07-01 dbm Initial Model.amin:: Info: file loading completed with 4 files processed along with 146 lines of code reviewed
+//  2018-07-04 dbm Linkages.amin:Some(16): Warning: target item Schedule Classes already exists once as a join. There is a duplicate entry. Previous join exists on 2018-07-03 dbm Project-Backlog.amin(2) line 4.
+//  2018-07-04 dbm Linkages.amin:Some(23): Warning: target item Schedule Classes already exists once as a join. There is a duplicate entry. Previous join exists on 2018-07-03 dbm Project-Backlog.amin(2) line 8.
+//  2018-07-04 dbm Linkages.amin:Some(28): Warning: target item Schedule Classes already exists once as a join. There is a duplicate entry. Previous join exists on 2018-07-03 dbm Project-Backlog.amin(2) line 10.
 //                                                                             
 //    Model Summary
 //    -------------
 //    Total Master User Stories: 14
 //    Total open questions: 0
-//    Total notes: 1
+//    Total notes: 3
 //    Total to-do items: 0
 //    Total work items: 0
 //
@@ -19,9 +22,9 @@
 //    Total to-do items: 0
 //    Total work items: 0
 //
-//    Total Master Supplementals: 5
+//    Total Master Supplementals: 9
 //    Total open questions: 0
-//    Total notes: 0
+//    Total notes: 8
 //    Total to-do items: 0
 //    Total work items: 0
 //

@@ -176,9 +176,9 @@ module Lenses
             let nextLevelDownChildren=GetAllDescendentItems referenceModel x
             [|x|] |>Array.append nextLevelDownChildren |> Array.append acc
             ) [||]
-    let rec GetAllParentalItems (referenceModel:ModelItem []) (modelItem:ModelItem) =
+    let rec getAncestors (referenceModel:ModelItem []) (modelItem:ModelItem) =
         getParentItems referenceModel modelItem |> Array.fold(fun acc x->
-            let nextLevelUpParents=GetAllParentalItems referenceModel x
+            let nextLevelUpParents=getAncestors referenceModel x
             [|x|] |>Array.append nextLevelUpParents |> Array.append acc
             ) [||]
     let itemWithThisNameAlreadyExistsAtThisLocation (compilerStatus:CompilerReturn) (location:ModelLocationPointer) (desription:string) =

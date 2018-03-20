@@ -1,0 +1,19 @@
+//                            MASTER SUPPLEMENTAL                              
+//                      CHECK AND MONITOR DELIVERY STACK                       
+//                   Model Generation: 03/20/2018 03:19:17                     
+//                                                                             
+
+BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Check and monitor delivery stack
+    BECAUSE: 
+      All of our deployed solutions need a reliable delivery stack
+    WHENEVER: 
+      Any of our automated systems run
+    ITHASTOBETHAT: 
+      We monitor the stack itself to make sure it is performing correctly
+
+    NOTES: 
+      Right now this covers incremental development
+      There are a lot of other perfromance standards that go under here
+
+    AFFECTS: 
+      Schedule Classes (rest of current business supplementals)

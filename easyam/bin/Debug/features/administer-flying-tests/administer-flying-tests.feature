@@ -1,14 +1,8 @@
 #                             GHERKIN FEATURE FILE                             
 #                           Administer flying tests                            
-#                    Model Generation: 03/19/2018 11:15:12                     
+#                    Model Generation: 03/20/2018 03:19:17                     
 #                                                                              
 
-
-#  MASTER SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA
-
-#  BUSINESS REALIZED SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA
-
-#  SYSTEM ABSTRACT SUPPLEMENTALS TO CONSIDER WHEN WRITING ACCEPTANCE CRITERIA
 
 Feature: Administer flying tests
   Trigger

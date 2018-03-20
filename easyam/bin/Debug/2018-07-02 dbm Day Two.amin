@@ -19,9 +19,10 @@ MASTER BACKLOG
       the possum disappears and we never see him again
       the mechanism breaks and the possum is left disappointed
 
-
-SYSTEM SUPPLEMENTAL
-  Check and monitor delivery stack
+// This might be more System Abstract Supplementals 
+// but for the linkage to work it has to be at same level or above as the behavior it is targeting
+MASTER SUPPLEMENTAL MODEL
+  Check and monitor delivery stack 
     BECAUSE All of our deployed solutions need a reliable delivery stack
     WHENEVER Any of our automated systems run
     ITHASTOBETHAT We monitor the stack itself to make sure it is performing correctly

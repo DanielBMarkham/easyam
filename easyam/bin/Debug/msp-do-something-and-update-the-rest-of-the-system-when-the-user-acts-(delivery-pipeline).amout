@@ -1,0 +1,14 @@
+//                            MASTER SUPPLEMENTAL                              
+//DO SOMETHING AND UPDATE THE REST OF THE SYSTEM WHEN THE USER ACTS (DELIVERY PIPELINE)
+//                   Model Generation: 03/20/2018 03:19:17                     
+//                                                                             
+
+BUSINESS SUPPLEMENTAL ABSTRACT TO-BE: Do something and update the rest of the system when the user acts (delivery pipeline)
+
+    NOTES: 
+      This means a database should change value
+      Use inspection to check while writing story
+      Provide automated test with story delivery
+
+    AFFECTS: 
+      Schedule Classes (Do something and update)
