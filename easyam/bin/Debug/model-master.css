@@ -48,6 +48,23 @@ h2 {
 h3 {
 
 }
+#entity_table {
+    margin-top:3em;
+}
+#entity_table thead tr {
+    border:black 1px solid;
+
+}
+#entity_table tfoot tr {
+    
+}
+#entity_table td {
+    border-right: black 1px solid;
+    border-top: black 1px solid;
+}
+#entity_table tr:last-child td {
+ border-bottom: black 1px solid;   
+}
 @media print {
     #content {
         display:initial;

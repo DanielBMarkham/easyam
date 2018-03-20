@@ -172,6 +172,7 @@
                 saveProjectBacklog (programDirectories.DestinationDirectoryInfo.FullName + "project-cards.html") compilerResult
                 saveCanonicalModel programDirectories.DestinationDirectoryInfo.FullName compilerResult
                 saveFeatureFiles programDirectories.FeaturesDirectoryInfo.FullName compilerResult
+                writeOutHtmlTree compilerResult.ModelItems compilerResult.ModelItems programDirectories.DestinationDirectoryInfo "master-model-tree.html"
                 printCompilerMessages compilerResult.CompilerMessages false
                 ()
 

@@ -1,0 +1,195 @@
+  <html>
+    <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Master Model Tree</title>
+    <link href='model-master.css' rel='stylesheet'>
+    <script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>
+    <script type='text/javascript'>
+      google.charts.load('current', {packages:['orgchart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var dataBehavior = new google.visualization.DataTable();
+        dataBehavior.addColumn('string', 'Name');
+        dataBehavior.addColumn('string', 'Manager');
+        dataBehavior.addColumn('string', 'ToolTip');
+        // For each orgchart box, provide the name, manager, and tooltip to show.
+        dataBehavior.addRows([
+          [{v:'Master Backlog', f:'Master Backlog<div style="color:red; font-style:italic">Root</div>'},
+             '', 'The President'],
+          [{v:'Administer flying tests', f:'Administer flying tests<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Assign Possums To Classes', f:'Assign Possums To Classes<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Assign possums to classes', f:'Assign possums to classes<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Clean possums', f:'Clean possums<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Create flying tests', f:'Create flying tests<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Create training material', f:'Create training material<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Enroll possums into school', f:'Enroll possums into school<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Gather possums', f:'Gather possums<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Launch Possums From Catapults', f:'Launch Possums From Catapults<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Launch possums from catapults', f:'Launch possums from catapults<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Organize possums into tribes', f:'Organize possums into tribes<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Schedule Classes', f:'Schedule Classes<div class="model_tree_entity_box">4 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Schedule Classes (show something)', f:'Schedule Classes (show something)<div class="model_tree_entity_box">0 kids</div>'},'Schedule Classes', 'TOOLTIP'],
+          [{v:'Schedule Classes (Do something)', f:'Schedule Classes (Do something)<div class="model_tree_entity_box">0 kids</div>'},'Schedule Classes', 'TOOLTIP'],
+          [{v:'Schedule Classes (Do something and update)', f:'Schedule Classes (Do something and update)<div class="model_tree_entity_box">0 kids</div>'},'Schedule Classes', 'TOOLTIP'],
+          [{v:'Schedule Classes (rest of current business supplementals)', f:'Schedule Classes (rest of current business supplementals)<div class="model_tree_entity_box">0 kids</div>'},'Schedule Classes', 'TOOLTIP']
+,          [{v:'Teach class', f:'Teach class<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP'],
+          [{v:'Teach possums in class', f:'Teach possums in class<div class="model_tree_entity_box">0 kids</div>'},'Master Backlog', 'TOOLTIP']
+        ]);
+        // Create the chart.
+        var chart = new google.visualization.OrgChart(document.getElementById('chart_behavior'));
+        // Draw the chart, setting the allowHtml option to true for the tooltips.
+        chart.draw(dataBehavior, {allowHtml:true});
+
+
+        var dataStructure = new google.visualization.DataTable();
+        dataStructure.addColumn('string', 'Name');
+        dataStructure.addColumn('string', 'Manager');
+        dataStructure.addColumn('string', 'ToolTip');
+        // For each orgchart box, provide the name, manager, and tooltip to show.
+        dataStructure.addRows([
+          [{v:'Administrator', f:'Administrator<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Assign possums to classes, Create training material, Create flying tests', f:'Assign possums to classes, Create training material, Create flying tests<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Assign possums to classes, Launch possums from catapults, Clean possums', f:'Assign possums to classes, Launch possums from catapults, Clean possums<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Catapult', f:'Catapult<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Classroom', f:'Classroom<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Course', f:'Course<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Launch possums from catapults, Clean possums, Create training material, Create flying tests', f:'Launch possums from catapults, Clean possums, Create training material, Create flying tests<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Possum', f:'Possum<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Schedule', f:'Schedule<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'School', f:'School<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Teacher', f:'Teacher<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Test', f:'Test<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Training Period', f:'Training Period<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Training material', f:'Training material<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Training period', f:'Training period<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP'],          [{v:'Tribe', f:'Tribe<div class="model_tree_entity_box">0kids</div>'},'', 'TOOLTIP']        ]);
+        // Create the chart.
+        var chart = new google.visualization.OrgChart(document.getElementById('chart_structure'));
+        // Draw the chart, setting the allowHtml option to true for the tooltips.
+        chart.draw(dataStructure, {allowHtml:true});
+
+
+        var dataSupplementals = new google.visualization.DataTable();
+        dataSupplementals.addColumn('string', 'Name');
+        dataSupplementals.addColumn('string', 'Manager');
+        dataSupplementals.addColumn('string', 'ToolTip');
+        // For each orgchart box, provide the name, manager, and tooltip to show.
+        dataSupplementals.addRows([
+          [{v:'Master Supplemental Model', f:'Master Supplemental Model<div style="color:red; font-style:italic">Root</div>'},
+          '', 'The President'],
+          [{v:'Be encouraging', f:'Be encouraging<div class="model_tree_entity_box">0 kids</div>'},'Master Supplemental Model', 'TOOLTIP'],
+          [{v:'Be fair', f:'Be fair<div class="model_tree_entity_box">0 kids</div>'},'Master Supplemental Model', 'TOOLTIP'],
+          [{v:'Check and monitor delivery stack', f:'Check and monitor delivery stack<div class="model_tree_entity_box">3 kids</div>'},'Master Supplemental Model', 'TOOLTIP'],
+          [{v:'Show something to the user related to the goal', f:'Show something to the user related to the goal<div class="model_tree_entity_box">0 kids</div>'},'Check and monitor delivery stack', 'TOOLTIP'],
+          [{v:'Do something when the user acts (UX)', f:'Do something when the user acts (UX)<div class="model_tree_entity_box">0 kids</div>'},'Check and monitor delivery stack', 'TOOLTIP'],
+          [{v:'Do something and update the rest of the system when the user acts (delivery pipeline)', f:'Do something and update the rest of the system when the user acts (delivery pipeline)<div class="model_tree_entity_box">0 kids</div>'},'Check and monitor delivery stack', 'TOOLTIP']
+,          [{v:'Do something and update the rest of the system when the user acts (delivery pipeline)', f:'Do something and update the rest of the system when the user acts (delivery pipeline)<div class="model_tree_entity_box">0 kids</div>'},'Master Supplemental Model', 'TOOLTIP'],
+          [{v:'Do something when the user acts (UX)', f:'Do something when the user acts (UX)<div class="model_tree_entity_box">0 kids</div>'},'Master Supplemental Model', 'TOOLTIP'],
+          [{v:'Listen to the possums', f:'Listen to the possums<div class="model_tree_entity_box">0 kids</div>'},'Master Supplemental Model', 'TOOLTIP'],
+          [{v:'Safety is job one', f:'Safety is job one<div class="model_tree_entity_box">0 kids</div>'},'Master Supplemental Model', 'TOOLTIP'],
+          [{v:'Show something to the user related to the goal', f:'Show something to the user related to the goal<div class="model_tree_entity_box">0 kids</div>'},'Master Supplemental Model', 'TOOLTIP'],
+          [{v:'Take your time', f:'Take your time<div class="model_tree_entity_box">0 kids</div>'},'Master Supplemental Model', 'TOOLTIP']
+        ]);
+        // Create the chart.
+        var chart = new google.visualization.OrgChart(document.getElementById('chart_supplemental'));
+        // Draw the chart, setting the allowHtml option to true for the tooltips.
+        chart.draw(dataSupplementals, {allowHtml:true});
+      }
+    </script>
+  </head>
+  <body>
+    <div id='chart_behavior'></div>
+    <div id='chart_supplemental'></div>
+    <div id='chart_structure'></div>
+    <div id='entity_table'>
+      <h3>Domain Joins</h3>
+      <table><thead><tr><td>Entity</td><td colspan='3'>HASA</td>
+      </tr></thead><tbody>
+        <tr>
+          <td>Administrator</td>
+            <td>Teacher</td>
+            <td>Possum</td>
+            <td></td>
+        </tr>
+        <tr>
+          <td>Assign possums to classes, Create training material, Create flying tests</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+          <td>Assign possums to classes, Launch possums from catapults, Clean possums</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+          <td>Catapult</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+          <td>Classroom</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+          <td>Course</td>
+            <td>Catapult</td>
+            <td>Test</td>
+            <td>Training material</td>
+        </tr>
+        <tr>
+          <td>Launch possums from catapults, Clean possums, Create training material, Create flying tests</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+          <td>Possum</td>
+            <td>Tribe</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+          <td>Schedule</td>
+            <td>Training Period</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+          <td>School</td>
+            <td>Administrator</td>
+            <td>Teacher</td>
+            <td>Tribe</td>
+        </tr>
+        <tr>
+          <td>Teacher</td>
+            <td>Course</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+          <td>Test</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+          <td>Training Period</td>
+            <td>Course</td>
+            <td>Teacher</td>
+            <td>Possum</td>
+        </tr>
+        <tr>
+          <td>Training material</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+          <td>Training period</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+          <td>Tribe</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+      </tbody><tfoot><tr></tr></tfoot></table>
+    </div>
+  </body>
+  </html>

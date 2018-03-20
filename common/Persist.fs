@@ -1103,3 +1103,143 @@ module Persist
         ()
 
 
+
+
+
+
+    let rec addModelTreeBoxesWithACommonParent (sb:System.Text.StringBuilder) (items:ModelItem []) (referenceModel:ModelItem []) (parentTitle:string) =
+        items|>Array.iteri(fun i x->
+            sb.Append "          [{v:'" |> ignore
+            sb.Append x.Description |> ignore
+            sb.Append "', f:'" |> ignore
+            sb.Append x.Description |> ignore
+            sb.Append "<div class=\"model_tree_entity_box\">" |> ignore
+            let itemKids=(getChildren x) |> Array.map(fun y->getModelItemById referenceModel y.TargetId)
+            sb.Append (string itemKids.Length + " kids") |> ignore 
+            //sb.Append "Some Info Here" |> ignore 
+            sb.Append "</div>'}," |> ignore
+            sb.Append( "'"  + parentTitle + "', 'TOOLTIP']") |> ignore 
+            if (i = items.Length-1 && itemKids.Length=0) then () else sb.Append "," |> ignore
+            sb.wl ""
+            addModelTreeBoxesWithACommonParent sb itemKids referenceModel x.Description
+            if (i < items.Length-1 && itemKids.Length>0) then (sb.Append "," |> ignore) else ()
+            )
+
+    let writeOutHtmlTree (referenceModel:ModelItem []) (outputModel:ModelItem []) (destinationDirectoryInfo:System.IO.DirectoryInfo) (fileName:string) =
+        let sb = new System.Text.StringBuilder(65536)
+        let fullFileName = System.IO.Path.Combine([|destinationDirectoryInfo.FullName; fileName|])
+        let musList = getMasterUserStories outputModel
+        let mspList = getMasterSupplementals outputModel
+        let mdeList = getMasterDomainEntities outputModel
+
+        sb.wt 1 "<html>"
+        sb.wt 2 "<head>"
+        sb.wt 2 "<meta charset='utf-8'>"
+        sb.wt 2 "<meta http-equiv='X-UA-Compatible' content='IE=edge'>"
+        sb.wt 2 "<meta name='viewport' content='width=device-width, initial-scale=1'>"
+        sb.wt 2 "<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->"
+        sb.wt 2 "<title>Master Model Tree</title>"
+        sb.wt 2 "<link href='model-master.css' rel='stylesheet'>"
+        sb.wt 2 "<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>"
+        sb.wt 2 "<script type='text/javascript'>"
+        sb.wt 3 "google.charts.load('current', {packages:['orgchart']});"
+        sb.wt 3 "google.charts.setOnLoadCallback(drawChart);"
+
+        sb.wt 3 "function drawChart() {"
+        sb.wt 4 "var dataBehavior = new google.visualization.DataTable();"
+        sb.wt 4 "dataBehavior.addColumn('string', 'Name');"
+        sb.wt 4 "dataBehavior.addColumn('string', 'Manager');"
+        sb.wt 4 "dataBehavior.addColumn('string', 'ToolTip');"
+        sb.wt 4 "// For each orgchart box, provide the name, manager, and tooltip to show."
+        sb.wt 4 "dataBehavior.addRows(["
+        sb.wt 5 "[{v:'Master Backlog', f:'Master Backlog<div style=\"color:red; font-style:italic\">Root</div>'},"
+        sb.wt 5 "   '', 'The President'],"
+        
+        addModelTreeBoxesWithACommonParent sb musList referenceModel "Master Backlog"
+
+        sb.wt 4 "]);"
+        sb.wt 4 "// Create the chart."
+        sb.wt 4 "var chart = new google.visualization.OrgChart(document.getElementById('chart_behavior'));"
+        sb.wt 4 "// Draw the chart, setting the allowHtml option to true for the tooltips."
+        sb.wt 4 "chart.draw(dataBehavior, {allowHtml:true});"
+        sb.wt 0 ""
+        sb.wt 0 ""
+        sb.wt 4 "var dataStructure = new google.visualization.DataTable();"
+        sb.wt 4 "dataStructure.addColumn('string', 'Name');"
+        sb.wt 4 "dataStructure.addColumn('string', 'Manager');"
+        sb.wt 4 "dataStructure.addColumn('string', 'ToolTip');"
+        sb.wt 4 "// For each orgchart box, provide the name, manager, and tooltip to show."
+        sb.wt 4 "dataStructure.addRows(["
+        //sb.wt 5 "[{v:'Master Domain Model', f:'Master Domain Model<div style=\"color:red; font-style:italic\">Root</div>'},"
+        //sb.wt 5 "'', 'The President'],"
+        
+        mdeList|>Array.iteri(fun i x->
+            sb.Append "          [{v:'" |> ignore
+            sb.Append x.Description |> ignore
+            sb.Append "', f:'" |> ignore
+            sb.Append x.Description |> ignore
+            sb.Append "<div class=\"model_tree_entity_box\">" |> ignore
+            let musKids=(getChildren x) |> Array.map(fun y->getModelItemById referenceModel y.TargetId)
+            sb.Append (string musKids.Length + " kids") |> ignore 
+            //sb.Append "Some Info Here" |> ignore 
+            sb.Append "</div>'}," |> ignore
+            sb.Append "'', 'TOOLTIP']" |> ignore 
+            if i = mdeList.Length-1 then () else sb.Append "," |> ignore            
+            )
+        
+        sb.wt 4 "]);"
+        sb.wt 4 "// Create the chart."
+        sb.wt 4 "var chart = new google.visualization.OrgChart(document.getElementById('chart_structure'));"
+        sb.wt 4 "// Draw the chart, setting the allowHtml option to true for the tooltips."
+        sb.wt 4 "chart.draw(dataStructure, {allowHtml:true});"
+        sb.wt 0 ""
+        sb.wt 0 ""
+        sb.wt 4 "var dataSupplementals = new google.visualization.DataTable();"
+        sb.wt 4 "dataSupplementals.addColumn('string', 'Name');"
+        sb.wt 4 "dataSupplementals.addColumn('string', 'Manager');"
+        sb.wt 4 "dataSupplementals.addColumn('string', 'ToolTip');"
+        sb.wt 4 "// For each orgchart box, provide the name, manager, and tooltip to show."
+        sb.wt 4 "dataSupplementals.addRows(["
+        sb.wt 5 "[{v:'Master Supplemental Model', f:'Master Supplemental Model<div style=\"color:red; font-style:italic\">Root</div>'},"
+        sb.wt 5 "'', 'The President'],"
+        addModelTreeBoxesWithACommonParent sb mspList referenceModel "Master Supplemental Model"
+        sb.wt 4 "]);"
+        sb.wt 4 "// Create the chart."
+        sb.wt 4 "var chart = new google.visualization.OrgChart(document.getElementById('chart_supplemental'));"
+        sb.wt 4 "// Draw the chart, setting the allowHtml option to true for the tooltips."
+        sb.wt 4 "chart.draw(dataSupplementals, {allowHtml:true});"
+        sb.wt 3 "}"
+        sb.wt 2 "</script>"
+        sb.wt 1 "</head>"
+        sb.wt 1 "<body>"
+        sb.wt 2 "<div id='chart_behavior'></div>"
+        sb.wt 2 "<div id='chart_supplemental'></div>"
+        sb.wt 2 "<div id='chart_structure'></div>"
+
+        let maxEntityConnections = (getHasA (mdeList |> Array.maxBy(fun x->(getHasA x).Length))).Length
+        sb.wt 2 "<div id='entity_table'>"
+        sb.wt 3 "<h3>Domain Joins</h3>"
+        let dummyHeadColumnsRemaining = maxEntityConnections
+        sb.wt 3 ("<table><thead><tr><td>Entity</td><td colspan='" + string dummyHeadColumnsRemaining + "'>HASA</td>")
+        //for _ in 1..dummyHeadColumnsRemaining do sb.wt 4 ("<td></td>")
+        sb.wt 3 "</tr></thead><tbody>"
+        mdeList|>Array.iteri(fun i x->
+            sb.wt 4 "<tr>"
+            sb.wt 5 ("<td>" + x.Description + "</td>")
+            let hasaEntities = getHasAItems referenceModel x 
+            hasaEntities |> Array.iter(fun y->
+                sb.wt 6 ("<td>" + y.Description + "</td>")
+                )
+            let dummyColumnsRemaining = maxEntityConnections - hasaEntities.Length
+            for _ in 1..dummyColumnsRemaining do sb.wt 6 ("<td></td>")
+            sb.wt 4 "</tr>"
+            )
+        sb.wt 3 "</tbody><tfoot><tr></tr></tfoot></table>"
+        sb.wt 2 "</div>"
+
+        sb.wt 1 "</body>"
+        sb.wt 1 "</html>"
+
+        System.IO.File.WriteAllText(fullFileName,string sb)
+        ()
+
