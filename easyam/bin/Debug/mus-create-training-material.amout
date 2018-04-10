@@ -1,6 +1,6 @@
 //                             MASTER USER STORY                               
 //                          CREATE TRAINING MATERIAL                           
-//                   Model Generation: 03/20/2018 16:13:00                     
+//                   Model Generation: 03/20/2018 16:20:56                     
 //                                                                             
 
 MASTER USER STORY: Create training material
@@ -11,5 +11,7 @@ MASTER USER STORY: Create training material
 
 
     USES: 
+      Administrator
+      Teacher
       Course
       Training material

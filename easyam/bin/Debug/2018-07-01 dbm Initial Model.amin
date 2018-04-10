@@ -20,13 +20,29 @@ MASTER SUPPLEMENTAL MODEL
 MASTER DOMAIN MODEL
   School USEDBY Enroll possums into school
   Administrator 
-    USEDBY Gather possums, Organize possums into tribes, Administer flying tests
-      Assign possums to classes, Create training material, Create flying tests
+    USEDBY 
+      Gather possums
+      Organize possums into tribes
+      Administer flying tests
+      Assign possums to classes
+      Create training material
+      Create flying tests
   Teacher 
-    USEDBY Gather possums, Organize possums into tribes, Assign possums to classes
-      Launch possums from catapults, Clean possums, Create training material, Create flying tests
-  Possum USEDBY Gather possums, Organize possums into tribes
-    Assign possums to classes, Launch possums from catapults, Clean possums
+    USEDBY 
+      Gather possums
+      Organize possums into tribes
+      Assign possums to classes
+      Launch possums from catapults
+      Clean possums
+      Create training material
+      Create flying tests
+  Possum 
+    USEDBY 
+      Gather possums
+      Organize possums into tribes
+      Assign possums to classes
+      Launch possums from catapults
+      Clean possums
   Catapult USEDBY Launch possums from catapults
   Course USEDBY Assign possums to classes, Create training material, Create flying tests
   Classroom USEDBY Assign possums to classes

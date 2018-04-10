@@ -1,6 +1,6 @@
 //                             MASTER USER STORY                               
 //                       LAUNCH POSSUMS FROM CATAPULTS                         
-//                   Model Generation: 03/20/2018 16:13:00                     
+//                   Model Generation: 03/20/2018 16:20:56                     
 //                                                                             
 
 MASTER USER STORY: Launch possums from catapults
@@ -11,5 +11,7 @@ MASTER USER STORY: Launch possums from catapults
 
 
     USES: 
+      Teacher
+      Possum
       Catapult
       Training period

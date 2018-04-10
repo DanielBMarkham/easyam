@@ -1,6 +1,6 @@
 //                             MASTER USER STORY                               
 //                         ASSIGN POSSUMS TO CLASSES                           
-//                   Model Generation: 03/20/2018 16:12:59                     
+//                   Model Generation: 03/20/2018 16:20:56                     
 //                                                                             
 
 MASTER USER STORY: Assign possums to classes
@@ -11,7 +11,9 @@ MASTER USER STORY: Assign possums to classes
 
 
     USES: 
+      Administrator
       Teacher
+      Possum
       Course
       Classroom
       Training period

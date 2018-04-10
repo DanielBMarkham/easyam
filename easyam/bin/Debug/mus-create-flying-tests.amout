@@ -1,6 +1,6 @@
 //                             MASTER USER STORY                               
 //                            CREATE FLYING TESTS                              
-//                   Model Generation: 03/20/2018 16:12:59                     
+//                   Model Generation: 03/20/2018 16:20:56                     
 //                                                                             
 
 MASTER USER STORY: Create flying tests
@@ -11,6 +11,8 @@ MASTER USER STORY: Create flying tests
 
 
     USES: 
+      Administrator
+      Teacher
       Course
       Training material
       Test

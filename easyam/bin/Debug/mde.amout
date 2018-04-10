@@ -1,5 +1,5 @@
 //                           MASTER DOMAIN ENTITIES                            
-//                   Model Generation: 03/20/2018 16:12:59                     
+//                   Model Generation: 03/20/2018 16:20:56                     
 //                                                                             
 
 BUSINESS STRUCTURE ABSTRACT TO-BE
@@ -7,12 +7,6 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
     HASA:
       Teacher
       Possum
-
-
-  Assign possums to classes, Create training material, Create flying tests
-
-
-  Assign possums to classes, Launch possums from catapults, Clean possums
 
 
   Catapult
@@ -26,9 +20,6 @@ BUSINESS STRUCTURE ABSTRACT TO-BE
       Catapult
       Test
       Training material
-
-
-  Launch possums from catapults, Clean possums, Create training material, Create flying tests
 
 
   Possum

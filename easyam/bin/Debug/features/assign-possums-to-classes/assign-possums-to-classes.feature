@@ -1,6 +1,6 @@
 #                             GHERKIN FEATURE FILE                             
 #                          Assign possums to classes                           
-#                    Model Generation: 03/20/2018 16:13:00                     
+#                    Model Generation: 03/20/2018 16:20:57                     
 #                                                                              
 
 
