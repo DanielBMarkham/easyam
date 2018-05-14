@@ -1,0 +1,84 @@
+// Met with Nifty Jones
+// What a great idea!
+// Nuclear-powered nose-pickers
+
+MASTER BACKLOG
+  Pick your nose
+  Pick your friends 
+  Pick your friend's nose 
+    Q: Is this allowed?
+    Q: What if they're really good friends?
+    NOTE: Friends not included
+    TO-DO: Build giant model of a nose 
+    WORKS: Spent all last week at the nose museum
+    OUTCOMES:
+      Your friend is happy
+      Your friend's nose is happy 
+      You don't have a friend any more
+      Nuclear accident causes your friend's nose to glow
+
+// Must buy one as soon as they're available!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MASTER BACKLOG
+  Check account balance
+  See what's on sale
+  Sign up for rewards program
+  Schedule appointment
+MASTER SUPPLEMENTAL MODEL
+  Web App
+  Support English, Spanish, and French
+  Continuous Deployment
+  Usable by Grade School Kids
+PROJECT BACKLOG
+  Check account balance bare bones functionality CHILD Check account balance
+  Check account balance using OAuth CHILD Check account balance
+  Check account balance with full exception flows CHILD Check account balance
+  View my offers CHILD See what's on sale
+    OUTCOMES
+      I see the offers reserved for me 
+      I am offered an opportunity to join the club
+      I am notified that I won a prize!
+    SCENARIOS
+      Valid user
+      Invalid user
+      Expired user
+      Prize winner
+      Seasonal sale 
+
+
+
+
+
+
+
+
+
+
+
+SUPPLEMENTALS
+  Web App AFFECTS Check account balance, See what's on sale, Sign up for rewards program, Schedule appointment
+  Support English, Spanish, and French AFFECTS Check account balance, See what's on sale, Sign up for rewards program, Schedule appointment
+  Continuous Deployment AFFECTS Check account balance, See what's on sale, Sign up for rewards program, Schedule appointment
+  Usable by Grade School Kids AFFECTS Check account balance, See what's on sale, Sign up for rewards program, Schedule appointment
+

@@ -1,117 +1,17 @@
 //                              MASTER USE CASES                               
-//                   Model Generation: 03/20/2018 16:20:56                     
+//                   Model Generation: 04/20/2018 07:17:20                     
 //                                                                             
 
 BUSINESS BEHAVIOR ABSTRACT TO-BE
-  Administer flying tests
-    WHEN: 
-      The possums have learned as much as they can
-    ASA: 
-      Administrator
+  Check account balance
 
 
-  Assign Possums To Classes
-    WHEN: 
-      A new school year comes around
-    ASA: 
-      Administrator
-    INEEDTO: 
-      Work with the possums to see which classes suit them
-    SOTHAT: 
-      possums and teachers are happy
-    NOTES: 
-      Master Backlog
+  Schedule appointment
 
 
-  Assign possums to classes
-    WHEN: 
-      A new school year comes around
-    ASA: 
-      Administrator
+  See what's on sale
 
 
-  Clean possums
-    WHEN: 
-      Friday classes are complete
-    ASA: 
-      Teacher
-
-
-  Create flying tests
-    WHEN: 
-      The training material has been completed
-    ASA: 
-      Teacher
-
-
-  Create training material
-    WHEN: 
-      School's out for the summer
-    ASA: 
-      Teacher
-
-
-  Enroll possums into school
-    WHEN: 
-      Eager possums have arrived on campus
-    ASA: 
-      Administrator
-
-
-  Gather possums
-    WHEN: 
-      we visit the woods for more students
-    ASA: 
-      Administrator
-
-
-  Launch Possums From Catapults
-    WHEN: 
-      The possums have completed their initial exams
-    ASA: 
-      Teacher
-    INEEDTO: 
-      shoot a possum as high as I can
-    SOTHAT: 
-      the possum will feel like he is flying
-    NOTES: 
-      This might be more System Abstract Supplementals
-      but for the linkage to work it has to be at same level or above as the behavior it is targeting
-
-
-  Launch possums from catapults
-    WHEN: 
-      The possums have completed their initial exams
-    ASA: 
-      Teacher
-
-
-  Organize possums into tribes
-    WHEN: 
-      Possums first arrive at school
-    ASA: 
-      Administrator
-
-
-  Schedule Classes
-    WHEN: 
-      Teachers have finished creating training material for the year
-      Possums are enrolled
-    ASA: 
-      Administrator
-
-
-  Teach class
-    WHEN: 
-      The scheduled time rolls around and the possums are alll there
-    ASA: 
-      Teacher
-
-
-  Teach possums in class
-    WHEN: 
-      The scheduled time arrives
-    ASA: 
-      Teacher
+  Sign up for rewards program
 
 

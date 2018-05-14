@@ -899,6 +899,7 @@
                                         | "TODOS"|"TODOS " | "TODOS: "|"TODOS:"|"TO-DOS"|"TO-DOS "|"TO-DOS: "|"TO-DOS:"->AnnotationTokenType.ToDo
                                         | "WORKS"|"WORKS: " | "WORKS "|"WORKS:"|"WORK:"->AnnotationTokenType.Work
                                         | "DEFECTS"|"DEFECTS: "|"DEFECT:"|"DEFECT" | "BUGS"|"BUGSS: "|"BUG:"|"BUG"->AnnotationTokenType.Work
+                                        | "CODE"|"CODE:"->AnnotationTokenType.Code
                                         |_->AnnotationTokenType.Note // ERROR ERROR
                                 // run through everything split on this line by a comma and add
                                 let newLoc={incomingCompilerStatus.CurrentLocation with AttributeType=newAttributeType; AttributeId=newAttributeId}
@@ -1080,7 +1081,7 @@
                                                                 | "WHEN"|"WHEN:"->ModelAttributeTypes.Trigger
                                                                 | "ASA"|"ASA:"->ModelAttributeTypes.Actor
                                                                 | "INEEDTO"|"INEEDTO:"->ModelAttributeTypes.Goal
-                                                                | "SOTHAT"|"SOTHAT:"->ModelAttributeTypes.BusinessContext
+                                                                | "SOTHAT"|"SOTHAT:|OUTCOME|OUTCOME:|OUTCOMES|OUTCOMES:"->ModelAttributeTypes.BusinessContext
                                                                 | "SCENARIO"|"SCENARIO:"->ModelAttributeTypes.Scenario
                                                                 | "BECAUSE"|"BECAUSE:"->ModelAttributeTypes.Because
                                                                 | "WHENEVER"|"WHENEVER:"->ModelAttributeTypes.Whenever

@@ -1,17 +1,15 @@
 //                             MASTER USER STORY                               
 //                                    ALL                                      
-//                   Model Generation: 03/08/2018 15:37:05                     
+//                   Model Generation: 04/15/2018 05:07:49                     
 //                                                                             
 
 MASTER USER STORY: ALL
 
-    NOTES: 
-      www.lucidchart.com/invitations/accept/284edbd2-039b-4f09-a8e3-81b5a615ba76
-    QUESTIONS: 
-      Without hurting myself?
-      Even if I have been drinking?
-      Without the neighbors seeing?
 
     AFFECTEDBY: 
-      Meets local building codes
+      Always respond in a way that's easy for the user to understand
+      Never make the user wait
+      Never confuse the user
+      Continuously inform the team about everything the users do
+      Always do the best we can to cheer the user up during any interaction
 

@@ -1,30 +1,27 @@
 //                               EASYAM REPORT                                 
-//                   Model Generation: 03/20/2018 16:20:56                     
+//                   Model Generation: 04/20/2018 07:17:20                     
 //                                                                             
 //    Compiler Messages
 //    -----------------
-//  2018-07-01 dbm Initial Model.amin:: Info: file loading completed with 4 files processed along with 162 lines of code reviewed
-//  2018-07-04 dbm Linkages.amin:Some(16): Warning: target item Schedule Classes already exists once as a join. There is a duplicate entry. Previous join exists on 2018-07-03 dbm Project-Backlog.amin(2) line 4.
-//  2018-07-04 dbm Linkages.amin:Some(23): Warning: target item Schedule Classes already exists once as a join. There is a duplicate entry. Previous join exists on 2018-07-03 dbm Project-Backlog.amin(2) line 8.
-//  2018-07-04 dbm Linkages.amin:Some(28): Warning: target item Schedule Classes already exists once as a join. There is a duplicate entry. Previous join exists on 2018-07-03 dbm Project-Backlog.amin(2) line 10.
+//  teaser.amin:: Info: file loading completed with 1 files processed along with 22 lines of code reviewed
 //                                                                             
 //    Model Summary
 //    -------------
-//    Total Master User Stories: 14
-//    Total open questions: 0
-//    Total notes: 3
-//    Total to-do items: 0
-//    Total work items: 0
-//
-//    Total Master Domain Entities: 13
+//    Total Master User Stories: 4
 //    Total open questions: 0
 //    Total notes: 0
 //    Total to-do items: 0
 //    Total work items: 0
 //
-//    Total Master Supplementals: 9
+//    Total Master Domain Entities: 0
 //    Total open questions: 0
-//    Total notes: 8
+//    Total notes: 0
+//    Total to-do items: 0
+//    Total work items: 0
+//
+//    Total Master Supplementals: 4
+//    Total open questions: 0
+//    Total notes: 0
 //    Total to-do items: 0
 //    Total work items: 0
 //
