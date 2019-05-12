@@ -97,6 +97,8 @@ module Utils
             | PlatformID.Win32NT | PlatformID.Win32S | PlatformID.Win32Windows | PlatformID.WinCE | PlatformID.Xbox -> false
             | PlatformID.MacOSX | PlatformID.Unix -> true
             | _ ->false
+    type MajorTypeOfOS = Windows|Linux 
+    let MajorOSType = if isLinuxFileSystem then Linux else Windows
     /// OS-independent file copy from one place to another. Uses shell.
     let copyToDestinationDirectory (localFileName:string) (copyTo:string) =
         if System.IO.File.Exists(localFileName) = false
