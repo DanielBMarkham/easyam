@@ -1,4 +1,6 @@
-#EasyAM
+# EasyAM
+
+EasyAM is the demonstration program for the [Info-Ops book.](https://wiki.info-ops.org)
 
 When keeping information in a program, many times we use relational databases. When we normalize the database we ensure we only store the minimum amount of information necessary for the job and there is no duplication.
 
